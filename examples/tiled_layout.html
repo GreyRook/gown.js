@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>pixi UI example: tiled layout</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../lib/pixi.dev.js"></script>
+    <script src="../src/PixiUi.js"></script>
+    <script src="../src/skin/Theme.js"></script>
+    <script src="../themes/AeonTheme.js"></script>
+    <script src="../src/shapes/Shape.js"></script>
+    <script src="../src/shapes/Ellipse.js"></script>
+    <script src="../src/shapes/Diamond.js"></script>
+    <script src="../src/shapes/Rect.js"></script>
+    <script src="../themes/ShapeTheme.js"></script>
+    <script src="../src/util/ScaleContainer.js"></script>
+
+    <script src="../src/layout/ViewPortBounds.js"></script>
+    <script src="../src/layout/Layout.js"></script>
+    <script src="../src/layout/LayoutAlignment.js"></script>
+    <script src="../src/layout/HorizontalLayout.js"></script>
+    <script src="../src/layout/VerticalLayout.js"></script>
+    <script src="../src/layout/TiledLayout.js"></script>
+    <script src="../src/layout/TiledRowsLayout.js"></script>
+    <script src="../src/layout/TiledColumnsLayout.js"></script>
+
+    <script src="../src/core/Control.js"></script>
+    <script src="../src/controls/Button.js"></script>
+    <script src="../src/controls/ToggleButton.js"></script>
+    <script src="../src/controls/LayoutGroup.js"></script>
+
+    <script src="../src/controls/ScrollArea.js"></script>
+    <script src="../src/controls/ScrollBar.js"></script>
+    <script src="../src/controls/ScrollThumb.js"></script>
+
+</head>
+<body>
+<script>
+    var stage = new PIXI.Stage(0xffffff);
+    var sizes = {w: 800, h: 600};
+    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h);
+    var btn, grp;
+    document.body.appendChild(renderer.view);
+
+    function onComplete() {
+        grp = new PIXI_UI.LayoutGroup();
+        grp.x = 20;
+        grp.y = 60;
+        grp.width = sizes.w - (grp.x*2);
+        grp.height = sizes.h - (grp.y*2);
+
+        grp.layout = new PIXI_UI.TiledColumnsLayout();
+        grp.layout.gap = 10;
+        stage.addChild(grp);
+
+        // create layout container and add some buttons
+        for (var i = 0; i < 100; i++) {
+            btn = new PIXI_UI.Button();
+            btn.width = 80;
+            btn.height = 25;
+            btn.label = (i+1)+". button";
+            grp.addChild(btn);
+        }
+
+        var toggleButton = new PIXI_UI.ToggleButton();
+        toggleButton.label = "switch row/column layout";
+        toggleButton.width = 300;
+        toggleButton.height = 25;
+
+        toggleButton.x = toggleButton.y = 20;
+        toggleButton.click = toggleButton.tap = function () {
+            if (grp.layout._orientation == PIXI_UI.TiledLayout.ORIENTATION_ROWS) {
+                grp.layout._orientation = PIXI_UI.TiledLayout.ORIENTATION_COLUMNS;
+            } else {
+                grp.layout._orientation = PIXI_UI.TiledLayout.ORIENTATION_ROWS;
+            }
+            grp.layout._needUpdate = true;
+        };
+
+        stage.addChild(toggleButton);
+
+        requestAnimFrame(animate);
+    }
+
+    var theme = new PIXI_UI.AeonTheme(
+            ["../themes/assets/aeon/aeon_desktop.json"], onComplete);
+
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimFrame(animate);
+    }
+</script>
+
+</body>
+</html>

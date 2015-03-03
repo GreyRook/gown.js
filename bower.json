@@ -1,0 +1,17 @@
+{
+    "name": "pixi_ui",
+    "version": "0.0.0",
+
+    "main": "bin/pixi_ui.dev.js",
+
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test"
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+    }
+}

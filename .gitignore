@@ -1,0 +1,5 @@
+docs/
+coverage
+node_modules/
+.grunt
+bin
