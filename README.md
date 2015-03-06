@@ -4,6 +4,7 @@ PIXI_UI
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com) for ActionScript
 
 [![Inline docs](http://inch-ci.org/github/brean/pixi_ui.svg?branch=master)](http://inch-ci.org/github/brean/pixi_ui)
+[![Build Status](https://travis-ci.org/brean/pixi_ui.svg?branch=master)](https://travis-ci.org/brean/pixi_ui)
 
 Features
 ========
