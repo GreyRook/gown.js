@@ -248,47 +248,31 @@ PIXI_UI.TiledLayout.prototype.layout = function (items, viewPortBounds) {
         if(item) {
             switch(this._tileHorizontalAlign) {
                 case PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_JUSTIFY:
-                {
                     item.x = positionX;
                     item.width = tileWidth;
                     break;
-                }
                 case PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT:
-                {
                     item.x = positionX;
                     break;
-                }
                 case PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_RIGHT:
-                {
                     item.x = positionX + tileWidth - item.width;
                     break;
-                }
                 default: //center or unknown
-                {
                     item.x = positionX + (tileWidth - item.width) / 2;
-                }
             }
             switch(this._tileVerticalAlign) {
                 case PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY:
-                {
                     item.y = positionY;
                     item.height = tileHeight;
                     break;
-                }
                 case PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_TOP:
-                {
                     item.y = positionY;
                     break;
-                }
                 case PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_BOTTOM:
-                {
                     item.y = positionY + tileHeight - item.height;
                     break;
-                }
                 default: //middle or unknown
-                {
                     item.y = positionY + (tileHeight - item.height) / 2;
-                }
             }
         }
         if (_rows) {

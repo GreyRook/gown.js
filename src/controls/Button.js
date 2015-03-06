@@ -290,5 +290,6 @@ Object.defineProperty(PIXI_UI.Button.prototype, 'label', {
             return;
         }
         this._label = label;
-        this.updateLabel = true;    }
+        this.updateLabel = true;
+    }
 });
