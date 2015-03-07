@@ -134,7 +134,9 @@ PIXI_UI.Control.prototype.redraw = function() {
         this.fromSkin(this._currentState, this.changeState);
     }
     if (this._currentSkin &&
-        this.invalidDimensions) {
+        this.invalidDimensions &&
+        this._width > 0 && this._height > 0) {
+
         this._currentSkin.width = this._width;
         this._currentSkin.height = this._height;
         this.invalidDimensions = false;
