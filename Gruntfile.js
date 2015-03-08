@@ -29,6 +29,7 @@ module.exports = function(grunt) {
 
             '<%= dirs.src %>/core/Control.js',
             '<%= dirs.src %>/controls/Button.js',
+            '<%= dirs.src %>/controls/TextInput.js',
             '<%= dirs.src %>/controls/ToggleButton.js',
             '<%= dirs.src %>/controls/LayoutGroup.js',
 

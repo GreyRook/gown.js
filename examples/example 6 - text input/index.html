@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>pixi UI example: layouting</title>
+    <title>pixi UI example: Buttons with different themes</title>
     <style>
         body {
             margin: 0;
@@ -39,41 +39,27 @@
     <script src="../../src/controls/ScrollArea.js"></script>
     <script src="../../src/controls/ScrollBar.js"></script>
     <script src="../../src/controls/ScrollThumb.js"></script>
-
 </head>
 <body>
 <script>
     var stage = new PIXI.Stage(0xffffff);
-    var sizes = {w: 800, h: 600};
-    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h);
-    var btn, grp;
+    var renderer = PIXI.autoDetectRenderer(800, 600);
+    var btn;
     document.body.appendChild(renderer.view);
 
     function onComplete() {
-        grp = new PIXI_UI.LayoutGroup();
-        grp.x = 20;
-        grp.y = 30;
-        grp.width = Math.floor(sizes.w - (grp.x*2));
-        grp.layout = new PIXI_UI.HorizontalLayout();
-        grp.layout.gap = 10;
-        stage.addChild(grp);
+        // initialize theme
 
-        // create layout container and add some buttons
-        for (var i = 0; i < 10; i++) {
-            btn = new PIXI_UI.Button();
-            btn.percentWidth = 100;
-            btn.height = 25;
-            btn.label = (i+1)+". button";
-            grp.addChild(btn);
-        }
-        btn.percentWidth = null;
-        btn.width = 110;
+        var txt = new PIXI_UI.TextInput();
+        txt.width = 200;
+        txt.height = 25;
+        stage.addChild(txt);
 
         requestAnimFrame(animate);
     }
-
+    
     var theme = new PIXI_UI.AeonTheme(
-            ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
+        ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
 
     function animate() {
         // render the stage

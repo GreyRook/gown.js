@@ -11,6 +11,7 @@ Features
 
  1. Basic UI components
      - **Button**: simple Button, with label and background, easy to extend using themes
+     - **TextInput**: keyboard/touch text input
      - **ToggleButton**: a button with on/off state
  1. Layouting
      - **LayoutGroup**: a component to create horizontal, vertical or tile-based layouts
@@ -81,7 +82,6 @@ This list is not ordered by priority nor does it contain any promise that those 
    - Toggle
    - Gauge
    - NumericStepper
-   - TextInput
    - ProgressBar
    - ScaleTool (to change width/height of a control)
    - ScrollContainer (sth. with the same API as feathers)

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>pixi UI example: layouting</title>
+    <title>pixi UI example: Buttons with different themes</title>
     <style>
         body {
             margin: 0;
@@ -39,41 +39,51 @@
     <script src="../../src/controls/ScrollArea.js"></script>
     <script src="../../src/controls/ScrollBar.js"></script>
     <script src="../../src/controls/ScrollThumb.js"></script>
-
 </head>
 <body>
 <script>
     var stage = new PIXI.Stage(0xffffff);
-    var sizes = {w: 800, h: 600};
-    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h);
-    var btn, grp;
+    var renderer = PIXI.autoDetectRenderer(800, 600);
+    var btn;
     document.body.appendChild(renderer.view);
 
     function onComplete() {
-        grp = new PIXI_UI.LayoutGroup();
-        grp.x = 20;
-        grp.y = 30;
-        grp.width = Math.floor(sizes.w - (grp.x*2));
-        grp.layout = new PIXI_UI.HorizontalLayout();
-        grp.layout.gap = 10;
-        stage.addChild(grp);
+        // initialize theme
 
-        // create layout container and add some buttons
-        for (var i = 0; i < 10; i++) {
-            btn = new PIXI_UI.Button();
-            btn.percentWidth = 100;
-            btn.height = 25;
-            btn.label = (i+1)+". button";
-            grp.addChild(btn);
-        }
-        btn.percentWidth = null;
-        btn.width = 110;
+        btn = new PIXI_UI.Button();
+        btn.width = 150;
+        btn.height = 100;
+        btn.x = 20;
+        btn.y = 30;
+        btn.label = "first";
+        stage.addChild(btn);
+
+        btn.tap = btn.click = function (evt) {
+            if (window.console) {
+                console.log("you clicked the first button!");
+            }
+        };
+
+        var theme = new PIXI_UI.ShapeTheme();
+        btn = new PIXI_UI.Button(theme);
+        btn.width = 150;
+        btn.height = 100;
+        btn.x = 170;
+        btn.y = 30;
+        btn.label = "second";
+        stage.addChild(btn);
+
+        btn.tap = btn.click = function (evt) {
+            if (window.console) {
+                console.log("you clicked the second button!");
+            }
+        };
 
         requestAnimFrame(animate);
     }
-
+    
     var theme = new PIXI_UI.AeonTheme(
-            ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
+        ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
 
     function animate() {
         // render the stage
