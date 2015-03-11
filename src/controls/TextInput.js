@@ -139,7 +139,7 @@ PIXI_UI.TextInput.prototype.updateSelection = function(start, end) {
     }
 };
 
-PIXI_UI.TextInput.prototype.onSubmit = function(e) {
+PIXI_UI.TextInput.prototype.onSubmit = function() {
 };
 
 PIXI_UI.TextInput.prototype.onKeyDown = function(e) {
@@ -174,7 +174,7 @@ PIXI_UI.TextInput.prototype.onKeyDown = function(e) {
     this.updateTextState();
 };
 
-PIXI_UI.TextInput.prototype.onKeyUp = function(e) {
+PIXI_UI.TextInput.prototype.onKeyUp = function() {
     // update the canvas input state information from the hidden input
     this.updateTextState();
 };
@@ -202,7 +202,7 @@ PIXI_UI.TextInput.prototype.drawCursor = function() {
     } else {
         this.cursor.visible = false;
     }
-}
+};
 
 PIXI_UI.TextInput.prototype.redraw = function()
 {
@@ -266,7 +266,7 @@ PIXI_UI.TextInput.prototype.onMouseUp = function(e) {
     if(!(this.selectionStart >= 0 && clickPos !== this.selectionStart))
     {
         this.cursorPos = clickPos;
-        this.updateSelection(this.cursorPos, this.cursorPos)
+        this.updateSelection(this.cursorPos, this.cursorPos);
     }
 
     this.selectionStart = -1;

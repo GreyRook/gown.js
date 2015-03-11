@@ -60,10 +60,9 @@ PIXI_UI.InputControl.prototype.onKeyDown = function() {
  *
  * @method clickPos
  * @param x
- * @param y
  * @returns {Number}
  */
-PIXI_UI.InputControl.prototype.clickPos = function(x, y)
+PIXI_UI.InputControl.prototype.clickPos = function(x)
 {
 
     var text = this.pixiText,
@@ -98,7 +97,7 @@ PIXI_UI.InputControl.prototype.textWidth = function(text) {
     if(!this.text._isBitmapFont)
     {
         var ctx = this.pixiText.context;
-        return ctx.measureText(text || "").width;
+        return ctx.measureText(text || '').width;
     }
     else
     {
@@ -171,7 +170,7 @@ Object.defineProperty(PIXI_UI.InputControl.prototype, 'hasFocus', {
     }
 });
 
-PIXI_UI.InputControl.prototype.onMouseUpOutside = function(e) {
+PIXI_UI.InputControl.prototype.onMouseUpOutside = function() {
     if(this.hasFocus && !this._mouseDown)
     {
         this.blur();

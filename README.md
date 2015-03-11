@@ -100,3 +100,4 @@ This list is not ordered by priority nor does it contain any promise that those 
  - Drag-and-Drop
  - Gestue helper (pitch-zoom)
  - better/more async testing
+ - evaluate cocoonjs support

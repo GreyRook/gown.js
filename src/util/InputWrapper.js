@@ -11,7 +11,7 @@
  * @class InputWrapper
  * @static
  */
-PIXI_UI.InputWrapper = function(text)
+PIXI_UI.InputWrapper = function()
 {
 };
 
@@ -89,11 +89,11 @@ PIXI_UI.InputWrapper.createInput = function()
 };
 
 /**
- * key to get text ("value" for default input field)
+ * key to get text ('value' for default input field)
  * @type {string}
  * @static
  */
-PIXI_UI.InputWrapper.textProp = "value"
+PIXI_UI.InputWrapper.textProp = 'value';
 
 /**
  * activate the text input
