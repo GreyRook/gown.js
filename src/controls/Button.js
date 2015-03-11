@@ -15,7 +15,6 @@ PIXI_UI.Button = function(theme) {
     PIXI_UI.Control.call(this, theme);
     this.handleEvent('up');
     var scope = this;
-    this.interactive = true;
     this.updateLabel = false; // label text changed
     this.touchstart = this.mousedown = function() {
         scope.handleEvent(PIXI_UI.Button.DOWN);
