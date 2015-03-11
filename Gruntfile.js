@@ -18,6 +18,7 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/shapes/Diamond.js',
             '<%= dirs.src %>/shapes/Rect.js',
             '<%= dirs.src %>/util/ScaleContainer.js',
+            '<%= dirs.src %>/util/InputWrapper.js',
             '<%= dirs.src %>/layout/ViewPortBounds.js',
             '<%= dirs.src %>/layout/Layout.js',
             '<%= dirs.src %>/layout/LayoutAlignment.js',
@@ -29,6 +30,7 @@ module.exports = function(grunt) {
 
             '<%= dirs.src %>/core/Control.js',
             '<%= dirs.src %>/controls/Button.js',
+            '<%= dirs.src %>/controls/InputControl.js',
             '<%= dirs.src %>/controls/TextInput.js',
             '<%= dirs.src %>/controls/ToggleButton.js',
             '<%= dirs.src %>/controls/LayoutGroup.js',
