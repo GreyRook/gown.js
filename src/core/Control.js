@@ -18,6 +18,7 @@ PIXI_UI.Control = function(theme) {
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
     this.invalidDimensions = true;
+    this.interactive = true;
 };
 
 PIXI_UI.Control.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
@@ -53,6 +54,16 @@ PIXI_UI.Control.prototype.setTheme = function(theme) {
 PIXI_UI.Control.prototype._renderWebGL = function(renderSession) {
     this.redraw();
     return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
+};
+
+/**
+ * get local mouse position from PIXI.InteractionData
+ *
+ * @method mousePos
+ * @returns {x: Number, y: Number}
+ */
+PIXI_UI.Control.prototype.mousePos = function(e) {
+    return e.getLocalPosition(e.target || this);
 };
 
 /**
