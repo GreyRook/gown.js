@@ -1,4 +1,8 @@
 /**
+ * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
+ * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
+ * and then execute an "onwheel"-callback)
+ *
  * enable or disable mouse wheel support for canvas (e.g. for scroller)
  * using HTML 5 scrolling. will do nothing if it is already activated/
  * deactivated
