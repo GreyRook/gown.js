@@ -42,7 +42,7 @@ PIXI_UI.ScrollThumb.prototype.showTrack = function(skin) {
 };
 
 PIXI_UI.ScrollThumb.prototype.redraw = function() {
-    this.redrawControl();
+    this.redrawSkinable();
     if (this.invalidTrack) {
         this.fromSkin(this.orientation+'_thumb', this.showTrack);
     }
