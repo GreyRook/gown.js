@@ -17,7 +17,7 @@ describe("object instances", function() {
 
     it("make sure all graphic elements are invalid after creation", function() {
         var elems = [
-            new PIXI_UI.Control(),
+            new PIXI_UI.Skinable(),
             new PIXI_UI.Button()
         ];
         for (var i = 0; i < elems.length; i++) {

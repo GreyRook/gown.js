@@ -11,12 +11,12 @@
 PIXI_UI.LayoutGroup = function() {
     this.percentWidth = this.percentWidth || null;
     this.percentHeight = this.percentHeight || null;
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI_UI.Control.call(this);
     this._viewPortBounds = new PIXI_UI.ViewPortBounds();
     this._needUpdate = true;
 };
 
-PIXI_UI.LayoutGroup.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI_UI.LayoutGroup.prototype = Object.create( PIXI_UI.Control.prototype );
 PIXI_UI.LayoutGroup.prototype.constructor = PIXI_UI.LayoutGroup;
 
 /**
@@ -42,32 +42,6 @@ PIXI_UI.LayoutGroup.prototype.redraw = function() {
         this._needUpdate = false;
         this.layout._needUpdate = false;
     }
-};
-
-/**
- * Renders the object using the WebGL renderer
- *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
- * @private
- */
-/* istanbul ignore next */
-PIXI_UI.LayoutGroup.prototype._renderWebGL = function(renderSession) {
-    this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
-};
-
-/**
- * Renders the object using the Canvas renderer
- *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
- * @private
- */
-/* istanbul ignore next */
-PIXI_UI.LayoutGroup.prototype._renderCanvas = function(renderSession) {
-    this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderCanvas.call(this, renderSession);
 };
 
 /* istanbul ignore next */

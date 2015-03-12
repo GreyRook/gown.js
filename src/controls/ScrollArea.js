@@ -11,7 +11,7 @@
  */
 PIXI_UI.ScrollArea = function(content, addListener, scrolldelta) {
     this.addListener = addListener || true;
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI_UI.Control.call(this);
     this.content = content || null;
     this.mask = undefined;
     this.enabled = true;
@@ -28,7 +28,7 @@ PIXI_UI.ScrollArea = function(content, addListener, scrolldelta) {
     this.touchmove = this.mousemove;
 };
 
-PIXI_UI.ScrollArea.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+PIXI_UI.ScrollArea.prototype = Object.create( PIXI_UI.Control.prototype );
 PIXI_UI.ScrollArea.prototype.constructor = PIXI_UI.ScrollArea;
 
 // scrolls horizontal as default, but will change if a

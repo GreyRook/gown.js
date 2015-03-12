@@ -12,7 +12,7 @@ PIXI_UI.ScrollBar = function(scrollArea, theme) {
         }
     }
 
-    PIXI_UI.Control.call(this, theme);
+    PIXI_UI.Skinable.call(this, theme);
 
     this.thumb = new PIXI_UI.ScrollThumb(this.orientation, theme);
     this.addChild(this.thumb);
@@ -46,7 +46,7 @@ PIXI_UI.ScrollBar = function(scrollArea, theme) {
     this.thumb.touchmove = this.thumb.mousemove;
 };
 
-PIXI_UI.ScrollBar.prototype = Object.create( PIXI_UI.Control.prototype );
+PIXI_UI.ScrollBar.prototype = Object.create( PIXI_UI.Skinable.prototype );
 PIXI_UI.ScrollBar.prototype.constructor = PIXI_UI.ScrollBar;
 
 PIXI_UI.ScrollBar.SKIN_NAME = 'scroll_bar';

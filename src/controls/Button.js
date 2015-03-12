@@ -12,7 +12,7 @@
 PIXI_UI.Button = function(theme) {
     this.skinName = this.skinName || PIXI_UI.Button.SKIN_NAME;
     this._validStates = this._validStates || PIXI_UI.Button.stateNames;
-    PIXI_UI.Control.call(this, theme);
+    PIXI_UI.Skinable.call(this, theme);
     this.handleEvent('up');
     var scope = this;
     this.updateLabel = false; // label text changed
@@ -30,7 +30,7 @@ PIXI_UI.Button = function(theme) {
     };
 };
 
-PIXI_UI.Button.prototype = Object.create( PIXI_UI.Control.prototype );
+PIXI_UI.Button.prototype = Object.create( PIXI_UI.Skinable.prototype );
 PIXI_UI.Button.prototype.constructor = PIXI_UI.Button;
 
 
@@ -200,6 +200,8 @@ PIXI_UI.Button.prototype.updateLabelDimensions = function () {
     }
 };
 
+PIXI_UI.Button.prototype.skinableSetTheme = PIXI_UI.Skinable.prototype.setTheme;
+
 /**
  * change the theme
  *
@@ -213,7 +215,7 @@ PIXI_UI.Button.prototype.setTheme = function(theme) {
             this.labelText.font !== this.theme.labelFont ||
             this.labelText.color !== this.theme.labelColor );
     }
-    PIXI_UI.Control.prototype.setTheme.call(this, theme);
+    this.skinableSetTheme(theme);
 };
 
 

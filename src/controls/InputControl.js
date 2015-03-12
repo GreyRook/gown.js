@@ -13,7 +13,7 @@
  * @constructor
  */
 PIXI_UI.InputControl = function(text, theme) {
-    PIXI_UI.Control.call(this, theme);
+    PIXI_UI.Skinable.call(this, theme);
     this.text = text || ' ';
     // create DOM Input (if we need one)
     PIXI_UI.InputWrapper.createInput();
@@ -37,7 +37,7 @@ PIXI_UI.InputControl = function(text, theme) {
     this._clipPos = [0, 0];
 };
 
-PIXI_UI.InputControl.prototype = Object.create( PIXI_UI.Control.prototype );
+PIXI_UI.InputControl.prototype = Object.create( PIXI_UI.Skinable.prototype );
 PIXI_UI.InputControl.prototype.constructor = PIXI_UI.InputControl;
 
 /**

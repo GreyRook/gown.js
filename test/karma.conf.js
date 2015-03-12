@@ -28,6 +28,7 @@ module.exports = function(config) {
             'src/layout/TiledColumnsLayout.js',
 
             'src/core/Control.js',
+            'src/core/Skinable.js',
             'src/controls/Button.js',
             'src/controls/ToggleButton.js',
             'src/controls/LayoutGroup.js',

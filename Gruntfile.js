@@ -29,6 +29,7 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/layout/TiledColumnsLayout.js',
 
             '<%= dirs.src %>/core/Control.js',
+            '<%= dirs.src %>/core/Skinable.js',
             '<%= dirs.src %>/controls/Button.js',
             '<%= dirs.src %>/controls/InputControl.js',
             '<%= dirs.src %>/controls/TextInput.js',
