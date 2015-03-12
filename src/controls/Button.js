@@ -157,7 +157,7 @@ PIXI_UI.Button.prototype.handleEvent = function(type) {
 };
 
 // performance increase to avoid using call.. (10x faster)
-PIXI_UI.Button.prototype.redrawControl = PIXI_UI.Control.prototype.redraw;
+PIXI_UI.Button.prototype.redrawSkinable = PIXI_UI.Skinable.prototype.redraw;
 
 /**
  * update before draw call (position label)
@@ -168,7 +168,7 @@ PIXI_UI.Button.prototype.redraw = function() {
     if (this.updateLabel) {
         this.createLabel();
     }
-    this.redrawControl();
+    this.redrawSkinable();
 };
 
 /**

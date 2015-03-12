@@ -13,7 +13,7 @@
 PIXI_UI.Control = function() {
     PIXI.DisplayObjectContainer.call(this);
     this.enabled = this.enabled !== false;
-    // invalidate state so the control will be redrawn next time
+    // assume all controls are interactive
     this.interactive = true;
 };
 
@@ -33,7 +33,7 @@ PIXI_UI.Control.prototype.setTheme = function(theme) {
         return;
     }
 
-    this.theme = theme || PIXI_UI.theme;
+    this.theme = theme;
     this.invalidSkin = true;
 };
 
@@ -84,6 +84,7 @@ PIXI_UI.Control.prototype.redraw = function() {
 
 /**
  * Enables/Disables the control.
+ * (not implemented yet)
  *
  * @property enabled
  * @type Boolean

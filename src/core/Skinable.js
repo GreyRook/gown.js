@@ -11,12 +11,13 @@
 PIXI_UI.Skinable = function (theme) {
     PIXI_UI.Control.call(this);
     this.skinCache = {};
-    this.setTheme(theme);
+    this.setTheme(theme || PIXI_UI.theme);
 
     if (this.theme === undefined) {
         throw new Error("you need to define a theme first");
     }
 
+    // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
     this.invalidDimensions = true;
 };
@@ -56,7 +57,6 @@ PIXI_UI.Skinable.prototype.changeState = function(skin) {
         this._currentSkin = skin;
 
     }
-    this.invalidSkin = true;
     this.invalidState = false;
 };
 
