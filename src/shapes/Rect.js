@@ -8,8 +8,8 @@
  * @constructor
  */
 
-PIXI_UI.Rect = function(color, width, height, radius) {
-    PIXI_UI.Shape.call(this, color, width, height);
+PIXI_UI.Rect = function(color, alpha, width, height, radius) {
+    PIXI_UI.Shape.call(this, color, alpha, width, height);
     this._radius = radius;
 };
 

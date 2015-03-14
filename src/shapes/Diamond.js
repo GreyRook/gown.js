@@ -7,8 +7,8 @@
  * @class Diamond
  * @constructor
  */
-PIXI_UI.Diamond = function(color, width, height) {
-    PIXI_UI.Shape.call(this, color, width, height);
+PIXI_UI.Diamond = function(color, alpha, width, height) {
+    PIXI_UI.Shape.call(this, color, alpha, width, height);
 };
 
 PIXI_UI.Diamond.prototype = Object.create( PIXI_UI.Shape.prototype );

@@ -7,12 +7,12 @@
  * @class Shape
  * @constructor
  */
-PIXI_UI.Shape = function(color, width, height) {
+PIXI_UI.Shape = function(color, alpha, width, height) {
     PIXI.Graphics.call(this);
     this._color = color;
     this._width = width;
     this._height = height;
-    this.alpha = 1;
+    this._alpha = alpha || 1.0;
     this.invalid = true;
 };
 

@@ -7,8 +7,8 @@
  * @class Ellipse
  * @constructor
  */
-PIXI_UI.Ellipse = function(color, width, height) {
-    PIXI_UI.Shape.call(this, color, width, height);
+PIXI_UI.Ellipse = function(color, alpha, width, height) {
+    PIXI_UI.Shape.call(this, color, alpha, width, height);
 };
 
 PIXI_UI.Ellipse.prototype = Object.create( PIXI_UI.Shape.prototype );
