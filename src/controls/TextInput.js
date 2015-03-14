@@ -75,30 +75,6 @@ PIXI_UI.TextInput.prototype.constructor = PIXI_UI.TextInput;
 // name of skin
 PIXI_UI.TextInput.SKIN_NAME = 'text_input';
 
-// define width
-Object.defineProperty(PIXI_UI.TextInput.prototype, 'width', {
-    get: function()
-    {
-        return this._width;
-    },
-    set: function(value)
-    {
-        this._width = value;
-    }
-});
-
-// define height
-Object.defineProperty(PIXI_UI.TextInput.prototype, 'height', {
-    get: function()
-    {
-        return this._height;
-    },
-    set: function(value)
-    {
-        this._height = value;
-    }
-});
-
 /**
  * set the text that is shown inside the input field
  *
@@ -180,6 +156,13 @@ PIXI_UI.TextInput.prototype.onKeyUp = function() {
 };
 
 /**
+ * position cursor on the text
+ */
+PIXI_UI.TextInput.prototype.setCursorPos = function() {
+    this.cursor.x = this.textWidth(this.text.substring(0, this.cursorPos)) | 0;
+};
+
+/**
  * draw the cursor
  *
  * @method drawCursor
@@ -196,7 +179,7 @@ PIXI_UI.TextInput.prototype.drawCursor = function() {
 
         // update cursor position
         if(this.cursor.visible && this._cursorNeedsUpdate) {
-            this.cursor.x = this.textWidth(this.text.substring(0, this.cursorPos)) | 0;
+            this.setCursorPos();
             this._cursorNeedsUpdate = false;
         }
     } else {
