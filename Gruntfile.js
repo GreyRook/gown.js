@@ -12,6 +12,7 @@ module.exports = function(grunt) {
     var srcFiles = [
             '<%= dirs.src %>/Intro.js',
             '<%= dirs.src %>/PixiUi.js',
+            '<%= dirs.src %>/util/position.js',
             '<%= dirs.src %>/skin/Theme.js',
             '<%= dirs.src %>/shapes/Shape.js',
             '<%= dirs.src %>/shapes/Ellipse.js',
