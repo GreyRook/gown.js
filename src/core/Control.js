@@ -89,11 +89,54 @@ PIXI_UI.Control.prototype.redraw = function() {
  * @property enabled
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.Control.prototype, "enabled", {
+Object.defineProperty(PIXI_UI.Control.prototype, 'enabled', {
     get: function() {
         return this._enabled;
     },
     set: function(value) {
         this._enabled = value;
+    }
+});
+
+
+//var originalWidth = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'width');
+
+/**
+ * The width of the shape, setting this will redraw the component.
+ * (set invalidDimensions)
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(PIXI_UI.Control.prototype, 'width', {
+    get: function() {
+        return this._width;
+        //return originalWidth.get.call(this);
+    },
+    set: function(width) {
+        this._width = width;
+        //originalWidth.set.call(this, width);
+        this.invalidDimensions = true;
+    }
+});
+
+//var originalHeight = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'height');
+
+/**
+ * The height of the shape, setting this will redraw the component.
+ * (set invalidDimensions)
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(PIXI_UI.Control.prototype, 'height', {
+    get: function() {
+        //return originalHeight.get.call(this);
+        return this._height;
+    },
+    set: function(height) {
+        //originalHeight.set.call(this, height);
+        this._height = height;
+        this.invalidDimensions = true;
     }
 });

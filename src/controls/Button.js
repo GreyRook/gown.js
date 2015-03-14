@@ -243,40 +243,6 @@ Object.defineProperty(PIXI_UI.Button.prototype, 'currentState',{
 });
 
 /**
- * The width of the shape, setting this will redraw the component.
- * (set invalidDimensions)
- *
- * @property width
- * @type Number
- */
-Object.defineProperty(PIXI_UI.Button.prototype, 'width', {
-    get: function() {
-        return this._width;
-    },
-    set: function(width) {
-        this._width = width;
-        this.invalidDimensions = true;
-    }
-});
-
-/**
- * The height of the shape, setting this will redraw the component.
- * (set invalidDimensions)
- *
- * @property height
- * @type Number
- */
-Object.defineProperty(PIXI_UI.Button.prototype, 'height', {
-    get: function() {
-        return this._height;
-    },
-    set: function(height) {
-        this._height = height;
-        this.invalidDimensions = true;
-    }
-});
-
-/**
  * Create/Update the label of the button.
  *
  * @property label
