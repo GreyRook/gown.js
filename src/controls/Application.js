@@ -48,9 +48,9 @@ PIXI_UI.Application.prototype.animate = function() {
     var stage = this._stage;
     var animate = function() {
         renderer.render(stage);
-        requestAnimFrame(animate);
+        requestAnimFrame(animate); // jshint ignore:line
     };
-    requestAnimFrame(animate);
+    requestAnimFrame(animate); // jshint ignore:line
 };
 
 /**
@@ -60,16 +60,16 @@ PIXI_UI.Application.prototype.animate = function() {
  * @private
  */
 PIXI_UI.Application.prototype._createGradientRect = function(width, height, gradient) {
-    var bg_canvas = document.createElement('canvas');
-    bg_canvas.width = width; bg_canvas.height = height;
-    var ctx = bg_canvas.getContext('2d');
+    var bgCanvas = document.createElement('canvas');
+    bgCanvas.width = width; bgCanvas.height = height;
+    var ctx = bgCanvas.getContext('2d');
     var linearGradient = ctx.createLinearGradient(0,0,0,height);
     for (var i = 0; i < gradient.length; i++) {
         linearGradient.addColorStop(i, gradient[i]);
     }
     ctx.fillStyle = linearGradient;
     ctx.fillRect(0,0,width,height);
-    return PIXI.Texture.fromCanvas(bg_canvas);
+    return PIXI.Texture.fromCanvas(bgCanvas);
 };
 
 PIXI_UI.Application.prototype.onresize = function() {
@@ -100,9 +100,9 @@ Object.defineProperty(PIXI_UI.Application.prototype, 'fullscreen', {
     },
     set: function(value) {
         if (this._fullscreen && !value) {
-            window.removeEventListener('resize')
+            window.removeEventListener('resize');
         } else if (!this._fullscreen && value) {
-            window.addEventListener('resize', this.onresize.bind(this))
+            window.addEventListener('resize', this.onresize.bind(this));
         }
         this._fullscreen = value;
     }
