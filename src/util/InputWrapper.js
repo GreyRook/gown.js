@@ -34,15 +34,15 @@ PIXI_UI.InputWrapper.createInput = function()
     if (!PIXI_UI.InputWrapper.hiddenInput) {
         var input = document.createElement('input');
         input.type = 'text';
-         input.tabindex = -1;
-         input.style.position = 'fixed';
-         input.style.opacity = 0;
-         input.style.pointerEvents = 'none';
-         input.style.left = '0px';
-         input.style.bottom = '0px';
-         input.style.left = '-100px';
-         input.style.top = '-100px';
-         input.style.zIndex = 10;
+        input.tabindex = -1;
+        input.style.position = 'fixed';
+        input.style.opacity = 0;
+        input.style.pointerEvents = 'none';
+        input.style.left = '0px';
+        input.style.bottom = '0px';
+        input.style.left = '-100px';
+        input.style.top = '-100px';
+        input.style.zIndex = 10;
 
         // add blur handler
         input.addEventListener('blur', function()
