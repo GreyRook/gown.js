@@ -36,7 +36,7 @@ PIXI_UI.LayoutGroup.prototype.redraw = function() {
         this._viewPortBounds.explicitHeight = this._height;
         dimensionChanged = true;
     }
-    if (this.layout !== null && this.layout !== undefined &&
+    if (this.layout &&
         (this._needUpdate || dimensionChanged || this.layout.needUpdate)) {
         this.layout.layout(this.children, this._viewPortBounds);
         this._needUpdate = false;
@@ -46,14 +46,27 @@ PIXI_UI.LayoutGroup.prototype.redraw = function() {
 
 /* istanbul ignore next */
 PIXI_UI.LayoutGroup.prototype.addChild = function(child) {
+    var re = PIXI_UI.Control.prototype.addChild.call(this, child);
     this._needUpdate = true;
-    return PIXI.DisplayObjectContainer.prototype.addChild.call(this, child);
+    return re;
 };
 
 /* istanbul ignore next */
 PIXI_UI.LayoutGroup.prototype.addChildAt = function(child, pos) {
+    var re = PIXI_UI.Control.prototype.addChildAt.call(this, child, pos);
     this._needUpdate = true;
-    return PIXI.DisplayObjectContainer.prototype.addChildAt.call(this, child, pos);
+    return re;
+};
+
+/**
+ * add some space between children
+ *
+ * @param space {Number}
+ */
+PIXI_UI.LayoutGroup.prototype.addSpacer = function(space) {
+    var spacer = new PIXI_UI.Control();
+    spacer.width = spacer.height = space;
+    this.addChild(spacer);
 };
 
 /**
