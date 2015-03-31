@@ -46,11 +46,13 @@ PIXI_UI.Application.prototype.constructor = PIXI_UI.Application;
 PIXI_UI.Application.prototype.animate = function() {
     var renderer = this._renderer;
     var stage = this._stage;
+    /* jshint ignore:start */
     var animate = function() {
         renderer.render(stage);
-        requestAnimFrame(animate); // jshint ignore:line
+        requestAnimFrame(animate);
     };
-    requestAnimFrame(animate); // jshint ignore:line
+    requestAnimFrame(animate);
+    /* jshint ignore:end */
 };
 
 /**
