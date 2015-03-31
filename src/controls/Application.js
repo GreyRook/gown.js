@@ -27,8 +27,10 @@ PIXI_UI.Application = function (background, fullscreen, renderer, stage) {
         renderer = PIXI.autoDetectRenderer(width, height);
         document.body.appendChild(renderer.view);
     }
+    /* jshint ignore:start */
     this._stage = stage;
     this._renderer = renderer;
+    /* jshint ignore:end */
     this._width = renderer.width;
     this._height = renderer.height;
 
