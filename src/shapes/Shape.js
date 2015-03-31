@@ -10,9 +10,9 @@
 PIXI_UI.Shape = function(color, alpha, width, height) {
     PIXI.Graphics.call(this);
     this._color = color;
+    this._alpha = alpha || 1.0;
     this._width = width;
     this._height = height;
-    this._alpha = alpha || 1.0;
     this.invalid = true;
 };
 
