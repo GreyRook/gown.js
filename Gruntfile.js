@@ -17,6 +17,7 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/shapes/Shape.js',
             '<%= dirs.src %>/shapes/Ellipse.js',
             '<%= dirs.src %>/shapes/Diamond.js',
+            '<%= dirs.src %>/shapes/Line.js',
             '<%= dirs.src %>/shapes/Rect.js',
             '<%= dirs.src %>/util/ScaleContainer.js',
             '<%= dirs.src %>/util/InputWrapper.js',
