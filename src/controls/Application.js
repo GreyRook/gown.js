@@ -27,8 +27,10 @@ PIXI_UI.Application = function (background, fullscreen, renderer, stage) {
         renderer = PIXI.autoDetectRenderer(width, height);
         document.body.appendChild(renderer.view);
     }
+    /* jshint ignore:start */
     this._stage = stage;
     this._renderer = renderer;
+    /* jshint ignore:end */
     this._width = renderer.width;
     this._height = renderer.height;
 
@@ -43,19 +45,17 @@ PIXI_UI.Application = function (background, fullscreen, renderer, stage) {
 PIXI_UI.Application.prototype = Object.create( PIXI_UI.Control.prototype );
 PIXI_UI.Application.prototype.constructor = PIXI_UI.Application;
 
+/* jshint ignore:start */
 PIXI_UI.Application.prototype.animate = function() {
     var renderer = this._renderer;
     var stage = this._stage;
     var animate = function() {
         renderer.render(stage);
-        /* jshint ignore:start */
         requestAnimFrame(animate);
-        /* jshint ignore:end */
     };
-    /* jshint ignore:start */
     requestAnimFrame(animate);
-    /* jshint ignore:end */
 };
+/* jshint ignore:end */
 
 /**
  * creates a gradient rect that can be used as background
