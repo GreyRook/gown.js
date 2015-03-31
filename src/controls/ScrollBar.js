@@ -125,9 +125,9 @@ PIXI_UI.ScrollBar.prototype.moveThumb = function(x, y) {
         x = Math.min(x, this.width - this.thumb.width);
         x = Math.max(x, 0);
         if (x !== this.thumb.x) {
-            if (this.progress_skin) {
-                this.progress_skin.width = x;
-                this.progress_skin.height = this.skin.height;
+            if (this.progressSkin) {
+                this.progressSkin.width = x;
+                this.progressSkin.height = this.skin.height;
             }
             this.thumb.x = x;
             return true;
@@ -137,9 +137,9 @@ PIXI_UI.ScrollBar.prototype.moveThumb = function(x, y) {
         y = Math.max(y, 0);
         if (y !== this.thumb.y) {
             this.thumb.y = y;
-            if (this.progress_skin) {
-                this.progress_skin.height = y;
-                this.progress_skin.width = this.skin.width;
+            if (this.progressSkin) {
+                this.progressSkin.height = y;
+                this.progressSkin.width = this.skin.width;
             }
             return true;
         }
@@ -159,19 +159,19 @@ PIXI_UI.ScrollBar.prototype.showTrack = function(skin) {
 };
 
 PIXI_UI.ScrollBar.prototype.showProgress = function(skin) {
-    if (this.progress_skin !== skin) {
-        if(this.progress_skin) {
-            this.removeChild(this.progress_skin);
+    if (this.progressSkin !== skin) {
+        if(this.progressSkin) {
+            this.removeChild(this.progressSkin);
         }
         skin.width = skin.height = 0;
         this.addChildAt(skin, 1);
-        this.progress_skin = skin;
+        this.progressSkin = skin;
     }
 };
 
 PIXI_UI.ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
-        this.fromSkin("horizontal_progress", this.showProgress);
+        this.fromSkin('horizontal_progress', this.showProgress);
         this.fromSkin(this.orientation+'_track', this.showTrack);
         if (this.scrollArea) {
             if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {

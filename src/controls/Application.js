@@ -61,7 +61,8 @@ PIXI_UI.Application.prototype.animate = function() {
  */
 PIXI_UI.Application.prototype._createGradientRect = function(width, height, gradient) {
     var bgCanvas = document.createElement('canvas');
-    bgCanvas.width = width; bgCanvas.height = height;
+    bgCanvas.width = width;
+    bgCanvas.height = height;
     var ctx = bgCanvas.getContext('2d');
     var linearGradient = ctx.createLinearGradient(0,0,0,height);
     for (var i = 0; i < gradient.length; i++) {
