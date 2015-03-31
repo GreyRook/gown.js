@@ -1,3 +1,7 @@
+/**
+ * authors: Björn Friedrichs, Andreas Bresser
+ */
+
 PIXI_UI.ScrollThumb = function(orientation, theme) {
     this.orientation = orientation || PIXI_UI.ScrollBar.HORIZONTAL;
     this.skinName = this.skinName || PIXI_UI.ScrollThumb.SKIN_NAME;
@@ -22,7 +26,6 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(PIXI_UI.Button.protot
 Object.defineProperty(PIXI_UI.ScrollThumb.prototype, 'currentState',{
     set: function(value) {
         value = this.orientation + '_' + value;
-
         originalCurrentState.set.call(this, value);
     }
 });

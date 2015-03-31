@@ -110,6 +110,21 @@
         stage.addChild(grp);
         grp.y = 100;
         requestAnimFrame(animate);
+        
+        var progress_theme = new PIXI_UI.AeonTheme(
+                ["../../themes/assets/aeon/aeon_desktop.json"]);
+        progress_theme.loadComplete();
+        progress_theme.setSkin(
+                PIXI_UI.ScrollBar.SKIN_NAME, 
+                "horizontal_progress",
+                function () {
+                    return new PIXI_UI.Rect(0xff0000, 1.0, 20, 20);
+                }
+            );
+        var other_scrollbar = new PIXI_UI.ScrollBar(null, progress_theme);
+        stage.addChild(other_scrollbar);
+        other_scrollbar.y = other_scrollbar.x = 200;
+        other_scrollbar.width = 200;
     }
 
     var theme = new PIXI_UI.AeonTheme(

@@ -1,3 +1,7 @@
+/**
+ * authors: Björn Friedrichs, Andreas Bresser
+ */
+
 PIXI_UI.ScrollBar = function(scrollArea, theme) {
     this.scrollArea = scrollArea;
     this.skinName = this.skinName || PIXI_UI.ScrollBar.SKIN_NAME;
@@ -15,6 +19,8 @@ PIXI_UI.ScrollBar = function(scrollArea, theme) {
     PIXI_UI.Skinable.call(this, theme);
 
     this.thumb = new PIXI_UI.ScrollThumb(this.orientation, theme);
+    this.thumb.width = 20;
+    this.thumb.height = 20;
     this.addChild(this.thumb);
 
     var scope = this;
@@ -119,6 +125,10 @@ PIXI_UI.ScrollBar.prototype.moveThumb = function(x, y) {
         x = Math.min(x, this.width - this.thumb.width);
         x = Math.max(x, 0);
         if (x !== this.thumb.x) {
+            if (this.progress_skin) {
+                this.progress_skin.width = x;
+                this.progress_skin.height = this.skin.height;
+            }
             this.thumb.x = x;
             return true;
         }
@@ -127,6 +137,10 @@ PIXI_UI.ScrollBar.prototype.moveThumb = function(x, y) {
         y = Math.max(y, 0);
         if (y !== this.thumb.y) {
             this.thumb.y = y;
+            if (this.progress_skin) {
+                this.progress_skin.height = y;
+                this.progress_skin.width = this.skin.width;
+            }
             return true;
         }
     }
@@ -144,10 +158,21 @@ PIXI_UI.ScrollBar.prototype.showTrack = function(skin) {
     }
 };
 
+PIXI_UI.ScrollBar.prototype.showProgress = function(skin) {
+    if (this.progress_skin !== skin) {
+        if(this.progress_skin) {
+            this.removeChild(this.progress_skin);
+        }
+        skin.width = skin.height = 0;
+        this.addChildAt(skin, 1);
+        this.progress_skin = skin;
+    }
+};
+
 PIXI_UI.ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
+        this.fromSkin("horizontal_progress", this.showProgress);
         this.fromSkin(this.orientation+'_track', this.showTrack);
-        this.thumb.width = this.thumb.height = 20;
         if (this.scrollArea) {
             if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
                 this.thumb.width = Math.max(20, this.scrollArea.width / (this.scrollArea.content.width / this.scrollArea.width));
@@ -155,7 +180,6 @@ PIXI_UI.ScrollBar.prototype.redraw = function() {
                 this.thumb.height = Math.max(20, this.scrollArea.height / (this.scrollArea.content.height / this.scrollArea.height));
             }
         }
-        this.skin.width = this.skin.height = 20;
         if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
             this.skin.width = this.width;
         } else {
