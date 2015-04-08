@@ -173,20 +173,21 @@ PIXI_UI.ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
         this.fromSkin('horizontal_progress', this.showProgress);
         this.fromSkin(this.orientation+'_track', this.showTrack);
-        if (this.scrollArea) {
+        if (this.scrollArea && this.thumb) {
             if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
                 this.thumb.width = Math.max(20, this.scrollArea.width / (this.scrollArea.content.width / this.scrollArea.width));
             } else {
                 this.thumb.height = Math.max(20, this.scrollArea.height / (this.scrollArea.content.height / this.scrollArea.height));
             }
         }
-        if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
-            this.skin.width = this.width;
-        } else {
-            this.skin.height = this.height;
+        if (this.skin) {
+            if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
+                this.skin.width = this.width;
+            } else {
+                this.skin.height = this.height;
+            }
+            this.invalidTrack = false;
         }
-
-        this.invalidTrack = false;
     }
 };
 
