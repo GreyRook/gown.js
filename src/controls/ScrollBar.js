@@ -44,6 +44,7 @@ PIXI_UI.ScrollBar = function(scrollArea, theme) {
     */
 
     this.invalidTrack = true;
+    this._inverse = false;
     this._start = null;
 
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
@@ -113,6 +114,32 @@ PIXI_UI.ScrollBar.prototype.handleWheel = function (event) {
     }
 };
 
+
+PIXI_UI.ScrollBar.prototype._updateProgressSkin = function() {
+    if (!this.progressSkin) {
+        return;
+    }
+    if(this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
+        if (this.inverse) {
+            this.progressSkin.x = this.thumb.x + this.thumb.width / 2;
+            this.progressSkin.width = this.width - this.thumb.x;
+            this.progressSkin.height = this.skin.height;
+        } else {
+            this.progressSkin.width = this.thumb.x + this.thumb.width / 2;
+            this.progressSkin.height = this.skin.height;
+        }
+    } else {
+        if (this.inverse) {
+            this.progressSkin.y = this.thumb.y + this.thumb.height / 2;
+            this.progressSkin.height = this.height - this.thumb.y;
+            this.progressSkin.width = this.skin.width;
+        } else {
+            this.progressSkin.height = this.thumb.y + this.thumb.height / 2;
+            this.progressSkin.width = this.skin.width;
+        }
+    }
+};
+
 /**
  * move the thumb on the scroll bar within its bounds
  * @param x new calculated x position of the thumb
@@ -125,11 +152,8 @@ PIXI_UI.ScrollBar.prototype.moveThumb = function(x, y) {
         x = Math.min(x, this.width - this.thumb.width);
         x = Math.max(x, 0);
         if (x !== this.thumb.x) {
-            if (this.progressSkin) {
-                this.progressSkin.width = x;
-                this.progressSkin.height = this.skin.height;
-            }
             this.thumb.x = x;
+            this._updateProgressSkin();
             return true;
         }
     } else {
@@ -137,10 +161,7 @@ PIXI_UI.ScrollBar.prototype.moveThumb = function(x, y) {
         y = Math.max(y, 0);
         if (y !== this.thumb.y) {
             this.thumb.y = y;
-            if (this.progressSkin) {
-                this.progressSkin.height = y;
-                this.progressSkin.width = this.skin.width;
-            }
+            this._updateProgressSkin();
             return true;
         }
     }
@@ -155,6 +176,9 @@ PIXI_UI.ScrollBar.prototype.showTrack = function(skin) {
 
         this.addChildAt(skin, 0);
         this.skin = skin;
+        if (this.progressSkin) {
+            this._updateProgressSkin();
+        }
     }
 };
 
@@ -164,14 +188,17 @@ PIXI_UI.ScrollBar.prototype.showProgress = function(skin) {
             this.removeChild(this.progressSkin);
         }
         skin.width = skin.height = 0;
-        this.addChildAt(skin, 1);
+        this.addChildAt(skin, 0);
         this.progressSkin = skin;
+        if (this.skin) {
+            this._updateProgressSkin();
+        }
     }
 };
 
 PIXI_UI.ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
-        this.fromSkin('horizontal_progress', this.showProgress);
+        this.fromSkin(this.orientation+'_progress', this.showProgress);
         this.fromSkin(this.orientation+'_track', this.showTrack);
         if (this.scrollArea && this.thumb) {
             if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
@@ -208,6 +235,34 @@ Object.defineProperty(PIXI_UI.ScrollBar.prototype, 'width', {
         this.invalidTrack = true;
         if (this.thumb) {
             this.thumb.invalidTrack = true;
+        }
+    }
+});
+
+/**
+ * Inverse the progress bar
+ *
+ * @property inverse
+ * @type Boolean
+ */
+Object.defineProperty(PIXI_UI.ScrollBar.prototype, 'inverse', {
+    get: function() {
+        return this._inverse;
+    },
+    set: function(inverse) {
+        if (inverse !== this._inverse) {
+            this._inverse = inverse;
+
+            if (this.orientation === PIXI_UI.ScrollBar.HORIZONTAL) {
+                this.moveThumb(0, this.width - this.thumb.x);
+            } else {
+                this.moveThumb(0, this.height - this.thumb.y);
+            }
+
+            this.invalidTrack = true;
+            if (this.thumb) {
+                this.thumb.invalidTrack = true;
+            }
         }
     }
 });
