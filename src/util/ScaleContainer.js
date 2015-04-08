@@ -18,7 +18,7 @@ PIXI_UI.ScaleContainer = function(texture, rect) {
 
     this._width = this.frame.width;
     this._height = this.frame.height;
-    
+
     // left / middle / right width
     var lw = rect.x;
     var mw = rect.width;
@@ -30,34 +30,52 @@ PIXI_UI.ScaleContainer = function(texture, rect) {
     var bh = this.frame.height - (ch + th);
 
     // top
-    this.tl = this._getTexture(0, 0, lw, th);
-    this.tm = this._getTexture(lw, 0, mw, th);
-    this.tr = this._getTexture(lw+mw, 0, rw, th);
+    if (lw > 0 && th > 0) {
+        this.tl = this._getTexture(0, 0, lw, th);
+        this.addChild(this.tl);
+    }
+    if (mw > 0 && th > 0) {
+        this.tm = this._getTexture(lw, 0, mw, th);
+        this.addChild(this.tm);
+        this.tm.x = lw;
+    }
+    if (rw > 0 && th > 0) {
+        this.tr = this._getTexture(lw + mw, 0, rw, th);
+        this.addChild(this.tr);
+    }
 
     // center
-    this.cl = this._getTexture(0, th, lw, ch);
-    this.cm = this._getTexture(lw, th, mw, ch);
-    this.cr = this._getTexture(lw+mw, th, rw, ch);
+    if (lw > 0 && ch > 0) {
+        this.cl = this._getTexture(0, th, lw, ch);
+        this.addChild(this.cl);
+        this.cl.y = th;
+    }
+    if (mw > 0 && ch > 0) {
+        this.cm = this._getTexture(lw, th, mw, ch);
+        this.addChild(this.cm);
+        this.cm.y = th;
+        this.cm.x = lw;
+    }
+    if (rw > 0 && ch > 0) {
+        this.cr = this._getTexture(lw + mw, th, rw, ch);
+        this.addChild(this.cr);
+        this.cr.y = th;
+    }
 
     // bottom
-    this.bl = this._getTexture(0, th+ch, lw, bh);
-    this.bm = this._getTexture(lw, th+ch, mw, bh);
-    this.br = this._getTexture(lw+mw, th+ch, rw, bh);
-
-    this.cl.y = this.cm.y = this.cr.y = th;
-    this.tm.x = this.cm.x = this.bm.x = lw;
-
-    this.addChild(this.tl);
-    this.addChild(this.tm);
-    this.addChild(this.tr);
-
-    this.addChild(this.cl);
-    this.addChild(this.cm);
-    this.addChild(this.cr);
-
-    this.addChild(this.bl);
-    this.addChild(this.bm);
-    this.addChild(this.br);
+    if (lw > 0 && bh > 0) {
+        this.bl = this._getTexture(0, th + ch, lw, bh);
+        this.addChild(this.bl);
+    }
+    if (mw > 0 && bh > 0) {
+        this.bm = this._getTexture(lw, th + ch, mw, bh);
+        this.addChild(this.bm);
+        this.bm.x = lw;
+    }
+    if (rw > 0 && bh > 0) {
+        this.br = this._getTexture(lw + mw, th + ch, rw, bh);
+        this.addChild(this.br);
+    }
 };
 
 // constructor
@@ -141,11 +159,42 @@ PIXI_UI.ScaleContainer.prototype._positionTilable = function() {
     var ch = this.rect.height;
     var bh = this.frame.height - (ch + th);
 
-    this.cr.x = this.br.x = this.tr.x = this._width - rw;
-    this.cm.width = this.bm.width = this.tm.width = this._width - (lw + rw);
+    var rightX = this._width - rw;
+    var bottomY = this._height - bh;
+    if (this.cr) {
+        this.cr.x = rightX;
+    }
+    if (this.br) {
+        this.br.x = rightX;
+        this.br.y = bottomY;
+    }
+    if (this.tr) {
+        this.tr.x = rightX;
+    }
 
-    this.cl.height = this.cm.height = this.cr.height = this._height - (th + bh);
-    this.br.y = this.bm.y = this.bl.y = this._height - bh;
+    var middleWidth = this._width - (lw + rw);
+    var centerHeight = this._height - (th + bh);
+    if (this.cm) {
+        this.cm.width = middleWidth;
+        this.cm.height = centerHeight;
+    }
+    if (this.bm) {
+        this.bm.width = middleWidth;
+        this.bm.y = bottomY;
+    }
+    if (this.tm) {
+        this.tm.width = middleWidth;
+    }
+    if (this.cl) {
+        this.cl.height = centerHeight;
+    }
+    if (this.cr) {
+        this.cr.height = centerHeight;
+    }
+
+    if (this.bl) {
+        this.bl.y = bottomY;
+    }
 };
 
 /**
