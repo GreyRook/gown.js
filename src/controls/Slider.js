@@ -10,7 +10,7 @@ PIXI_UI.Slider = function(theme) {
     this.step = this.step || 0; //TODO: implement me!
     this.page = this.page || 10;
     this._value = this.minimum;
-    this.valueChanged = null;
+    this.change = null;
 
     PIXI_UI.Scrollable.call(this, theme);
 };
@@ -34,7 +34,8 @@ PIXI_UI.Slider.prototype.thumbMoved = function(x, y) {
         max = this.height - this.thumb.height;
         value = y;
     }
-    this.value = value / max * (this.maximum - this.minimum) + this.minimum;
+    value = value / max * (this.maximum - this.minimum) + this.minimum;
+    this.value = value;
 };
 
 /**
@@ -45,6 +46,8 @@ Object.defineProperty(PIXI_UI.Slider.prototype, 'value', {
         return this._value;
     },
     set: function(value) {
+        value = Math.min(value, this.maximum);
+        value = Math.max(value, this.minimum);
         this._value = value;
         if (this.change) {
             var sliderData = new PIXI_UI.SliderData();
