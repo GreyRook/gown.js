@@ -40,6 +40,7 @@
 
     <script src="../../src/controls/Scrollable.js"></script>
     <script src="../../src/controls/ScrollBar.js"></script>
+    <script src="../../src/util/SliderData.js"></script>
     <script src="../../src/controls/Slider.js"></script>
     <script src="../../src/controls/ScrollArea.js"></script>
     <script src="../../src/controls/ScrollThumb.js"></script>
@@ -73,9 +74,9 @@
         );
 
         var slider = new PIXI_UI.Slider(progress_theme);
-        slider.change = function(value) {
-            txt.setText(value);
-            console.log(value);
+        slider.change = function(sliderData) {
+            txt.setText(sliderData.value);
+            console.log(sliderData.value);
         };
         slider.width = 300;
         slider.minimum = 0;

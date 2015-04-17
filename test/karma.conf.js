@@ -33,6 +33,7 @@ module.exports = function(config) {
             'src/controls/ToggleButton.js',
             'src/controls/LayoutGroup.js',
 
+            'src/util/SliderData.js',
             'src/controls/ScrollArea.js',
             'src/controls/ScrollThumb.js',
             'src/controls/Scrollable.js',

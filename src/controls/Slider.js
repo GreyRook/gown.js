@@ -47,7 +47,10 @@ Object.defineProperty(PIXI_UI.Slider.prototype, 'value', {
     set: function(value) {
         this._value = value;
         if (this.change) {
-            this.change(this._value);
+            var sliderData = new PIXI_UI.SliderData();
+            sliderData.value = this._value;
+            sliderData.target = this;
+            this.change(sliderData);
         }
     }
 });

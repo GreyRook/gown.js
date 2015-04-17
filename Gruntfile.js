@@ -39,6 +39,7 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/controls/ToggleButton.js',
             '<%= dirs.src %>/controls/LayoutGroup.js',
 
+            '<%= dirs.src %>/util/SliderData.js',
             '<%= dirs.src %>/controls/ScrollArea.js',
             '<%= dirs.src %>/controls/ScrollThumb.js',
             '<%= dirs.src %>/controls/Scrollable.js',
