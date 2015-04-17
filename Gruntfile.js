@@ -40,8 +40,10 @@ module.exports = function(grunt) {
             '<%= dirs.src %>/controls/LayoutGroup.js',
 
             '<%= dirs.src %>/controls/ScrollArea.js',
-            '<%= dirs.src %>/controls/ScrollBar.js',
             '<%= dirs.src %>/controls/ScrollThumb.js',
+            '<%= dirs.src %>/controls/Scrollable.js',
+            '<%= dirs.src %>/controls/Slider.js',
+            '<%= dirs.src %>/controls/ScrollBar.js',
             '<%= dirs.src %>/Outro.js'
         ],
         banner = [

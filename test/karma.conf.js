@@ -34,8 +34,10 @@ module.exports = function(config) {
             'src/controls/LayoutGroup.js',
 
             'src/controls/ScrollArea.js',
-            'src/controls/ScrollBar.js',
             'src/controls/ScrollThumb.js',
+            'src/controls/Scrollable.js',
+            'src/controls/Slider.js',
+            'src/controls/ScrollBar.js',
             'src/Outro.js',
 
             'themes/*.js',

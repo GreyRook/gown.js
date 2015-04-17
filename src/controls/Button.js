@@ -14,25 +14,16 @@ PIXI_UI.Button = function(theme) {
     this._validStates = this._validStates || PIXI_UI.Button.stateNames;
     PIXI_UI.Skinable.call(this, theme);
     this.handleEvent('up');
-    var scope = this;
+
     this.updateLabel = false; // label text changed
-    this.touchstart = this.mousedown = function() {
-        scope.handleEvent(PIXI_UI.Button.DOWN);
-    };
-    this.touchend = this.mouseupoutside = this.mouseup = function() {
-        scope.handleEvent(PIXI_UI.Button.UP);
-    };
-    this.mouseover = function() {
-        scope.handleEvent(PIXI_UI.Button.HOVER);
-    };
-    this.mouseout = this.touchendoutside = function() {
-        scope.handleEvent('out');
-    };
+
+    this.touchstart = this.mousedown;
+    this.touchend = this.mouseupoutside = this.mouseup;
+    this.touchendoutside = this.mouseout;
 };
 
 PIXI_UI.Button.prototype = Object.create( PIXI_UI.Skinable.prototype );
 PIXI_UI.Button.prototype.constructor = PIXI_UI.Button;
-
 
 // name of skin that will be applied
 PIXI_UI.Button.SKIN_NAME = 'button';
@@ -98,6 +89,26 @@ PIXI_UI.Button.prototype.preloadSkins = function() {
         }
     }
 };
+
+PIXI_UI.Button.prototype.mousedown = function() {
+    this.handleEvent(PIXI_UI.Button.DOWN);
+};
+
+PIXI_UI.Button.prototype.mouseup = function() {
+    this.handleEvent(PIXI_UI.Button.UP);
+};
+
+PIXI_UI.Button.prototype.mousemove = function() {
+};
+
+PIXI_UI.Button.prototype.mouseover = function() {
+    this.handleEvent(PIXI_UI.Button.HOVER);
+};
+
+PIXI_UI.Button.prototype.mouseout = function() {
+    this.handleEvent('out');
+};
+
 
 /**
  * update width/height of the button
