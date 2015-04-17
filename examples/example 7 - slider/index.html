@@ -73,7 +73,7 @@
         );
 
         var slider = new PIXI_UI.Slider(progress_theme);
-        slider.valueChanged = function(value) {
+        slider.change = function(value) {
             txt.setText(value);
             console.log(value);
         };

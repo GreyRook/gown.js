@@ -7,8 +7,7 @@ PIXI_UI.Slider = function(theme) {
 
     this.minimum = this.minimum || 0;
     this.maximum = this.maximum || 100;
-    this.step = this.step || 0;
-    this.step = 10;
+    this.step = this.step || 0; //TODO: implement me!
     this.page = this.page || 10;
     this._value = this.minimum;
     this.valueChanged = null;
@@ -47,8 +46,8 @@ Object.defineProperty(PIXI_UI.Slider.prototype, 'value', {
     },
     set: function(value) {
         this._value = value;
-        if (this.valueChanged) {
-            this.valueChanged(this._value);
+        if (this.change) {
+            this.change(this._value);
         }
     }
 });
