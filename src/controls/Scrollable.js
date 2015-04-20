@@ -109,6 +109,9 @@ PIXI_UI.Scrollable.prototype._updateProgressSkin = function() {
  */
 PIXI_UI.Scrollable.prototype.moveThumb = function(x, y) {
     if(this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+        if (isNaN(x)) {
+            return false;
+        }
         x = Math.min(x, this.width - this.thumb.width);
         x = Math.max(x, 0);
         if (x !== this.thumb.x) {
@@ -117,6 +120,9 @@ PIXI_UI.Scrollable.prototype.moveThumb = function(x, y) {
             return true;
         }
     } else {
+        if (isNaN(y)) {
+            return false;
+        }
         y = Math.min(y, this.height - this.thumb.height);
         y = Math.max(y, 0);
         if (y !== this.thumb.y) {
