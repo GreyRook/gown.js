@@ -85,6 +85,7 @@ PIXI_UI.Scrollable.prototype._updateProgressSkin = function() {
             this.progressSkin.width = this.width - this.thumb.x;
             this.progressSkin.height = this.skin.height;
         } else {
+            this.progressSkin.x = 0;
             this.progressSkin.width = this.thumb.x + this.thumb.width / 2;
             this.progressSkin.height = this.skin.height;
         }
@@ -94,6 +95,7 @@ PIXI_UI.Scrollable.prototype._updateProgressSkin = function() {
             this.progressSkin.height = this.height - this.thumb.y;
             this.progressSkin.width = this.skin.width;
         } else {
+            this.progressSkin.y = 0;
             this.progressSkin.height = this.thumb.y + this.thumb.height / 2;
             this.progressSkin.width = this.skin.width;
         }
