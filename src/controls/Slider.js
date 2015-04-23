@@ -54,6 +54,9 @@ Object.defineProperty(PIXI_UI.Slider.prototype, 'value', {
         return this._value;
     },
     set: function(value) {
+        if (isNaN(value)) {
+            return;
+        }
         value = Math.min(value, this.maximum);
         value = Math.max(value, this.minimum);
         this._value = value;
