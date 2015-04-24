@@ -2,14 +2,14 @@
  * scroll bar or slider
  */
 
-PIXI_UI.Scrollable = function(theme) {
+PIXI_UI.Scrollable = function(thumb, theme) {
     this.mode = this.mode || PIXI_UI.Scrollable.DESKTOP_MODE;
 
     PIXI_UI.Skinable.call(this, theme);
 
     this.orientation = this.orientation || PIXI_UI.Scrollable.HORIZONTAL;
 
-    this.thumb = new PIXI_UI.ScrollThumb(this, theme);
+    this.thumb = thumb || new PIXI_UI.ScrollThumb(this, theme);
     this.addChild(this.thumb);
 
     this.invalidTrack = true;

@@ -2,7 +2,7 @@
  * authors: Björn Friedrichs, Andreas Bresser
  */
 
-PIXI_UI.Slider = function(theme) {
+PIXI_UI.Slider = function(thumb, theme) {
     this.skinName = this.skinName || PIXI_UI.Slider.SKIN_NAME;
 
     this._minimum = this._minimum || 0;
@@ -12,7 +12,7 @@ PIXI_UI.Slider = function(theme) {
     this._value = this.minimum;
     this.change = null;
 
-    PIXI_UI.Scrollable.call(this, theme);
+    PIXI_UI.Scrollable.call(this, thumb, theme);
 };
 
 PIXI_UI.Slider.prototype = Object.create( PIXI_UI.Scrollable.prototype );

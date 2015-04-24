@@ -2,7 +2,7 @@
  * authors: Björn Friedrichs, Andreas Bresser
  */
 
-PIXI_UI.ScrollBar = function(scrollArea, theme) {
+PIXI_UI.ScrollBar = function(scrollArea, thumb, theme) {
     this.scrollArea = scrollArea;
     this.skinName = this.skinName || PIXI_UI.ScrollBar.SKIN_NAME;
 
@@ -14,7 +14,7 @@ PIXI_UI.ScrollBar = function(scrollArea, theme) {
             this.orientation = PIXI_UI.Scrollable.VERTICAL;
         }
     }
-    PIXI_UI.Scrollable.call(this, theme);
+    PIXI_UI.Scrollable.call(this, thumb, theme);
 };
 
 PIXI_UI.ScrollBar.prototype = Object.create( PIXI_UI.Scrollable.prototype );
