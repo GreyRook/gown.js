@@ -105,6 +105,22 @@ PIXI_UI.Scrollable.prototype._updateProgressSkin = function() {
 };
 
 /**
+ * returns the max. width in pixel
+ * (normally this.width - thumb width)
+ */
+PIXI_UI.Scrollable.prototype.maxWidth = function() {
+    return this.width - this.thumb.width;
+};
+
+/**
+ * returns the max. height in pixel
+ * (normally this.height - thumb height)
+ */
+PIXI_UI.Scrollable.prototype.maxHeight = function() {
+    return this.height - this.thumb.height;
+};
+
+/**
  * move the thumb on the scroll bar within its bounds
  * @param x new calculated x position of the thumb
  * @param y new calculated y position of the thumb
@@ -116,7 +132,7 @@ PIXI_UI.Scrollable.prototype.moveThumb = function(x, y) {
         if (isNaN(x)) {
             return false;
         }
-        x = Math.min(x, this.width - this.thumb.width);
+        x = Math.min(x, this.maxWidth());
         x = Math.max(x, 0);
         if (x !== this.thumb.x) {
             this.thumb.x = x;
@@ -127,7 +143,7 @@ PIXI_UI.Scrollable.prototype.moveThumb = function(x, y) {
         if (isNaN(y)) {
             return false;
         }
-        y = Math.min(y, this.height - this.thumb.height);
+        y = Math.min(y, this.maxHeight());
         y = Math.max(y, 0);
         if (y !== this.thumb.y) {
             this.thumb.y = y;

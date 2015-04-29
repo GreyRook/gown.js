@@ -28,14 +28,14 @@ PIXI_UI.Slider.SKIN_NAME = 'scroll_bar';
 PIXI_UI.Slider.prototype.thumbMoved = function(x, y) {
     var max = 1, value = 0;
     if (this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
-        max = this.width - this.thumb.width;
+        max = this.maxWidth();
         if (this._inverse) {
             value = max - x;
         } else {
             value = x;
         }
     } else {
-        max = this.height - this.thumb.height;
+        max = this.maxHeight();
         if (this._inverse) {
             value = max - y;
         } else {
