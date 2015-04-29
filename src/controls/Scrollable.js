@@ -80,23 +80,25 @@ PIXI_UI.Scrollable.prototype._updateProgressSkin = function() {
         return;
     }
     if(this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+        var progressPosX = this.thumb.x + this.thumb.width / 2;
         if (this.inverse) {
-            this.progressSkin.x = this.thumb.x + this.thumb.width / 2;
-            this.progressSkin.width = this.width - this.thumb.x;
+            this.progressSkin.x = progressPosX;
+            this.progressSkin.width = this.width - progressPosX;
             this.progressSkin.height = this.skin.height;
         } else {
             this.progressSkin.x = 0;
-            this.progressSkin.width = this.thumb.x + this.thumb.width / 2;
+            this.progressSkin.width = progressPosX;
             this.progressSkin.height = this.skin.height;
         }
     } else {
+        var progressPosY = this.thumb.y + this.thumb.height / 2;
         if (this.inverse) {
-            this.progressSkin.y = this.thumb.y + this.thumb.height / 2;
-            this.progressSkin.height = this.height - this.thumb.y;
+            this.progressSkin.y = progressPosY;
+            this.progressSkin.height = this.height - progressPosY;
             this.progressSkin.width = this.skin.width;
         } else {
             this.progressSkin.y = 0;
-            this.progressSkin.height = this.thumb.y + this.thumb.height / 2;
+            this.progressSkin.height =progressPosY;
             this.progressSkin.width = this.skin.width;
         }
     }
