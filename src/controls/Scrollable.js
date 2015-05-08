@@ -38,6 +38,21 @@ PIXI_UI.Scrollable.prototype.handleUp = function() {
     this._start = null;
 };
 
+PIXI_UI.Scrollable.prototype.mousedown = function(mouseData) {
+    var local = mouseData.getLocalPosition(this);
+    if (this.moveThumb(local.x, local.y)) {
+        // do not override localX/localY in start
+        // if we do not move the thumb
+        this.thumbMoved(local.x, local.y);
+        this._start = [local.x, local.y];
+    }
+
+};
+
+PIXI_UI.Scrollable.prototype.mouseupoutside = PIXI_UI.Scrollable.prototype.mouseup = function() {
+    this._start = null;
+};
+
 /**
  * handle mouse move: move thumb
  * @param mouseData
