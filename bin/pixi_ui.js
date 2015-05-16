@@ -290,7 +290,7 @@ Button.prototype.updateDimensions = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
     }
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
@@ -1105,7 +1105,7 @@ ScrollArea.prototype.drawMask = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
     }
 };
 
@@ -2265,18 +2265,18 @@ module.exports = {
  * based on pixi-DisplayContainer that supports adding children, so all
  * controls are container
  * @class Control
- * @extends PIXI.DisplayObjectContainer
+ * @extends PIXI.Container
  * @memberof PIXI_UI
  * @constructor
  */
 function Control() {
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.Container.call(this);
     this.enabled = this.enabled !== false;
     // assume all controls are interactive
     this.interactive = true;
 }
 
-Control.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+Control.prototype = Object.create( PIXI.Container.prototype );
 Control.prototype.constructor = Control;
 module.exports = Control;
 
@@ -2307,7 +2307,7 @@ Control.prototype.setTheme = function(theme) {
 /* istanbul ignore next */
 Control.prototype._renderWebGL = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
+    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
 };
 
 /**
@@ -2320,7 +2320,7 @@ Control.prototype._renderWebGL = function(renderSession) {
 /* istanbul ignore next */
 Control.prototype._renderCanvas = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderCanvas.call(this, renderSession);
+    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
 };
 
 /**
@@ -3873,9 +3873,9 @@ Theme.prototype.setSkin = function(comp, id, skin) {
  * @param jsonPath {Array}
  */
 Theme.prototype.loadImage = function(jsonPath) {
-    this.loader = new PIXI.AssetLoader(jsonPath);
-    this.loader.onComplete = this.loadComplete.bind(this);
-    this.loader.load();
+    PIXI_UI.loader
+        .add(jsonPath)
+        .load(this.loadComplete.bind(this));
 };
 
 /**
@@ -4124,13 +4124,13 @@ InputWrapper.setText = function(text) {
  * e.g. useful for scalable buttons.
  *
  * @class ScaleContainer
- * @extends PIXI.DisplayObjectContainer
+ * @extends PIXI.Container
  * @memberof PIXI_UI
  * @constructor
  */
 
 function ScaleContainer(texture, rect) {
-    PIXI.DisplayObjectContainer.call( this );
+    PIXI.Container.call( this );
 
     this.rect = rect;
     this.baseTexture = texture.baseTexture;
@@ -4199,7 +4199,7 @@ function ScaleContainer(texture, rect) {
 }
 
 // constructor
-ScaleContainer.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+ScaleContainer.prototype = Object.create( PIXI.Container.prototype );
 ScaleContainer.prototype.constructor = ScaleContainer;
 module.exports = ScaleContainer;
 
@@ -4210,7 +4210,7 @@ module.exports = ScaleContainer;
  * @private
  */
 ScaleContainer.prototype._getTexture = function(x, y, w, h) {
-    var frame = new PIXI.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
+    var frame = new PIXI.math.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
     var t = new PIXI.Texture(this.baseTexture, frame, frame.clone(), null);
     return new PIXI.Sprite(t);
 };
@@ -4330,7 +4330,7 @@ ScaleContainer.prototype._positionTilable = function() {
  * @return {ScaleTexture} A new Scalable Texture (e.g. a button) using a texture from the texture cache matching the frameId
  */
 ScaleContainer.fromFrame = function(frameId, rect) {
-    var texture = PIXI.TextureCache[frameId];
+    var texture = PIXI.utils.TextureCache[frameId];
     if(!texture) {
         throw new Error('The frameId "' + frameId + '" does not exist ' +
                         'in the texture cache');
@@ -4348,7 +4348,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
 /* istanbul ignore next */
 ScaleContainer.prototype._renderWebGL = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
+    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
 };
 
 /**
@@ -4361,7 +4361,7 @@ ScaleContainer.prototype._renderWebGL = function(renderSession) {
 /* istanbul ignore next */
 ScaleContainer.prototype._renderCanvas = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderCanvas.call(this, renderSession);
+    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
 };
 
 },{}],36:[function(require,module,exports){
@@ -4472,47 +4472,49 @@ function mouseWheelSupport(stage, enable) {
 
 module.exports = mouseWheelSupport;
 },{}],39:[function(require,module,exports){
-/**
- * center element on parent horizontally
- * @param elem
- * @param parent (optional)
- * @method centerHorizontal
- */
-PIXI_UI.centerHorizontal = function(elem, parent) {
-    parent = parent || elem.parent;
-    elem.x = Math.floor((parent.width - elem.width ) / 2);
-};
+module.exports = {
+    /**
+     * center element on parent horizontally
+     * @param elem
+     * @param parent (optional)
+     * @method centerHorizontal
+     */
+    centerHorizontal: function (elem, parent) {
+        parent = parent || elem.parent;
+        elem.x = Math.floor((parent.width - elem.width ) / 2);
+    },
 
-/**
- * center element on parent vertically
- * @param elem
- * @param parent (optional)
- * @method centerVertical
- */
-PIXI_UI.centerVertical = function(elem, parent) {
-    parent = parent || elem.parent;
-    elem.y = Math.floor((parent.height - elem.height ) / 2);
-};
+    /**
+     * center element on parent vertically
+     * @param elem
+     * @param parent (optional)
+     * @method centerVertical
+     */
+    centerVertical: function (elem, parent) {
+        parent = parent || elem.parent;
+        elem.y = Math.floor((parent.height - elem.height ) / 2);
+    },
 
-/**
- * center element on parent
- * @param elem
- * @param parent (optional)
- * @method center
- */
-PIXI_UI.center = function(elem, parent) {
-    PIXI_UI.centerVertical(elem, parent);
-    PIXI_UI.centerHorizontal(elem, parent);
-};
+    /**
+     * center element on parent
+     * @param elem
+     * @param parent (optional)
+     * @method center
+     */
+    center: function (elem, parent) {
+        PIXI_UI.centerVertical(elem, parent);
+        PIXI_UI.centerHorizontal(elem, parent);
+    },
 
-/**
- *
- * @param elem
- * @param parent (optional)
- */
-PIXI_UI.bottom = function(elem, parent) {
-    parent = parent || elem.parent;
-    elem.y = parent.y - elem.height;
+    /**
+     *
+     * @param elem
+     * @param parent (optional)
+     */
+    bottom: function (elem, parent) {
+        parent = parent || elem.parent;
+        elem.y = parent.y - elem.height;
+    }
 };
 },{}]},{},[1])(1)
 });

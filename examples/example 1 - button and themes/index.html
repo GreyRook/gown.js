@@ -19,14 +19,14 @@
 <script>
     var stage = new PIXI.Container();
 
-    var renderer = PIXI.autoDetectRenderer(800, 600);
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
     var btn;
     document.body.appendChild(renderer.view);
 
     function onComplete() {
         // initialize theme
 
-        btn = new PIXI_UI.Button();
+        btn = new PIXI_UI.controls.Button();
         btn.width = 150;
         btn.height = 100;
         btn.x = 20;
@@ -41,7 +41,7 @@
         };
 
         var theme = new PIXI_UI.ShapeTheme();
-        btn = new PIXI_UI.Button(theme);
+        btn = new PIXI_UI.controls.Button(theme);
         btn.width = 150;
         btn.height = 100;
         btn.x = 170;
@@ -55,7 +55,7 @@
             }
         };
 
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
     
     var theme = new PIXI_UI.AeonTheme(
@@ -64,7 +64,7 @@
     function animate() {
         // render the stage
         renderer.render(stage);
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
 </script>
 
