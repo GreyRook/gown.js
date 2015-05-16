@@ -8,10 +8,10 @@
 var LoginDialog = function() {
     PIXI_UI.Control.call(this);
     // background
-    this.bg = new PIXI_UI.Rect(0x515151, 0.7, 200, 350, 5);
+    this.bg = new PIXI_UI.shapes.Rect(0x515151, 0.7, 200, 350, 5);
     this.addChild(this.bg);
 
-    this.login_bg = new PIXI_UI.Rect(0x111111, 0.5, 200, 100, 5);
+    this.login_bg = new PIXI_UI.shapes.Rect(0x111111, 0.5, 200, 100, 5);
     this.login_bg.y = 250;
     this.addChild(this.login_bg);
 
@@ -22,9 +22,9 @@ var LoginDialog = function() {
 
     this.height = 380;
 
-    var grp = new PIXI_UI.LayoutGroup();
+    var grp = new PIXI_UI.controls.LayoutGroup();
     this.grp = grp;
-    grp.layout = new PIXI_UI.VerticalLayout();
+    grp.layout = new PIXI_UI.layout.VerticalLayout();
     grp.y = 20;
     grp.x = 10;
 
@@ -66,7 +66,7 @@ var LoginDialog = function() {
     this.pass = new IconTextInput(lock_icon, '');
     grp.addChild(this.pass);
 
-    this.submitButton = new PIXI_UI.Button();
+    this.submitButton = new PIXI_UI.controls.Button();
     this.submitButton.label = "sign in";
     this.submitButton.width = 150;
     this.submitButton.height = 40;
@@ -86,12 +86,13 @@ LoginDialog.prototype.onresize = function(width, height) {
     var _width = Math.min(width, this.minWidth);
     _width = Math.max(_width, this.maxWidth);
     this.width = _width;
+    var pos = PIXI_UI.util.position;
     // center text
-    PIXI_UI.centerHorizontal(this.loginText, this);
+    pos.centerHorizontal(this.loginText, this);
     // center
-    PIXI_UI.center(this);
+    pos.center(this);
 
-    PIXI_UI.center(this.submitButton, this.login_bg);
+    pos.center(this.submitButton, this.login_bg);
 
     this.submitButton.y += this.login_bg.y;
     // obey borders
