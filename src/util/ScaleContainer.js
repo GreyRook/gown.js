@@ -209,7 +209,7 @@ ScaleContainer.prototype._positionTilable = function() {
  * @return {ScaleTexture} A new Scalable Texture (e.g. a button) using a texture from the texture cache matching the frameId
  */
 ScaleContainer.fromFrame = function(frameId, rect) {
-    var texture = PIXI.TextureCache[frameId];
+    var texture = PIXI.util.TextureCache[frameId];
     if(!texture) {
         throw new Error('The frameId "' + frameId + '" does not exist ' +
                         'in the texture cache');
