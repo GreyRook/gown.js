@@ -44,9 +44,9 @@ Theme.prototype.setSkin = function(comp, id, skin) {
  * @param jsonPath {Array}
  */
 Theme.prototype.loadImage = function(jsonPath) {
-    this.loader = new PIXI.AssetLoader(jsonPath);
-    this.loader.onComplete = this.loadComplete.bind(this);
-    this.loader.load();
+    PIXI_UI.loader
+        .add('spreadsheet', jsonPath)
+        .load(this.loadComplete.bind(this));
 };
 
 /**
