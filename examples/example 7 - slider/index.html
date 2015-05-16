@@ -17,9 +17,9 @@
 </head>
 <body>
 <script>
-    var stage = new PIXI.Stage(0xffffff);
+    var stage = new PIXI.Container();
     var sizes = {w: 800, h: 600};
-    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h);
+    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
     function onComplete() {
@@ -36,14 +36,14 @@
                 ["../../themes/assets/aeon/aeon_desktop.json"]);
         progress_theme.loadComplete();
         progress_theme.setSkin(
-                PIXI_UI.ScrollBar.SKIN_NAME,
+                PIXI_UI.controls.ScrollBar.SKIN_NAME,
                 "horizontal_progress",
                 function () {
-                    return new PIXI_UI.Rect(0xff0000, 1.0, 20, 20);
+                    return new PIXI_UI.shapes.Rect(0xff0000, 1.0, 20, 20);
                 }
         );
 
-        var slider = new PIXI_UI.Slider(progress_theme);
+        var slider = new PIXI_UI.controls.Slider(progress_theme);
         slider.change = function(sliderData) {
             txt.setText(sliderData.value);
             console.log(sliderData.value);
@@ -55,7 +55,7 @@
         stage.addChild(slider);
         stage.addChild(txt);
 
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
 
     var theme = new PIXI_UI.AeonTheme(
@@ -64,7 +64,7 @@
     function animate() {
         // render the stage
         renderer.render(stage);
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
 </script>
 

@@ -17,9 +17,9 @@
 </head>
 <body>
 <script>
-    var stage = new PIXI.Stage(0xffffff);
+    var stage = new PIXI.Container();
     var sizes = {w: 800, h: 600};
-    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h);
+    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
     var grp, btn, sa_grp;
@@ -30,52 +30,52 @@
 
         // HORIZONTAL
 
-        inner_horizontal = new PIXI_UI.LayoutGroup();
-        inner_horizontal.layout = new PIXI_UI.HorizontalLayout();
+        inner_horizontal = new PIXI_UI.controls.LayoutGroup();
+        inner_horizontal.layout = new PIXI_UI.layout.HorizontalLayout();
         inner_horizontal.layout.gap = 10;
 
         // add some buttons
         for (i = 0; i < 100; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new PIXI_UI.controls.Button();
             btn.height = 25;
             btn.width = 80;
             btn.label = (i+1)+". button";
             inner_horizontal.addChild(btn);
         }
-        inner_scroll_horizontal = new PIXI_UI.ScrollArea();
+        inner_scroll_horizontal = new PIXI_UI.controls.ScrollArea();
         inner_scroll_horizontal.width = 500;
 
         inner_scroll_horizontal.content = inner_horizontal;
         inner_scroll_horizontal.x = 200;
         stage.addChild(inner_scroll_horizontal);
 
-        sb_horizontal = new PIXI_UI.ScrollBar(inner_scroll_horizontal);
+        sb_horizontal = new PIXI_UI.controls.ScrollBar(inner_scroll_horizontal);
         stage.addChild(sb_horizontal);
         sb_horizontal.y = inner_scroll_horizontal.height;
         sb_horizontal.x = inner_scroll_horizontal.x;
         sb_horizontal.width = inner_scroll_horizontal.width;
 
         // VERTICAL
-        var grp = new PIXI_UI.LayoutGroup();
-        var inner = new PIXI_UI.LayoutGroup();
-        inner.layout = new PIXI_UI.VerticalLayout();
+        var grp = new PIXI_UI.controls.LayoutGroup();
+        var inner = new PIXI_UI.controls.LayoutGroup();
+        inner.layout = new PIXI_UI.layout.VerticalLayout();
         inner.layout.gap = 10;
 
         // add some buttons
         for (i = 0; i < 12; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new PIXI_UI.controls.Button();
             btn.height = 25;
             btn.width = 80;
             btn.label = (i+1)+". button";
             inner.addChild(btn);
         }
-        var inner_scroll = new PIXI_UI.ScrollArea(inner);
+        var inner_scroll = new PIXI_UI.controls.ScrollArea(inner);
         inner_scroll.width = 100;
         inner_scroll.height = 150;
         grp.addChild(inner_scroll);
 
 
-        var sb = new PIXI_UI.ScrollBar(inner_scroll);
+        var sb = new PIXI_UI.controls.ScrollBar(inner_scroll);
         grp.addChild(sb);
         sb.x = inner_scroll.width;
         sb.height = inner_scroll.height;
@@ -83,7 +83,7 @@
         stage.addChild(grp);
         grp.y = 100;
 
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
 
     var theme = new PIXI_UI.AeonTheme(
@@ -92,7 +92,7 @@
     function animate() {
         // render the stage
         renderer.render(stage);
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
 </script>
 
