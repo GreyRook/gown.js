@@ -1,6 +1,4 @@
-/**
- * @author Andreas Bresser
- */
+var Control = require('../core/Control');
 
 /**
  * entry point for your application, makes some assumptions, (e.g. that you
@@ -8,6 +6,8 @@
  * background.
  *
  * @class Application
+ * @extends PIXI_UI.Control
+ * @memberof PIXI_UI
  * @constructor
  * @param background {Number | Array} a background color or a list of colors
  *  that will be used as vertical gradient
@@ -15,7 +15,7 @@
  * @param renderer {WebGLRenderer|CanvasRenderer}
  * @param stage {Stage}
  */
-PIXI_UI.Application = function (background, fullscreen, renderer, stage) {
+function Application(background, fullscreen, renderer, stage) {
     if (!stage || !renderer) {
         stage = new PIXI.Stage(0xffffff);
         var width = 800;
@@ -34,19 +34,20 @@ PIXI_UI.Application = function (background, fullscreen, renderer, stage) {
     this._width = renderer.width;
     this._height = renderer.height;
 
-    PIXI_UI.Control.call(this);
+    Control.call(this);
     stage.addChild(this);
     this.animate();
 
     this.background = background;
     this.fullscreen = fullscreen;
-};
+}
 
-PIXI_UI.Application.prototype = Object.create( PIXI_UI.Control.prototype );
-PIXI_UI.Application.prototype.constructor = PIXI_UI.Application;
+Application.prototype = Object.create( Control.prototype );
+Application.prototype.constructor = Application;
+module.exports = Application;
 
 /* jshint ignore:start */
-PIXI_UI.Application.prototype.animate = function() {
+Application.prototype.animate = function() {
     var renderer = this._renderer;
     var stage = this._stage;
     var animate = function() {
@@ -63,7 +64,7 @@ PIXI_UI.Application.prototype.animate = function() {
  * @method _createGradientRect
  * @private
  */
-PIXI_UI.Application.prototype._createGradientRect = function(width, height, gradient) {
+Application.prototype._createGradientRect = function(width, height, gradient) {
     var bgCanvas = document.createElement('canvas');
     bgCanvas.width = width;
     bgCanvas.height = height;
@@ -77,7 +78,7 @@ PIXI_UI.Application.prototype._createGradientRect = function(width, height, grad
     return PIXI.Texture.fromCanvas(bgCanvas);
 };
 
-PIXI_UI.Application.prototype.onresize = function() {
+Application.prototype.onresize = function() {
     this._width = window.innerWidth;
     this._height = window.innerHeight;
     this._renderer.resize(this._width, this._height);
@@ -99,7 +100,7 @@ PIXI_UI.Application.prototype.onresize = function() {
  * @property enabled
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.Application.prototype, 'fullscreen', {
+Object.defineProperty(Application.prototype, 'fullscreen', {
     get: function() {
         return this._fullscreen;
     },
@@ -119,7 +120,7 @@ Object.defineProperty(PIXI_UI.Application.prototype, 'fullscreen', {
  * @property enabled
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.Application.prototype, 'background', {
+Object.defineProperty(Application.prototype, 'background', {
     get: function() {
         return this._background;
     },

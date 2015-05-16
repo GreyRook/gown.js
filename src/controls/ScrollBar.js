@@ -1,32 +1,41 @@
-/**
- * authors: Björn Friedrichs, Andreas Bresser
- */
+var Scrollable = require('./Scrollable'),
+    LayoutAlignment = require('../layout/LayoutAlignment');
 
-PIXI_UI.ScrollBar = function(scrollArea, thumb, theme) {
+/**
+ * scoll bar
+ *
+ * @class ScrollArea
+ * @extends PIXI_UI.Scrollable
+ * @memberof PIXI_UI
+ * @constructor
+ */
+function ScrollBar(scrollArea, thumb, theme) {
     this.scrollArea = scrollArea;
-    this.skinName = this.skinName || PIXI_UI.ScrollBar.SKIN_NAME;
+    this.skinName = this.skinName || ScrollBar.SKIN_NAME;
 
     if (this.orientation === undefined) {
-        this.orientation = PIXI_UI.Scrollable.HORIZONTAL;
+        this.orientation = Scrollable.HORIZONTAL;
         if (scrollArea && scrollArea.content &&
             scrollArea.content.layout.alignment ===
-                PIXI_UI.LayoutAlignment.VERTICAL_ALIGNMENT) {
-            this.orientation = PIXI_UI.Scrollable.VERTICAL;
+                LayoutAlignment.VERTICAL_ALIGNMENT) {
+            this.orientation = Scrollable.VERTICAL;
         }
     }
-    PIXI_UI.Scrollable.call(this, thumb, theme);
-};
+    Scrollable.call(this, thumb, theme);
+}
 
-PIXI_UI.ScrollBar.prototype = Object.create( PIXI_UI.Scrollable.prototype );
-PIXI_UI.ScrollBar.prototype.constructor = PIXI_UI.ScrollBar;
+ScrollBar.prototype = Object.create( Scrollable.prototype );
+ScrollBar.prototype.constructor = ScrollBar;
+module.exports = ScrollBar;
 
-PIXI_UI.ScrollBar.SKIN_NAME = 'scroll_bar';
 
-PIXI_UI.ScrollBar.prototype.scrollableredraw = PIXI_UI.Scrollable.prototype.redraw;
-PIXI_UI.ScrollBar.prototype.redraw = function() {
+ScrollBar.SKIN_NAME = 'scroll_bar';
+
+ScrollBar.prototype.scrollableredraw = Scrollable.prototype.redraw;
+ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
         if (this.scrollArea && this.thumb) {
-            if (this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+            if (this.orientation === Scrollable.HORIZONTAL) {
                 this.thumb.width = Math.max(20, this.scrollArea.width /
                     (this.scrollArea.content.width / this.scrollArea.width));
             } else {
@@ -43,10 +52,10 @@ PIXI_UI.ScrollBar.prototype.redraw = function() {
  * @param x x-position to scroll to (ignored when vertical)
  * @param y y-position to scroll to (ignored when horizontal)
  */
-PIXI_UI.ScrollBar.prototype.thumbMoved = function(x, y) {
+ScrollBar.prototype.thumbMoved = function(x, y) {
     if (this.scrollArea && this.scrollArea.content) {
 
-        if (this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+        if (this.orientation === Scrollable.HORIZONTAL) {
             this.scrollArea._scrollContent(
                 -(this.scrollArea.content.width - this.scrollArea.width) *
                     (x / (this.scrollArea.width - this.thumb.width)),

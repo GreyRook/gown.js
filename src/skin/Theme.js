@@ -1,26 +1,27 @@
-/**
- * @author Andreas Bresser
- */
+var ScaleContainer = require('../util/ScaleContainer');
+
 /**
  * basic theming/skinning.
  *
  * @class Theme
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.Theme = function(global) {
+function Theme(global) {
     // at its core a theme is just a dict that holds a collection of skins
     this._skins = {};
 
     this.textStyle = this.textStyle || {};
     // default color for label (e.g. buttons)
-    this.textStyle.fill = this.textStyle.fill || "#000";
+    this.textStyle.fill = this.textStyle.fill || '#000';
     // default font for label (e.g. buttons)
-    this.textStyle.font = this.textStyle.font || "12px Arial";
+    this.textStyle.font = this.textStyle.font || '12px Arial';
 
     if (global === true || global === undefined) {
         PIXI_UI.theme = this;
     }
-};
+}
+module.exports = Theme;
 
 /**
  * Set skin for ui component
@@ -30,7 +31,7 @@ PIXI_UI.Theme = function(global) {
  * @param id id for the skin (e.g. state when the skinning function will be applied {String}
  * @param skin skin-function that will executed once the component gets updated  {String}
  */
-PIXI_UI.Theme.prototype.setSkin = function(comp, id, skin) {
+Theme.prototype.setSkin = function(comp, id, skin) {
     this._skins[comp] = this._skins[comp] || {};
     this._skins[comp][id] = skin;
     // TODO: dispatch event - the skin of "comp"
@@ -42,7 +43,7 @@ PIXI_UI.Theme.prototype.setSkin = function(comp, id, skin) {
  * @method loadImage
  * @param jsonPath {Array}
  */
-PIXI_UI.Theme.prototype.loadImage = function(jsonPath) {
+Theme.prototype.loadImage = function(jsonPath) {
     this.loader = new PIXI.AssetLoader(jsonPath);
     this.loader.onComplete = this.loadComplete.bind(this);
     this.loader.load();
@@ -56,9 +57,9 @@ PIXI_UI.Theme.prototype.loadImage = function(jsonPath) {
  * @param grid grid defining the inner square of the scalable container {Rectangle}
  * @returns {Function}
  */
-PIXI_UI.Theme.prototype.getScaleContainer = function(name, grid) {
+Theme.prototype.getScaleContainer = function(name, grid) {
     return function() {
-        return PIXI_UI.ScaleContainer.fromFrame(name, grid);
+        return ScaleContainer.fromFrame(name, grid);
     };
 };
 
@@ -69,7 +70,7 @@ PIXI_UI.Theme.prototype.getScaleContainer = function(name, grid) {
  * @param name id defined in the asset loader {String}
  * @returns {Function}
  */
-PIXI_UI.Theme.prototype.getImage = function(name) {
+Theme.prototype.getImage = function(name) {
     return function() {
         return PIXI.Sprite.fromImage(name);
     };
@@ -83,7 +84,7 @@ PIXI_UI.Theme.prototype.getImage = function(name) {
  * @param state (state or type of the skin e.g. "up") {String}
  * @returns {DisplayObject}
  */
-PIXI_UI.Theme.prototype.getSkin = function(comp, state) {
+Theme.prototype.getSkin = function(comp, state) {
     if (this._skins[comp] && this._skins[comp][state]) {
         return this._skins[comp][state]();
     }
@@ -95,6 +96,6 @@ PIXI_UI.Theme.prototype.getSkin = function(comp, state) {
  *
  * @method removeTheme
  */
-PIXI_UI.Theme.removeTheme = function() {
+Theme.removeTheme = function() {
     PIXI_UI.theme = undefined;
 };

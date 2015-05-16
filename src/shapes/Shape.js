@@ -1,23 +1,23 @@
 /**
- * @author Andreas Bresser
- */
-/**
- * shape
+ * shape base class
  *
  * @class Shape
+ * @extends PIXI.Graphics
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.Shape = function(color, alpha, width, height) {
+function Shape(color, alpha, width, height) {
     PIXI.Graphics.call(this);
     this._color = color;
     this._alpha = alpha || 1.0;
     this._width = width;
     this._height = height;
     this.invalid = true;
-};
+}
 
-PIXI_UI.Shape.prototype = Object.create( PIXI.Graphics.prototype );
-PIXI_UI.Shape.prototype.constructor = PIXI_UI.Shape;
+Shape.prototype = Object.create( PIXI.Graphics.prototype );
+Shape.prototype.constructor = Shape;
+module.exports = Shape;
 
 // setter/getter
 /**
@@ -26,7 +26,7 @@ PIXI_UI.Shape.prototype.constructor = PIXI_UI.Shape;
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Shape.prototype, 'width', {
+Object.defineProperty(Shape.prototype, 'width', {
     get: function() {
         return this._width;
     },
@@ -42,7 +42,7 @@ Object.defineProperty(PIXI_UI.Shape.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Shape.prototype, 'height', {
+Object.defineProperty(Shape.prototype, 'height', {
     get: function() {
         return this._height;
     },
@@ -59,7 +59,7 @@ Object.defineProperty(PIXI_UI.Shape.prototype, 'height', {
  * @type Number
  */
 
-Object.defineProperty(PIXI_UI.Shape.prototype, 'color', {
+Object.defineProperty(Shape.prototype, 'color', {
     get: function() {
         return this._color;
     },
@@ -76,7 +76,7 @@ Object.defineProperty(PIXI_UI.Shape.prototype, 'color', {
  * @type Number
  */
 
-Object.defineProperty(PIXI_UI.Shape.prototype, 'alpha', {
+Object.defineProperty(Shape.prototype, 'alpha', {
     get: function() {
         return this._alpha;
     },
@@ -88,7 +88,7 @@ Object.defineProperty(PIXI_UI.Shape.prototype, 'alpha', {
 
 // renderer
 /* istanbul ignore next */
-PIXI_UI.Shape.prototype._renderWebGL = function(renderSession) {
+Shape.prototype._renderWebGL = function(renderSession) {
     if (this.invalid) {
         this.redraw();
         this.invalid = false;
@@ -97,7 +97,7 @@ PIXI_UI.Shape.prototype._renderWebGL = function(renderSession) {
 };
 
 /* istanbul ignore next */
-PIXI_UI.Shape.prototype._renderCanvas = function(renderSession) {
+Shape.prototype._renderCanvas = function(renderSession) {
     if (this.invalid) {
         this.redraw();
         this.invalid = false;
@@ -112,7 +112,7 @@ PIXI_UI.Shape.prototype._renderCanvas = function(renderSession) {
  *
  * @method applyColor
  */
-PIXI_UI.Shape.prototype.applyColor = function() {
+Shape.prototype.applyColor = function() {
     this.beginFill(this.color, this.alpha);
 };
 
@@ -121,7 +121,7 @@ PIXI_UI.Shape.prototype.applyColor = function() {
  *
  * @method drawBorder
  */
-PIXI_UI.Shape.prototype.drawBorder = function() {
+Shape.prototype.drawBorder = function() {
     if (this.border) {
         this.lineStyle(this.border, this.borderColor);
     }
@@ -133,7 +133,7 @@ PIXI_UI.Shape.prototype.drawBorder = function() {
  * @method _drawShape
  * @private
  */
-PIXI_UI.Shape.prototype._drawShape = function() {
+Shape.prototype._drawShape = function() {
     if (this.width <= 0 || this.height <= 0) {
         return;
     }
@@ -147,7 +147,7 @@ PIXI_UI.Shape.prototype._drawShape = function() {
  *
  * @method redraw
  */
-PIXI_UI.Shape.prototype.redraw = function() {
+Shape.prototype.redraw = function() {
     this.clear();
     this.applyColor();
     this.drawBorder();

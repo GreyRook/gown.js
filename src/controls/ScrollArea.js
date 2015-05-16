@@ -1,23 +1,24 @@
-/**
- * @author Andreas Bresser
- */
+var Control = require('../core/Control'),
+    LayoutAlignment = require('../layout/LayoutAlignment');
 
 /**
  * The ScrollArea hosts some content that can be scrolled. The width/height
  * of the ScrollArea defines the viewport.
  *
  * @class ScrollArea
+ * @extends PIXI_UI.Control
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.ScrollArea = function(content, addListener, scrolldelta) {
+function ScrollArea(content, addListener, scrolldelta) {
     this.addListener = addListener || true;
-    PIXI_UI.Control.call(this);
+    Control.call(this);
     this.content = content || null;
     this.mask = undefined;
     this.enabled = true;
     this._useMask = true;
 
-    this.scrolldirection = PIXI_UI.ScrollArea.SCROLL_AUTO;
+    this.scrolldirection = ScrollArea.SCROLL_AUTO;
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
     this.scrolldelta = scrolldelta || 10;
 
@@ -26,25 +27,26 @@ PIXI_UI.ScrollArea = function(content, addListener, scrolldelta) {
     this.touchend = this.touchendoutside = this.mouseupoutside = this.mouseup;
     this.touchstart = this.mousedown;
     this.touchmove = this.mousemove;
-};
+}
 
-PIXI_UI.ScrollArea.prototype = Object.create( PIXI_UI.Control.prototype );
-PIXI_UI.ScrollArea.prototype.constructor = PIXI_UI.ScrollArea;
+ScrollArea.prototype = Object.create( Control.prototype );
+ScrollArea.prototype.constructor = ScrollArea;
+module.exports = ScrollArea;
 
 // scrolls horizontal as default, but will change if a
 // horizontal layout is set in the content
-PIXI_UI.ScrollArea.SCROLL_AUTO = 'auto';
-PIXI_UI.ScrollArea.SCROLL_VERTICAL = 'vertical';
-PIXI_UI.ScrollArea.SCROLL_HORIZONTAL = 'horizontal';
+ScrollArea.SCROLL_AUTO = 'auto';
+ScrollArea.SCROLL_VERTICAL = 'vertical';
+ScrollArea.SCROLL_HORIZONTAL = 'horizontal';
 
 /**
  * check, if the layout of the content is horizontally alligned
  *
  * * @method layoutHorizontalAlign
  */
-PIXI_UI.ScrollArea.prototype.layoutHorizontalAlign = function() {
+ScrollArea.prototype.layoutHorizontalAlign = function() {
     return this.content.layout &&
-        this.content.layout.alignment === PIXI_UI.LayoutAlignment.HORIZONTAL_ALIGNMENT;
+        this.content.layout.alignment === LayoutAlignment.HORIZONTAL_ALIGNMENT;
 };
 
 /**
@@ -53,7 +55,7 @@ PIXI_UI.ScrollArea.prototype.layoutHorizontalAlign = function() {
  *
  * @method upright
  */
-PIXI_UI.ScrollArea.prototype.upright = function() {
+ScrollArea.prototype.upright = function() {
     return this.content.height <= this.height &&
         this.content.width > this.width;
 };
@@ -64,18 +66,18 @@ PIXI_UI.ScrollArea.prototype.upright = function() {
  *
  * @method _scrollContent
  */
-PIXI_UI.ScrollArea.prototype._scrollContent = function(x, y) {
+ScrollArea.prototype._scrollContent = function(x, y) {
     // todo: press shift to switch direction
-    var scrollAuto = this.scrolldirection === PIXI_UI.ScrollArea.SCROLL_AUTO;
-    var scroll = PIXI_UI.ScrollArea.SCROLL_VERTICAL;
+    var scrollAuto = this.scrolldirection === ScrollArea.SCROLL_AUTO;
+    var scroll = ScrollArea.SCROLL_VERTICAL;
     // if the scroll direction is set to SCROLL_AUTO we check, if the
     // layout of the content is set to horizontal or the content
     // width is bigger than the current
-    if (this.scrolldirection === PIXI_UI.ScrollArea.SCROLL_HORIZONTAL ||
+    if (this.scrolldirection === ScrollArea.SCROLL_HORIZONTAL ||
         (scrollAuto && (this.layoutHorizontalAlign() || this.upright()) )) {
-        scroll = PIXI_UI.ScrollArea.SCROLL_HORIZONTAL;
+        scroll = ScrollArea.SCROLL_HORIZONTAL;
     }
-    if (scroll === PIXI_UI.ScrollArea.SCROLL_HORIZONTAL) {
+    if (scroll === ScrollArea.SCROLL_HORIZONTAL) {
         if (this.content.width > this.width) {
             // assure we are within bounds
             x = Math.min(x, 0);
@@ -85,7 +87,7 @@ PIXI_UI.ScrollArea.prototype._scrollContent = function(x, y) {
             this.content.x = Math.floor(x);
         }
     }
-    if (scroll === PIXI_UI.ScrollArea.SCROLL_VERTICAL) {
+    if (scroll === ScrollArea.SCROLL_VERTICAL) {
         if (this.content.height > this.height) {
             // assure we are within bounds
             y = Math.min(y, 0);
@@ -102,7 +104,7 @@ PIXI_UI.ScrollArea.prototype._scrollContent = function(x, y) {
  *
  * @method mousedown
  */
-PIXI_UI.ScrollArea.prototype.mousedown = function(mouseData) {
+ScrollArea.prototype.mousedown = function(mouseData) {
     var pos = mouseData.getLocalPosition(this);
     if (!this._start) {
         this._start = [
@@ -117,7 +119,7 @@ PIXI_UI.ScrollArea.prototype.mousedown = function(mouseData) {
  *
  * @method mousemove
  */
-PIXI_UI.ScrollArea.prototype.mousemove = function(mouseData) {
+ScrollArea.prototype.mousemove = function(mouseData) {
     if (this._start) {
         var pos = mouseData.getLocalPosition(this);
         this._scrollContent(
@@ -132,7 +134,7 @@ PIXI_UI.ScrollArea.prototype.mousemove = function(mouseData) {
  *
  * @method mouseup
  */
-PIXI_UI.ScrollArea.prototype.mouseup = function() {
+ScrollArea.prototype.mouseup = function() {
     this._start = null;
 };
 
@@ -143,11 +145,11 @@ PIXI_UI.ScrollArea.prototype.mouseup = function() {
  * @param child
  */
 /*
-PIXI_UI.ScrollArea.prototype.removeChild = function(child) {
+ScrollArea.prototype.removeChild = function(child) {
     throw new Error('use .content = null instead of removeChild(child)')
 };
 
-PIXI_UI.ScrollArea.prototype.addChild = function(child) {
+ScrollArea.prototype.addChild = function(child) {
     throw new Error('use .content = child instead of addChild(child)')
 };
 */
@@ -156,7 +158,7 @@ PIXI_UI.ScrollArea.prototype.addChild = function(child) {
  * create a new mask or redraw it
  * @method updateMask
  */
-PIXI_UI.ScrollArea.prototype.updateMask = function() {
+ScrollArea.prototype.updateMask = function() {
     if (this.height && this.width && this._useMask) {
         if (this.mask === undefined) {
             this.mask = new PIXI.Graphics();
@@ -176,7 +178,7 @@ PIXI_UI.ScrollArea.prototype.updateMask = function() {
  * @private
  * @method drawMask
  */
-PIXI_UI.ScrollArea.prototype.drawMask = function() {
+ScrollArea.prototype.drawMask = function() {
     var pos = new PIXI.Point(0, 0);
     var global = this.toGlobal(pos);
     this.mask.clear()
@@ -199,9 +201,11 @@ PIXI_UI.ScrollArea.prototype.drawMask = function() {
  * @private
  */
 /* istanbul ignore next */
-PIXI_UI.ScrollArea.prototype._renderWebGL = function(renderSession)
+ScrollArea.prototype._renderWebGL = function(renderSession)
 {
-    if(!this.visible || this.alpha <= 0)return;
+    if(!this.visible || this.alpha <= 0) {
+        return;
+    }
 
     if(this._cacheAsBitmap)
     {
@@ -243,8 +247,12 @@ PIXI_UI.ScrollArea.prototype._renderWebGL = function(renderSession)
 
         renderSession.spriteBatch.stop();
 
-        if(this._mask)renderSession.maskManager.popMask(this._mask, renderSession);
-        if(this._filters)renderSession.filterManager.popFilter();
+        if (this._mask) {
+            renderSession.maskManager.popMask(this._mask, renderSession);
+        }
+        if (this._filters) {
+            renderSession.filterManager.popFilter();
+        }
 
         renderSession.spriteBatch.start();
     }
@@ -271,9 +279,11 @@ PIXI_UI.ScrollArea.prototype._renderWebGL = function(renderSession)
  * @private
  */
 /* istanbul ignore next */
-PIXI_UI.ScrollArea.prototype._renderCanvas = function(renderSession)
+ScrollArea.prototype._renderCanvas = function(renderSession)
 {
-    if(this.visible === false || this.alpha === 0)return;
+    if(this.visible === false || this.alpha === 0) {
+        return;
+    }
 
     if(this._cacheAsBitmap)
     {
@@ -305,7 +315,7 @@ PIXI_UI.ScrollArea.prototype._renderCanvas = function(renderSession)
     }
 };
 
-PIXI_UI.ScrollArea.prototype.redraw = function() {
+ScrollArea.prototype.redraw = function() {
     if (this.invalid) {
         this.updateMask();
         this.invalid = false;
@@ -313,7 +323,7 @@ PIXI_UI.ScrollArea.prototype.redraw = function() {
 };
 
 
-Object.defineProperty(PIXI_UI.ScrollArea.prototype, 'content', {
+Object.defineProperty(ScrollArea.prototype, 'content', {
     set: function(content) {
         if (this._content) {
             this.removeChild(content);
@@ -335,7 +345,7 @@ Object.defineProperty(PIXI_UI.ScrollArea.prototype, 'content', {
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI_UI.ScrollArea.prototype, 'width', {
+Object.defineProperty(ScrollArea.prototype, 'width', {
     get: function() {
         if (!this._width) {
             return this._content.width;
@@ -354,7 +364,7 @@ Object.defineProperty(PIXI_UI.ScrollArea.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI_UI.ScrollArea.prototype, 'height', {
+Object.defineProperty(ScrollArea.prototype, 'height', {
     get: function() {
         if (!this._height) {
             return this._content.height;

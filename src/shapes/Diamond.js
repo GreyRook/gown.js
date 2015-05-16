@@ -1,18 +1,20 @@
-/**
- * @author Andreas Bresser
- */
+var Shape = require('./Shape');
+
 /**
  * basic diamond shape
  *
  * @class Diamond
+ * @extends PIXI_UI.Shape
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.Diamond = function(color, alpha, width, height) {
-    PIXI_UI.Shape.call(this, color, alpha, width, height);
-};
+function Diamond(color, alpha, width, height) {
+    Shape.call(this, color, alpha, width, height);
+}
 
-PIXI_UI.Diamond.prototype = Object.create( PIXI_UI.Shape.prototype );
-PIXI_UI.Diamond.prototype.constructor = PIXI_UI.Diamond;
+Diamond.prototype = Object.create( Shape.prototype );
+Diamond.prototype.constructor = Diamond;
+module.exports = Diamond;
 
 /**
  * draw the diamond during redraw.
@@ -20,7 +22,7 @@ PIXI_UI.Diamond.prototype.constructor = PIXI_UI.Diamond;
  * @method _drawShape
  * @private
  */
-PIXI_UI.Diamond.prototype._drawShape = function() {
+Diamond.prototype._drawShape = function() {
     if (this.width <= 0 || this.height <= 0) {
         return;
     }

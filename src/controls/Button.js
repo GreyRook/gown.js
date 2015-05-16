@@ -1,18 +1,18 @@
-/**
- * @author Andreas Bresser
- */
+var Skinable = require('../core/Skinable');
 
 /**
  * The basic Button with 3 states (up, down and hover) and a label that is
  * centered on it
  *
  * @class Button
+ * @extends PIXI_UI.Skinable
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.Button = function(theme) {
-    this.skinName = this.skinName || PIXI_UI.Button.SKIN_NAME;
-    this._validStates = this._validStates || PIXI_UI.Button.stateNames;
-    PIXI_UI.Skinable.call(this, theme);
+function Button(theme) {
+    this.skinName = this.skinName || Button.SKIN_NAME;
+    this._validStates = this._validStates || Button.stateNames;
+    Skinable.call(this, theme);
     this.handleEvent('up');
 
     this.updateLabel = false; // label text changed
@@ -20,13 +20,14 @@ PIXI_UI.Button = function(theme) {
     this.touchstart = this.mousedown;
     this.touchend = this.mouseupoutside = this.mouseup;
     this.touchendoutside = this.mouseout;
-};
+}
 
-PIXI_UI.Button.prototype = Object.create( PIXI_UI.Skinable.prototype );
-PIXI_UI.Button.prototype.constructor = PIXI_UI.Button;
+Button.prototype = Object.create( Skinable.prototype );
+Button.prototype.constructor = Button;
+module.exports = Button;
 
 // name of skin that will be applied
-PIXI_UI.Button.SKIN_NAME = 'button';
+Button.SKIN_NAME = 'button';
 
 // Identifier for the different button states
 /**
@@ -37,7 +38,7 @@ PIXI_UI.Button.SKIN_NAME = 'button';
  * @final
  * @type String
  */
-PIXI_UI.Button.UP = 'up';
+Button.UP = 'up';
 
 /**
  * Down state: mouse button is pressed or finger touches the screen
@@ -47,7 +48,7 @@ PIXI_UI.Button.UP = 'up';
  * @final
  * @type String
  */
-PIXI_UI.Button.DOWN = 'down';
+Button.DOWN = 'down';
 
 /**
  * Hover state: mouse pointer hovers over the button
@@ -58,7 +59,7 @@ PIXI_UI.Button.DOWN = 'down';
  * @final
  * @type String
  */
-PIXI_UI.Button.HOVER = 'hover';
+Button.HOVER = 'hover';
 
 /**
  * names of possible states for a button
@@ -68,8 +69,8 @@ PIXI_UI.Button.HOVER = 'hover';
  * @final
  * @type String
  */
-PIXI_UI.Button.stateNames = [
-    PIXI_UI.Button.DOWN, PIXI_UI.Button.HOVER, PIXI_UI.Button.UP
+Button.stateNames = [
+    Button.DOWN, Button.HOVER, Button.UP
 ];
 
 /**
@@ -78,7 +79,7 @@ PIXI_UI.Button.stateNames = [
  *
  * @method preloadSkins
  */
-PIXI_UI.Button.prototype.preloadSkins = function() {
+Button.prototype.preloadSkins = function() {
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
         var skin = this.theme.getSkin(this.skinName, name);
@@ -90,22 +91,22 @@ PIXI_UI.Button.prototype.preloadSkins = function() {
     }
 };
 
-PIXI_UI.Button.prototype.mousedown = function() {
-    this.handleEvent(PIXI_UI.Button.DOWN);
+Button.prototype.mousedown = function() {
+    this.handleEvent(Button.DOWN);
 };
 
-PIXI_UI.Button.prototype.mouseup = function() {
-    this.handleEvent(PIXI_UI.Button.UP);
+Button.prototype.mouseup = function() {
+    this.handleEvent(Button.UP);
 };
 
-PIXI_UI.Button.prototype.mousemove = function() {
+Button.prototype.mousemove = function() {
 };
 
-PIXI_UI.Button.prototype.mouseover = function() {
-    this.handleEvent(PIXI_UI.Button.HOVER);
+Button.prototype.mouseover = function() {
+    this.handleEvent(Button.HOVER);
 };
 
-PIXI_UI.Button.prototype.mouseout = function() {
+Button.prototype.mouseout = function() {
     this.handleEvent('out');
 };
 
@@ -115,7 +116,7 @@ PIXI_UI.Button.prototype.mouseout = function() {
  *
  * @method updateDimensions
  */
-PIXI_UI.Button.prototype.updateDimensions = function() {
+Button.prototype.updateDimensions = function() {
     if (this.hitArea) {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
@@ -138,44 +139,44 @@ PIXI_UI.Button.prototype.updateDimensions = function() {
  * @method handleEvent
  * @param type one of the valid states
  */
-PIXI_UI.Button.prototype.handleEvent = function(type) {
+Button.prototype.handleEvent = function(type) {
     if (!this._enabled) {
         return;
     }
-    if (type === PIXI_UI.Button.DOWN) {
-        this.currentState = PIXI_UI.Button.DOWN;
+    if (type === Button.DOWN) {
+        this.currentState = Button.DOWN;
         this._pressed = true;
-    } else if (type === PIXI_UI.Button.UP) {
+    } else if (type === Button.UP) {
         this._pressed = false;
         if (this._over) {
-            this.currentState = PIXI_UI.Button.HOVER;
+            this.currentState = Button.HOVER;
         } else {
-            this.currentState = PIXI_UI.Button.UP;
+            this.currentState = Button.UP;
         }
-    } else if (type === PIXI_UI.Button.HOVER) {
+    } else if (type === Button.HOVER) {
         this._over = true;
         if (this._pressed) {
-            this.currentState = PIXI_UI.Button.DOWN;
+            this.currentState = Button.DOWN;
         } else {
-            this.currentState = PIXI_UI.Button.HOVER;
+            this.currentState = Button.HOVER;
         }
     } else  { // type === rollout and default
         if (this._over) {
             this._over = false;
         }
-        this.currentState = PIXI_UI.Button.UP;
+        this.currentState = Button.UP;
     }
 };
 
 // performance increase to avoid using call.. (10x faster)
-PIXI_UI.Button.prototype.redrawSkinable = PIXI_UI.Skinable.prototype.redraw;
+Button.prototype.redrawSkinable = Skinable.prototype.redraw;
 
 /**
  * update before draw call (position label)
  *
  * @method redraw
  */
-PIXI_UI.Button.prototype.redraw = function() {
+Button.prototype.redraw = function() {
     if (this.updateLabel) {
         this.createLabel();
     }
@@ -187,7 +188,7 @@ PIXI_UI.Button.prototype.redraw = function() {
  *
  * @method createLabel
  */
-PIXI_UI.Button.prototype.createLabel = function() {
+Button.prototype.createLabel = function() {
     if(this.labelText) {
         this.labelText.text = this._label;
         this.labelText.style = this.theme.textStyle;
@@ -204,14 +205,14 @@ PIXI_UI.Button.prototype.createLabel = function() {
  *
  * @method updateLabelDimensions
  */
-PIXI_UI.Button.prototype.updateLabelDimensions = function () {
+Button.prototype.updateLabelDimensions = function () {
     if (this.labelText && this.labelText.text) {
         this.labelText.x = Math.floor((this.width - this.labelText.width) / 2);
         this.labelText.y = Math.floor((this.height - this.labelText.height) / 2);
     }
 };
 
-PIXI_UI.Button.prototype.skinableSetTheme = PIXI_UI.Skinable.prototype.setTheme;
+Button.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
 /**
  * change the theme
@@ -219,7 +220,7 @@ PIXI_UI.Button.prototype.skinableSetTheme = PIXI_UI.Skinable.prototype.setTheme;
  * @method setTheme
  * @param theme the new theme {Theme}
  */
-PIXI_UI.Button.prototype.setTheme = function(theme) {
+Button.prototype.setTheme = function(theme) {
     // this theme has other font or color settings - update the label
     if (this.labelText) {
         this.updateLabel = (this.updateLabel ||
@@ -236,7 +237,7 @@ PIXI_UI.Button.prototype.setTheme = function(theme) {
  * @property currentState
  * @type String
  */
-Object.defineProperty(PIXI_UI.Button.prototype, 'currentState',{
+Object.defineProperty(Button.prototype, 'currentState',{
     get: function() {
         return this._currentState;
     },
@@ -259,7 +260,7 @@ Object.defineProperty(PIXI_UI.Button.prototype, 'currentState',{
  * @property label
  * @type String
  */
-Object.defineProperty(PIXI_UI.Button.prototype, 'label', {
+Object.defineProperty(Button.prototype, 'label', {
     get: function() {
         return this._label;
     },

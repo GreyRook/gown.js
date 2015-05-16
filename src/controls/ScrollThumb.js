@@ -1,12 +1,18 @@
-/**
- * authors: Björn Friedrichs, Andreas Bresser
- */
+var Button = require('./Button');
 
-PIXI_UI.ScrollThumb = function(scrollable, theme) {
+/**
+ * thumb button that can be moved on the scrollbar
+ *
+ * @class ScrollThumb
+ * @extends PIXI_UI.Button
+ * @memberof PIXI_UI
+ * @constructor
+ */
+function ScrollThumb(scrollable, theme) {
     this.scrollable = scrollable;
-    this.skinName = this.skinName || PIXI_UI.ScrollThumb.SKIN_NAME;
+    this.skinName = this.skinName || ScrollThumb.SKIN_NAME;
     this._validStates = ['horizontal_up', 'vertical_up', 'horizontal_down', 'vertical_down', 'horizontal_hover', 'vertical_hover'];
-    PIXI_UI.Button.call(this, theme);
+    Button.call(this, theme);
     this.invalidTrack = true;
     this.width = 20;
     this.height = 20;
@@ -16,14 +22,16 @@ PIXI_UI.ScrollThumb = function(scrollable, theme) {
     this.touchdown = this.mousedown;
     /* jshint unused: false */
     this.touchend = this.touchendoutside = this.mouseup;
-};
+}
 
-PIXI_UI.ScrollThumb.prototype = Object.create( PIXI_UI.Button.prototype );
-PIXI_UI.ScrollThumb.prototype.constructor = PIXI_UI.ScrollThumb;
+ScrollThumb.prototype = Object.create( Button.prototype );
+ScrollThumb.prototype.constructor = ScrollThumb;
+module.exports = ScrollThumb;
 
-PIXI_UI.ScrollThumb.SKIN_NAME = 'scroll_thumb';
 
-var originalCurrentState = Object.getOwnPropertyDescriptor(PIXI_UI.Button.prototype, 'currentState');
+ScrollThumb.SKIN_NAME = 'scroll_thumb';
+
+var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'currentState');
 
 /**
  * The current state (one of _validStates)
@@ -31,32 +39,32 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(PIXI_UI.Button.protot
  * @property currentState
  * @type String
  */
-Object.defineProperty(PIXI_UI.ScrollThumb.prototype, 'currentState',{
+Object.defineProperty(ScrollThumb.prototype, 'currentState',{
     set: function(value) {
         value = this.scrollable.orientation + '_' + value;
         originalCurrentState.set.call(this, value);
     }
 });
 
-PIXI_UI.ScrollThumb.prototype.buttonmousedown = PIXI_UI.Button.prototype.mousedown;
-PIXI_UI.ScrollThumb.prototype.mousedown = function(mouseData) {
+ScrollThumb.prototype.buttonmousedown = Button.prototype.mousedown;
+ScrollThumb.prototype.mousedown = function(mouseData) {
     this.buttonmousedown(mouseData);
     this.scrollable.handleDown(mouseData);
 };
 
-PIXI_UI.ScrollThumb.prototype.buttonmousemove = PIXI_UI.Button.prototype.mousemove;
-PIXI_UI.ScrollThumb.prototype.mousemove = function (mouseData) {
+ScrollThumb.prototype.buttonmousemove = Button.prototype.mousemove;
+ScrollThumb.prototype.mousemove = function (mouseData) {
     this.buttonmousemove(mouseData);
     this.scrollable.handleMove(mouseData);
 };
 
-PIXI_UI.ScrollThumb.prototype.buttonmouseup = PIXI_UI.Button.prototype.mousemove;
-PIXI_UI.ScrollThumb.prototype.mouseup = function (mouseData) {
+ScrollThumb.prototype.buttonmouseup = Button.prototype.mousemove;
+ScrollThumb.prototype.mouseup = function (mouseData) {
     this.buttonmouseup(mouseData);
     this.scrollable.handleUp();
 };
 
-PIXI_UI.ScrollThumb.prototype.showTrack = function(skin) {
+ScrollThumb.prototype.showTrack = function(skin) {
     if (this.skin !== skin) {
         if(this.skin) {
             this.removeChild(this.skin);
@@ -70,7 +78,7 @@ PIXI_UI.ScrollThumb.prototype.showTrack = function(skin) {
     this.invalidTrack = false;
 };
 
-PIXI_UI.ScrollThumb.prototype.redraw = function() {
+ScrollThumb.prototype.redraw = function() {
     this.redrawSkinable();
     if (this.invalidTrack) {
         this.fromSkin(this.scrollable.orientation+'_thumb', this.showTrack);

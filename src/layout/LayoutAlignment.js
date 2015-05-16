@@ -1,22 +1,23 @@
-/**
- * @author Andreas Bresser
- */
+var Layout = require('./Layout');
 
 /**
  * basic layout
  *
  * @class LayoutAlignment
+ * @extends PIXI_UI.Layout
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.LayoutAlignment = function() {
-    PIXI_UI.Layout.call(this);
-};
+function LayoutAlignment() {
+    Layout.call(this);
+}
 
-PIXI_UI.LayoutAlignment.prototype = Object.create( PIXI_UI.Layout.prototype );
-PIXI_UI.LayoutAlignment.prototype.constructor = PIXI_UI.LayoutAlignment;
+LayoutAlignment.prototype = Object.create( Layout.prototype );
+LayoutAlignment.prototype.constructor = LayoutAlignment;
+module.exports = LayoutAlignment;
 
-PIXI_UI.LayoutAlignment.VERTICAL_ALIGNMENT = 'vertical';
-PIXI_UI.LayoutAlignment.HORIZONTAL_ALIGNMENT = 'horizontal';
+LayoutAlignment.VERTICAL_ALIGNMENT = 'vertical';
+LayoutAlignment.HORIZONTAL_ALIGNMENT = 'horizontal';
 
 /**
  * apply percentage width/height to items.
@@ -30,8 +31,8 @@ PIXI_UI.LayoutAlignment.HORIZONTAL_ALIGNMENT = 'horizontal';
  * (this function will handle padding and gap, so the explicitWidth is
  *  for the whole available width)
  */
-PIXI_UI.LayoutAlignment.prototype.applyPercent = function(items, explicit) {
-    var _hor = (this.alignment === PIXI_UI.LayoutAlignment.HORIZONTAL_ALIGNMENT);
+LayoutAlignment.prototype.applyPercent = function(items, explicit) {
+    var _hor = (this.alignment === LayoutAlignment.HORIZONTAL_ALIGNMENT);
 
     var itemCount = items.length;
     var remaining = explicit;
@@ -95,7 +96,7 @@ PIXI_UI.LayoutAlignment.prototype.applyPercent = function(items, explicit) {
  * @param i current item position
  * @param items list of items (to determine if we are at the last gap)
  */
-PIXI_UI.LayoutAlignment.prototype._currentGap = function(i, items) {
+LayoutAlignment.prototype._currentGap = function(i, items) {
     if(!isNaN(this._firstGap) && i === 0)
     {
         return this._firstGap;
@@ -114,8 +115,8 @@ PIXI_UI.LayoutAlignment.prototype._currentGap = function(i, items) {
  * @param items items that will be layouted {Array}
  * @param viewPortBounds {ViewPortBounds}
  */
-PIXI_UI.LayoutAlignment.prototype.layout = function(items, viewPortBounds) {
-    var _hor = (this.alignment === PIXI_UI.LayoutAlignment.HORIZONTAL_ALIGNMENT);
+LayoutAlignment.prototype.layout = function(items, viewPortBounds) {
+    var _hor = (this.alignment === LayoutAlignment.HORIZONTAL_ALIGNMENT);
 
     // get max. dimensions from viewport bounds
     var explicitWidth = viewPortBounds ? viewPortBounds.explicitWidth : NaN;
@@ -152,7 +153,7 @@ PIXI_UI.LayoutAlignment.prototype.layout = function(items, viewPortBounds) {
  * @property firstGap
  * @type String
  */
-Object.defineProperty(PIXI_UI.LayoutAlignment.prototype, 'firstGap', {
+Object.defineProperty(LayoutAlignment.prototype, 'firstGap', {
     set: function(value) {
         if (value === this._firstGap) {
             return;
@@ -171,7 +172,7 @@ Object.defineProperty(PIXI_UI.LayoutAlignment.prototype, 'firstGap', {
  * @property firstGap
  * @type String
  */
-Object.defineProperty(PIXI_UI.LayoutAlignment.prototype, 'lastGap', {
+Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
     set: function(value) {
         if (value === this._lastGap) {
             return;

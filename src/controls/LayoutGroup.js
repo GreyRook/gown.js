@@ -1,30 +1,32 @@
-/**
- * @author Andreas Bresser
- */
+var Control = require('../core/Control'),
+    ViewPortBounds = require('../layout/ViewPortBounds');
 
 /**
  * The LayoutGroup allows you to add PIXI.js children that will be positioned
  *
  * @class LayoutGroup
+ * @extends PIXI_UI.Layout
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.LayoutGroup = function() {
+function LayoutGroup() {
     this.percentWidth = this.percentWidth || null;
     this.percentHeight = this.percentHeight || null;
-    PIXI_UI.Control.call(this);
-    this._viewPortBounds = new PIXI_UI.ViewPortBounds();
+    Control.call(this);
+    this._viewPortBounds = new ViewPortBounds();
     this._needUpdate = true;
-};
+}
 
-PIXI_UI.LayoutGroup.prototype = Object.create( PIXI_UI.Control.prototype );
-PIXI_UI.LayoutGroup.prototype.constructor = PIXI_UI.LayoutGroup;
+LayoutGroup.prototype = Object.create( Control.prototype );
+LayoutGroup.prototype.constructor = LayoutGroup;
+module.exports = LayoutGroup;
 
 /**
  * update before draw call (position label)
  *
  * @method redraw
  */
-PIXI_UI.LayoutGroup.prototype.redraw = function() {
+LayoutGroup.prototype.redraw = function() {
     var dimensionChanged = false;
     if (this._width && this._viewPortBounds.explicitWidth !== this._width) {
         // width set - change viewport boundaries
@@ -45,15 +47,15 @@ PIXI_UI.LayoutGroup.prototype.redraw = function() {
 };
 
 /* istanbul ignore next */
-PIXI_UI.LayoutGroup.prototype.addChild = function(child) {
-    var re = PIXI_UI.Control.prototype.addChild.call(this, child);
+LayoutGroup.prototype.addChild = function(child) {
+    var re = Control.prototype.addChild.call(this, child);
     this._needUpdate = true;
     return re;
 };
 
 /* istanbul ignore next */
-PIXI_UI.LayoutGroup.prototype.addChildAt = function(child, pos) {
-    var re = PIXI_UI.Control.prototype.addChildAt.call(this, child, pos);
+LayoutGroup.prototype.addChildAt = function(child, pos) {
+    var re = Control.prototype.addChildAt.call(this, child, pos);
     this._needUpdate = true;
     return re;
 };
@@ -63,8 +65,8 @@ PIXI_UI.LayoutGroup.prototype.addChildAt = function(child, pos) {
  *
  * @param space {Number}
  */
-PIXI_UI.LayoutGroup.prototype.addSpacer = function(space) {
-    var spacer = new PIXI_UI.Control();
+LayoutGroup.prototype.addSpacer = function(space) {
+    var spacer = new Control();
     spacer.width = spacer.height = space;
     this.addChild(spacer);
 };
@@ -80,7 +82,7 @@ PIXI_UI.LayoutGroup.prototype.addSpacer = function(space) {
  * @param width width of the viewport
  * @param height height of the viewport
  */
-PIXI_UI.LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, height) {
+LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, height) {
     return child.x < width + x &&
         child.y < height + y &&
         child.x > x - child.width &&
@@ -97,10 +99,12 @@ PIXI_UI.LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, h
  * @returns {boolean}
  */
 /* istanbul ignore next */
-PIXI_UI.LayoutGroup.prototype._renderAreaWebGL = function(renderSession, x, y, width, height) {
+LayoutGroup.prototype._renderAreaWebGL = function(renderSession, x, y, width, height) {
     this.redraw();
 
-    if(!this.visible || this.alpha <= 0)return;
+    if(!this.visible || this.alpha <= 0) {
+        return;
+    }
 
     if(this._cacheAsBitmap)
     {
@@ -138,8 +142,12 @@ PIXI_UI.LayoutGroup.prototype._renderAreaWebGL = function(renderSession, x, y, w
 
         renderSession.spriteBatch.stop();
 
-        if(this._mask)renderSession.maskManager.popMask(this._mask, renderSession);
-        if(this._filters)renderSession.filterManager.popFilter();
+        if (this._mask) {
+            renderSession.maskManager.popMask(this._mask, renderSession);
+        }
+        if (this._filters) {
+            renderSession.filterManager.popFilter();
+        }
 
         renderSession.spriteBatch.start();
     }
@@ -157,9 +165,11 @@ PIXI_UI.LayoutGroup.prototype._renderAreaWebGL = function(renderSession, x, y, w
 };
 
 /* istanbul ignore next */
-PIXI_UI.LayoutGroup.prototype._renderAreaCanvas = function(renderSession, x, y, width, height) {
+LayoutGroup.prototype._renderAreaCanvas = function(renderSession, x, y, width, height) {
     this.redraw();
-    if(this.visible === false || this.alpha === 0)return;
+    if(this.visible === false || this.alpha === 0) {
+        return;
+    }
 
     if(this._cacheAsBitmap)
     {
@@ -193,7 +203,7 @@ PIXI_UI.LayoutGroup.prototype._renderAreaCanvas = function(renderSession, x, y, 
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI_UI.LayoutGroup.prototype, 'width', {
+Object.defineProperty(LayoutGroup.prototype, 'width', {
     set: function(width) {
         this._width = width;
     },
@@ -218,7 +228,7 @@ Object.defineProperty(PIXI_UI.LayoutGroup.prototype, 'width', {
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI_UI.LayoutGroup.prototype, 'height', {
+Object.defineProperty(LayoutGroup.prototype, 'height', {
     set: function(height) {
         this._height = height;
     },

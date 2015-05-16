@@ -1,18 +1,19 @@
-/**
- * @author Andreas Bresser
- */
+var LayoutAlignment = require('./LayoutAlignment');
 
 /**
  * HorizontalLayout - just set alignment to
  * LayoutAlignment.HORIZONTAL_ALIGNMENT
  *
  * @class HorizontalLayout
+ * @extends PIXI_UI.LayoutAlignment
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.HorizontalLayout = function() {
-    PIXI_UI.LayoutAlignment.call(this);
-    this.alignment = PIXI_UI.LayoutAlignment.HORIZONTAL_ALIGNMENT;
-};
+function HorizontalLayout() {
+    LayoutAlignment.call(this);
+    this.alignment = LayoutAlignment.HORIZONTAL_ALIGNMENT;
+}
 
-PIXI_UI.HorizontalLayout.prototype = Object.create( PIXI_UI.LayoutAlignment.prototype );
-PIXI_UI.HorizontalLayout.prototype.constructor = PIXI_UI.HorizontalLayout;
+HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
+HorizontalLayout.prototype.constructor = HorizontalLayout;
+module.exports = HorizontalLayout;

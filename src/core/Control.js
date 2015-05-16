@@ -1,24 +1,22 @@
 /**
- * @author Andreas Bresser
- */
-
-/**
  * base for all UI controls (see controls/)
  * based on pixi-DisplayContainer that supports adding children, so all
  * controls are container
  * @class Control
+ * @extends PIXI.DisplayObjectContainer
+ * @memberof PIXI_UI
  * @constructor
  */
-
-PIXI_UI.Control = function() {
+function Control() {
     PIXI.DisplayObjectContainer.call(this);
     this.enabled = this.enabled !== false;
     // assume all controls are interactive
     this.interactive = true;
-};
+}
 
-PIXI_UI.Control.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
-PIXI_UI.Control.prototype.constructor = PIXI_UI.Control;
+Control.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+Control.prototype.constructor = Control;
+module.exports = Control;
 
 /**
  * change the theme (every control can have a theme, even if it does not
@@ -28,7 +26,7 @@ PIXI_UI.Control.prototype.constructor = PIXI_UI.Control;
  * @method setTheme
  * @param theme the new theme {Theme}
  */
-PIXI_UI.Control.prototype.setTheme = function(theme) {
+Control.prototype.setTheme = function(theme) {
     if (theme === this.theme && theme) {
         return;
     }
@@ -45,7 +43,7 @@ PIXI_UI.Control.prototype.setTheme = function(theme) {
  * @private
  */
 /* istanbul ignore next */
-PIXI_UI.Control.prototype._renderWebGL = function(renderSession) {
+Control.prototype._renderWebGL = function(renderSession) {
     this.redraw();
     return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
 };
@@ -58,7 +56,7 @@ PIXI_UI.Control.prototype._renderWebGL = function(renderSession) {
  * @private
  */
 /* istanbul ignore next */
-PIXI_UI.Control.prototype._renderCanvas = function(renderSession) {
+Control.prototype._renderCanvas = function(renderSession) {
     this.redraw();
     return PIXI.DisplayObjectContainer.prototype._renderCanvas.call(this, renderSession);
 };
@@ -69,7 +67,7 @@ PIXI_UI.Control.prototype._renderCanvas = function(renderSession) {
  * @method mousePos
  * @returns {x: Number, y: Number}
  */
-PIXI_UI.Control.prototype.mousePos = function(e) {
+Control.prototype.mousePos = function(e) {
     return e.getLocalPosition(e.target || this);
 };
 
@@ -79,7 +77,7 @@ PIXI_UI.Control.prototype.mousePos = function(e) {
  *
  * @method redraw
  */
-PIXI_UI.Control.prototype.redraw = function() {
+Control.prototype.redraw = function() {
 };
 
 /**
@@ -89,7 +87,7 @@ PIXI_UI.Control.prototype.redraw = function() {
  * @property enabled
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.Control.prototype, 'enabled', {
+Object.defineProperty(Control.prototype, 'enabled', {
     get: function() {
         return this._enabled;
     },
@@ -108,7 +106,7 @@ Object.defineProperty(PIXI_UI.Control.prototype, 'enabled', {
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Control.prototype, 'width', {
+Object.defineProperty(Control.prototype, 'width', {
     get: function() {
         return this._width;
         //return originalWidth.get.call(this);
@@ -129,7 +127,7 @@ Object.defineProperty(PIXI_UI.Control.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Control.prototype, 'height', {
+Object.defineProperty(Control.prototype, 'height', {
     get: function() {
         //return originalHeight.get.call(this);
         return this._height;

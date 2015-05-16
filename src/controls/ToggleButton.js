@@ -1,21 +1,21 @@
-/**
- * @author Andreas Bresser
- */
+var Button = require('./Button');
 
 /**
  * basic button that has a selected state which indicates if the button
  * is pressed or not.
  *
  * @class ToggleButton
+ * @extends PIXI_UI.Button
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.ToggleButton = function (theme) {
-    this.skinName = this.skinName || PIXI_UI.ToggleButton.SKIN_NAME;
-    this._validStates = PIXI_UI.Button.stateNames.slice(0);
-    this._validStates.push(PIXI_UI.ToggleButton.SELECTED_UP);
-    this._validStates.push(PIXI_UI.ToggleButton.SELECTED_DOWN);
-    this._validStates.push(PIXI_UI.ToggleButton.SELECTED_HOVER);
-    PIXI_UI.Button.call(this, theme);
+function ToggleButton(theme) {
+    this.skinName = this.skinName || ToggleButton.SKIN_NAME;
+    this._validStates = Button.stateNames.slice(0);
+    this._validStates.push(ToggleButton.SELECTED_UP);
+    this._validStates.push(ToggleButton.SELECTED_DOWN);
+    this._validStates.push(ToggleButton.SELECTED_HOVER);
+    Button.call(this, theme);
 
     /**
      * The pressed state of the Button
@@ -24,18 +24,20 @@ PIXI_UI.ToggleButton = function (theme) {
      * @type Boolean
      */
     this._selected = false;
-};
+}
 
-PIXI_UI.ToggleButton.prototype = Object.create( PIXI_UI.Button.prototype );
-PIXI_UI.ToggleButton.prototype.constructor = PIXI_UI.ToggleButton;
+ToggleButton.prototype = Object.create( Button.prototype );
+ToggleButton.prototype.constructor = ToggleButton;
+module.exports = ToggleButton;
 
-PIXI_UI.ToggleButton.SKIN_NAME = 'toggle_button';
 
-PIXI_UI.ToggleButton.SELECTED_UP = 'selected_up';
-PIXI_UI.ToggleButton.SELECTED_DOWN = 'selected_down';
-PIXI_UI.ToggleButton.SELECTED_HOVER = 'selected_hover';
+ToggleButton.SKIN_NAME = 'toggle_button';
 
-var originalCurrentState = Object.getOwnPropertyDescriptor(PIXI_UI.Button.prototype, 'currentState');
+ToggleButton.SELECTED_UP = 'selected_up';
+ToggleButton.SELECTED_DOWN = 'selected_down';
+ToggleButton.SELECTED_HOVER = 'selected_hover';
+
+var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'currentState');
 
 /**
  * The current state (one of _validStates)
@@ -43,7 +45,7 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(PIXI_UI.Button.protot
  * @property currentState
  * @type String
  */
-Object.defineProperty(PIXI_UI.ToggleButton.prototype, 'currentState',{
+Object.defineProperty(ToggleButton.prototype, 'currentState',{
     set: function(value) {
         if (this._selected) {
             value = 'selected_' + value;
@@ -58,7 +60,7 @@ Object.defineProperty(PIXI_UI.ToggleButton.prototype, 'currentState',{
  * @property selected
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.ToggleButton.prototype, 'selected', {
+Object.defineProperty(ToggleButton.prototype, 'selected', {
     set: function(selected) {
         var state = this._currentState;
         this.invalidState = this._selected !== selected || this.invalidState;
@@ -77,12 +79,12 @@ Object.defineProperty(PIXI_UI.ToggleButton.prototype, 'selected', {
 /**
  * toggle state
  */
-PIXI_UI.ToggleButton.prototype.toggle = function() {
+ToggleButton.prototype.toggle = function() {
     this.selected = !this._selected;
 };
 
 
-PIXI_UI.ToggleButton.prototype.buttonHandleEvent = PIXI_UI.Button.prototype.handleEvent;
+ToggleButton.prototype.buttonHandleEvent = Button.prototype.handleEvent;
 
 /**
  * handle Touch/Tab Event
@@ -90,12 +92,12 @@ PIXI_UI.ToggleButton.prototype.buttonHandleEvent = PIXI_UI.Button.prototype.hand
  * @param {Object} type the type of the press/touch.
  * @protected
  **/
-PIXI_UI.ToggleButton.prototype.handleEvent = function(type) {
+ToggleButton.prototype.handleEvent = function(type) {
     if (!this._enabled) {
         return;
     }
 
-    if (type === PIXI_UI.Button.UP && this._pressed) {
+    if (type === Button.UP && this._pressed) {
         this.toggle();
     }
     this.buttonHandleEvent(type);

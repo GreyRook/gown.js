@@ -1,17 +1,16 @@
 /**
- * @author Andreas Bresser
- */
-
-/**
  * basic layout stub - see LayoutAlignment
  *
  * @class Layout
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.Layout = function() {
+function Layout() {
     this.gap = 0;
     this.padding = 0;
-};
+}
+
+module.exports = Layout;
 
 /**
  * If the total item height is smaller than the height of the bounds,
@@ -20,7 +19,7 @@ PIXI_UI.Layout = function() {
  * @property VERTICAL_ALIGN_TOP
  * @static
  */
-PIXI_UI.Layout.VERTICAL_ALIGN_TOP = 'top';
+Layout.VERTICAL_ALIGN_TOP = 'top';
 
 /**
  * If the total item height is smaller than the height of the bounds,
@@ -29,7 +28,7 @@ PIXI_UI.Layout.VERTICAL_ALIGN_TOP = 'top';
  * @property VERTICAL_ALIGN_MIDDLE
  * @static
  */
-PIXI_UI.Layout.VERTICAL_ALIGN_MIDDLE = 'middle';
+Layout.VERTICAL_ALIGN_MIDDLE = 'middle';
 
 /**
  * Alignment justified
@@ -37,7 +36,7 @@ PIXI_UI.Layout.VERTICAL_ALIGN_MIDDLE = 'middle';
  * @property ALIGN_JUSTIFY
  * @static
  */
-PIXI_UI.Layout.ALIGN_JUSTIFY = 'justify';
+Layout.ALIGN_JUSTIFY = 'justify';
 
 /**
  * If the total item height is smaller than the height of the bounds,
@@ -46,7 +45,7 @@ PIXI_UI.Layout.ALIGN_JUSTIFY = 'justify';
  * @property VERTICAL_ALIGN_BOTTOM
  * @static
  */
-PIXI_UI.Layout.VERTICAL_ALIGN_BOTTOM = 'bottom';
+Layout.VERTICAL_ALIGN_BOTTOM = 'bottom';
 
 /**
  * If the total item width is smaller than the width of the bounds, the
@@ -55,7 +54,7 @@ PIXI_UI.Layout.VERTICAL_ALIGN_BOTTOM = 'bottom';
  * @property HORIZONTAL_ALIGN_LEFT
  * @static
  */
-PIXI_UI.Layout.HORIZONTAL_ALIGN_LEFT = 'left';
+Layout.HORIZONTAL_ALIGN_LEFT = 'left';
 
 /**
  * If the total item width is smaller than the width of the bounds, the
@@ -64,7 +63,7 @@ PIXI_UI.Layout.HORIZONTAL_ALIGN_LEFT = 'left';
  * @property HORIZONTAL_ALIGN_CENTER
  * @static
  */
-PIXI_UI.Layout.HORIZONTAL_ALIGN_CENTER = 'center';
+Layout.HORIZONTAL_ALIGN_CENTER = 'center';
 
 /**
  * If the total item width is smaller than the width of the bounds, the
@@ -73,7 +72,7 @@ PIXI_UI.Layout.HORIZONTAL_ALIGN_CENTER = 'center';
  * @property HORIZONTAL_ALIGN_RIGHT
  * @static
  */
-PIXI_UI.Layout.HORIZONTAL_ALIGN_RIGHT = 'right';
+Layout.HORIZONTAL_ALIGN_RIGHT = 'right';
 
 
 
@@ -83,7 +82,7 @@ PIXI_UI.Layout.HORIZONTAL_ALIGN_RIGHT = 'right';
  * @property gap
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Layout.prototype, 'gap', {
+Object.defineProperty(Layout.prototype, 'gap', {
     get: function() {
         return this._gap;
     },
@@ -102,7 +101,7 @@ Object.defineProperty(PIXI_UI.Layout.prototype, 'gap', {
  * @property needUpdate
  * @readonly
  */
-Object.defineProperty(PIXI_UI.Layout.prototype, 'needUpdate', {
+Object.defineProperty(Layout.prototype, 'needUpdate', {
     get: function() {
         return this._needUpdate;
     }
@@ -114,7 +113,7 @@ Object.defineProperty(PIXI_UI.Layout.prototype, 'needUpdate', {
  * @property padding
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Layout.prototype, 'padding', {
+Object.defineProperty(Layout.prototype, 'padding', {
     set: function(value) {
         this._paddingLeft = value;
         this._paddingRight = value;
@@ -136,7 +135,7 @@ Object.defineProperty(PIXI_UI.Layout.prototype, 'padding', {
  * @property paddingTop
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingTop', {
+Object.defineProperty(Layout.prototype, 'paddingTop', {
     get:  function() {
         return this._paddingTop;
     },
@@ -156,7 +155,7 @@ Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingTop', {
  * @property paddingTop
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingBottom', {
+Object.defineProperty(Layout.prototype, 'paddingBottom', {
     get:  function() {
         return this._paddingBottom;
     },
@@ -177,7 +176,7 @@ Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingBottom', {
  * @property paddingLeft
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingLeft', {
+Object.defineProperty(Layout.prototype, 'paddingLeft', {
     get:  function() {
         return this._paddingLeft;
     },
@@ -197,7 +196,7 @@ Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingLeft', {
  * @property paddingLeft
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingRight', {
+Object.defineProperty(Layout.prototype, 'paddingRight', {
     get:  function() {
         return this._paddingRight;
     },
@@ -218,5 +217,5 @@ Object.defineProperty(PIXI_UI.Layout.prototype, 'paddingRight', {
  * @param viewPortBounds {ViewPortBounds}
  */
 /* jshint unused: false */
-PIXI_UI.Layout.prototype.layout = function (items, viewPortBounds) {
+Layout.prototype.layout = function (items, viewPortBounds) {
 };

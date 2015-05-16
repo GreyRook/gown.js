@@ -2,9 +2,10 @@
  * Holds all information related to a Slider change event
  *
  * @class SliderData
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.SliderData = function()
+function SliderData()
 {
     this.value = 0;
     /**
@@ -14,4 +15,6 @@ PIXI_UI.SliderData = function()
      * @type Sprite
      */
     this.target = null;
-};
+}
+
+module.exports = SliderData;

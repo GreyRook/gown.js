@@ -1,6 +1,5 @@
-/**
- * @author Andreas Bresser
- */
+var Skinable = require('../core/Skinable'),
+    InputWrapper = require('../util/InputWrapper');
 
 /**
  * InputControl used for TextInput, TextArea and everything else that
@@ -10,13 +9,15 @@
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class InputControl
+ * @extends PIXI_UI.Skinable
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.InputControl = function(text, theme) {
-    PIXI_UI.Skinable.call(this, theme);
+function InputControl(text, theme) {
+    Skinable.call(this, theme);
     this.text = text || ' ';
     // create DOM Input (if we need one)
-    PIXI_UI.InputWrapper.createInput();
+    InputWrapper.createInput();
     this.hasFocus = false;
 
     /**
@@ -27,7 +28,6 @@ PIXI_UI.InputControl = function(text, theme) {
      */
     this._mouseDown = false;
 
-
     /**
      * TODO: description!
      *
@@ -35,10 +35,11 @@ PIXI_UI.InputControl = function(text, theme) {
      * @private
      */
     this._clipPos = [0, 0];
-};
+}
 
-PIXI_UI.InputControl.prototype = Object.create( PIXI_UI.Skinable.prototype );
-PIXI_UI.InputControl.prototype.constructor = PIXI_UI.InputControl;
+InputControl.prototype = Object.create( Skinable.prototype );
+InputControl.prototype.constructor = InputControl;
+module.exports = InputControl;
 
 /**
  * currently selected input control (used for tab index)
@@ -47,12 +48,12 @@ PIXI_UI.InputControl.prototype.constructor = PIXI_UI.InputControl;
  * @type PIXI_UI.InputControl
  * @static
  */
-PIXI_UI.InputControl.currentInput = null;
+InputControl.currentInput = null;
 
-PIXI_UI.InputControl.prototype.onKeyUp = function() {
+InputControl.prototype.onKeyUp = function() {
 };
 
-PIXI_UI.InputControl.prototype.onKeyDown = function() {
+InputControl.prototype.onKeyDown = function() {
 };
 
 /**
@@ -62,7 +63,7 @@ PIXI_UI.InputControl.prototype.onKeyDown = function() {
  * @param x
  * @returns {Number}
  */
-PIXI_UI.InputControl.prototype.clickPos = function(x)
+InputControl.prototype.clickPos = function(x)
 {
 
     var text = this.pixiText,
@@ -93,7 +94,7 @@ PIXI_UI.InputControl.prototype.clickPos = function(x)
  * @param text
  * @returns {*}
  */
-PIXI_UI.InputControl.prototype.textWidth = function(text) {
+InputControl.prototype.textWidth = function(text) {
     if(!this.text._isBitmapFont)
     {
         var ctx = this.pixiText.context;
@@ -125,19 +126,19 @@ PIXI_UI.InputControl.prototype.textWidth = function(text) {
  *
  * @method focus
  */
-PIXI_UI.InputControl.prototype.focus = function () {
+InputControl.prototype.focus = function () {
     // is already current input
-    if (PIXI_UI.InputControl.currentInput === this) {
+    if (InputControl.currentInput === this) {
         return;
     }
 
     // drop focus
-    if (PIXI_UI.InputControl.currentInput) {
-        PIXI_UI.InputControl.currentInput.blur();
+    if (InputControl.currentInput) {
+        InputControl.currentInput.blur();
     }
 
     // set focus
-    PIXI_UI.InputControl.currentInput = this;
+    InputControl.currentInput = this;
     this.hasFocus = true;
 
     // check custom focus event
@@ -152,7 +153,7 @@ PIXI_UI.InputControl.prototype.focus = function () {
      */
 
     // focus hidden input
-    PIXI_UI.InputWrapper.focus();
+    InputWrapper.focus();
 };
 
 /**
@@ -161,7 +162,7 @@ PIXI_UI.InputControl.prototype.focus = function () {
  * @property hasFocus
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.InputControl.prototype, 'hasFocus', {
+Object.defineProperty(InputControl.prototype, 'hasFocus', {
     get: function() {
         return this._hasFocus;
     },
@@ -170,7 +171,7 @@ Object.defineProperty(PIXI_UI.InputControl.prototype, 'hasFocus', {
     }
 });
 
-PIXI_UI.InputControl.prototype.onMouseUpOutside = function() {
+InputControl.prototype.onMouseUpOutside = function() {
     if(this.hasFocus && !this._mouseDown)
     {
         this.blur();
@@ -182,7 +183,7 @@ PIXI_UI.InputControl.prototype.onMouseUpOutside = function() {
  * callback to execute code on focus
  * @method onFocus
  */
-PIXI_UI.InputControl.prototype.onfocus = function () {
+InputControl.prototype.onfocus = function () {
 };
 
 /**
@@ -190,13 +191,13 @@ PIXI_UI.InputControl.prototype.onfocus = function () {
  *
  * @method blur
  */
-PIXI_UI.InputControl.prototype.blur = function() {
-    if (PIXI_UI.InputControl.currentInput === this) {
-        PIXI_UI.InputControl.currentInput = null;
+InputControl.prototype.blur = function() {
+    if (InputControl.currentInput === this) {
+        InputControl.currentInput = null;
         this.hasFocus = false;
 
         // blur hidden input
-        PIXI_UI.InputWrapper.blur();
+        InputWrapper.blur();
         this.onblur();
     }
 };
@@ -206,15 +207,15 @@ PIXI_UI.InputControl.prototype.blur = function() {
  *
  * @method onblur
  */
-PIXI_UI.InputControl.prototype.onblur = function() {
+InputControl.prototype.onblur = function() {
 };
 
 // blur current input
-PIXI_UI.InputControl.blur = function() {
-    if (PIXI_UI.InputControl.currentInput &&
-        !PIXI_UI.InputControl.currentInput._mouseDown) {
-        PIXI_UI.InputControl.currentInput.blur();
-        PIXI_UI.InputControl.currentInput = null;
+InputControl.blur = function() {
+    if (InputControl.currentInput &&
+        !InputControl.currentInput._mouseDown) {
+        InputControl.currentInput.blur();
+        InputControl.currentInput = null;
     }
 };
-window.addEventListener('blur', PIXI_UI.InputControl.blur, false);
+window.addEventListener('blur', InputControl.blur, false);

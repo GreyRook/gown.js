@@ -1,20 +1,22 @@
-/**
- * @author Andreas Bresser
- */
+var Shape = require('./Shape');
+
 /**
  * basic line
  *
  * @class Line
+ * @extends PIXI_UI.Shape
+ * @memberof PIXI_UI
  * @constructor
  */
 
-PIXI_UI.Line = function(color, alpha, width, height, reverse) {
-    PIXI_UI.Shape.call(this, color, alpha, width, height);
+function Line(color, alpha, width, height, reverse) {
+    Shape.call(this, color, alpha, width, height);
     this._reverse = reverse;
-};
+}
 
-PIXI_UI.Line.prototype = Object.create( PIXI_UI.Shape.prototype );
-PIXI_UI.Line.prototype.constructor = PIXI_UI.Line;
+Line.prototype = Object.create( Shape.prototype );
+Line.prototype.constructor = Line;
+module.exports = Line;
 
 /**
  * draw the rect during redraw. will use drawRoundRect if a radius is provided.
@@ -22,7 +24,7 @@ PIXI_UI.Line.prototype.constructor = PIXI_UI.Line;
  * @method _drawShape
  * @private
  */
-PIXI_UI.Line.prototype._drawShape = function() {
+Line.prototype._drawShape = function() {
     if (this.width <= 0 || this.height <= 0) {
         return;
     }
@@ -41,7 +43,7 @@ PIXI_UI.Line.prototype._drawShape = function() {
  * @property color
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Line.prototype, 'reverse', {
+Object.defineProperty(Line.prototype, 'reverse', {
     get: function() {
         return this._reverse;
     },

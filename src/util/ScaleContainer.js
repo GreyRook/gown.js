@@ -1,15 +1,14 @@
 /**
- * @author Andreas Bresser
- */
-/**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
  *
  * @class ScaleContainer
+ * @extends PIXI.DisplayObjectContainer
+ * @memberof PIXI_UI
  * @constructor
  */
 
-PIXI_UI.ScaleContainer = function(texture, rect) {
+function ScaleContainer(texture, rect) {
     PIXI.DisplayObjectContainer.call( this );
 
     this.rect = rect;
@@ -76,11 +75,12 @@ PIXI_UI.ScaleContainer = function(texture, rect) {
         this.br = this._getTexture(lw + mw, th + ch, rw, bh);
         this.addChild(this.br);
     }
-};
+}
 
 // constructor
-PIXI_UI.ScaleContainer.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
-PIXI_UI.ScaleContainer.prototype.constructor = PIXI_UI.ScaleContainer;
+ScaleContainer.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+ScaleContainer.prototype.constructor = ScaleContainer;
+module.exports = ScaleContainer;
 
 /**
  * create a new texture from a base-texture by given dimensions
@@ -88,7 +88,7 @@ PIXI_UI.ScaleContainer.prototype.constructor = PIXI_UI.ScaleContainer;
  * @method _getTexture
  * @private
  */
-PIXI_UI.ScaleContainer.prototype._getTexture = function(x, y, w, h) {
+ScaleContainer.prototype._getTexture = function(x, y, w, h) {
     var frame = new PIXI.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
     var t = new PIXI.Texture(this.baseTexture, frame, frame.clone(), null);
     return new PIXI.Sprite(t);
@@ -100,7 +100,7 @@ PIXI_UI.ScaleContainer.prototype._getTexture = function(x, y, w, h) {
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI_UI.ScaleContainer.prototype, 'width', {
+Object.defineProperty(ScaleContainer.prototype, 'width', {
     get: function() {
         return this._width;
     },
@@ -118,7 +118,7 @@ Object.defineProperty(PIXI_UI.ScaleContainer.prototype, 'width', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI_UI.ScaleContainer.prototype, 'height', {
+Object.defineProperty(ScaleContainer.prototype, 'height', {
     get: function() {
         return this._height;
     },
@@ -135,7 +135,7 @@ Object.defineProperty(PIXI_UI.ScaleContainer.prototype, 'height', {
  *
  * @method redraw
  */
-PIXI_UI.ScaleContainer.prototype.redraw = function() {
+ScaleContainer.prototype.redraw = function() {
     if (this.invalid) {
         this._positionTilable();
         this.invalid = false;
@@ -148,7 +148,7 @@ PIXI_UI.ScaleContainer.prototype.redraw = function() {
  * @method _positionTilable
  * @private
  */
-PIXI_UI.ScaleContainer.prototype._positionTilable = function() {
+ScaleContainer.prototype._positionTilable = function() {
     // left / middle / right width
     var lw = this.rect.x;
     var mw = this.rect.width;
@@ -208,13 +208,13 @@ PIXI_UI.ScaleContainer.prototype._positionTilable = function() {
  * @param rect {Rectangle} defines tilable area
  * @return {ScaleTexture} A new Scalable Texture (e.g. a button) using a texture from the texture cache matching the frameId
  */
-PIXI_UI.ScaleContainer.fromFrame = function(frameId, rect) {
+ScaleContainer.fromFrame = function(frameId, rect) {
     var texture = PIXI.TextureCache[frameId];
     if(!texture) {
         throw new Error('The frameId "' + frameId + '" does not exist ' +
                         'in the texture cache');
     }
-    return new PIXI_UI.ScaleContainer(texture, rect);
+    return new ScaleContainer(texture, rect);
 };
 
 /**
@@ -225,7 +225,7 @@ PIXI_UI.ScaleContainer.fromFrame = function(frameId, rect) {
  * @private
  */
 /* istanbul ignore next */
-PIXI_UI.ScaleContainer.prototype._renderWebGL = function(renderSession) {
+ScaleContainer.prototype._renderWebGL = function(renderSession) {
     this.redraw();
     return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
 };
@@ -238,7 +238,7 @@ PIXI_UI.ScaleContainer.prototype._renderWebGL = function(renderSession) {
  * @private
  */
 /* istanbul ignore next */
-PIXI_UI.ScaleContainer.prototype._renderCanvas = function(renderSession) {
+ScaleContainer.prototype._renderCanvas = function(renderSession) {
     this.redraw();
     return PIXI.DisplayObjectContainer.prototype._renderCanvas.call(this, renderSession);
 };

@@ -1,22 +1,23 @@
-/**
- * @author Andreas Bresser
- */
+var TiledLayout = require('./TiledLayout');
 
 /**
- * Tiled columns Layout
- * (roughly based on starling TiledColumnsLayout)
+ * Tiled rows Layout
+ * (roughly based on starling TiledRowsLayout)
  *
  * @class TiledRowsLayout
+ * @extends PIXI_UI.TiledLayout
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.TiledRowsLayout = function() {
-    PIXI_UI.TiledLayout.call(this);
-    this._paging = PIXI_UI.TiledLayout.PAGING_HORIZONTAL;
-    this._orientation = PIXI_UI.TiledLayout.ORIENTATION_ROWS;
-};
+function TiledRowsLayout() {
+    TiledLayout.call(this);
+    this._paging = TiledLayout.PAGING_HORIZONTAL;
+    this._orientation = TiledLayout.ORIENTATION_ROWS;
+}
 
-PIXI_UI.TiledRowsLayout.prototype = Object.create( PIXI_UI.TiledLayout.prototype );
-PIXI_UI.TiledRowsLayout.prototype.constructor = PIXI_UI.TiledRowsLayout;
+TiledRowsLayout.prototype = Object.create( TiledLayout.prototype );
+TiledRowsLayout.prototype.constructor = TiledRowsLayout;
+module.exports = TiledRowsLayout;
 
 /**
  * Quickly sets both <code>horizontalGap</code> and <code>verticalGap</code>
@@ -32,7 +33,7 @@ PIXI_UI.TiledRowsLayout.prototype.constructor = PIXI_UI.TiledRowsLayout;
  * @property gap
  * @type Number
  */
-Object.defineProperty(PIXI_UI.TiledRowsLayout.prototype, 'gap', {
+Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
     get: function() {
         return this._horizontalGap;
     },

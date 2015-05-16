@@ -1,6 +1,4 @@
-/**
- * @author Andreas Bresser
- */
+var InputControl = require('../controls/InputControl');
 
 /**
  * Wrapper for DOM Text Input
@@ -9,11 +7,13 @@
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class InputWrapper
+ * @memberof PIXI_UI
  * @static
  */
-PIXI_UI.InputWrapper = function()
+function InputWrapper()
 {
-};
+}
+module.exports = InputWrapper;
 
 /**
  * DOM input field.
@@ -23,15 +23,15 @@ PIXI_UI.InputWrapper = function()
  * @type DOMObject
  * @static
  */
-PIXI_UI.InputWrapper.hiddenInput = null;
+InputWrapper.hiddenInput = null;
 
 /**
  * create/return unique input field.
  * @returns {DOMObject}
  */
-PIXI_UI.InputWrapper.createInput = function()
+InputWrapper.createInput = function()
 {
-    if (!PIXI_UI.InputWrapper.hiddenInput) {
+    if (!InputWrapper.hiddenInput) {
         var input = document.createElement('input');
         input.type = 'text';
         input.tabindex = -1;
@@ -47,21 +47,21 @@ PIXI_UI.InputWrapper.createInput = function()
         // add blur handler
         input.addEventListener('blur', function()
         {
-            if(PIXI_UI.InputControl.currentInput)
+            if(InputControl.currentInput)
             {
-                PIXI_UI.InputControl.currentInput.onMouseUpOutside();
+                InputControl.currentInput.onMouseUpOutside();
             }
         }, false);
 
         // on key down
         input.addEventListener('keydown', function(e)
         {
-            if(PIXI_UI.InputControl.currentInput)
+            if(InputControl.currentInput)
             {
                 e = e || window.event;
-                if (PIXI_UI.InputControl.currentInput.hasFocus)
+                if (InputControl.currentInput.hasFocus)
                 {
-                    PIXI_UI.InputControl.currentInput.onKeyDown(e);
+                    InputControl.currentInput.onKeyDown(e);
                 }
             }
         });
@@ -69,21 +69,21 @@ PIXI_UI.InputWrapper.createInput = function()
         // on key up
         input.addEventListener('keyup', function(e)
         {
-            if(PIXI_UI.InputControl.currentInput)
+            if(InputControl.currentInput)
             {
                 e = e || window.event;
-                if (PIXI_UI.InputControl.currentInput.hasFocus)
+                if (InputControl.currentInput.hasFocus)
                 {
-                    PIXI_UI.InputControl.currentInput.onKeyUp(e);
+                    InputControl.currentInput.onKeyUp(e);
                 }
             }
         });
 
         document.body.appendChild(input);
 
-        PIXI_UI.InputWrapper.hiddenInput = input;
+        InputWrapper.hiddenInput = input;
     }
-    return PIXI_UI.InputWrapper.hiddenInput;
+    return InputWrapper.hiddenInput;
 };
 
 /**
@@ -91,16 +91,16 @@ PIXI_UI.InputWrapper.createInput = function()
  * @type {string}
  * @static
  */
-PIXI_UI.InputWrapper.textProp = 'value';
+InputWrapper.textProp = 'value';
 
 /**
  * activate the text input
  * @returns {DOMObject}
  */
-PIXI_UI.InputWrapper.focus = function()
+InputWrapper.focus = function()
 {
-    if (PIXI_UI.InputWrapper.hiddenInput) {
-        PIXI_UI.InputWrapper.hiddenInput.focus();
+    if (InputWrapper.hiddenInput) {
+        InputWrapper.hiddenInput.focus();
     }
 };
 
@@ -108,10 +108,10 @@ PIXI_UI.InputWrapper.focus = function()
  * deactivate the text input
  * @returns {DOMObject}
  */
-PIXI_UI.InputWrapper.blur = function()
+InputWrapper.blur = function()
 {
-    if (PIXI_UI.InputWrapper.hiddenInput) {
-        PIXI_UI.InputWrapper.hiddenInput.blur();
+    if (InputWrapper.hiddenInput) {
+        InputWrapper.hiddenInput.blur();
     }
 };
 
@@ -120,13 +120,13 @@ PIXI_UI.InputWrapper.blur = function()
  * set selection
  * @returns {DOMObject}
  */
-PIXI_UI.InputWrapper.setSelection = function(start, end)
+InputWrapper.setSelection = function(start, end)
 {
-    if (PIXI_UI.InputWrapper.hiddenInput) {
-        PIXI_UI.InputWrapper.hiddenInput.selectionStart = start;
-        PIXI_UI.InputWrapper.hiddenInput.selectionEnd = end;
+    if (InputWrapper.hiddenInput) {
+        InputWrapper.hiddenInput.selectionStart = start;
+        InputWrapper.hiddenInput.selectionEnd = end;
     } else {
-        PIXI_UI.InputWrapper._selection = [start, end];
+        InputWrapper._selection = [start, end];
     }
 };
 
@@ -134,14 +134,14 @@ PIXI_UI.InputWrapper.setSelection = function(start, end)
  * get start and end of selection
  * @returns {Array}
  */
-PIXI_UI.InputWrapper.getSelection = function() {
-    if (PIXI_UI.InputWrapper.hiddenInput) {
+InputWrapper.getSelection = function() {
+    if (InputWrapper.hiddenInput) {
         return [
-            PIXI_UI.InputWrapper.hiddenInput.selectionStart,
-            PIXI_UI.InputWrapper.hiddenInput.selectionEnd
+            InputWrapper.hiddenInput.selectionStart,
+            InputWrapper.hiddenInput.selectionEnd
         ];
     } else {
-        return PIXI_UI.InputWrapper._selection;
+        return InputWrapper._selection;
     }
 };
 
@@ -149,13 +149,13 @@ PIXI_UI.InputWrapper.getSelection = function() {
  * get text value from hiddenInput
  * @returns {String}
  */
-PIXI_UI.InputWrapper.getText = function() {
-    if (PIXI_UI.InputWrapper.hiddenInput) {
-        var textProp = PIXI_UI.InputWrapper.textProp;
-        var txt = PIXI_UI.InputWrapper.hiddenInput[textProp];
+InputWrapper.getText = function() {
+    if (InputWrapper.hiddenInput) {
+        var textProp = InputWrapper.textProp;
+        var txt = InputWrapper.hiddenInput[textProp];
         return txt.replace(/\r/g, '');
     } else {
-        return PIXI_UI.InputWrapper._text;
+        return InputWrapper._text;
     }
 
 };
@@ -164,11 +164,11 @@ PIXI_UI.InputWrapper.getText = function() {
  * get text value to hiddenInput
  * @param {String}
  */
-PIXI_UI.InputWrapper.setText = function(text) {
-    if (PIXI_UI.InputWrapper.hiddenInput) {
-        var textProp = PIXI_UI.InputWrapper.textProp;
-        PIXI_UI.InputWrapper.hiddenInput[textProp] = text;
+InputWrapper.setText = function(text) {
+    if (InputWrapper.hiddenInput) {
+        var textProp = InputWrapper.textProp;
+        InputWrapper.hiddenInput[textProp] = text;
     } else {
-        PIXI_UI.InputWrapper._text = text;
+        InputWrapper._text = text;
     }
 };

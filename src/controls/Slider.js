@@ -1,9 +1,17 @@
+var Scrollable = require('./Scrollable'),
+    SliderData = require('../util/SliderData');
+
 /**
- * authors: Björn Friedrichs, Andreas Bresser
+ * Simple slider with min. and max. value
+ *
+ * @class Slider
+ * @extends PIXI_UI.Scrollable
+ * @memberof PIXI_UI
+ * @constructor
  */
 
-PIXI_UI.Slider = function(thumb, theme) {
-    this.skinName = this.skinName || PIXI_UI.Slider.SKIN_NAME;
+function Slider(thumb, theme) {
+    this.skinName = this.skinName || Slider.SKIN_NAME;
 
     this._minimum = this._minimum || 0;
     this._maximum = this._maximum || 100;
@@ -12,22 +20,24 @@ PIXI_UI.Slider = function(thumb, theme) {
     this._value = this.minimum;
     this.change = null;
 
-    PIXI_UI.Scrollable.call(this, thumb, theme);
-};
+    Scrollable.call(this, thumb, theme);
+}
 
-PIXI_UI.Slider.prototype = Object.create( PIXI_UI.Scrollable.prototype );
-PIXI_UI.Slider.prototype.constructor = PIXI_UI.Slider;
+Slider.prototype = Object.create( Scrollable.prototype );
+Slider.prototype.constructor = Slider;
+module.exports = Slider;
 
-PIXI_UI.Slider.SKIN_NAME = 'scroll_bar';
+
+Slider.SKIN_NAME = 'scroll_bar';
 
 /**
  * thumb has been moved - calculate new value
  * @param x x-position to scroll to (ignored when vertical)
  * @param y y-position to scroll to (ignored when horizontal)
  */
-PIXI_UI.Slider.prototype.thumbMoved = function(x, y) {
+Slider.prototype.thumbMoved = function(x, y) {
     var max = 1, value = 0;
-    if (this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+    if (this.orientation === Scrollable.HORIZONTAL) {
         max = this.maxWidth();
         if (this._inverse) {
             value = max - x;
@@ -49,7 +59,7 @@ PIXI_UI.Slider.prototype.thumbMoved = function(x, y) {
 /**
  * value changed
  */
-Object.defineProperty(PIXI_UI.Slider.prototype, 'value', {
+Object.defineProperty(Slider.prototype, 'value', {
     get: function() {
         return this._value;
     },
@@ -61,7 +71,7 @@ Object.defineProperty(PIXI_UI.Slider.prototype, 'value', {
         value = Math.max(value, this.minimum);
         this._value = value;
         if (this.change) {
-            var sliderData = new PIXI_UI.SliderData();
+            var sliderData = new SliderData();
             sliderData.value = this._value;
             sliderData.target = this;
             this.change(sliderData);
@@ -72,7 +82,7 @@ Object.defineProperty(PIXI_UI.Slider.prototype, 'value', {
 /**
  * set minimum and update value if necessary
  */
-Object.defineProperty(PIXI_UI.Slider.prototype, 'minimum', {
+Object.defineProperty(Slider.prototype, 'minimum', {
     get: function() {
         return this._minimum;
     },
@@ -89,7 +99,7 @@ Object.defineProperty(PIXI_UI.Slider.prototype, 'minimum', {
 /**
  * set maximum and update value if necessary
  */
-Object.defineProperty(PIXI_UI.Slider.prototype, 'maximum', {
+Object.defineProperty(Slider.prototype, 'maximum', {
     get: function() {
         return this._maximum;
     },

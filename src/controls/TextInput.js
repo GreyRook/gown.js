@@ -1,22 +1,24 @@
-/**
- * @author Andreas Bresser
- */
-
+var Control = require('../core/Control'),
+    InputControl = require('./InputControl'),
+    InputWrapper = require('../util/InputWrapper');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class TextInput
+ * @extends PIXI_UI.InputControl
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.TextInput = function(text, theme) {
+
+function TextInput(text, theme) {
     // show and load background image as skin (exploiting skin states)
-    this.skinName = this.skinName || PIXI_UI.TextInput.SKIN_NAME;
-    this._validStates = this._validStates || PIXI_UI.TextInput.stateNames;
+    this.skinName = this.skinName || TextInput.SKIN_NAME;
+    this._validStates = this._validStates || TextInput.stateNames;
     this._currentState = 'background';
     this.invalidState = true;
 
-    PIXI_UI.InputControl.call(this, text, theme);
+    InputControl.call(this, text, theme);
 
     // caret/selection sprite
     this.cursor = new PIXI.Text('|', this.theme.textStyle );
@@ -67,13 +69,15 @@ PIXI_UI.TextInput = function(text, theme) {
     this.mousedown = this.touchstart = this.boundOnMouseDown;
     this.mouseup = this.touchend = this.boundOnMouseUp;
     this.mouseupoutside = this.touchendoutside = this.boundOnMouseUpOutside;
-};
+}
 
-PIXI_UI.TextInput.prototype = Object.create( PIXI_UI.InputControl.prototype );
-PIXI_UI.TextInput.prototype.constructor = PIXI_UI.TextInput;
+TextInput.prototype = Object.create( InputControl.prototype );
+TextInput.prototype.constructor = TextInput;
+module.exports = TextInput;
+
 
 // name of skin
-PIXI_UI.TextInput.SKIN_NAME = 'text_input';
+TextInput.SKIN_NAME = 'text_input';
 
 /**
  * set the text that is shown inside the input field
@@ -81,7 +85,7 @@ PIXI_UI.TextInput.SKIN_NAME = 'text_input';
  * @property text
  * @type String
  */
-Object.defineProperty(PIXI_UI.TextInput.prototype, 'text', {
+Object.defineProperty(TextInput.prototype, 'text', {
     get: function() {
         return this._text;
     },
@@ -103,11 +107,11 @@ Object.defineProperty(PIXI_UI.TextInput.prototype, 'text', {
  * @param end
  * @returns {boolean}
  */
-PIXI_UI.TextInput.prototype.updateSelection = function(start, end) {
+TextInput.prototype.updateSelection = function(start, end) {
     if (this.selection[0] !== start || this.selection[1] !== end) {
         this.selection[0] = start;
         this.selection[1] = end;
-        PIXI_UI.InputWrapper.setSelection(start, end);
+        InputWrapper.setSelection(start, end);
         this._cursorNeedsUpdate = true;
         return true;
     } else {
@@ -115,10 +119,10 @@ PIXI_UI.TextInput.prototype.updateSelection = function(start, end) {
     }
 };
 
-PIXI_UI.TextInput.prototype.onSubmit = function() {
+TextInput.prototype.onSubmit = function() {
 };
 
-PIXI_UI.TextInput.prototype.onKeyDown = function(e) {
+TextInput.prototype.onKeyDown = function(e) {
     var keyCode = e.which;
 
     // ESC
@@ -150,7 +154,7 @@ PIXI_UI.TextInput.prototype.onKeyDown = function(e) {
     this.updateTextState();
 };
 
-PIXI_UI.TextInput.prototype.onKeyUp = function() {
+TextInput.prototype.onKeyUp = function() {
     // update the canvas input state information from the hidden input
     this.updateTextState();
 };
@@ -158,7 +162,7 @@ PIXI_UI.TextInput.prototype.onKeyUp = function() {
 /**
  * position cursor on the text
  */
-PIXI_UI.TextInput.prototype.setCursorPos = function() {
+TextInput.prototype.setCursorPos = function() {
     this.cursor.x = this.textWidth(this.text.substring(0, this.cursorPos)) | 0;
 };
 
@@ -167,7 +171,7 @@ PIXI_UI.TextInput.prototype.setCursorPos = function() {
  *
  * @method drawCursor
  */
-PIXI_UI.TextInput.prototype.drawCursor = function() {
+TextInput.prototype.drawCursor = function() {
     if(this.hasFocus || this._mouseDown) {
         var time = Date.now();
 
@@ -187,13 +191,13 @@ PIXI_UI.TextInput.prototype.drawCursor = function() {
     }
 };
 
-PIXI_UI.TextInput.prototype.redraw = function()
+TextInput.prototype.redraw = function()
 {
     this.drawCursor();
-    PIXI_UI.Control.prototype.redraw.call(this);
+    Control.prototype.redraw.call(this);
 };
 
-PIXI_UI.TextInput.prototype.onMouseMove = function(e) {
+TextInput.prototype.onMouseMove = function(e) {
 
     if(!this.hasFocus || !this._mouseDown || this.selectionStart < 0 ||
             !this.stage.interactionManager.hitTest(this, e)) {
@@ -212,7 +216,7 @@ PIXI_UI.TextInput.prototype.onMouseMove = function(e) {
     return true;
 };
 
-PIXI_UI.TextInput.prototype.onMouseDown = function(e) {
+TextInput.prototype.onMouseDown = function(e) {
     if(e.originalEvent.which === 2 || e.originalEvent.which === 3)
     {
         e.originalEvent.preventDefault();
@@ -232,7 +236,7 @@ PIXI_UI.TextInput.prototype.onMouseDown = function(e) {
     return true;
 };
 
-PIXI_UI.TextInput.prototype.onMouseUp = function(e) {
+TextInput.prototype.onMouseUp = function(e) {
 
     if(e.originalEvent.which === 2 || e.originalEvent.which === 3)
     {
@@ -262,15 +266,15 @@ PIXI_UI.TextInput.prototype.onMouseUp = function(e) {
  *
  * @method updateTextState
  */
-PIXI_UI.TextInput.prototype.updateTextState = function() {
-    var text = PIXI_UI.InputWrapper.getText();
+TextInput.prototype.updateTextState = function() {
+    var text = InputWrapper.getText();
 
     if (text !== this.text)
     {
         this.text = text;
     }
 
-    var sel = PIXI_UI.InputWrapper.getSelection();
+    var sel = InputWrapper.getSelection();
     if (this.updateSelection(sel[0], sel[1])) {
         this.cursorPos = sel[0];
     }

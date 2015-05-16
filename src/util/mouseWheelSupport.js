@@ -10,7 +10,7 @@
  * @param stage the PIXI-stage
  * @param enable true to enable mouse support, false to disable,
  */
-PIXI_UI.mouseWheelSupport = function(stage, enable) {
+function mouseWheelSupport(stage, enable) {
     var canvas = stage.canvas;
     if (enable || enable === undefined) {
         if (PIXI_UI._mouseWheelHandler !== undefined) {
@@ -27,6 +27,7 @@ PIXI_UI.mouseWheelSupport = function(stage, enable) {
             }
             for(var i = 0; i < target.length; i++) {
                 var t = target[i];
+                t.mouseMove(delta);
                 /*
                 var evt = new createjs.MouseEvent(
                     "mousewheel", true, false,
@@ -37,27 +38,29 @@ PIXI_UI.mouseWheelSupport = function(stage, enable) {
             }
         };
         if (canvas.addEventListener) {
-            canvas.addEventListener("mousewheel",
+            canvas.addEventListener('mousewheel',
                 PIXI_UI._mouseWheelHandler, false);
-            canvas.addEventListener("DOMMouseScroll",
+            canvas.addEventListener('DOMMouseScroll',
                 PIXI_UI._mouseWheelHandler, false);
         } else {
-            canvas.attachEvent("onmousewheel",
+            canvas.attachEvent('onmousewheel',
                 PIXI_UI._mouseWheelHandler);
         }
     } else {
-        if (createjs_ui._mouseWheelHandler === undefined) {
+        if (PIXI_UI._mouseWheelHandler === undefined) {
             return;
         }
         if (canvas.removeEventListener) {
-            canvas.removeEventListener("mousewheel",
+            canvas.removeEventListener('mousewheel',
                 PIXI_UI._mouseWheelHandler);
-            canvas.removeEventListener("DOMMouseScroll",
+            canvas.removeEventListener('DOMMouseScroll',
                 PIXI_UI._mouseWheelHandler);
         } else {
-            canvas.detachEvent("onmousewheel",
+            canvas.detachEvent('onmousewheel',
                 PIXI_UI._mouseWheelHandler);
         }
         PIXI_UI._mouseWheelHandler = undefined;
     }
-};
+}
+
+module.exports = mouseWheelSupport;

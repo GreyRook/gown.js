@@ -1,38 +1,39 @@
-/**
- * @author Andreas Bresser
- */
+var Control = require('./Control');
 
 /**
  * Control that requires a theme (e.g. a button)
  *
  * @class Skinable
+ * @extends PIXI_UI.Control
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.Skinable = function (theme) {
-    PIXI_UI.Control.call(this);
+function Skinable(theme) {
+    Control.call(this);
     this.skinCache = {};
     this.setTheme(theme || PIXI_UI.theme);
 
     if (this.theme === undefined) {
-        throw new Error("you need to define a theme first");
+        throw new Error('you need to define a theme first');
     }
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
     this.invalidDimensions = true;
-};
+}
 
-PIXI_UI.Skinable.prototype = Object.create( PIXI_UI.Control.prototype );
-PIXI_UI.Skinable.prototype.constructor = PIXI_UI.Skinable;
+Skinable.prototype = Object.create( Control.prototype );
+Skinable.prototype.constructor = Skinable;
+module.exports = Skinable;
 
-PIXI_UI.Skinable.prototype.controlSetTheme = PIXI_UI.Control.prototype.setTheme;
+Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
 /**
  * change the theme
  *
  * @method setTheme
  * @param theme the new theme {Theme}
  */
-PIXI_UI.Skinable.prototype.setTheme = function(theme) {
+Skinable.prototype.setTheme = function(theme) {
     if (theme === this.theme && theme) {
         return;
     }
@@ -49,7 +50,7 @@ PIXI_UI.Skinable.prototype.setTheme = function(theme) {
  * @method changeState
  * @param skin {DisplayObject}
  */
-PIXI_UI.Skinable.prototype.changeState = function(skin) {
+Skinable.prototype.changeState = function(skin) {
     if (this._currentSkin !== skin) {
         this._lastSkin = this._currentSkin;
         this.addChildAt(skin, 0);
@@ -65,7 +66,7 @@ PIXI_UI.Skinable.prototype.changeState = function(skin) {
  *
  * @method preloadSkins
  */
-PIXI_UI.Skinable.prototype.preloadSkins = function() {
+Skinable.prototype.preloadSkins = function() {
 };
 
 /**
@@ -76,7 +77,7 @@ PIXI_UI.Skinable.prototype.preloadSkins = function() {
  * @param name name of the state
  * @param callback callback that is executed if the skin is loaded
  */
-PIXI_UI.Skinable.prototype.fromSkin = function(name, callback) {
+Skinable.prototype.fromSkin = function(name, callback) {
     var skin;
     if (this.skinCache[name]) {
         skin = this.skinCache[name];
@@ -96,7 +97,7 @@ PIXI_UI.Skinable.prototype.fromSkin = function(name, callback) {
  *
  * @method redraw
  */
-PIXI_UI.Skinable.prototype.redraw = function() {
+Skinable.prototype.redraw = function() {
     // remove last skin after new one has been added
     // (just before rendering, otherwise we would see nothing for a frame)
     if (this._lastSkin) {
@@ -118,7 +119,7 @@ PIXI_UI.Skinable.prototype.redraw = function() {
     }
 };
 
-PIXI_UI.Skinable.prototype.updateDimensions = function() {
+Skinable.prototype.updateDimensions = function() {
 };
 
 
@@ -131,7 +132,7 @@ PIXI_UI.Skinable.prototype.updateDimensions = function() {
  * @property skinName
  * @type String
  */
-Object.defineProperty(PIXI_UI.Skinable.prototype, "skinName", {
+Object.defineProperty(Skinable.prototype, 'skinName', {
     get: function() {
         return this._skinName;
     },

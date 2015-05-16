@@ -1,20 +1,22 @@
-/**
- * @author Andreas Bresser
- */
+var Shape = require('./Shape');
+
 /**
  * basic rectangular shape
  *
  * @class Rect
+ * @extends PIXI_UI.Shape
+ * @memberof PIXI_UI
  * @constructor
  */
 
-PIXI_UI.Rect = function(color, alpha, width, height, radius) {
-    PIXI_UI.Shape.call(this, color, alpha, width, height);
+function Rect(color, alpha, width, height, radius) {
+    Shape.call(this, color, alpha, width, height);
     this._radius = radius;
-};
+}
 
-PIXI_UI.Rect.prototype = Object.create( PIXI_UI.Shape.prototype );
-PIXI_UI.Rect.prototype.constructor = PIXI_UI.Rect;
+Rect.prototype = Object.create( Shape.prototype );
+Rect.prototype.constructor = Rect;
+module.exports = Rect;
 
 /**
  * draw the rect during redraw. will use drawRoundRect if a radius is provided.
@@ -22,7 +24,7 @@ PIXI_UI.Rect.prototype.constructor = PIXI_UI.Rect;
  * @method _drawShape
  * @private
  */
-PIXI_UI.Rect.prototype._drawShape = function() {
+Rect.prototype._drawShape = function() {
     if (this.width <= 0 || this.height <= 0) {
         return;
     }
@@ -41,7 +43,7 @@ PIXI_UI.Rect.prototype._drawShape = function() {
  * @property color
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Rect.prototype, 'radius', {
+Object.defineProperty(Rect.prototype, 'radius', {
     get: function() {
         return this._radius;
     },

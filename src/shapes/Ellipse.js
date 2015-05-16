@@ -1,18 +1,20 @@
-/**
- * @author Andreas Bresser
- */
+var Shape = require('./Shape');
+
 /**
  * basic ellipse shape
  *
  * @class Ellipse
+ * @extends PIXI_UI.Shape
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.Ellipse = function(color, alpha, width, height) {
-    PIXI_UI.Shape.call(this, color, alpha, width, height);
-};
+function Ellipse(color, alpha, width, height) {
+    Shape.call(this, color, alpha, width, height);
+}
 
-PIXI_UI.Ellipse.prototype = Object.create( PIXI_UI.Shape.prototype );
-PIXI_UI.Ellipse.prototype.constructor = PIXI_UI.Ellipse;
+Ellipse.prototype = Object.create( Shape.prototype );
+Ellipse.prototype.constructor = Ellipse;
+module.exports = Ellipse;
 
 /**
  * draw the ellipse during redraw.
@@ -20,7 +22,7 @@ PIXI_UI.Ellipse.prototype.constructor = PIXI_UI.Ellipse;
  * @method _drawShape
  * @private
  */
-PIXI_UI.Ellipse.prototype._drawShape = function() {
+Ellipse.prototype._drawShape = function() {
     if (this.width <= 0 || this.height <= 0) {
         return;
     }

@@ -1,15 +1,21 @@
+var Skinable = require('../core/Skinable'),
+    ScrollThumb = require('./ScrollThumb');
 /**
  * scroll bar or slider
+ * @class Scrollable
+ * @extends PIXI_UI.Scrollable
+ * @memberof PIXI_UI
+ * @constructor
  */
 
-PIXI_UI.Scrollable = function(thumb, theme) {
-    this.mode = this.mode || PIXI_UI.Scrollable.DESKTOP_MODE;
+function Scrollable(thumb, theme) {
+    this.mode = this.mode || Scrollable.DESKTOP_MODE;
 
-    PIXI_UI.Skinable.call(this, theme);
+    Skinable.call(this, theme);
 
-    this.orientation = this.orientation || PIXI_UI.Scrollable.HORIZONTAL;
+    this.orientation = this.orientation || Scrollable.HORIZONTAL;
 
-    this.thumb = thumb || new PIXI_UI.ScrollThumb(this, theme);
+    this.thumb = thumb || new ScrollThumb(this, theme);
     this.addChild(this.thumb);
 
     this.invalidTrack = true;
@@ -18,23 +24,25 @@ PIXI_UI.Scrollable = function(thumb, theme) {
 
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
     this.scrolldelta = 10;
-};
+}
 
-PIXI_UI.Scrollable.prototype = Object.create( PIXI_UI.Skinable.prototype );
-PIXI_UI.Scrollable.prototype.constructor = PIXI_UI.Scrollable;
+Scrollable.prototype = Object.create( Skinable.prototype );
+Scrollable.prototype.constructor = Scrollable;
+module.exports = Scrollable;
 
-PIXI_UI.Scrollable.DESKTOP_MODE = 'desktop';
-PIXI_UI.Scrollable.MOBILE_MODE = 'mobile';
 
-PIXI_UI.Scrollable.HORIZONTAL = 'horizontal';
-PIXI_UI.Scrollable.VERTICAL = 'vertical';
+Scrollable.DESKTOP_MODE = 'desktop';
+Scrollable.MOBILE_MODE = 'mobile';
 
-PIXI_UI.Scrollable.prototype.handleDown = function(mouseData) {
+Scrollable.HORIZONTAL = 'horizontal';
+Scrollable.VERTICAL = 'vertical';
+
+Scrollable.prototype.handleDown = function(mouseData) {
     var local = mouseData.getLocalPosition(this);
     this._start = [local.x, local.y];
 };
 
-PIXI_UI.Scrollable.prototype.handleUp = function() {
+Scrollable.prototype.handleUp = function() {
     this._start = null;
 };
 
@@ -42,7 +50,7 @@ PIXI_UI.Scrollable.prototype.handleUp = function() {
  * handle mouse move: move thumb
  * @param mouseData
  */
-PIXI_UI.Scrollable.prototype.handleMove = function(mouseData) {
+Scrollable.prototype.handleMove = function(mouseData) {
     if (this._start) {
         var local = mouseData.getLocalPosition(this);
         var x = this.thumb.x + local.x - this._start[0];
@@ -58,7 +66,7 @@ PIXI_UI.Scrollable.prototype.handleMove = function(mouseData) {
 };
 
 
-PIXI_UI.Scrollable.prototype.handleWheel = function (event) {
+Scrollable.prototype.handleWheel = function (event) {
     var x = this.thumb.x - event.delta * this.scrolldelta;
     var y = this.thumb.y - event.delta * this.scrolldelta;
     if (this.moveThumb(x, y)) {
@@ -72,14 +80,14 @@ PIXI_UI.Scrollable.prototype.handleWheel = function (event) {
  * @param y y-position that has been scrolled to (ignored when horizontal)
  */
 /* jshint unused: false */
-PIXI_UI.Scrollable.prototype.thumbMoved = function(x, y) {
+Scrollable.prototype.thumbMoved = function(x, y) {
 };
 
-PIXI_UI.Scrollable.prototype._updateProgressSkin = function() {
+Scrollable.prototype._updateProgressSkin = function() {
     if (!this.progressSkin) {
         return;
     }
-    if(this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+    if(this.orientation === Scrollable.HORIZONTAL) {
         var progressPosX = this.thumb.x + this.thumb.width / 2;
         if (this.inverse) {
             this.progressSkin.x = progressPosX;
@@ -108,7 +116,7 @@ PIXI_UI.Scrollable.prototype._updateProgressSkin = function() {
  * returns the max. width in pixel
  * (normally this.width - thumb width)
  */
-PIXI_UI.Scrollable.prototype.maxWidth = function() {
+Scrollable.prototype.maxWidth = function() {
     return this.width - this.thumb.width;
 };
 
@@ -116,7 +124,7 @@ PIXI_UI.Scrollable.prototype.maxWidth = function() {
  * returns the max. height in pixel
  * (normally this.height - thumb height)
  */
-PIXI_UI.Scrollable.prototype.maxHeight = function() {
+Scrollable.prototype.maxHeight = function() {
     return this.height - this.thumb.height;
 };
 
@@ -127,8 +135,8 @@ PIXI_UI.Scrollable.prototype.maxHeight = function() {
  * @returns {boolean} returns true if the position of the thumb has been
  * moved
  */
-PIXI_UI.Scrollable.prototype.moveThumb = function(x, y) {
-    if(this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+Scrollable.prototype.moveThumb = function(x, y) {
+    if(this.orientation === Scrollable.HORIZONTAL) {
         if (isNaN(x)) {
             return false;
         }
@@ -154,7 +162,7 @@ PIXI_UI.Scrollable.prototype.moveThumb = function(x, y) {
     return false;
 };
 
-PIXI_UI.Scrollable.prototype.showTrack = function(skin) {
+Scrollable.prototype.showTrack = function(skin) {
     if (this.skin !== skin) {
         if(this.skin) {
             this.removeChild(this.skin);
@@ -168,7 +176,7 @@ PIXI_UI.Scrollable.prototype.showTrack = function(skin) {
     }
 };
 
-PIXI_UI.Scrollable.prototype.showProgress = function(skin) {
+Scrollable.prototype.showProgress = function(skin) {
     if (this.progressSkin !== skin) {
         if(this.progressSkin) {
             this.removeChild(this.progressSkin);
@@ -182,12 +190,12 @@ PIXI_UI.Scrollable.prototype.showProgress = function(skin) {
     }
 };
 
-PIXI_UI.Scrollable.prototype.redraw = function() {
+Scrollable.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
         this.fromSkin(this.orientation+'_progress', this.showProgress);
         this.fromSkin(this.orientation+'_track', this.showTrack);
         if (this.skin) {
-            if (this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+            if (this.orientation === Scrollable.HORIZONTAL) {
                 this.skin.width = this.width;
             } else {
                 this.skin.height = this.height;
@@ -205,7 +213,7 @@ PIXI_UI.Scrollable.prototype.redraw = function() {
  * @property width
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Scrollable.prototype, 'width', {
+Object.defineProperty(Scrollable.prototype, 'width', {
     get: function() {
         return this._width;
     },
@@ -224,7 +232,7 @@ Object.defineProperty(PIXI_UI.Scrollable.prototype, 'width', {
  * @property inverse
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.Scrollable.prototype, 'inverse', {
+Object.defineProperty(Scrollable.prototype, 'inverse', {
     get: function() {
         return this._inverse;
     },
@@ -232,7 +240,7 @@ Object.defineProperty(PIXI_UI.Scrollable.prototype, 'inverse', {
         if (inverse !== this._inverse) {
             this._inverse = inverse;
 
-            if (this.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+            if (this.orientation === Scrollable.HORIZONTAL) {
                 this.moveThumb(0, this.width - this.thumb.x);
             } else {
                 this.moveThumb(0, this.height - this.thumb.y);
@@ -253,7 +261,7 @@ Object.defineProperty(PIXI_UI.Scrollable.prototype, 'inverse', {
  * @property height
  * @type Number
  */
-Object.defineProperty(PIXI_UI.Scrollable.prototype, 'height', {
+Object.defineProperty(Scrollable.prototype, 'height', {
     get: function() {
         return this._height;
     },

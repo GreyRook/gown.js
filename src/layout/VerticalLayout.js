@@ -1,18 +1,19 @@
-/**
- * @author Andreas Bresser
- */
+var LayoutAlignment = require('./LayoutAlignment');
 
 /**
  * VerticalLayout - just set alignment to
  * LayoutAlignment.VERTICAL_ALIGNMENT
  *
  * @class VerticalLayout
+ * @extends PIXI_UI.LayoutAlignment
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.VerticalLayout = function() {
-    PIXI_UI.LayoutAlignment.call(this);
-    this.alignment = PIXI_UI.LayoutAlignment.VERTICAL_ALIGNMENT;
-};
+function VerticalLayout() {
+    LayoutAlignment.call(this);
+    this.alignment = LayoutAlignment.VERTICAL_ALIGNMENT;
+}
 
-PIXI_UI.VerticalLayout.prototype = Object.create( PIXI_UI.LayoutAlignment.prototype );
-PIXI_UI.VerticalLayout.prototype.constructor = PIXI_UI.VerticalLayout;
+VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
+VerticalLayout.prototype.constructor = VerticalLayout;
+module.exports = VerticalLayout;

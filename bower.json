@@ -2,13 +2,15 @@
     "name": "pixi_ui",
     "version": "0.0.0",
 
-    "main": "bin/pixi_ui.dev.js",
+    "main": "bin/pixi_ui.js",
 
     "ignore": [
         "**/.*",
         "node_modules",
         "bower_components",
-        "test"
+        "test",
+        "examples",
+        "tasks"
     ],
     "dependencies": {
     },

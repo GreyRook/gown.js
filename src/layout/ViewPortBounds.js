@@ -1,14 +1,11 @@
 /**
- * @author Andreas Bresser
- */
-
-/**
  * define viewport dimensions
  *
  * @class HorizontalLayout
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.ViewPortBounds = function() {
+function ViewPortBounds() {
     /**
      * The explicit width of the view port, in pixels. If <code>NaN</code>,
      * there is no explicit width value.
@@ -38,4 +35,6 @@ PIXI_UI.ViewPortBounds = function() {
      * @property y
      */
     this.y = 0;
-};
+}
+
+module.exports = ViewPortBounds;

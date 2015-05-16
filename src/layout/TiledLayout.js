@@ -1,30 +1,32 @@
-/**
- * @author Andreas Bresser
- */
+var Layout = require('./Layout');
 
 /**
  * TiledLayout a layout for tiled rows/columns
  *
  * @class TiledLayout
+ * @extends PIXI_UI.Layout
+ * @memberof PIXI_UI
  * @constructor
  */
-PIXI_UI.TiledLayout = function() {
-    PIXI_UI.Layout.call(this);
+function TiledLayout() {
+    Layout.call(this);
     this._useSquareTiles = false;
     this._horizontalGap = 0;
     this._verticalGap = 0;
-    this._tileHorizontalAlign = PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER;
-    this._tileVerticalAlign = PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE;
-    this._paging = PIXI_UI.TiledLayout.PAGING_NONE;
-    this._orientation = PIXI_UI.TiledLayout.ORIENTATION_ROWS;
+    this._tileHorizontalAlign = TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER;
+    this._tileVerticalAlign = TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE;
+    this._paging = TiledLayout.PAGING_NONE;
+    this._orientation = TiledLayout.ORIENTATION_ROWS;
     this._needUpdate = true;
-};
+}
 
-PIXI_UI.TiledLayout.prototype = Object.create( PIXI_UI.Layout.prototype );
-PIXI_UI.TiledLayout.prototype.constructor = PIXI_UI.TiledLayout;
+TiledLayout.prototype = Object.create( Layout.prototype );
+TiledLayout.prototype.constructor = TiledLayout;
+module.exports = TiledLayout;
 
-PIXI_UI.TiledLayout.ORIENTATION_ROWS = 'rows';
-PIXI_UI.TiledLayout.ORIENTATION_COLUMNS = 'columns';
+
+TiledLayout.ORIENTATION_ROWS = 'rows';
+TiledLayout.ORIENTATION_COLUMNS = 'columns';
 
 /**
  * If an item height is smaller than the height of a tile, the item will
@@ -33,7 +35,7 @@ PIXI_UI.TiledLayout.ORIENTATION_COLUMNS = 'columns';
  * @property TILE_VERTICAL_ALIGN_TOP
  * @static
  */
-PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_TOP = 'top';
+TiledLayout.TILE_VERTICAL_ALIGN_TOP = 'top';
 
 /**
  * If an item height is smaller than the height of a tile, the item will
@@ -42,7 +44,7 @@ PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_TOP = 'top';
  * @property TILE_VERTICAL_ALIGN_MIDDLE
  * @static
  */
-PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE = 'middle';
+TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE = 'middle';
 
 /**
  * If an item height is smaller than the height of a tile, the item will
@@ -51,7 +53,7 @@ PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE = 'middle';
  * @property TILE_VERTICAL_ALIGN_BOTTOM
  * @static
  */
-PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_BOTTOM = 'bottom';
+TiledLayout.TILE_VERTICAL_ALIGN_BOTTOM = 'bottom';
 
 /**
  * The item will be resized to fit the height of the tile.
@@ -59,7 +61,7 @@ PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_BOTTOM = 'bottom';
  * @property TILE_VERTICAL_ALIGN_JUSTIFY
  * @static
  */
-PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY = 'justify';
+TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY = 'justify';
 
 /**
  * If an item width is smaller than the width of a tile, the item will
@@ -68,7 +70,7 @@ PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY = 'justify';
  * @property TILE_HORIZONTAL_ALIGN_LEFT
  * @static
  */
-PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT = 'left';
+TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT = 'left';
 
 /**
  * If an item width is smaller than the width of a tile, the item will
@@ -77,7 +79,7 @@ PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT = 'left';
  * @property TILE_HORIZONTAL_ALIGN_CENTER
  * @static
  */
-PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER = 'center';
+TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER = 'center';
 
 /**
  * If an item width is smaller than the width of a tile, the item will
@@ -86,7 +88,7 @@ PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER = 'center';
  * @property TILE_HORIZONTAL_ALIGN_RIGHT
  * @static
  */
-PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_RIGHT = 'right';
+TiledLayout.TILE_HORIZONTAL_ALIGN_RIGHT = 'right';
 
 /**
  * The item will be resized to fit the width of the tile.
@@ -94,7 +96,7 @@ PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_RIGHT = 'right';
  * @property TILE_HORIZONTAL_ALIGN_JUSTIFY
  * @static
  */
-PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_JUSTIFY = 'justify';
+TiledLayout.TILE_HORIZONTAL_ALIGN_JUSTIFY = 'justify';
 
 /**
  * The items will be positioned in pages horizontally from left to right.
@@ -102,7 +104,7 @@ PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_JUSTIFY = 'justify';
  * @property PAGING_HORIZONTAL
  * @static
  */
-PIXI_UI.TiledLayout.PAGING_HORIZONTAL = 'horizontal';
+TiledLayout.PAGING_HORIZONTAL = 'horizontal';
 
 /**
  * The items will be positioned in pages vertically from top to bottom.
@@ -110,7 +112,7 @@ PIXI_UI.TiledLayout.PAGING_HORIZONTAL = 'horizontal';
  * @property PAGING_VERTICAL
  * @static
  */
-PIXI_UI.TiledLayout.PAGING_VERTICAL = 'vertical';
+TiledLayout.PAGING_VERTICAL = 'vertical';
 
 
 /**
@@ -120,8 +122,8 @@ PIXI_UI.TiledLayout.PAGING_VERTICAL = 'vertical';
  * @param items items that will be layouted
  * @param viewPortBounds
  */
-PIXI_UI.TiledLayout.prototype.layout = function (items, viewPortBounds) {
-    var _rows = this._orientation === PIXI_UI.TiledLayout.ORIENTATION_ROWS;
+TiledLayout.prototype.layout = function (items, viewPortBounds) {
+    var _rows = this._orientation === TiledLayout.ORIENTATION_ROWS;
     if(items.length === 0) {
         return;
     }
@@ -229,17 +231,17 @@ PIXI_UI.TiledLayout.prototype.layout = function (items, viewPortBounds) {
             //checking if they're NaN because we will never reach a
             //new page without them already being calculated.
             if (_rows) {
-                if(this._paging === PIXI_UI.TiledLayout.PAGING_HORIZONTAL)
+                if(this._paging === TiledLayout.PAGING_HORIZONTAL)
                 {
                     positionX = pageStart === startX + availableWidth * pageIndex;
                     positionY = startY;
-                } else if(this._paging === PIXI_UI.TiledLayout.PAGING_VERTICAL) {
+                } else if(this._paging === TiledLayout.PAGING_VERTICAL) {
                     positionY = startY + availableHeight * pageIndex;
                 }
             } else { // columns
-                if(this._paging === PIXI_UI.TiledLayout.PAGING_HORIZONTAL) {
+                if(this._paging === TiledLayout.PAGING_HORIZONTAL) {
                     positionX = startX + availableWidth * pageIndex;
-                } else if(this._paging === PIXI_UI.TiledLayout.PAGING_VERTICAL) {
+                } else if(this._paging === TiledLayout.PAGING_VERTICAL) {
                     positionX = startX;
                     positionY = pageStart = startY + availableHeight * pageIndex;
                 }
@@ -247,28 +249,28 @@ PIXI_UI.TiledLayout.prototype.layout = function (items, viewPortBounds) {
         }
         if(item) {
             switch(this._tileHorizontalAlign) {
-                case PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_JUSTIFY:
+                case TiledLayout.TILE_HORIZONTAL_ALIGN_JUSTIFY:
                     item.x = positionX;
                     item.width = tileWidth;
                     break;
-                case PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT:
+                case TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT:
                     item.x = positionX;
                     break;
-                case PIXI_UI.TiledLayout.TILE_HORIZONTAL_ALIGN_RIGHT:
+                case TiledLayout.TILE_HORIZONTAL_ALIGN_RIGHT:
                     item.x = positionX + tileWidth - item.width;
                     break;
                 default: //center or unknown
                     item.x = positionX + (tileWidth - item.width) / 2;
             }
             switch(this._tileVerticalAlign) {
-                case PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY:
+                case TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY:
                     item.y = positionY;
                     item.height = tileHeight;
                     break;
-                case PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_TOP:
+                case TiledLayout.TILE_VERTICAL_ALIGN_TOP:
                     item.y = positionY;
                     break;
-                case PIXI_UI.TiledLayout.TILE_VERTICAL_ALIGN_BOTTOM:
+                case TiledLayout.TILE_VERTICAL_ALIGN_BOTTOM:
                     item.y = positionY + tileHeight - item.height;
                     break;
                 default: //middle or unknown
@@ -292,7 +294,7 @@ PIXI_UI.TiledLayout.prototype.layout = function (items, viewPortBounds) {
  * @property useSquareTiles
  * @type Boolean
  */
-Object.defineProperty(PIXI_UI.TiledLayout.prototype, 'useSquareTiles', {
+Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
     set: function(useSquareTiles) {
         this._useSquareTiles = useSquareTiles;
         this._needUpdate = true;
