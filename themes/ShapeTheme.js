@@ -13,7 +13,7 @@ ShapeTheme.prototype.constructor = ShapeTheme;
 
 ShapeTheme.prototype.getDummyButton = function(color, borderColor) {
     return function() {
-        var rect = new PIXI_UI.shape.Rect(color, 0.8);
+        var rect = new PIXI_UI.shapes.Rect(color, 0.8);
         rect.radius = 5;
         rect.border = 2;
         rect.borderColor = borderColor;
