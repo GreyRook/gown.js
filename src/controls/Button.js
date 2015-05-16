@@ -121,7 +121,7 @@ Button.prototype.updateDimensions = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
     }
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];

@@ -89,7 +89,7 @@ module.exports = ScaleContainer;
  * @private
  */
 ScaleContainer.prototype._getTexture = function(x, y, w, h) {
-    var frame = new PIXI.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
+    var frame = new PIXI.math.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
     var t = new PIXI.Texture(this.baseTexture, frame, frame.clone(), null);
     return new PIXI.Sprite(t);
 };
