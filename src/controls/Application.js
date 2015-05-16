@@ -17,14 +17,15 @@ var Control = require('../core/Control');
  */
 function Application(background, fullscreen, renderer, stage) {
     if (!stage || !renderer) {
-        stage = new PIXI.Stage(0xffffff);
+        stage = new PIXI.Container();
         var width = 800;
         var height = 600;
         if (fullscreen) {
             width = window.innerWidth;
             height = window.innerHeight;
         }
-        renderer = PIXI.autoDetectRenderer(width, height);
+        renderer = PIXI.autoDetectRenderer(
+            width, height, {backgroundColor : 0xffffff});
         document.body.appendChild(renderer.view);
     }
     /* jshint ignore:start */
@@ -52,9 +53,9 @@ Application.prototype.animate = function() {
     var stage = this._stage;
     var animate = function() {
         renderer.render(stage);
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     };
-    requestAnimFrame(animate);
+    requestAnimationFrame(animate);
 };
 /* jshint ignore:end */
 
