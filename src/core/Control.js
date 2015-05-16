@@ -3,18 +3,18 @@
  * based on pixi-DisplayContainer that supports adding children, so all
  * controls are container
  * @class Control
- * @extends PIXI.DisplayObjectContainer
+ * @extends PIXI.Container
  * @memberof PIXI_UI
  * @constructor
  */
 function Control() {
-    PIXI.DisplayObjectContainer.call(this);
+    PIXI.Container.call(this);
     this.enabled = this.enabled !== false;
     // assume all controls are interactive
     this.interactive = true;
 }
 
-Control.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+Control.prototype = Object.create( PIXI.Container.prototype );
 Control.prototype.constructor = Control;
 module.exports = Control;
 
@@ -45,7 +45,7 @@ Control.prototype.setTheme = function(theme) {
 /* istanbul ignore next */
 Control.prototype._renderWebGL = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
+    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
 };
 
 /**
@@ -58,7 +58,7 @@ Control.prototype._renderWebGL = function(renderSession) {
 /* istanbul ignore next */
 Control.prototype._renderCanvas = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderCanvas.call(this, renderSession);
+    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
 };
 
 /**

@@ -3,13 +3,13 @@
  * e.g. useful for scalable buttons.
  *
  * @class ScaleContainer
- * @extends PIXI.DisplayObjectContainer
+ * @extends PIXI.Container
  * @memberof PIXI_UI
  * @constructor
  */
 
 function ScaleContainer(texture, rect) {
-    PIXI.DisplayObjectContainer.call( this );
+    PIXI.Container.call( this );
 
     this.rect = rect;
     this.baseTexture = texture.baseTexture;
@@ -78,7 +78,7 @@ function ScaleContainer(texture, rect) {
 }
 
 // constructor
-ScaleContainer.prototype = Object.create( PIXI.DisplayObjectContainer.prototype );
+ScaleContainer.prototype = Object.create( PIXI.Container.prototype );
 ScaleContainer.prototype.constructor = ScaleContainer;
 module.exports = ScaleContainer;
 
@@ -227,7 +227,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
 /* istanbul ignore next */
 ScaleContainer.prototype._renderWebGL = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderWebGL.call(this, renderSession);
+    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
 };
 
 /**
@@ -240,5 +240,5 @@ ScaleContainer.prototype._renderWebGL = function(renderSession) {
 /* istanbul ignore next */
 ScaleContainer.prototype._renderCanvas = function(renderSession) {
     this.redraw();
-    return PIXI.DisplayObjectContainer.prototype._renderCanvas.call(this, renderSession);
+    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
 };
