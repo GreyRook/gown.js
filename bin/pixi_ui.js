@@ -39,14 +39,15 @@ var Control = require('../core/Control');
  */
 function Application(background, fullscreen, renderer, stage) {
     if (!stage || !renderer) {
-        stage = new PIXI.Stage(0xffffff);
+        stage = new PIXI.Container();
         var width = 800;
         var height = 600;
         if (fullscreen) {
             width = window.innerWidth;
             height = window.innerHeight;
         }
-        renderer = PIXI.autoDetectRenderer(width, height);
+        renderer = PIXI.autoDetectRenderer(
+            width, height, {backgroundColor : 0xffffff});
         document.body.appendChild(renderer.view);
     }
     /* jshint ignore:start */
@@ -74,9 +75,9 @@ Application.prototype.animate = function() {
     var stage = this._stage;
     var animate = function() {
         renderer.render(stage);
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     };
-    requestAnimFrame(animate);
+    requestAnimationFrame(animate);
 };
 /* jshint ignore:end */
 
@@ -4472,49 +4473,56 @@ function mouseWheelSupport(stage, enable) {
 
 module.exports = mouseWheelSupport;
 },{}],39:[function(require,module,exports){
+/**
+ * center element on parent vertically
+ * @param elem
+ * @param parent (optional)
+ * @method centerVertical
+ */
+function centerVertical(elem, parent) {
+    parent = parent || elem.parent;
+    elem.y = Math.floor((parent.height - elem.height ) / 2);
+}
+
+/**
+ *
+ * @param elem
+ * @param parent (optional)
+ */
+function bottom(elem, parent) {
+    parent = parent || elem.parent;
+    elem.y = parent.y - elem.height;
+}
+
+/**
+ * center element on parent horizontally
+ * @param elem
+ * @param parent (optional)
+ * @method centerHorizontal
+ */
+function centerHorizontal(elem, parent) {
+    parent = parent || elem.parent;
+    elem.x = Math.floor((parent.width - elem.width ) / 2);
+}
+
+
+/**
+ * center element on parent
+ * @param elem
+ * @param parent (optional)
+ * @method center
+ */
+function center(elem, parent) {
+    centerVertical(elem, parent);
+    centerHorizontal(elem, parent);
+}
+
+
 module.exports = {
-    /**
-     * center element on parent horizontally
-     * @param elem
-     * @param parent (optional)
-     * @method centerHorizontal
-     */
-    centerHorizontal: function (elem, parent) {
-        parent = parent || elem.parent;
-        elem.x = Math.floor((parent.width - elem.width ) / 2);
-    },
-
-    /**
-     * center element on parent vertically
-     * @param elem
-     * @param parent (optional)
-     * @method centerVertical
-     */
-    centerVertical: function (elem, parent) {
-        parent = parent || elem.parent;
-        elem.y = Math.floor((parent.height - elem.height ) / 2);
-    },
-
-    /**
-     * center element on parent
-     * @param elem
-     * @param parent (optional)
-     * @method center
-     */
-    center: function (elem, parent) {
-        PIXI_UI.centerVertical(elem, parent);
-        PIXI_UI.centerHorizontal(elem, parent);
-    },
-
-    /**
-     *
-     * @param elem
-     * @param parent (optional)
-     */
-    bottom: function (elem, parent) {
-        parent = parent || elem.parent;
-        elem.y = parent.y - elem.height;
-    }
+    centerHorizontal: centerHorizontal,
+    centerVertical: centerVertical,
+    center: center,
+    bottom: bottom
 };
 },{}]},{},[1])(1)
 });
