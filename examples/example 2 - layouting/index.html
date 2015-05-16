@@ -17,24 +17,24 @@
 </head>
 <body>
 <script>
-    var stage = new PIXI.Stage(0xffffff);
+    var stage = new PIXI.Container();
     var sizes = {w: 800, h: 600};
-    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h);
+    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     var btn, grp;
     document.body.appendChild(renderer.view);
 
     function onComplete() {
-        grp = new PIXI_UI.LayoutGroup();
+        grp = new PIXI_UI.controls.LayoutGroup();
         grp.x = 20;
         grp.y = 30;
         grp.width = Math.floor(sizes.w - (grp.x*2));
-        grp.layout = new PIXI_UI.HorizontalLayout();
+        grp.layout = new PIXI_UI.layout.HorizontalLayout();
         grp.layout.gap = 10;
         stage.addChild(grp);
 
         // create layout container and add some buttons
         for (var i = 0; i < 10; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new PIXI_UI.controls.Button();
             btn.percentWidth = 100;
             btn.height = 25;
             btn.label = (i+1)+". button";
@@ -43,7 +43,7 @@
         btn.percentWidth = null;
         btn.width = 110;
 
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
 
     var theme = new PIXI_UI.AeonTheme(
@@ -52,7 +52,7 @@
     function animate() {
         // render the stage
         renderer.render(stage);
-        requestAnimFrame(animate);
+        requestAnimationFrame(animate);
     }
 </script>
 
