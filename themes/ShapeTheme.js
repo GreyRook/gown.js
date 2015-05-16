@@ -1,19 +1,19 @@
-PIXI_UI.ShapeTheme = function(onComplete, global) {
-    PIXI_UI.Theme.call(this, global);
+function ShapeTheme(onComplete, global) {
+    PIXI_UI.skin.Theme.call(this, global);
     this.textStyle = {
         "fill": "#fff",
         "font": "20px Arial"
     };
     this.onComplete = onComplete;
     this.setSkins();
-};
+}
 
-PIXI_UI.ShapeTheme.prototype = Object.create( PIXI_UI.Theme.prototype );
-PIXI_UI.ShapeTheme.prototype.constructor = PIXI_UI.ShapeTheme;
+ShapeTheme.prototype = Object.create( PIXI_UI.skin.Theme.prototype );
+ShapeTheme.prototype.constructor = ShapeTheme;
 
-PIXI_UI.ShapeTheme.prototype.getDummyButton = function(color, borderColor) {
+ShapeTheme.prototype.getDummyButton = function(color, borderColor) {
     return function() {
-        var rect = new PIXI_UI.Rect(color, 0.8);
+        var rect = new PIXI_UI.shape.Rect(color, 0.8);
         rect.radius = 5;
         rect.border = 2;
         rect.borderColor = borderColor;
@@ -21,9 +21,9 @@ PIXI_UI.ShapeTheme.prototype.getDummyButton = function(color, borderColor) {
     }
 };
 
-PIXI_UI.ShapeTheme.prototype.setSkins = function() {
-    var b = PIXI_UI.Button;
-    //var tb = PIXI_UI.ToggleButton;
+ShapeTheme.prototype.setSkins = function() {
+    var b = PIXI_UI.controls.Button;
+    //var tb = PIXI_UI.controls.ToggleButton;
     this.setSkin(b.SKIN_NAME, b.UP,
         this.getDummyButton(0x6073c8, 0x0000ff));
     this.setSkin(b.SKIN_NAME, b.DOWN,
@@ -37,4 +37,6 @@ PIXI_UI.ShapeTheme.prototype.setSkins = function() {
     }
 };
 
-PIXI_UI.ShapeTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(6, 6, 70, 10);
+ShapeTheme.BUTTON_SCALE_9_GRID = new PIXI.math.Rectangle(6, 6, 70, 10);
+
+PIXI_UI.ShapeTheme = ShapeTheme;
