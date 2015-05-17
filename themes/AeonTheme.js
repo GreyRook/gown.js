@@ -1,14 +1,14 @@
 function AeonTheme(jsonPath, onComplete, global) {
-    PIXI_UI.skin.Theme.call(this, global);
+    PIXI_UI.Theme.call(this, global);
     this._onComplete = onComplete;
     this.loadImage(jsonPath);
 }
 
-AeonTheme.prototype = Object.create( PIXI_UI.skin.Theme.prototype );
+AeonTheme.prototype = Object.create( PIXI_UI.Theme.prototype );
 AeonTheme.prototype.constructor = AeonTheme;
 
 AeonTheme.prototype.loadComplete = function() {
-    var b = PIXI_UI.controls.Button;
+    var b = PIXI_UI.Button;
     var bg = AeonTheme.BUTTON_SCALE_9_GRID;
 
     this.setSkin(b.SKIN_NAME, b.UP,
@@ -19,8 +19,8 @@ AeonTheme.prototype.loadComplete = function() {
         this.getScaleContainer("button-hover-skin", bg));
 
 
-    if (PIXI_UI.controls.ToggleButton) {
-        var tb = PIXI_UI.controls.ToggleButton;
+    if (PIXI_UI.ToggleButton) {
+        var tb = PIXI_UI.ToggleButton;
         var sbg = AeonTheme.SELECTED_BUTTON_SCALE_9_GRID;
 
         this.setSkin(tb.SKIN_NAME, b.UP,
@@ -39,8 +39,8 @@ AeonTheme.prototype.loadComplete = function() {
     }
 
 
-    if (PIXI_UI.controls.ScrollBar) {
-        var sb = PIXI_UI.controls.ScrollBar;
+    if (PIXI_UI.ScrollBar) {
+        var sb = PIXI_UI.ScrollBar;
 
         this.setSkin(sb.SKIN_NAME, "horizontal_track",
             this.getScaleContainer("horizontal-scroll-bar-track-skin",
@@ -49,8 +49,8 @@ AeonTheme.prototype.loadComplete = function() {
             this.getScaleContainer("vertical-scroll-bar-track-skin",
                 AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID));
     }
-    if (PIXI_UI.controls.ScrollThumb) {
-        var st = PIXI_UI.controls.ScrollThumb;
+    if (PIXI_UI.ScrollThumb) {
+        var st = PIXI_UI.ScrollThumb;
         this.setSkin(st.SKIN_NAME, "horizontal_up" + b.UP,
             this.getScaleContainer("horizontal-scroll-bar-thumb-up-skin",
                 AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID));
@@ -77,8 +77,8 @@ AeonTheme.prototype.loadComplete = function() {
             this.getImage("vertical-scroll-bar-thumb-icon"));
     }
 
-    if (PIXI_UI.controls.TextInput) {
-        var ti = PIXI_UI.controls.TextInput;
+    if (PIXI_UI.TextInput) {
+        var ti = PIXI_UI.TextInput;
         this.setSkin(ti.SKIN_NAME, "background",
             this.getScaleContainer("text-input-background-skin",
                 AeonTheme.TEXT_INPUT_SCALE_9_GRID));

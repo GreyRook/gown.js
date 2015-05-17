@@ -24,17 +24,17 @@
     document.body.appendChild(renderer.view);
 
     function onComplete() {
-        grp = new PIXI_UI.controls.LayoutGroup();
+        grp = new PIXI_UI.LayoutGroup();
         grp.x = 20;
         grp.y = 30;
         grp.width = Math.floor(sizes.w - (grp.x*2));
-        grp.layout = new PIXI_UI.layout.HorizontalLayout();
+        grp.layout = new PIXI_UI.HorizontalLayout();
         grp.layout.gap = 10;
         stage.addChild(grp);
 
         // create layout container and add some buttons
         for (var i = 0; i < 10; i++) {
-            btn = new PIXI_UI.controls.Button();
+            btn = new PIXI_UI.Button();
             btn.percentWidth = 100;
             btn.height = 25;
             btn.label = (i+1)+". button";

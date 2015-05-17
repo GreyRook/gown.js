@@ -1,4 +1,4 @@
-var Skinable = require('../core/Skinable'),
+var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
 /**
  * scroll bar or slider

@@ -1,4 +1,4 @@
-var Control = require('../core/Control'),
+var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
 /**

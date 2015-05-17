@@ -1,4 +1,4 @@
-var InputControl = require('../controls/InputControl');
+var InputControl = require('../core/controls/InputControl');
 
 /**
  * Wrapper for DOM Text Input

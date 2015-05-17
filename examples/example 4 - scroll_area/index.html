@@ -27,25 +27,25 @@
     function onComplete() {
         //stage.addChild(toggleButton);
         var sprite = PIXI.Sprite.fromImage("img/rainbow.png");
-        var sa_sprite = new PIXI_UI.controls.ScrollArea(sprite);
+        var sa_sprite = new PIXI_UI.ScrollArea(sprite);
         sa_sprite.x = 240;
         sa_sprite.y = 240;
         sa_sprite.width = sa_sprite.height = 180;
         stage.addChild(sa_sprite);
 
-        grp = new PIXI_UI.controls.LayoutGroup();
-        grp.layout = new PIXI_UI.layout.VerticalLayout();
+        grp = new PIXI_UI.LayoutGroup();
+        grp.layout = new PIXI_UI.VerticalLayout();
 
         // create layout container and add some buttons
         for (var i = 0; i < 20; i++) {
-            btn = new PIXI_UI.controls.Button();
+            btn = new PIXI_UI.Button();
             btn.height = 25;
             btn.width = 100;
             btn.label = (i+1)+". button";
             grp.addChild(btn);
         }
 
-        sa_grp = new PIXI_UI.controls.ScrollArea(grp);
+        sa_grp = new PIXI_UI.ScrollArea(grp);
         sa_grp.x = 100;
         sa_grp.y = 100;
         sa_grp._useMask = false;

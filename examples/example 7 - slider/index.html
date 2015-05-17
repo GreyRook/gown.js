@@ -36,14 +36,14 @@
                 ["../../themes/assets/aeon/aeon_desktop.json"]);
         progress_theme.loadComplete();
         progress_theme.setSkin(
-                PIXI_UI.controls.ScrollBar.SKIN_NAME,
+                PIXI_UI.ScrollBar.SKIN_NAME,
                 "horizontal_progress",
                 function () {
-                    return new PIXI_UI.shapes.Rect(0xff0000, 1.0, 20, 20);
+                    return new PIXI_UI.Rect(0xff0000, 1.0, 20, 20);
                 }
         );
 
-        var slider = new PIXI_UI.controls.Slider(progress_theme);
+        var slider = new PIXI_UI.Slider(progress_theme);
         slider.change = function(sliderData) {
             txt.setText(sliderData.value);
             console.log(sliderData.value);

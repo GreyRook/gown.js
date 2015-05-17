@@ -9,10 +9,10 @@
  */
 
 var IconTextInput = function(icon, text, theme) {
-    PIXI_UI.controls.TextInput.call(this, text, theme);
+    PIXI_UI.TextInput.call(this, text, theme);
     this.icon  = icon;
 
-    this.bg = new PIXI_UI.shapes.Rect(0x111111, 0.5, 360, 46, 5);
+    this.bg = new PIXI_UI.Rect(0x111111, 0.5, 360, 46, 5);
     this.icon.x = 7;
 
     this.addChild(this.bg);
@@ -29,11 +29,11 @@ var IconTextInput = function(icon, text, theme) {
     pos.centerVertical(this.pixiText);
 };
 
-IconTextInput.prototype = Object.create( PIXI_UI.controls.TextInput.prototype );
+IconTextInput.prototype = Object.create( PIXI_UI.TextInput.prototype );
 IconTextInput.prototype.constructor = IconTextInput;
 
 IconTextInput.prototype.setCursorPos = function() {
-    PIXI_UI.controls.TextInput.prototype.setCursorPos.call(this);
+    PIXI_UI.TextInput.prototype.setCursorPos.call(this);
     this.cursor.x += this.icon.width + this.icon.x*2;
     PIXI_UI.utils.position.centerVertical(this.cursor);
 };

@@ -1,4 +1,4 @@
-var Control = require('../core/Control');
+var Control = require('../Control');
 
 /**
  * entry point for your application, makes some assumptions, (e.g. that you

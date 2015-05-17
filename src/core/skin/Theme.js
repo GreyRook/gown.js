@@ -1,4 +1,4 @@
-var ScaleContainer = require('../utils/ScaleContainer');
+var ScaleContainer = require('../../utils/ScaleContainer');
 
 /**
  * basic theming/skinning.

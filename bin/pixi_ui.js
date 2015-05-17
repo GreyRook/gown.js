@@ -3,10 +3,6 @@
 var core = module.exports = require('./core');
 
 // add core plugins.
-core.controls       = require('./controls');
-core.layout         = require('./layout');
-core.shapes         = require('./shapes');
-core.skin           = require('./skin');
 core.utils          = require('./utils');
 
 // use default pixi loader
@@ -19,8 +15,296 @@ core.loader = PIXI.loader;
 global.PIXI_UI = core;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./controls":13,"./core":16,"./layout":25,"./shapes":31,"./skin":33,"./utils":37}],2:[function(require,module,exports){
-var Control = require('../core/Control');
+},{"./core":15,"./utils":33}],2:[function(require,module,exports){
+/**
+ * base for all UI controls (see controls/)
+ * based on pixi-DisplayContainer that supports adding children, so all
+ * controls are container
+ * @class Control
+ * @extends PIXI.Container
+ * @memberof PIXI_UI
+ * @constructor
+ */
+function Control() {
+    PIXI.Container.call(this);
+    this.enabled = this.enabled !== false;
+    // assume all controls are interactive
+    this.interactive = true;
+}
+
+Control.prototype = Object.create( PIXI.Container.prototype );
+Control.prototype.constructor = Control;
+module.exports = Control;
+
+/**
+ * change the theme (every control can have a theme, even if it does not
+ * inherit Skinable, e.g. if there is only some color in the skin that will
+ * be taken)
+ *
+ * @method setTheme
+ * @param theme the new theme {Theme}
+ */
+Control.prototype.setTheme = function(theme) {
+    if (theme === this.theme && theme) {
+        return;
+    }
+
+    this.theme = theme;
+    this.invalidSkin = true;
+};
+
+/**
+ * Renders the object using the WebGL renderer
+ *
+ * @method _renderWebGL
+ * @param renderSession {RenderSession}
+ * @private
+ */
+/* istanbul ignore next */
+Control.prototype._renderWebGL = function(renderSession) {
+    this.redraw();
+    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
+};
+
+/**
+ * Renders the object using the Canvas renderer
+ *
+ * @method _renderWebGL
+ * @param renderSession {RenderSession}
+ * @private
+ */
+/* istanbul ignore next */
+Control.prototype._renderCanvas = function(renderSession) {
+    this.redraw();
+    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
+};
+
+/**
+ * get local mouse position from PIXI.InteractionData
+ *
+ * @method mousePos
+ * @returns {x: Number, y: Number}
+ */
+Control.prototype.mousePos = function(e) {
+    return e.getLocalPosition(e.target || this);
+};
+
+/**
+ * update before draw call
+ * redraw control for current state from theme
+ *
+ * @method redraw
+ */
+Control.prototype.redraw = function() {
+};
+
+/**
+ * Enables/Disables the control.
+ * (not implemented yet)
+ *
+ * @property enabled
+ * @type Boolean
+ */
+Object.defineProperty(Control.prototype, 'enabled', {
+    get: function() {
+        return this._enabled;
+    },
+    set: function(value) {
+        this._enabled = value;
+    }
+});
+
+
+//var originalWidth = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'width');
+
+/**
+ * The width of the shape, setting this will redraw the component.
+ * (set invalidDimensions)
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(Control.prototype, 'width', {
+    get: function() {
+        return this._width;
+        //return originalWidth.get.call(this);
+    },
+    set: function(width) {
+        this._width = width;
+        //originalWidth.set.call(this, width);
+        this.invalidDimensions = true;
+    }
+});
+
+//var originalHeight = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'height');
+
+/**
+ * The height of the shape, setting this will redraw the component.
+ * (set invalidDimensions)
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(Control.prototype, 'height', {
+    get: function() {
+        //return originalHeight.get.call(this);
+        return this._height;
+    },
+    set: function(height) {
+        //originalHeight.set.call(this, height);
+        this._height = height;
+        this.invalidDimensions = true;
+    }
+});
+},{}],3:[function(require,module,exports){
+var Control = require('./Control');
+
+/**
+ * Control that requires a theme (e.g. a button)
+ *
+ * @class Skinable
+ * @extends PIXI_UI.Control
+ * @memberof PIXI_UI
+ * @constructor
+ */
+function Skinable(theme) {
+    Control.call(this);
+    this.skinCache = {};
+    this.setTheme(theme || PIXI_UI.theme);
+
+    if (this.theme === undefined) {
+        throw new Error('you need to define a theme first');
+    }
+
+    // invalidate state so the control will be redrawn next time
+    this.invalidState = true; // draw for the first time
+    this.invalidDimensions = true;
+}
+
+Skinable.prototype = Object.create( Control.prototype );
+Skinable.prototype.constructor = Skinable;
+module.exports = Skinable;
+
+Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
+/**
+ * change the theme
+ *
+ * @method setTheme
+ * @param theme the new theme {Theme}
+ */
+Skinable.prototype.setTheme = function(theme) {
+    if (theme === this.theme && theme) {
+        return;
+    }
+
+    this.controlSetTheme(theme);
+    this.preloadSkins();
+    // force states to redraw
+    this.invalidState = true;
+};
+
+/**
+ * remove old skin and add new one
+ *
+ * @method changeState
+ * @param skin {DisplayObject}
+ */
+Skinable.prototype.changeState = function(skin) {
+    if (this._currentSkin !== skin) {
+        this._lastSkin = this._currentSkin;
+        this.addChildAt(skin, 0);
+        skin.alpha = 1.0;
+        this._currentSkin = skin;
+
+    }
+    this.invalidState = false;
+};
+
+/**
+ * initiate all skins first
+ *
+ * @method preloadSkins
+ */
+Skinable.prototype.preloadSkins = function() {
+};
+
+/**
+ * get image from skin (will execute a callback with the loaded skin
+ * when it is loaded or call it directly when it already is loaded)
+ *
+ * @method fromSkin
+ * @param name name of the state
+ * @param callback callback that is executed if the skin is loaded
+ */
+Skinable.prototype.fromSkin = function(name, callback) {
+    var skin;
+    if (this.skinCache[name]) {
+        skin = this.skinCache[name];
+    } else {
+        skin = this.theme.getSkin(this.skinName, name);
+        this.skinCache[name] = skin;
+    }
+    if (skin) {
+        callback.call(this, skin);
+    }
+    // TODO: what, if the skin is not loaded jet? --> execute callback after load
+};
+
+/**
+ * update before draw call
+ * redraw control for current state from theme
+ *
+ * @method redraw
+ */
+Skinable.prototype.redraw = function() {
+    // remove last skin after new one has been added
+    // (just before rendering, otherwise we would see nothing for a frame)
+    if (this._lastSkin) {
+        //this.removeChild(this._lastSkin);
+        this._lastSkin.alpha = 0;
+        this._lastSkin = null;
+    }
+    if (this.invalidState) {
+        this.fromSkin(this._currentState, this.changeState);
+    }
+    if (this._currentSkin &&
+        this.invalidDimensions &&
+        this._width > 0 && this._height > 0) {
+
+        this._currentSkin.width = this._width;
+        this._currentSkin.height = this._height;
+        this.invalidDimensions = false;
+        this.updateDimensions();
+    }
+};
+
+Skinable.prototype.updateDimensions = function() {
+};
+
+
+/**
+ * change the skin name
+ * You normally set the skin name as constant in your control, but if you
+ * want you can set another skin name to change skins for single components
+ * at runtime.
+ *
+ * @property skinName
+ * @type String
+ */
+Object.defineProperty(Skinable.prototype, 'skinName', {
+    get: function() {
+        return this._skinName;
+    },
+    set: function(value) {
+        if ( this._skinName === value ) {
+            return;
+        }
+        this._skinName = value;
+        this.invalidState = true;
+    }
+});
+},{"./Control":2}],4:[function(require,module,exports){
+var Control = require('../Control');
 
 /**
  * entry point for your application, makes some assumptions, (e.g. that you
@@ -177,8 +461,8 @@ Object.defineProperty(Application.prototype, 'background', {
     }
 });
 
-},{"../core/Control":14}],3:[function(require,module,exports){
-var Skinable = require('../core/Skinable');
+},{"../Control":2}],5:[function(require,module,exports){
+var Skinable = require('../Skinable');
 
 /**
  * The basic Button with 3 states (up, down and hover) and a label that is
@@ -452,9 +736,9 @@ Object.defineProperty(Button.prototype, 'label', {
         this.updateLabel = true;
     }
 });
-},{"../core/Skinable":15}],4:[function(require,module,exports){
-var Skinable = require('../core/Skinable'),
-    InputWrapper = require('../utils/InputWrapper');
+},{"../Skinable":3}],6:[function(require,module,exports){
+var Skinable = require('../Skinable'),
+    InputWrapper = require('../../utils/InputWrapper');
 
 /**
  * InputControl used for TextInput, TextArea and everything else that
@@ -675,8 +959,8 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../core/Skinable":15,"../utils/InputWrapper":34}],5:[function(require,module,exports){
-var Control = require('../core/Control'),
+},{"../../utils/InputWrapper":30,"../Skinable":3}],7:[function(require,module,exports){
+var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
 /**
@@ -924,8 +1208,8 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
         return height;
     }
 });
-},{"../core/Control":14,"../layout/ViewPortBounds":24}],6:[function(require,module,exports){
-var Control = require('../core/Control'),
+},{"../Control":2,"../layout/ViewPortBounds":23}],8:[function(require,module,exports){
+var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
 /**
@@ -1304,7 +1588,7 @@ Object.defineProperty(ScrollArea.prototype, 'height', {
     }
 });
 
-},{"../core/Control":14,"../layout/LayoutAlignment":19}],7:[function(require,module,exports){
+},{"../Control":2,"../layout/LayoutAlignment":18}],9:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1376,7 +1660,7 @@ ScrollBar.prototype.thumbMoved = function(x, y) {
     }
 };
 
-},{"../layout/LayoutAlignment":19,"./Scrollable":9}],8:[function(require,module,exports){
+},{"../layout/LayoutAlignment":18,"./Scrollable":11}],10:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -1464,8 +1748,8 @@ ScrollThumb.prototype.redraw = function() {
     }
 };
 
-},{"./Button":3}],9:[function(require,module,exports){
-var Skinable = require('../core/Skinable'),
+},{"./Button":5}],11:[function(require,module,exports){
+var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
 /**
  * scroll bar or slider
@@ -1741,9 +2025,9 @@ Object.defineProperty(Scrollable.prototype, 'height', {
     }
 });
 
-},{"../core/Skinable":15,"./ScrollThumb":8}],10:[function(require,module,exports){
+},{"../Skinable":3,"./ScrollThumb":10}],12:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
-    SliderData = require('../utils/SliderData');
+    SliderData = require('../../utils/SliderData');
 
 /**
  * Simple slider with min. and max. value
@@ -1857,10 +2141,10 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../utils/SliderData":36,"./Scrollable":9}],11:[function(require,module,exports){
-var Control = require('../core/Control'),
+},{"../../utils/SliderData":32,"./Scrollable":11}],13:[function(require,module,exports){
+var Control = require('../Control'),
     InputControl = require('./InputControl'),
-    InputWrapper = require('../utils/InputWrapper');
+    InputWrapper = require('../../utils/InputWrapper');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input
@@ -2140,7 +2424,7 @@ TextInput.prototype.updateTextState = function() {
     }
 };
 
-},{"../core/Control":14,"../utils/InputWrapper":34,"./InputControl":4}],12:[function(require,module,exports){
+},{"../../utils/InputWrapper":30,"../Control":2,"./InputControl":6}],14:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2246,319 +2530,7 @@ ToggleButton.prototype.handleEvent = function(type) {
     this.buttonHandleEvent(type);
 };
 
-},{"./Button":3}],13:[function(require,module,exports){
-/**
- * @file        Main export of the PIXI_UI controls library
- * @author      Andreas Bresser <andreasbresser@gmail.com>, Björn Friedrichs
- * @copyright   2015 Andreas Bresser, Björn Friedrichs
- * @license     {@link https://github.com/brean/pixi_ui/blob/master/LICENSE|Apache License}
- */
-
-/**
- * @namespace PIXI.controls
- */
-module.exports = {
-    Application:            require('./Application'),
-    Button:                 require('./Button'),
-    InputControl:           require('./InputControl'),
-    LayoutGroup:            require('./LayoutGroup'),
-    Scrollable:             require('./Scrollable'),
-    ScrollArea:             require('./ScrollArea'),
-    ScrollBar:              require('./ScrollBar'),
-    ScrollThumb:            require('./ScrollThumb'),
-    Slicer:                 require('./Slider'),
-    TextInput:              require('./TextInput'),
-    ToggleButton:           require('./ToggleButton')
-};
-},{"./Application":2,"./Button":3,"./InputControl":4,"./LayoutGroup":5,"./ScrollArea":6,"./ScrollBar":7,"./ScrollThumb":8,"./Scrollable":9,"./Slider":10,"./TextInput":11,"./ToggleButton":12}],14:[function(require,module,exports){
-/**
- * base for all UI controls (see controls/)
- * based on pixi-DisplayContainer that supports adding children, so all
- * controls are container
- * @class Control
- * @extends PIXI.Container
- * @memberof PIXI_UI
- * @constructor
- */
-function Control() {
-    PIXI.Container.call(this);
-    this.enabled = this.enabled !== false;
-    // assume all controls are interactive
-    this.interactive = true;
-}
-
-Control.prototype = Object.create( PIXI.Container.prototype );
-Control.prototype.constructor = Control;
-module.exports = Control;
-
-/**
- * change the theme (every control can have a theme, even if it does not
- * inherit Skinable, e.g. if there is only some color in the skin that will
- * be taken)
- *
- * @method setTheme
- * @param theme the new theme {Theme}
- */
-Control.prototype.setTheme = function(theme) {
-    if (theme === this.theme && theme) {
-        return;
-    }
-
-    this.theme = theme;
-    this.invalidSkin = true;
-};
-
-/**
- * Renders the object using the WebGL renderer
- *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
- * @private
- */
-/* istanbul ignore next */
-Control.prototype._renderWebGL = function(renderSession) {
-    this.redraw();
-    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
-};
-
-/**
- * Renders the object using the Canvas renderer
- *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
- * @private
- */
-/* istanbul ignore next */
-Control.prototype._renderCanvas = function(renderSession) {
-    this.redraw();
-    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
-};
-
-/**
- * get local mouse position from PIXI.InteractionData
- *
- * @method mousePos
- * @returns {x: Number, y: Number}
- */
-Control.prototype.mousePos = function(e) {
-    return e.getLocalPosition(e.target || this);
-};
-
-/**
- * update before draw call
- * redraw control for current state from theme
- *
- * @method redraw
- */
-Control.prototype.redraw = function() {
-};
-
-/**
- * Enables/Disables the control.
- * (not implemented yet)
- *
- * @property enabled
- * @type Boolean
- */
-Object.defineProperty(Control.prototype, 'enabled', {
-    get: function() {
-        return this._enabled;
-    },
-    set: function(value) {
-        this._enabled = value;
-    }
-});
-
-
-//var originalWidth = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'width');
-
-/**
- * The width of the shape, setting this will redraw the component.
- * (set invalidDimensions)
- *
- * @property width
- * @type Number
- */
-Object.defineProperty(Control.prototype, 'width', {
-    get: function() {
-        return this._width;
-        //return originalWidth.get.call(this);
-    },
-    set: function(width) {
-        this._width = width;
-        //originalWidth.set.call(this, width);
-        this.invalidDimensions = true;
-    }
-});
-
-//var originalHeight = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'height');
-
-/**
- * The height of the shape, setting this will redraw the component.
- * (set invalidDimensions)
- *
- * @property height
- * @type Number
- */
-Object.defineProperty(Control.prototype, 'height', {
-    get: function() {
-        //return originalHeight.get.call(this);
-        return this._height;
-    },
-    set: function(height) {
-        //originalHeight.set.call(this, height);
-        this._height = height;
-        this.invalidDimensions = true;
-    }
-});
-},{}],15:[function(require,module,exports){
-var Control = require('./Control');
-
-/**
- * Control that requires a theme (e.g. a button)
- *
- * @class Skinable
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
- * @constructor
- */
-function Skinable(theme) {
-    Control.call(this);
-    this.skinCache = {};
-    this.setTheme(theme || PIXI_UI.theme);
-
-    if (this.theme === undefined) {
-        throw new Error('you need to define a theme first');
-    }
-
-    // invalidate state so the control will be redrawn next time
-    this.invalidState = true; // draw for the first time
-    this.invalidDimensions = true;
-}
-
-Skinable.prototype = Object.create( Control.prototype );
-Skinable.prototype.constructor = Skinable;
-module.exports = Skinable;
-
-Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
-/**
- * change the theme
- *
- * @method setTheme
- * @param theme the new theme {Theme}
- */
-Skinable.prototype.setTheme = function(theme) {
-    if (theme === this.theme && theme) {
-        return;
-    }
-
-    this.controlSetTheme(theme);
-    this.preloadSkins();
-    // force states to redraw
-    this.invalidState = true;
-};
-
-/**
- * remove old skin and add new one
- *
- * @method changeState
- * @param skin {DisplayObject}
- */
-Skinable.prototype.changeState = function(skin) {
-    if (this._currentSkin !== skin) {
-        this._lastSkin = this._currentSkin;
-        this.addChildAt(skin, 0);
-        skin.alpha = 1.0;
-        this._currentSkin = skin;
-
-    }
-    this.invalidState = false;
-};
-
-/**
- * initiate all skins first
- *
- * @method preloadSkins
- */
-Skinable.prototype.preloadSkins = function() {
-};
-
-/**
- * get image from skin (will execute a callback with the loaded skin
- * when it is loaded or call it directly when it already is loaded)
- *
- * @method fromSkin
- * @param name name of the state
- * @param callback callback that is executed if the skin is loaded
- */
-Skinable.prototype.fromSkin = function(name, callback) {
-    var skin;
-    if (this.skinCache[name]) {
-        skin = this.skinCache[name];
-    } else {
-        skin = this.theme.getSkin(this.skinName, name);
-        this.skinCache[name] = skin;
-    }
-    if (skin) {
-        callback.call(this, skin);
-    }
-    // TODO: what, if the skin is not loaded jet? --> execute callback after load
-};
-
-/**
- * update before draw call
- * redraw control for current state from theme
- *
- * @method redraw
- */
-Skinable.prototype.redraw = function() {
-    // remove last skin after new one has been added
-    // (just before rendering, otherwise we would see nothing for a frame)
-    if (this._lastSkin) {
-        //this.removeChild(this._lastSkin);
-        this._lastSkin.alpha = 0;
-        this._lastSkin = null;
-    }
-    if (this.invalidState) {
-        this.fromSkin(this._currentState, this.changeState);
-    }
-    if (this._currentSkin &&
-        this.invalidDimensions &&
-        this._width > 0 && this._height > 0) {
-
-        this._currentSkin.width = this._width;
-        this._currentSkin.height = this._height;
-        this.invalidDimensions = false;
-        this.updateDimensions();
-    }
-};
-
-Skinable.prototype.updateDimensions = function() {
-};
-
-
-/**
- * change the skin name
- * You normally set the skin name as constant in your control, but if you
- * want you can set another skin name to change skins for single components
- * at runtime.
- *
- * @property skinName
- * @type String
- */
-Object.defineProperty(Skinable.prototype, 'skinName', {
-    get: function() {
-        return this._skinName;
-    },
-    set: function(value) {
-        if ( this._skinName === value ) {
-            return;
-        }
-        this._skinName = value;
-        this.invalidState = true;
-    }
-});
-},{"./Control":14}],16:[function(require,module,exports){
+},{"./Button":5}],15:[function(require,module,exports){
 /**
  * @file        Main export of the PIXI_UI core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2571,9 +2543,42 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
  */
 module.exports = {
     Control:        require('./Control'),
-    Skinable:       require('./Skinable')
+    Skinable:       require('./Skinable'),
+
+    // controls
+    Application:            require('./controls/Application'),
+    Button:                 require('./controls/Button'),
+    InputControl:           require('./controls/InputControl'),
+    LayoutGroup:            require('./controls/LayoutGroup'),
+    Scrollable:             require('./controls/Scrollable'),
+    ScrollArea:             require('./controls/ScrollArea'),
+    ScrollBar:              require('./controls/ScrollBar'),
+    ScrollThumb:            require('./controls/ScrollThumb'),
+    Slicer:                 require('./controls/Slider'),
+    TextInput:              require('./controls/TextInput'),
+    ToggleButton:           require('./controls/ToggleButton'),
+
+    // layout
+    HorizontalLayout:     require('./layout/HorizontalLayout'),
+    Layout:               require('./layout/Layout'),
+    LayoutAlignment:      require('./layout/LayoutAlignment'),
+    TiledColumnsLayout:   require('./layout/TiledColumnsLayout'),
+    TiledLayout:          require('./layout/TiledLayout'),
+    TiledRowsLayout:      require('./layout/TiledRowsLayout'),
+    VerticalLayout:       require('./layout/VerticalLayout'),
+    ViewPortBounds:       require('./layout/ViewPortBounds'),
+
+    // shapes
+    Diamond:           require('./shapes/Diamond'),
+    Ellipse:           require('./shapes/Ellipse'),
+    Line:              require('./shapes/Line'),
+    Rect:              require('./shapes/Rect'),
+    Shape:             require('./shapes/Shape'),
+
+    // skin
+    Theme:           require('./skin/Theme')
 };
-},{"./Control":14,"./Skinable":15}],17:[function(require,module,exports){
+},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/ScrollArea":8,"./controls/ScrollBar":9,"./controls/ScrollThumb":10,"./controls/Scrollable":11,"./controls/Slider":12,"./controls/TextInput":13,"./controls/ToggleButton":14,"./layout/HorizontalLayout":16,"./layout/Layout":17,"./layout/LayoutAlignment":18,"./layout/TiledColumnsLayout":19,"./layout/TiledLayout":20,"./layout/TiledRowsLayout":21,"./layout/VerticalLayout":22,"./layout/ViewPortBounds":23,"./shapes/Diamond":24,"./shapes/Ellipse":25,"./shapes/Line":26,"./shapes/Rect":27,"./shapes/Shape":28,"./skin/Theme":29}],16:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2594,7 +2599,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":19}],18:[function(require,module,exports){
+},{"./LayoutAlignment":18}],17:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -2817,7 +2822,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3004,7 +3009,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":18}],20:[function(require,module,exports){
+},{"./Layout":17}],19:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3050,7 +3055,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":21}],21:[function(require,module,exports){
+},{"./TiledLayout":20}],20:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3356,7 +3361,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":18}],22:[function(require,module,exports){
+},{"./Layout":17}],21:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3402,7 +3407,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":21}],23:[function(require,module,exports){
+},{"./TiledLayout":20}],22:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3423,7 +3428,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":19}],24:[function(require,module,exports){
+},{"./LayoutAlignment":18}],23:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3464,28 +3469,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],25:[function(require,module,exports){
-/**
- * @file        Main export of the PIXI_UI layout library
- * @author      Andreas Bresser <andreasbresser@gmail.com>
- * @copyright   2015 Andreas Bresser
- * @license     {@link https://github.com/brean/pixi_ui/blob/master/LICENSE|Apache License}
- */
-
-/**
- * @namespace PIXI.layout
- */
-module.exports = {
-    HorizontalLayout:     require('./HorizontalLayout'),
-    Layout:               require('./Layout'),
-    LayoutAlignment:      require('./LayoutAlignment'),
-    TiledColumnsLayout:   require('./TiledColumnsLayout'),
-    TiledLayout:          require('./TiledLayout'),
-    TiledRowsLayout:      require('./TiledRowsLayout'),
-    VerticalLayout:       require('./VerticalLayout'),
-    ViewPortBounds:       require('./ViewPortBounds')
-};
-},{"./HorizontalLayout":17,"./Layout":18,"./LayoutAlignment":19,"./TiledColumnsLayout":20,"./TiledLayout":21,"./TiledRowsLayout":22,"./VerticalLayout":23,"./ViewPortBounds":24}],26:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3520,7 +3504,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":30}],27:[function(require,module,exports){
+},{"./Shape":28}],25:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3551,7 +3535,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":30}],28:[function(require,module,exports){
+},{"./Shape":28}],26:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3607,7 +3591,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":30}],29:[function(require,module,exports){
+},{"./Shape":28}],27:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3662,7 +3646,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":30}],30:[function(require,module,exports){
+},{"./Shape":28}],28:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -3819,26 +3803,8 @@ Shape.prototype.redraw = function() {
     this._drawShape();
 };
 
-},{}],31:[function(require,module,exports){
-/**
- * @file        Main export of the PIXI_UI shapes library
- * @author      Andreas Bresser <andreasbresser@gmail.com>
- * @copyright   2015 Andreas Bresser
- * @license     {@link https://github.com/brean/pixi_ui/blob/master/LICENSE|Apache License}
- */
-
-/**
- * @namespace PIXI.shapes
- */
-module.exports = {
-    Diamond:           require('./Diamond'),
-    Ellipse:           require('./Ellipse'),
-    Line:              require('./Line'),
-    Rect:              require('./Rect'),
-    Shape:             require('./Shape')
-};
-},{"./Diamond":26,"./Ellipse":27,"./Line":28,"./Rect":29,"./Shape":30}],32:[function(require,module,exports){
-var ScaleContainer = require('../utils/ScaleContainer');
+},{}],29:[function(require,module,exports){
+var ScaleContainer = require('../../utils/ScaleContainer');
 
 /**
  * basic theming/skinning.
@@ -3939,22 +3905,8 @@ Theme.prototype.getSkin = function(comp, state) {
 Theme.removeTheme = function() {
     PIXI_UI.theme = undefined;
 };
-},{"../utils/ScaleContainer":35}],33:[function(require,module,exports){
-/**
- * @file        Main export of the PIXI_UI theme library
- * @author      Andreas Bresser <andreasbresser@gmail.com>
- * @copyright   2015 Andreas Bresser
- * @license     {@link https://github.com/brean/pixi_ui/blob/master/LICENSE|Apache License}
- */
-
-/**
- * @namespace PIXI.theme
- */
-module.exports = {
-    Theme:           require('./Theme')
-};
-},{"./Theme":32}],34:[function(require,module,exports){
-var InputControl = require('../controls/InputControl');
+},{"../../utils/ScaleContainer":31}],30:[function(require,module,exports){
+var InputControl = require('../core/controls/InputControl');
 
 /**
  * Wrapper for DOM Text Input
@@ -4129,7 +4081,7 @@ InputWrapper.setText = function(text) {
     }
 };
 
-},{"../controls/InputControl":4}],35:[function(require,module,exports){
+},{"../core/controls/InputControl":6}],31:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4375,7 +4327,7 @@ ScaleContainer.prototype._renderCanvas = function(renderSession) {
     return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
 };
 
-},{}],36:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4397,7 +4349,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],37:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
  * @file        Main export of the PIXI_UI util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4415,7 +4367,7 @@ module.exports = {
     ScaleContainer:         require('./ScaleContainer'),
     SliderData:             require('./SliderData')
 };
-},{"./InputWrapper":34,"./ScaleContainer":35,"./SliderData":36,"./mouseWheelSupport":38,"./position":39}],38:[function(require,module,exports){
+},{"./InputWrapper":30,"./ScaleContainer":31,"./SliderData":32,"./mouseWheelSupport":34,"./position":35}],34:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -4482,7 +4434,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],39:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem

@@ -1,4 +1,4 @@
-var Skinable = require('../core/Skinable');
+var Skinable = require('../Skinable');
 
 /**
  * The basic Button with 3 states (up, down and hover) and a label that is
