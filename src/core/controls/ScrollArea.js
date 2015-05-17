@@ -105,7 +105,7 @@ ScrollArea.prototype._scrollContent = function(x, y) {
  * @method mousedown
  */
 ScrollArea.prototype.mousedown = function(mouseData) {
-    var pos = mouseData.getLocalPosition(this);
+    var pos = mouseData.data.getLocalPosition(this);
     if (!this._start) {
         this._start = [
             pos.x - this.content.x,
@@ -121,7 +121,7 @@ ScrollArea.prototype.mousedown = function(mouseData) {
  */
 ScrollArea.prototype.mousemove = function(mouseData) {
     if (this._start) {
-        var pos = mouseData.getLocalPosition(this);
+        var pos = mouseData.data.getLocalPosition(this);
         this._scrollContent(
             pos.x - this._start[0],
             pos.y - this._start[1]

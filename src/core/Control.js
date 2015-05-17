@@ -68,7 +68,7 @@ Control.prototype.renderCanvas = function(renderer) {
  * @returns {x: Number, y: Number}
  */
 Control.prototype.mousePos = function(e) {
-    return e.getLocalPosition(e.target || this);
+    return e.data.getLocalPosition(e.target || this);
 };
 
 /**

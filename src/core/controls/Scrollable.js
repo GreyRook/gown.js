@@ -68,7 +68,7 @@ Scrollable.VERTICAL = 'vertical';
  * @param mouseData mousedata provided by pixi
  */
 Scrollable.prototype.handleDown = function(mouseData) {
-    var local = mouseData.getLocalPosition(this);
+    var local = mouseData.data.getLocalPosition(this);
     this._start = [local.x, local.y];
 };
 
@@ -85,7 +85,7 @@ Scrollable.prototype.handleUp = function() {
  */
 Scrollable.prototype.handleMove = function(mouseData) {
     if (this._start) {
-        var local = mouseData.getLocalPosition(this);
+        var local = mouseData.data.getLocalPosition(this);
         var x = this.thumb.x + local.x - this._start[0];
         var y = this.thumb.y + local.y - this._start[1];
         if (this.moveThumb(x, y)) {
