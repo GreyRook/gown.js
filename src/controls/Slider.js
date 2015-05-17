@@ -1,5 +1,5 @@
 var Scrollable = require('./Scrollable'),
-    SliderData = require('../util/SliderData');
+    SliderData = require('../utils/SliderData');
 
 /**
  * Simple slider with min. and max. value

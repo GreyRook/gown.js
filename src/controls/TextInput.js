@@ -1,6 +1,6 @@
 var Control = require('../core/Control'),
     InputControl = require('./InputControl'),
-    InputWrapper = require('../util/InputWrapper');
+    InputWrapper = require('../utils/InputWrapper');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input

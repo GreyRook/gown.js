@@ -86,7 +86,7 @@ LoginDialog.prototype.onresize = function(width, height) {
     var _width = Math.min(width, this.minWidth);
     _width = Math.max(_width, this.maxWidth);
     this.width = _width;
-    var pos = PIXI_UI.util.position;
+    var pos = PIXI_UI.utils.position;
     // center text
     pos.centerHorizontal(this.loginText, this);
     // center

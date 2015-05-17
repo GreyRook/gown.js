@@ -19,7 +19,7 @@ var IconTextInput = function(icon, text, theme) {
 
     this.addChild(icon);
 
-    var pos = PIXI_UI.util.position;
+    var pos = PIXI_UI.utils.position;
     pos.centerVertical(this.icon, this.bg);
     this.interactive = true;
 
@@ -35,5 +35,5 @@ IconTextInput.prototype.constructor = IconTextInput;
 IconTextInput.prototype.setCursorPos = function() {
     PIXI_UI.controls.TextInput.prototype.setCursorPos.call(this);
     this.cursor.x += this.icon.width + this.icon.x*2;
-    PIXI_UI.util.position.centerVertical(this.cursor);
+    PIXI_UI.utils.position.centerVertical(this.cursor);
 };

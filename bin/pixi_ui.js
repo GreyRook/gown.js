@@ -7,7 +7,7 @@ core.controls       = require('./controls');
 core.layout         = require('./layout');
 core.shapes         = require('./shapes');
 core.skin           = require('./skin');
-core.util           = require('./util');
+core.utils          = require('./utils');
 
 // use default pixi loader
 core.loader = PIXI.loader;
@@ -19,7 +19,7 @@ core.loader = PIXI.loader;
 global.PIXI_UI = core;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./controls":13,"./core":16,"./layout":25,"./shapes":31,"./skin":33,"./util":37}],2:[function(require,module,exports){
+},{"./controls":13,"./core":16,"./layout":25,"./shapes":31,"./skin":33,"./utils":37}],2:[function(require,module,exports){
 var Control = require('../core/Control');
 
 /**
@@ -69,6 +69,11 @@ Application.prototype = Object.create( Control.prototype );
 Application.prototype.constructor = Application;
 module.exports = Application;
 
+/**
+ * call requestAnimationFrame to render the application at max. FPS
+ *
+ * @method animate
+ */
 /* jshint ignore:start */
 Application.prototype.animate = function() {
     var renderer = this._renderer;
@@ -101,6 +106,11 @@ Application.prototype._createGradientRect = function(width, height, gradient) {
     return PIXI.Texture.fromCanvas(bgCanvas);
 };
 
+/**
+ * called when the browser window / the application is resized
+ *
+ * @method onresize
+ */
 Application.prototype.onresize = function() {
     this._width = window.innerWidth;
     this._height = window.innerHeight;
@@ -161,7 +171,7 @@ Object.defineProperty(Application.prototype, 'background', {
             this.bg.height = this._height;
             this.addChildAt(this.bg, 0);
         } else {
-            this._stage.setBackgroundColor(value);
+            this._renderer.backgroundColor = value;
         }
         this._background = value;
     }
@@ -444,7 +454,7 @@ Object.defineProperty(Button.prototype, 'label', {
 });
 },{"../core/Skinable":15}],4:[function(require,module,exports){
 var Skinable = require('../core/Skinable'),
-    InputWrapper = require('../util/InputWrapper');
+    InputWrapper = require('../utils/InputWrapper');
 
 /**
  * InputControl used for TextInput, TextArea and everything else that
@@ -665,7 +675,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../core/Skinable":15,"../util/InputWrapper":34}],5:[function(require,module,exports){
+},{"../core/Skinable":15,"../utils/InputWrapper":34}],5:[function(require,module,exports){
 var Control = require('../core/Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1733,7 +1743,7 @@ Object.defineProperty(Scrollable.prototype, 'height', {
 
 },{"../core/Skinable":15,"./ScrollThumb":8}],10:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
-    SliderData = require('../util/SliderData');
+    SliderData = require('../utils/SliderData');
 
 /**
  * Simple slider with min. and max. value
@@ -1847,10 +1857,10 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../util/SliderData":36,"./Scrollable":9}],11:[function(require,module,exports){
+},{"../utils/SliderData":36,"./Scrollable":9}],11:[function(require,module,exports){
 var Control = require('../core/Control'),
     InputControl = require('./InputControl'),
-    InputWrapper = require('../util/InputWrapper');
+    InputWrapper = require('../utils/InputWrapper');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input
@@ -2130,7 +2140,7 @@ TextInput.prototype.updateTextState = function() {
     }
 };
 
-},{"../core/Control":14,"../util/InputWrapper":34,"./InputControl":4}],12:[function(require,module,exports){
+},{"../core/Control":14,"../utils/InputWrapper":34,"./InputControl":4}],12:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -3828,7 +3838,7 @@ module.exports = {
     Shape:             require('./Shape')
 };
 },{"./Diamond":26,"./Ellipse":27,"./Line":28,"./Rect":29,"./Shape":30}],32:[function(require,module,exports){
-var ScaleContainer = require('../util/ScaleContainer');
+var ScaleContainer = require('../utils/ScaleContainer');
 
 /**
  * basic theming/skinning.
@@ -3929,7 +3939,7 @@ Theme.prototype.getSkin = function(comp, state) {
 Theme.removeTheme = function() {
     PIXI_UI.theme = undefined;
 };
-},{"../util/ScaleContainer":35}],33:[function(require,module,exports){
+},{"../utils/ScaleContainer":35}],33:[function(require,module,exports){
 /**
  * @file        Main export of the PIXI_UI theme library
  * @author      Andreas Bresser <andreasbresser@gmail.com>

@@ -5,7 +5,7 @@ core.controls       = require('./controls');
 core.layout         = require('./layout');
 core.shapes         = require('./shapes');
 core.skin           = require('./skin');
-core.util           = require('./util');
+core.utils          = require('./utils');
 
 // use default pixi loader
 core.loader = PIXI.loader;
