@@ -10,8 +10,9 @@ var Control = require('../Control'),
  * @memberof PIXI_UI
  * @constructor
  */
-function ScrollArea(content, addListener, scrolldelta) {
+function ScrollArea(content, addListener, scrolldelta, bar) {
     this.addListener = addListener || true;
+    this.bar = bar || null;
     Control.call(this);
     this.content = content || null;
     this.mask = undefined;
@@ -61,13 +62,13 @@ ScrollArea.prototype.upright = function() {
 };
 
 /**
- * set content (will determine scrll direction automatically if it is a
- * PIXI_UI.ScrollArea, will assume vertical scrolling as default)
+ * get 1-dimensional scroll direction
+ * dissolve "auto" into VERTICAL or HORIZONTAL
  *
- * @method _scrollContent
+ * @method direction
+ * @returns {String}
  */
-ScrollArea.prototype._scrollContent = function(x, y) {
-    // todo: press shift to switch direction
+ScrollArea.prototype.direction = function() {
     var scrollAuto = this.scrolldirection === ScrollArea.SCROLL_AUTO;
     var scroll = ScrollArea.SCROLL_VERTICAL;
     // if the scroll direction is set to SCROLL_AUTO we check, if the
@@ -77,6 +78,18 @@ ScrollArea.prototype._scrollContent = function(x, y) {
         (scrollAuto && (this.layoutHorizontalAlign() || this.upright()) )) {
         scroll = ScrollArea.SCROLL_HORIZONTAL;
     }
+    return scroll;
+};
+
+/**
+ * move content
+ *
+ * @method _scrollContent
+ */
+ScrollArea.prototype._scrollContent = function(x, y) {
+    // todo: press shift to switch direction
+    var scroll = this.direction();
+    var contentMoved = false;
     if (scroll === ScrollArea.SCROLL_HORIZONTAL) {
         if (this.content.width > this.width) {
             // assure we are within bounds
@@ -85,6 +98,7 @@ ScrollArea.prototype._scrollContent = function(x, y) {
                 x = Math.max(x, -(this.content.width - this.width));
             }
             this.content.x = Math.floor(x);
+            contentMoved = true;
         }
     }
     if (scroll === ScrollArea.SCROLL_VERTICAL) {
@@ -95,6 +109,25 @@ ScrollArea.prototype._scrollContent = function(x, y) {
                 y = Math.max(y, -(this.content.height - this.height));
             }
             this.content.y = Math.floor(y);
+            contentMoved = true;
+        }
+    }
+    return contentMoved;
+};
+
+// update ScrollBar progress/thumb position
+ScrollArea.prototype.updateBar = function() {
+    if (this.bar && this.bar.thumb && this.content) {
+        var scroll = this.direction();
+        if (scroll === ScrollArea.SCROLL_HORIZONTAL) {
+            this.bar.thumb.x = Math.floor(-this.content.x /
+                (this.content.width - this.width) *
+                (this.bar.width - this.bar.thumb.width));
+        }
+        if (scroll === ScrollArea.SCROLL_VERTICAL) {
+            this.bar.thumb.y = Math.floor(-this.content.y /
+            (this.content.height - this.height) *
+            (this.bar.height - this.bar.thumb.height));
         }
     }
 };
@@ -122,10 +155,11 @@ ScrollArea.prototype.mousedown = function(mouseData) {
 ScrollArea.prototype.mousemove = function(mouseData) {
     if (this._start) {
         var pos = mouseData.data.getLocalPosition(this);
-        this._scrollContent(
-            pos.x - this._start[0],
-            pos.y - this._start[1]
-        );
+        if (this._scrollContent(
+                pos.x - this._start[0],
+                pos.y - this._start[1])) {
+            this.updateBar();
+        }
     }
 };
 

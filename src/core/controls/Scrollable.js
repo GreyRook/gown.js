@@ -211,28 +211,9 @@ Scrollable.prototype.maxHeight = function() {
  * @method moveThumb
  */
 Scrollable.prototype.moveThumb = function(x, y) {
-    if(this.orientation === Scrollable.HORIZONTAL) {
-        if (isNaN(x)) {
-            return false;
-        }
-        x = Math.min(x, this.maxWidth());
-        x = Math.max(x, 0);
-        if (x !== this.thumb.x) {
-            this.thumb.x = x;
-            this._updateProgressSkin();
-            return true;
-        }
-    } else {
-        if (isNaN(y)) {
-            return false;
-        }
-        y = Math.min(y, this.maxHeight());
-        y = Math.max(y, 0);
-        if (y !== this.thumb.y) {
-            this.thumb.y = y;
-            this._updateProgressSkin();
-            return true;
-        }
+    if (this.thumb.move(x, y)) {
+        this._updateProgressSkin();
+        return true;
     }
     return false;
 };

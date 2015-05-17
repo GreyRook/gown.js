@@ -22,6 +22,11 @@ function ScrollBar(scrollArea, thumb, theme) {
             this.orientation = Scrollable.VERTICAL;
         }
     }
+    if (scrollArea) {
+        //scrollArea
+        // move thumb when scrollarea moves
+        scrollArea.bar = this;
+    }
     Scrollable.call(this, thumb, theme);
 }
 

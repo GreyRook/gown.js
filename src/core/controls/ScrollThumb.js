@@ -70,6 +70,12 @@ ScrollThumb.prototype.mouseup = function (mouseData) {
     this.scrollable.handleUp();
 };
 
+/**
+ * show track icon on thumb
+ *
+ * @method showTrack
+ * @param skin
+ */
 ScrollThumb.prototype.showTrack = function(skin) {
     if (this.skin !== skin) {
         if(this.skin) {
@@ -84,9 +90,49 @@ ScrollThumb.prototype.showTrack = function(skin) {
     this.invalidTrack = false;
 };
 
+/**
+ * redraw the skin
+ *
+ * @method redraw
+ */
 ScrollThumb.prototype.redraw = function() {
     this.redrawSkinable();
     if (this.invalidTrack) {
         this.fromSkin(this.scrollable.orientation+'_thumb', this.showTrack);
     }
+};
+
+
+/**
+ * move the thumb on the scroll bar within its bounds
+ *
+ * @param x new calculated x position of the thumb
+ * @param y new calculated y position of the thumb
+ * @returns {boolean} returns true if the position of the thumb has been
+ * moved
+ * @method move
+ */
+ScrollThumb.prototype.move = function(x, y) {
+    if (this.scrollable.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+        if (isNaN(x)) {
+            return false;
+        }
+        x = Math.min(x, this.scrollable.maxWidth());
+        x = Math.max(x, 0);
+        if (x !== this.x) {
+            this.x = x;
+            return true;
+        }
+    } else {
+        if (isNaN(y)) {
+            return false;
+        }
+        y = Math.min(y, this.scrollable.maxHeight());
+        y = Math.max(y, 0);
+        if (y !== this.y) {
+            this.y = y;
+            return true;
+        }
+    }
+    return false;
 };

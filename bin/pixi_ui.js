@@ -1236,8 +1236,9 @@ var Control = require('../Control'),
  * @memberof PIXI_UI
  * @constructor
  */
-function ScrollArea(content, addListener, scrolldelta) {
+function ScrollArea(content, addListener, scrolldelta, bar) {
     this.addListener = addListener || true;
+    this.bar = bar || null;
     Control.call(this);
     this.content = content || null;
     this.mask = undefined;
@@ -1287,13 +1288,13 @@ ScrollArea.prototype.upright = function() {
 };
 
 /**
- * set content (will determine scrll direction automatically if it is a
- * PIXI_UI.ScrollArea, will assume vertical scrolling as default)
+ * get 1-dimensional scroll direction
+ * dissolve "auto" into VERTICAL or HORIZONTAL
  *
- * @method _scrollContent
+ * @method direction
+ * @returns {String}
  */
-ScrollArea.prototype._scrollContent = function(x, y) {
-    // todo: press shift to switch direction
+ScrollArea.prototype.direction = function() {
     var scrollAuto = this.scrolldirection === ScrollArea.SCROLL_AUTO;
     var scroll = ScrollArea.SCROLL_VERTICAL;
     // if the scroll direction is set to SCROLL_AUTO we check, if the
@@ -1303,6 +1304,18 @@ ScrollArea.prototype._scrollContent = function(x, y) {
         (scrollAuto && (this.layoutHorizontalAlign() || this.upright()) )) {
         scroll = ScrollArea.SCROLL_HORIZONTAL;
     }
+    return scroll;
+};
+
+/**
+ * move content
+ *
+ * @method _scrollContent
+ */
+ScrollArea.prototype._scrollContent = function(x, y) {
+    // todo: press shift to switch direction
+    var scroll = this.direction();
+    var contentMoved = false;
     if (scroll === ScrollArea.SCROLL_HORIZONTAL) {
         if (this.content.width > this.width) {
             // assure we are within bounds
@@ -1311,6 +1324,7 @@ ScrollArea.prototype._scrollContent = function(x, y) {
                 x = Math.max(x, -(this.content.width - this.width));
             }
             this.content.x = Math.floor(x);
+            contentMoved = true;
         }
     }
     if (scroll === ScrollArea.SCROLL_VERTICAL) {
@@ -1321,6 +1335,25 @@ ScrollArea.prototype._scrollContent = function(x, y) {
                 y = Math.max(y, -(this.content.height - this.height));
             }
             this.content.y = Math.floor(y);
+            contentMoved = true;
+        }
+    }
+    return contentMoved;
+};
+
+// update ScrollBar progress/thumb position
+ScrollArea.prototype.updateBar = function() {
+    if (this.bar && this.bar.thumb && this.content) {
+        var scroll = this.direction();
+        if (scroll === ScrollArea.SCROLL_HORIZONTAL) {
+            this.bar.thumb.x = Math.floor(-this.content.x /
+                (this.content.width - this.width) *
+                (this.bar.width - this.bar.thumb.width));
+        }
+        if (scroll === ScrollArea.SCROLL_VERTICAL) {
+            this.bar.thumb.y = Math.floor(-this.content.y /
+            (this.content.height - this.height) *
+            (this.bar.height - this.bar.thumb.height));
         }
     }
 };
@@ -1348,10 +1381,11 @@ ScrollArea.prototype.mousedown = function(mouseData) {
 ScrollArea.prototype.mousemove = function(mouseData) {
     if (this._start) {
         var pos = mouseData.data.getLocalPosition(this);
-        this._scrollContent(
-            pos.x - this._start[0],
-            pos.y - this._start[1]
-        );
+        if (this._scrollContent(
+                pos.x - this._start[0],
+                pos.y - this._start[1])) {
+            this.updateBar();
+        }
     }
 };
 
@@ -1633,6 +1667,11 @@ function ScrollBar(scrollArea, thumb, theme) {
             this.orientation = Scrollable.VERTICAL;
         }
     }
+    if (scrollArea) {
+        //scrollArea
+        // move thumb when scrollarea moves
+        scrollArea.bar = this;
+    }
     Scrollable.call(this, thumb, theme);
 }
 
@@ -1759,6 +1798,12 @@ ScrollThumb.prototype.mouseup = function (mouseData) {
     this.scrollable.handleUp();
 };
 
+/**
+ * show track icon on thumb
+ *
+ * @method showTrack
+ * @param skin
+ */
 ScrollThumb.prototype.showTrack = function(skin) {
     if (this.skin !== skin) {
         if(this.skin) {
@@ -1773,6 +1818,11 @@ ScrollThumb.prototype.showTrack = function(skin) {
     this.invalidTrack = false;
 };
 
+/**
+ * redraw the skin
+ *
+ * @method redraw
+ */
 ScrollThumb.prototype.redraw = function() {
     this.redrawSkinable();
     if (this.invalidTrack) {
@@ -1780,6 +1830,40 @@ ScrollThumb.prototype.redraw = function() {
     }
 };
 
+
+/**
+ * move the thumb on the scroll bar within its bounds
+ *
+ * @param x new calculated x position of the thumb
+ * @param y new calculated y position of the thumb
+ * @returns {boolean} returns true if the position of the thumb has been
+ * moved
+ * @method move
+ */
+ScrollThumb.prototype.move = function(x, y) {
+    if (this.scrollable.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+        if (isNaN(x)) {
+            return false;
+        }
+        x = Math.min(x, this.scrollable.maxWidth());
+        x = Math.max(x, 0);
+        if (x !== this.x) {
+            this.x = x;
+            return true;
+        }
+    } else {
+        if (isNaN(y)) {
+            return false;
+        }
+        y = Math.min(y, this.scrollable.maxHeight());
+        y = Math.max(y, 0);
+        if (y !== this.y) {
+            this.y = y;
+            return true;
+        }
+    }
+    return false;
+};
 },{"./Button":5}],11:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
@@ -1851,6 +1935,9 @@ Scrollable.VERTICAL = 'vertical';
 
 /**
  * handle mouse down/touch start
+ * move scroll thumb clicking somewhere on the scroll bar (outside the thumb)
+ *
+ * @method handleDown
  * @param mouseData mousedata provided by pixi
  */
 Scrollable.prototype.handleDown = function(mouseData) {
@@ -1870,6 +1957,8 @@ Scrollable.prototype.handleDown = function(mouseData) {
 
 /**
  * handle mouse up/touch end
+ *
+ * @method handleUp
  */
 Scrollable.prototype.handleUp = function() {
     this._start = null;
@@ -1877,6 +1966,8 @@ Scrollable.prototype.handleUp = function() {
 
 /**
  * handle mouse move: move thumb
+ *
+ * @method handleMove
  * @param mouseData mousedata provided by pixi
  */
 Scrollable.prototype.handleMove = function(mouseData) {
@@ -1896,6 +1987,8 @@ Scrollable.prototype.handleMove = function(mouseData) {
 
 /**
  * handle mouse wheel: move thumb on track
+ *
+ * @method handleWheel
  * @param event mousewheel event from browser
  */
 Scrollable.prototype.handleWheel = function (event) {
@@ -1908,6 +2001,8 @@ Scrollable.prototype.handleWheel = function (event) {
 
 /**
  * thumb has new x/y position
+ *
+ * @method thumbMoved
  * @param x x-position that has been scrolled to (ignored when vertical)
  * @param y y-position that has been scrolled to (ignored when horizontal)
  */
@@ -1918,6 +2013,8 @@ Scrollable.prototype.thumbMoved = function(x, y) {
 /**
  * show the progress skin from the start/end of the scroll track to the current
  * position of the thumb.
+ *
+ * @method _updateProgressSkin
  * @private
  */
 Scrollable.prototype._updateProgressSkin = function() {
@@ -1952,6 +2049,9 @@ Scrollable.prototype._updateProgressSkin = function() {
 /**
  * returns the max. width in pixel
  * (normally this.width - thumb width)
+ *
+ * @method maxWidth
+ * @returns {Number}
  */
 Scrollable.prototype.maxWidth = function() {
     return this.width - this.thumb.width;
@@ -1960,6 +2060,9 @@ Scrollable.prototype.maxWidth = function() {
 /**
  * returns the max. height in pixel
  * (normally this.height - thumb height)
+ *
+ * @method maxHeight
+ * @returns {Number}
  */
 Scrollable.prototype.maxHeight = function() {
     return this.height - this.thumb.height;
@@ -1967,34 +2070,17 @@ Scrollable.prototype.maxHeight = function() {
 
 /**
  * move the thumb on the scroll bar within its bounds
+ *
  * @param x new calculated x position of the thumb
  * @param y new calculated y position of the thumb
  * @returns {boolean} returns true if the position of the thumb has been
  * moved
+ * @method moveThumb
  */
 Scrollable.prototype.moveThumb = function(x, y) {
-    if(this.orientation === Scrollable.HORIZONTAL) {
-        if (isNaN(x)) {
-            return false;
-        }
-        x = Math.min(x, this.maxWidth());
-        x = Math.max(x, 0);
-        if (x !== this.thumb.x) {
-            this.thumb.x = x;
-            this._updateProgressSkin();
-            return true;
-        }
-    } else {
-        if (isNaN(y)) {
-            return false;
-        }
-        y = Math.min(y, this.maxHeight());
-        y = Math.max(y, 0);
-        if (y !== this.thumb.y) {
-            this.thumb.y = y;
-            this._updateProgressSkin();
-            return true;
-        }
+    if (this.thumb.move(x, y)) {
+        this._updateProgressSkin();
+        return true;
     }
     return false;
 };
@@ -2002,6 +2088,7 @@ Scrollable.prototype.moveThumb = function(x, y) {
 /**
  * show scroll track
  *
+ * @method showTrack
  * @param skin
  */
 Scrollable.prototype.showTrack = function(skin) {
@@ -2022,6 +2109,7 @@ Scrollable.prototype.showTrack = function(skin) {
  * show progress on track (from the start/end of the track to the
  * current position of the thumb)
  *
+ * @method showProgress
  * @param skin
  */
 Scrollable.prototype.showProgress = function(skin) {
@@ -2040,6 +2128,8 @@ Scrollable.prototype.showProgress = function(skin) {
 
 /**
  * redraw track and progressbar
+ *
+ * @method redraw
  */
 Scrollable.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
