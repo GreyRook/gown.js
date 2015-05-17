@@ -198,13 +198,12 @@ TextInput.prototype.redraw = function()
 };
 
 TextInput.prototype.onMouseMove = function(e) {
-
+    var mouse = this.mousePos(e);
     if(!this.hasFocus || !this._mouseDown || this.selectionStart < 0 ||
-            !this.stage.interactionManager.hitTest(this, e)) {
+            !this.containsPoint(mouse)) {
         return false;
     }
 
-    var mouse = this.mousePos(e);
     var curPos = this.clickPos(mouse.x, mouse.y),
         start = Math.min(this.selectionStart, curPos),
         end = Math.max(this.selectionStart, curPos);
@@ -217,9 +216,10 @@ TextInput.prototype.onMouseMove = function(e) {
 };
 
 TextInput.prototype.onMouseDown = function(e) {
-    if(e.originalEvent.which === 2 || e.originalEvent.which === 3)
+    var originalEvent = e.data.originalEvent;
+    if(originalEvent.which === 2 || originalEvent.which === 3)
     {
-        e.originalEvent.preventDefault();
+        originalEvent.preventDefault();
         return false;
     }
 
@@ -237,10 +237,10 @@ TextInput.prototype.onMouseDown = function(e) {
 };
 
 TextInput.prototype.onMouseUp = function(e) {
-
-    if(e.originalEvent.which === 2 || e.originalEvent.which === 3)
+    var originalEvent = e.data.originalEvent;
+    if(originalEvent.which === 2 || originalEvent.which === 3)
     {
-        e.originalEvent.preventDefault();
+        originalEvent.preventDefault();
         return false;
     }
 

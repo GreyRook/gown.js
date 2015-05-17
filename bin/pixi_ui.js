@@ -2423,13 +2423,12 @@ TextInput.prototype.redraw = function()
 };
 
 TextInput.prototype.onMouseMove = function(e) {
-
+    var mouse = this.mousePos(e);
     if(!this.hasFocus || !this._mouseDown || this.selectionStart < 0 ||
-            !this.stage.interactionManager.hitTest(this, e)) {
+            !this.containsPoint(mouse)) {
         return false;
     }
 
-    var mouse = this.mousePos(e);
     var curPos = this.clickPos(mouse.x, mouse.y),
         start = Math.min(this.selectionStart, curPos),
         end = Math.max(this.selectionStart, curPos);
@@ -2442,9 +2441,10 @@ TextInput.prototype.onMouseMove = function(e) {
 };
 
 TextInput.prototype.onMouseDown = function(e) {
-    if(e.originalEvent.which === 2 || e.originalEvent.which === 3)
+    var originalEvent = e.data.originalEvent;
+    if(originalEvent.which === 2 || originalEvent.which === 3)
     {
-        e.originalEvent.preventDefault();
+        originalEvent.preventDefault();
         return false;
     }
 
@@ -2462,10 +2462,10 @@ TextInput.prototype.onMouseDown = function(e) {
 };
 
 TextInput.prototype.onMouseUp = function(e) {
-
-    if(e.originalEvent.which === 2 || e.originalEvent.which === 3)
+    var originalEvent = e.data.originalEvent;
+    if(originalEvent.which === 2 || originalEvent.which === 3)
     {
-        e.originalEvent.preventDefault();
+        originalEvent.preventDefault();
         return false;
     }
 
@@ -3987,8 +3987,6 @@ Theme.removeTheme = function() {
     PIXI_UI.theme = undefined;
 };
 },{"../../utils/ScaleContainer":31}],30:[function(require,module,exports){
-var InputControl = require('../core/controls/InputControl');
-
 /**
  * Wrapper for DOM Text Input
  *
@@ -4036,21 +4034,21 @@ InputWrapper.createInput = function()
         // add blur handler
         input.addEventListener('blur', function()
         {
-            if(InputControl.currentInput)
+            if (PIXI_UI.InputControl.currentInput)
             {
-                InputControl.currentInput.onMouseUpOutside();
+                PIXI_UI.InputControl.currentInput.onMouseUpOutside();
             }
         }, false);
 
         // on key down
         input.addEventListener('keydown', function(e)
         {
-            if(InputControl.currentInput)
+            if (PIXI_UI.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (InputControl.currentInput.hasFocus)
+                if (PIXI_UI.InputControl.currentInput.hasFocus)
                 {
-                    InputControl.currentInput.onKeyDown(e);
+                    PIXI_UI.InputControl.currentInput.onKeyDown(e);
                 }
             }
         });
@@ -4058,12 +4056,12 @@ InputWrapper.createInput = function()
         // on key up
         input.addEventListener('keyup', function(e)
         {
-            if(InputControl.currentInput)
+            if(PIXI_UI.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (InputControl.currentInput.hasFocus)
+                if (PIXI_UI.InputControl.currentInput.hasFocus)
                 {
-                    InputControl.currentInput.onKeyUp(e);
+                    PIXI_UI.InputControl.currentInput.onKeyUp(e);
                 }
             }
         });
@@ -4162,7 +4160,7 @@ InputWrapper.setText = function(text) {
     }
 };
 
-},{"../core/controls/InputControl":6}],31:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.

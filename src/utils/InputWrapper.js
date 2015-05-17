@@ -1,5 +1,3 @@
-var InputControl = require('../core/controls/InputControl');
-
 /**
  * Wrapper for DOM Text Input
  *
@@ -47,21 +45,21 @@ InputWrapper.createInput = function()
         // add blur handler
         input.addEventListener('blur', function()
         {
-            if(InputControl.currentInput)
+            if (PIXI_UI.InputControl.currentInput)
             {
-                InputControl.currentInput.onMouseUpOutside();
+                PIXI_UI.InputControl.currentInput.onMouseUpOutside();
             }
         }, false);
 
         // on key down
         input.addEventListener('keydown', function(e)
         {
-            if(InputControl.currentInput)
+            if (PIXI_UI.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (InputControl.currentInput.hasFocus)
+                if (PIXI_UI.InputControl.currentInput.hasFocus)
                 {
-                    InputControl.currentInput.onKeyDown(e);
+                    PIXI_UI.InputControl.currentInput.onKeyDown(e);
                 }
             }
         });
@@ -69,12 +67,12 @@ InputWrapper.createInput = function()
         // on key up
         input.addEventListener('keyup', function(e)
         {
-            if(InputControl.currentInput)
+            if(PIXI_UI.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (InputControl.currentInput.hasFocus)
+                if (PIXI_UI.InputControl.currentInput.hasFocus)
                 {
-                    InputControl.currentInput.onKeyUp(e);
+                    PIXI_UI.InputControl.currentInput.onKeyUp(e);
                 }
             }
         });
