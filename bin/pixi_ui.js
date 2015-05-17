@@ -1700,7 +1700,10 @@ var Button = require('./Button');
 function ScrollThumb(scrollable, theme) {
     this.scrollable = scrollable;
     this.skinName = this.skinName || ScrollThumb.SKIN_NAME;
-    this._validStates = ['horizontal_up', 'vertical_up', 'horizontal_down', 'vertical_down', 'horizontal_hover', 'vertical_hover'];
+    this._validStates = [
+        'horizontal_up', 'vertical_up',
+        'horizontal_down', 'vertical_down',
+        'horizontal_hover', 'vertical_hover'];
     Button.call(this, theme);
     this.invalidTrack = true;
     this.width = 20;
@@ -1747,7 +1750,7 @@ ScrollThumb.prototype.mousemove = function (mouseData) {
     this.scrollable.handleMove(mouseData);
 };
 
-ScrollThumb.prototype.buttonmouseup = Button.prototype.mousemove;
+ScrollThumb.prototype.buttonmouseup = Button.prototype.mouseup;
 ScrollThumb.prototype.mouseup = function (mouseData) {
     this.buttonmouseup(mouseData);
     this.scrollable.handleUp();
