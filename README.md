@@ -109,6 +109,5 @@ Known Bugs
  - TextInput cursor should be at the end of the text field on focus
  - selecting Text in TextInput does not work
  - ScrollArea with ScrollBar should reposition the thumb when the user just moves the content in the scroll area without klicking on the thumb
- - UP-state for the horizontal ScrollBar in the AeonTheme seems not set 
  - new Button label flash at position 0:0 before they get positioned at the right position (scroll the buttons in example 4 to see this)
  - width/height not calculated for scaling (just pixel positions)

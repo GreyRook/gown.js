@@ -51,7 +51,7 @@ AeonTheme.prototype.loadComplete = function() {
     }
     if (PIXI_UI.ScrollThumb) {
         var st = PIXI_UI.ScrollThumb;
-        this.setSkin(st.SKIN_NAME, "horizontal_up" + b.UP,
+        this.setSkin(st.SKIN_NAME, "horizontal_" + b.UP,
             this.getScaleContainer("horizontal-scroll-bar-thumb-up-skin",
                 AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID));
         this.setSkin(st.SKIN_NAME, "horizontal_" + b.DOWN,
