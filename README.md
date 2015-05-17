@@ -104,11 +104,4 @@ This list is not ordered by priority nor does it contain any promise that those 
 
 Known Bugs
 ==========
- - Buttons without theme are invisible (they should at least show the label).
- - TextInput content should not be copied when changing text field
- - TextInput cursor should be at the end of the text field on focus
- - selecting Text in TextInput does not work
- - ScrollArea with ScrollBar should reposition the thumb when the user just moves the content in the scroll area without klicking on the thumb
- - new Button label flash at position 0:0 before they get positioned at the right position (scroll the buttons in example 4 to see this)
- - width/height not calculated for scaling (just pixel positions)
- - reusing the same image atlas for a theme does not work ("example 7 - slider" not working)
+see [Issues](https://github.com/brean/pixi_ui/issues/)
