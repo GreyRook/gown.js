@@ -52,7 +52,10 @@ Object.defineProperty(ScrollThumb.prototype, 'currentState',{
 ScrollThumb.prototype.buttonmousedown = Button.prototype.mousedown;
 ScrollThumb.prototype.mousedown = function(mouseData) {
     this.buttonmousedown(mouseData);
-    this.scrollable.handleDown(mouseData);
+    var local = mouseData.data.getLocalPosition(this.scrollable);
+    this.scrollable._start = [local.x, local.y];
+    //this.scrollable.handleDown(mouseData);
+    mouseData.stopPropagation();
 };
 
 ScrollThumb.prototype.buttonmousemove = Button.prototype.mousemove;

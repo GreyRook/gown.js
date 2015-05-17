@@ -1741,7 +1741,10 @@ Object.defineProperty(ScrollThumb.prototype, 'currentState',{
 ScrollThumb.prototype.buttonmousedown = Button.prototype.mousedown;
 ScrollThumb.prototype.mousedown = function(mouseData) {
     this.buttonmousedown(mouseData);
-    this.scrollable.handleDown(mouseData);
+    var local = mouseData.data.getLocalPosition(this.scrollable);
+    this.scrollable._start = [local.x, local.y];
+    //this.scrollable.handleDown(mouseData);
+    mouseData.stopPropagation();
 };
 
 ScrollThumb.prototype.buttonmousemove = Button.prototype.mousemove;
@@ -1804,6 +1807,9 @@ function Scrollable(thumb, theme) {
 
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
     this.scrolldelta = 10;
+
+    this.touchStart = this.mousedown = this.handleDown;
+    this.touchEnd = this.mouseup = this.mouseupoutside = this.handleUp;
 }
 
 Scrollable.prototype = Object.create( Skinable.prototype );
@@ -1849,7 +1855,17 @@ Scrollable.VERTICAL = 'vertical';
  */
 Scrollable.prototype.handleDown = function(mouseData) {
     var local = mouseData.data.getLocalPosition(this);
-    this._start = [local.x, local.y];
+    var center = {
+        x: local.x - this.thumb.width / 2,
+        y: local.y - this.thumb.height / 2
+    };
+    if (mouseData.target === this &&
+        this.moveThumb(center.x, center.y)) {
+        this._start = [local.x, local.y];
+        // do not override localX/localY in start
+        // if we do not move the thumb
+        this.thumbMoved(local.x, local.y);
+    }
 };
 
 /**
