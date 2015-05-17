@@ -3,7 +3,6 @@
  */
 PIXI_UI.TestTheme = function(global) {
     PIXI_UI.Theme.call(this, global);
-
 };
 
 PIXI_UI.TestTheme.prototype = Object.create( PIXI_UI.Theme.prototype );

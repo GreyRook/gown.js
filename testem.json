@@ -6,6 +6,8 @@
         "lib/pixi.js",
         "bin/pixi_ui.js",
         "test/setup.js",
+        "test/src/*.js",
+        "themes/*.js",
         "test/unit/**/*.test.js"
     ],
     "launchers": {
