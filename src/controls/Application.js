@@ -47,6 +47,11 @@ Application.prototype = Object.create( Control.prototype );
 Application.prototype.constructor = Application;
 module.exports = Application;
 
+/**
+ * call requestAnimationFrame to render the application at max. FPS
+ *
+ * @method animate
+ */
 /* jshint ignore:start */
 Application.prototype.animate = function() {
     var renderer = this._renderer;
@@ -79,6 +84,11 @@ Application.prototype._createGradientRect = function(width, height, gradient) {
     return PIXI.Texture.fromCanvas(bgCanvas);
 };
 
+/**
+ * called when the browser window / the application is resized
+ *
+ * @method onresize
+ */
 Application.prototype.onresize = function() {
     this._width = window.innerWidth;
     this._height = window.innerHeight;
