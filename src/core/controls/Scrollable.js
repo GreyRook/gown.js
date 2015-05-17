@@ -68,6 +68,9 @@ Scrollable.VERTICAL = 'vertical';
 
 /**
  * handle mouse down/touch start
+ * move scroll thumb clicking somewhere on the scroll bar (outside the thumb)
+ *
+ * @method handleDown
  * @param mouseData mousedata provided by pixi
  */
 Scrollable.prototype.handleDown = function(mouseData) {
@@ -87,6 +90,8 @@ Scrollable.prototype.handleDown = function(mouseData) {
 
 /**
  * handle mouse up/touch end
+ *
+ * @method handleUp
  */
 Scrollable.prototype.handleUp = function() {
     this._start = null;
@@ -94,6 +99,8 @@ Scrollable.prototype.handleUp = function() {
 
 /**
  * handle mouse move: move thumb
+ *
+ * @method handleMove
  * @param mouseData mousedata provided by pixi
  */
 Scrollable.prototype.handleMove = function(mouseData) {
@@ -113,6 +120,8 @@ Scrollable.prototype.handleMove = function(mouseData) {
 
 /**
  * handle mouse wheel: move thumb on track
+ *
+ * @method handleWheel
  * @param event mousewheel event from browser
  */
 Scrollable.prototype.handleWheel = function (event) {
@@ -125,6 +134,8 @@ Scrollable.prototype.handleWheel = function (event) {
 
 /**
  * thumb has new x/y position
+ *
+ * @method thumbMoved
  * @param x x-position that has been scrolled to (ignored when vertical)
  * @param y y-position that has been scrolled to (ignored when horizontal)
  */
@@ -135,6 +146,8 @@ Scrollable.prototype.thumbMoved = function(x, y) {
 /**
  * show the progress skin from the start/end of the scroll track to the current
  * position of the thumb.
+ *
+ * @method _updateProgressSkin
  * @private
  */
 Scrollable.prototype._updateProgressSkin = function() {
@@ -169,6 +182,9 @@ Scrollable.prototype._updateProgressSkin = function() {
 /**
  * returns the max. width in pixel
  * (normally this.width - thumb width)
+ *
+ * @method maxWidth
+ * @returns {Number}
  */
 Scrollable.prototype.maxWidth = function() {
     return this.width - this.thumb.width;
@@ -177,6 +193,9 @@ Scrollable.prototype.maxWidth = function() {
 /**
  * returns the max. height in pixel
  * (normally this.height - thumb height)
+ *
+ * @method maxHeight
+ * @returns {Number}
  */
 Scrollable.prototype.maxHeight = function() {
     return this.height - this.thumb.height;
@@ -184,10 +203,12 @@ Scrollable.prototype.maxHeight = function() {
 
 /**
  * move the thumb on the scroll bar within its bounds
+ *
  * @param x new calculated x position of the thumb
  * @param y new calculated y position of the thumb
  * @returns {boolean} returns true if the position of the thumb has been
  * moved
+ * @method moveThumb
  */
 Scrollable.prototype.moveThumb = function(x, y) {
     if(this.orientation === Scrollable.HORIZONTAL) {
@@ -219,6 +240,7 @@ Scrollable.prototype.moveThumb = function(x, y) {
 /**
  * show scroll track
  *
+ * @method showTrack
  * @param skin
  */
 Scrollable.prototype.showTrack = function(skin) {
@@ -239,6 +261,7 @@ Scrollable.prototype.showTrack = function(skin) {
  * show progress on track (from the start/end of the track to the
  * current position of the thumb)
  *
+ * @method showProgress
  * @param skin
  */
 Scrollable.prototype.showProgress = function(skin) {
@@ -257,6 +280,8 @@ Scrollable.prototype.showProgress = function(skin) {
 
 /**
  * redraw track and progressbar
+ *
+ * @method redraw
  */
 Scrollable.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
