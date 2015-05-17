@@ -59,12 +59,12 @@ TODO
 ======
 This list is not ordered by priority nor does it contain any promise that those items will be implemented.
 
+ - run tests through testem
+ - jasmine coverage
  - find a nicer name (pixi_ui does not roll that easily off the tongue)
  - better and more detailed documentation!
  - How-To tutorial and beginners documentation!
-
  - mouse wheel support
- - Bugfix: buttons without theme should at least show the label.
  - real viewport(s) for ScrollArea ?
  - build/compress themes
  - benchmarking capabilities and performance optimisation
@@ -101,3 +101,13 @@ This list is not ordered by priority nor does it contain any promise that those 
  - Gestue helper (pitch-zoom)
  - better/more async testing
  - evaluate cocoonjs support
+
+Known Bugs
+==========
+ - Buttons without theme should at least show the label.
+ - TextInput content should not be copied when changing text field
+ - TextInput cursor should be at the end of the text field on focus
+ - selecting Text in TextInput does not work
+ - ScrollArea with ScrollBar should reposition the thumb when the user just moves the content in the scroll area without klicking on the thumb
+ - UP-state for the horizontal ScrollBar in the AeonTheme seems not set 
+ - new Button label flash at position 0:0 before they get positioned at the right position (scroll the buttons in example 4 to see this) 
