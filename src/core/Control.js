@@ -38,27 +38,27 @@ Control.prototype.setTheme = function(theme) {
 /**
  * Renders the object using the WebGL renderer
  *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
+ * @method renderWebGL
+ * @param renderer
  * @private
  */
 /* istanbul ignore next */
-Control.prototype._renderWebGL = function(renderSession) {
+Control.prototype.renderWebGL = function(renderer) {
     this.redraw();
-    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
+    return PIXI.Container.prototype.renderWebGL.call(this, renderer);
 };
 
 /**
  * Renders the object using the Canvas renderer
  *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
+ * @method renderCanvas
+ * @param renderer
  * @private
  */
 /* istanbul ignore next */
-Control.prototype._renderCanvas = function(renderSession) {
+Control.prototype.renderCanvas = function(renderer) {
     this.redraw();
-    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
+    return PIXI.Container.prototype.renderCanvas.call(this, renderer);
 };
 
 /**

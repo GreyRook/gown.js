@@ -220,25 +220,25 @@ ScaleContainer.fromFrame = function(frameId, rect) {
 /**
  * Renders the object using the WebGL renderer
  *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
+ * @method renderWebGL
+ * @param renderer
  * @private
  */
 /* istanbul ignore next */
-ScaleContainer.prototype._renderWebGL = function(renderSession) {
+ScaleContainer.prototype.renderWebGL = function(renderer) {
     this.redraw();
-    return PIXI.Container.prototype._renderWebGL.call(this, renderSession);
+    return PIXI.Container.prototype.renderWebGL.call(this, renderer);
 };
 
 /**
  * Renders the object using the Canvas renderer
  *
- * @method _renderWebGL
- * @param renderSession {RenderSession}
+ * @method renderCanvas
+ * @param renderer
  * @private
  */
 /* istanbul ignore next */
-ScaleContainer.prototype._renderCanvas = function(renderSession) {
+ScaleContainer.prototype.renderCanvas = function(renderer) {
     this.redraw();
-    return PIXI.Container.prototype._renderCanvas.call(this, renderSession);
+    return PIXI.Container.prototype.renderCanvas.call(this, renderer);
 };

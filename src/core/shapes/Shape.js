@@ -88,21 +88,21 @@ Object.defineProperty(Shape.prototype, 'alpha', {
 
 // renderer
 /* istanbul ignore next */
-Shape.prototype._renderWebGL = function(renderSession) {
+Shape.prototype.renderWebGL = function(renderer) {
     if (this.invalid) {
         this.redraw();
         this.invalid = false;
     }
-    return PIXI.Graphics.prototype._renderWebGL.call(this, renderSession);
+    return PIXI.Graphics.prototype.renderWebGL.call(this, renderer);
 };
 
 /* istanbul ignore next */
-Shape.prototype._renderCanvas = function(renderSession) {
+Shape.prototype.renderCanvas = function(renderer) {
     if (this.invalid) {
         this.redraw();
         this.invalid = false;
     }
-    return PIXI.Graphics.prototype._renderCanvas.call(this, renderSession);
+    return PIXI.Graphics.prototype.renderCanvas.call(this, renderer);
 };
 
 // shape drawing

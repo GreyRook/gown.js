@@ -91,6 +91,7 @@ LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, height) {
 
 /**
  * only render specific area
+ * @method renderAreaWebGL
  * @param renderSession
  * @param x
  * @param y
@@ -99,101 +100,115 @@ LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, height) {
  * @returns {boolean}
  */
 /* istanbul ignore next */
-LayoutGroup.prototype._renderAreaWebGL = function(renderSession, x, y, width, height) {
+LayoutGroup.prototype.renderAreaWebGL = function(renderer, x, y, width, height) {
     this.redraw();
 
-    if(!this.visible || this.alpha <= 0) {
-        return;
-    }
-
-    if(this._cacheAsBitmap)
+    // if the object is not visible or the alpha is 0 then no need to render this element
+    if (!this.visible || this.worldAlpha <= 0 || !this.renderable)
     {
-        this._renderCachedSprite(renderSession);
         return;
     }
 
-    var i, j,child;
+    var i, j, child;
 
+    // do a quick check to see if this element has a mask or a filter.
     if(this._mask || this._filters)
     {
+        renderer.currentRenderer.flush();
 
         // push filter first as we need to ensure the stencil buffer is correct for any masking
-        if(this._filters)
+        if (this._filters)
         {
-            renderSession.spriteBatch.flush();
-            renderSession.filterManager.pushFilter(this._filterBlock);
+            renderer.filterManager.pushFilter(this, this._filters);
         }
 
-        if(this._mask)
+        if (this._mask)
         {
-            renderSession.spriteBatch.stop();
-            renderSession.maskManager.pushMask(this.mask, renderSession);
-            renderSession.spriteBatch.start();
+            renderer.maskManager.pushMask(this, this._mask);
         }
+
+        renderer.currentRenderer.start();
+
+        // add this object to the batch, only rendered if it has a texture.
+        this._renderWebGL(renderer);
 
         // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
+        for(i=0, j=this.children.length; i<j; i++)
         {
+            // only render children if they are visible
             child = this.children[i];
             if (this.childIsRenderAble(child, x, y, width, height)) {
-                child._renderWebGL(renderSession);
+                child.renderWebGL(renderer);
             }
         }
 
-        renderSession.spriteBatch.stop();
+        renderer.currentRenderer.flush();
 
-        if (this._mask) {
-            renderSession.maskManager.popMask(this._mask, renderSession);
-        }
-        if (this._filters) {
-            renderSession.filterManager.popFilter();
+        if (this._mask)
+        {
+            renderer.maskManager.popMask(this, this._mask);
         }
 
-        renderSession.spriteBatch.start();
+        if (this._filters)
+        {
+            renderer.filterManager.popFilter();
+        }
+        renderer.currentRenderer.start();
     }
     else
     {
+        this._renderWebGL(renderer);
+
         // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
+        for(i=0, j=this.children.length; i<j; i++)
         {
+            // only render children if they are visible
             child = this.children[i];
             if (this.childIsRenderAble(child, x, y, width, height)) {
-                child._renderWebGL(renderSession);
+                child.renderWebGL(renderer);
             }
         }
     }
 };
 
+/**
+ * only render specific area
+ * @method renderAreaWebCanvas
+ * @param renderSession
+ * @param x
+ * @param y
+ * @param width
+ * @param height
+ * @returns {boolean}
+ */
 /* istanbul ignore next */
-LayoutGroup.prototype._renderAreaCanvas = function(renderSession, x, y, width, height) {
+LayoutGroup.prototype.renderAreaCanvas = function(renderer, x, y, width, height) {
     this.redraw();
-    if(this.visible === false || this.alpha === 0) {
+
+    // if not visible or the alpha is 0 then no need to render this
+    if (!this.visible || this.alpha <= 0 || !this.renderable)
+    {
         return;
     }
 
-    if(this._cacheAsBitmap)
+    if (this._mask)
     {
-
-        this._renderCachedSprite(renderSession);
-        return;
+        renderer.maskManager.pushMask(this._mask, renderer);
     }
 
-    if(this._mask)
+    this._renderCanvas(renderer);
+    for (var i = 0, j = this.children.length; i < j; ++i)
     {
-        renderSession.maskManager.pushMask(this._mask, renderSession);
-    }
-
-    for(var i=0,j=this.children.length; i<j; i++)
-    {
+        // only render children if they are visible
         var child = this.children[i];
         if (this.childIsRenderAble(child, x, y, width, height)) {
-            child._renderCanvas(renderSession);
+            child._renderCanvas(renderer);
         }
     }
 
-    if(this._mask)
+    if (this._mask)
     {
-        renderSession.maskManager.popMask(renderSession);
+        renderer.maskManager.popMask(renderer);
     }
 };
 
