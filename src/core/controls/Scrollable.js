@@ -31,24 +31,57 @@ Scrollable.prototype.constructor = Scrollable;
 module.exports = Scrollable;
 
 
+/**
+ * in desktop mode mouse wheel support is added (default)
+ *
+ * @property DESKTOP_MODE
+ * @static
+ */
 Scrollable.DESKTOP_MODE = 'desktop';
+
+/**
+ * in mobile mode mouse wheel support is disabled
+ *
+ * @property MOBILE_MODE
+ * @static
+ */
 Scrollable.MOBILE_MODE = 'mobile';
 
+/**
+ * show horizontal scrollbar/slider
+ *
+ * @property HORIZONTAL
+ * @static
+ */
 Scrollable.HORIZONTAL = 'horizontal';
+
+/**
+ * show vertical scrollbar/slider
+ *
+ * @property VERTICAL
+ * @static
+ */
 Scrollable.VERTICAL = 'vertical';
 
+/**
+ * handle mouse down/touch start
+ * @param mouseData mousedata provided by pixi
+ */
 Scrollable.prototype.handleDown = function(mouseData) {
     var local = mouseData.getLocalPosition(this);
     this._start = [local.x, local.y];
 };
 
+/**
+ * handle mouse up/touch end
+ */
 Scrollable.prototype.handleUp = function() {
     this._start = null;
 };
 
 /**
  * handle mouse move: move thumb
- * @param mouseData
+ * @param mouseData mousedata provided by pixi
  */
 Scrollable.prototype.handleMove = function(mouseData) {
     if (this._start) {
@@ -65,7 +98,10 @@ Scrollable.prototype.handleMove = function(mouseData) {
     }
 };
 
-
+/**
+ * handle mouse wheel: move thumb on track
+ * @param event mousewheel event from browser
+ */
 Scrollable.prototype.handleWheel = function (event) {
     var x = this.thumb.x - event.delta * this.scrolldelta;
     var y = this.thumb.y - event.delta * this.scrolldelta;
@@ -83,6 +119,11 @@ Scrollable.prototype.handleWheel = function (event) {
 Scrollable.prototype.thumbMoved = function(x, y) {
 };
 
+/**
+ * show the progress skin from the start/end of the scroll track to the current
+ * position of the thumb.
+ * @private
+ */
 Scrollable.prototype._updateProgressSkin = function() {
     if (!this.progressSkin) {
         return;
@@ -162,6 +203,11 @@ Scrollable.prototype.moveThumb = function(x, y) {
     return false;
 };
 
+/**
+ * show scroll track
+ *
+ * @param skin
+ */
 Scrollable.prototype.showTrack = function(skin) {
     if (this.skin !== skin) {
         if(this.skin) {
@@ -176,6 +222,12 @@ Scrollable.prototype.showTrack = function(skin) {
     }
 };
 
+/**
+ * show progress on track (from the start/end of the track to the
+ * current position of the thumb)
+ *
+ * @param skin
+ */
 Scrollable.prototype.showProgress = function(skin) {
     if (this.progressSkin !== skin) {
         if(this.progressSkin) {
@@ -190,6 +242,9 @@ Scrollable.prototype.showProgress = function(skin) {
     }
 };
 
+/**
+ * redraw track and progressbar
+ */
 Scrollable.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
         this.fromSkin(this.orientation+'_progress', this.showProgress);

@@ -322,7 +322,12 @@ ScrollArea.prototype.redraw = function() {
     }
 };
 
-
+/**
+ * scroll content, that can have the scrollarea as viewport.
+ * can be a PIXI.Texture or a ScrollContainer
+ *
+ * @property content
+ */
 Object.defineProperty(ScrollArea.prototype, 'content', {
     set: function(content) {
         if (this._content) {

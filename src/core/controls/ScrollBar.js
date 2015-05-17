@@ -2,7 +2,8 @@ var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
 /**
- * scoll bar
+ * scoll bar with thumb
+ * hosting some Viewport (e.g. a ScrollArea or a Texture)
  *
  * @class ScrollArea
  * @extends PIXI_UI.Scrollable
@@ -32,6 +33,10 @@ module.exports = ScrollBar;
 ScrollBar.SKIN_NAME = 'scroll_bar';
 
 ScrollBar.prototype.scrollableredraw = Scrollable.prototype.redraw;
+/**
+ * recalculate scroll thumb width/height
+ * @method redraw
+ */
 ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
         if (this.scrollArea && this.thumb) {
@@ -51,6 +56,7 @@ ScrollBar.prototype.redraw = function() {
  * thumb has been moved - scroll content to position
  * @param x x-position to scroll to (ignored when vertical)
  * @param y y-position to scroll to (ignored when horizontal)
+ * @method thumbMoved
  */
 ScrollBar.prototype.thumbMoved = function(x, y) {
     if (this.scrollArea && this.scrollArea.content) {
