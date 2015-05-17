@@ -139,7 +139,7 @@ Object.defineProperty(Application.prototype, 'background', {
             this.bg.height = this._height;
             this.addChildAt(this.bg, 0);
         } else {
-            this._stage.setBackgroundColor(value);
+            this._renderer.backgroundColor = value;
         }
         this._background = value;
     }
