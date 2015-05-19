@@ -21,7 +21,7 @@ module.exports = {
     ScrollArea:             require('./controls/ScrollArea'),
     ScrollBar:              require('./controls/ScrollBar'),
     ScrollThumb:            require('./controls/ScrollThumb'),
-    Slicer:                 require('./controls/Slider'),
+    Slider:                 require('./controls/Slider'),
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
 

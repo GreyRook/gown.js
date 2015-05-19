@@ -2744,7 +2744,7 @@ module.exports = {
     ScrollArea:             require('./controls/ScrollArea'),
     ScrollBar:              require('./controls/ScrollBar'),
     ScrollThumb:            require('./controls/ScrollThumb'),
-    Slicer:                 require('./controls/Slider'),
+    Slider:                 require('./controls/Slider'),
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
 
@@ -2768,6 +2768,7 @@ module.exports = {
     // skin
     Theme:           require('./skin/Theme')
 };
+
 },{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/ScrollArea":8,"./controls/ScrollBar":9,"./controls/ScrollThumb":10,"./controls/Scrollable":11,"./controls/Slider":12,"./controls/TextInput":13,"./controls/ToggleButton":14,"./layout/HorizontalLayout":16,"./layout/Layout":17,"./layout/LayoutAlignment":18,"./layout/TiledColumnsLayout":19,"./layout/TiledLayout":20,"./layout/TiledRowsLayout":21,"./layout/VerticalLayout":22,"./layout/ViewPortBounds":23,"./shapes/Diamond":24,"./shapes/Ellipse":25,"./shapes/Line":26,"./shapes/Rect":27,"./shapes/Shape":28,"./skin/Theme":29}],16:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
