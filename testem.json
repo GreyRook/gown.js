@@ -9,11 +9,5 @@
         "test/src/*.js",
         "themes/*.js",
         "test/unit/**/*.test.js"
-    ],
-    "launchers": {
-        "node": {
-            "command": "./node_modules/.bin/mocha -r ./test/setup.js -R tap --recursive ./test/unit/",
-            "protocol": "tap"
-        }
-    }
+    ]
 }
