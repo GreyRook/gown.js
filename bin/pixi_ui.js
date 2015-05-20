@@ -754,7 +754,7 @@ var Skinable = require('../Skinable'),
  */
 function InputControl(text, theme) {
     Skinable.call(this, theme);
-    this.text = text || ' ';
+    this.text = text || '';
     // create DOM Input (if we need one)
     InputWrapper.createInput();
     this.hasFocus = false;
@@ -805,11 +805,11 @@ InputControl.prototype.onKeyDown = function() {
 InputControl.prototype.clickPos = function(x)
 {
 
-    var text = this.pixiText,
-        totalWidth = 0,
+    var text = this.pixiText.text,
+        totalWidth = this.pixiText.x,
         pos = text.length;
 
-    if (x < this.textWidth(text))
+    if (x < this.textWidth(text) + totalWidth)
     {
         // loop through each character to identify the position
         for (var i=0; i<text.length; i++)
@@ -824,6 +824,17 @@ InputControl.prototype.clickPos = function(x)
     }
 
     return this._clipPos[0] + pos;
+};
+
+InputControl.prototype.posToCoord = function(pos) {
+    var text = this.pixiText.text,
+        totalWidth = this.pixiText.x;
+
+    if (pos < text.length) {
+        return totalWidth + this.textWidth(text.substring(0, pos));
+    } else {
+        return totalWidth + this.textWidth(text);
+    }
 };
 
 /**
@@ -867,17 +878,17 @@ InputControl.prototype.textWidth = function(text) {
  */
 InputControl.prototype.focus = function () {
     // is already current input
-    if (InputControl.currentInput === this) {
+    if (PIXI_UI.InputControl.currentInput === this) {
         return;
     }
 
     // drop focus
-    if (InputControl.currentInput) {
-        InputControl.currentInput.blur();
+    if (PIXI_UI.InputControl.currentInput) {
+        PIXI_UI.InputControl.currentInput.blur();
     }
 
     // set focus
-    InputControl.currentInput = this;
+    PIXI_UI.InputControl.currentInput = this;
     this.hasFocus = true;
 
     // check custom focus event
@@ -931,8 +942,8 @@ InputControl.prototype.onfocus = function () {
  * @method blur
  */
 InputControl.prototype.blur = function() {
-    if (InputControl.currentInput === this) {
-        InputControl.currentInput = null;
+    if (PIXI_UI.InputControl.currentInput === this) {
+        PIXI_UI.InputControl.currentInput = null;
         this.hasFocus = false;
 
         // blur hidden input
@@ -951,10 +962,10 @@ InputControl.prototype.onblur = function() {
 
 // blur current input
 InputControl.blur = function() {
-    if (InputControl.currentInput &&
-        !InputControl.currentInput._mouseDown) {
-        InputControl.currentInput.blur();
-        InputControl.currentInput = null;
+    if (PIXI_UI.InputControl.currentInput &&
+        !PIXI_UI.InputControl.currentInput._mouseDown) {
+        PIXI_UI.InputControl.currentInput.blur();
+        PIXI_UI.InputControl.currentInput = null;
     }
 };
 window.addEventListener('blur', InputControl.blur, false);
@@ -2345,7 +2356,7 @@ var Control = require('../Control'),
  * @constructor
  */
 
-function TextInput(text, theme) {
+function TextInput(text, theme, pwd) {
     // show and load background image as skin (exploiting skin states)
     this.skinName = this.skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || TextInput.stateNames;
@@ -2355,8 +2366,13 @@ function TextInput(text, theme) {
     InputControl.call(this, text, theme);
 
     // caret/selection sprite
-    this.cursor = new PIXI.Text('|', this.theme.textStyle );
+    this.cursor = new PIXI.Text('|', this.theme.textStyle);
     this.addChild(this.cursor);
+
+    this.selectionBg = new PIXI.Graphics();
+    this.addChildAt(this.selectionBg, 0);
+
+    this._pwd = pwd || false;
 
     /**
      * timer used to indicate if the cursor is shown
@@ -2405,7 +2421,7 @@ function TextInput(text, theme) {
     this.mouseupoutside = this.touchendoutside = this.boundOnMouseUpOutside;
 }
 
-TextInput.prototype = Object.create( InputControl.prototype );
+TextInput.prototype = Object.create(InputControl.prototype);
 TextInput.prototype.constructor = TextInput;
 module.exports = TextInput;
 
@@ -2420,19 +2436,39 @@ TextInput.SKIN_NAME = 'text_input';
  * @type String
  */
 Object.defineProperty(TextInput.prototype, 'text', {
-    get: function() {
+    get: function () {
         return this._text;
     },
-    set: function(text) {
-        this._text = text || ' ';
+    set: function (text) {
+        this._origText = text;
+        if (this._pwd) {
+            text = text.replace(/./gi, '*');
+        }
+        this._text = text || '';
         if (!this.pixiText) {
             this.pixiText = new PIXI.Text(text, this.theme.textStyle);
             this.addChild(this.pixiText);
         } else {
-            this.pixiText.setText(text);
+            //this.pixiText.setText(text);
+            this.pixiText.text = text;
         }
     }
 });
+
+Object.defineProperty(TextInput.prototype, 'value', {
+    get: function() {
+        return this._origText;
+    }
+});
+
+TextInput.prototype.onfocus = function() {
+    InputWrapper.setText(this.value);
+    if (this._pwd) {
+        InputWrapper.setType('password');
+    } else {
+        InputWrapper.setType('text');
+    }
+};
 
 /**
  * set selected text
@@ -2441,22 +2477,40 @@ Object.defineProperty(TextInput.prototype, 'text', {
  * @param end
  * @returns {boolean}
  */
-TextInput.prototype.updateSelection = function(start, end) {
+TextInput.prototype.updateSelection = function (start, end) {
     if (this.selection[0] !== start || this.selection[1] !== end) {
         this.selection[0] = start;
         this.selection[1] = end;
         InputWrapper.setSelection(start, end);
         this._cursorNeedsUpdate = true;
+        this.updateSelectionBg();
         return true;
     } else {
         return false;
     }
 };
 
-TextInput.prototype.onSubmit = function() {
+TextInput.prototype.updateSelectionBg = function() {
+    var start = this.posToCoord(this.selection[0]),
+        end = this.posToCoord(this.selection[1]);
+
+    this.selectionBg.clear();
+    if (start !== end) {
+        this.selectionBg.beginFill(0x0080ff);
+        this.selectionBg.drawRect(0, 0, end - start, this.pixiText.height);
+        this.selectionBg.x = start;
+        this.selectionBg.y = this.pixiText.y;
+    }
 };
 
-TextInput.prototype.onKeyDown = function(e) {
+TextInput.prototype.onblur = function() {
+    this.updateSelection(0, 0);
+};
+
+TextInput.prototype.onSubmit = function () {
+};
+
+TextInput.prototype.onKeyDown = function (e) {
     var keyCode = e.which;
 
     // ESC
@@ -2466,8 +2520,7 @@ TextInput.prototype.onKeyDown = function(e) {
     }
 
     // add support for Ctrl/Cmd+A selection - select whole input text
-    if (keyCode === 65 && (e.ctrlKey || e.metaKey))
-    {
+    if (keyCode === 65 && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         this.updateSelection(0, this.text.length);
         return;
@@ -2488,15 +2541,14 @@ TextInput.prototype.onKeyDown = function(e) {
     this.updateTextState();
 };
 
-TextInput.prototype.onKeyUp = function() {
-    // update the canvas input state information from the hidden input
+TextInput.prototype.onKeyUp = function () {
     this.updateTextState();
 };
 
 /**
  * position cursor on the text
  */
-TextInput.prototype.setCursorPos = function() {
+TextInput.prototype.setCursorPos = function () {
     this.cursor.x = this.textWidth(this.text.substring(0, this.cursorPos)) | 0;
 };
 
@@ -2505,18 +2557,18 @@ TextInput.prototype.setCursorPos = function() {
  *
  * @method drawCursor
  */
-TextInput.prototype.drawCursor = function() {
-    if(this.hasFocus || this._mouseDown) {
+TextInput.prototype.drawCursor = function () {
+    if (this.hasFocus || this._mouseDown) {
         var time = Date.now();
 
         // blink interval for cursor
-        if((time-this._cursorTimer) >= this.blinkInterval) {
+        if ((time - this._cursorTimer) >= this.blinkInterval) {
             this._cursorTimer = time;
             this.cursor.visible = !this.cursor.visible;
         }
 
         // update cursor position
-        if(this.cursor.visible && this._cursorNeedsUpdate) {
+        if (this.cursor.visible && this._cursorNeedsUpdate) {
             this.setCursorPos();
             this._cursorNeedsUpdate = false;
         }
@@ -2525,16 +2577,14 @@ TextInput.prototype.drawCursor = function() {
     }
 };
 
-TextInput.prototype.redraw = function()
-{
+TextInput.prototype.redraw = function () {
     this.drawCursor();
     Control.prototype.redraw.call(this);
 };
 
-TextInput.prototype.onMouseMove = function(e) {
+TextInput.prototype.onMouseMove = function (e) {
     var mouse = this.mousePos(e);
-    if(!this.hasFocus || !this._mouseDown || this.selectionStart < 0 ||
-            !this.containsPoint(mouse)) {
+    if (!this.hasFocus || !this._mouseDown || this.selectionStart < 0) { // || !this.containsPoint(mouse)) {
         return false;
     }
 
@@ -2544,15 +2594,15 @@ TextInput.prototype.onMouseMove = function(e) {
 
     if (this.updateSelection(start, end)) {
         this.cursorPos = curPos;
+        this.setCursorPos();
         this._cursorNeedsUpdate = true;
     }
     return true;
 };
 
-TextInput.prototype.onMouseDown = function(e) {
+TextInput.prototype.onMouseDown = function (e) {
     var originalEvent = e.data.originalEvent;
-    if(originalEvent.which === 2 || originalEvent.which === 3)
-    {
+    if (originalEvent.which === 2 || originalEvent.which === 3) {
         originalEvent.preventDefault();
         return false;
     }
@@ -2567,13 +2617,13 @@ TextInput.prototype.onMouseDown = function(e) {
     this.selectionStart = this.clickPos(mouse.x, mouse.y);
     this.updateSelection(this.selectionStart, this.selectionStart);
     this.cursorPos = this.selectionStart;
+    this.setCursorPos();
     return true;
 };
 
-TextInput.prototype.onMouseUp = function(e) {
+TextInput.prototype.onMouseUp = function (e) {
     var originalEvent = e.data.originalEvent;
-    if(originalEvent.which === 2 || originalEvent.which === 3)
-    {
+    if (originalEvent.which === 2 || originalEvent.which === 3) {
         originalEvent.preventDefault();
         return false;
     }
@@ -2584,9 +2634,9 @@ TextInput.prototype.onMouseUp = function(e) {
     var clickPos = this.clickPos(mouse.x, mouse.y);
 
     // update the cursor position
-    if(!(this.selectionStart >= 0 && clickPos !== this.selectionStart))
-    {
+    if (!(this.selectionStart >= 0 && clickPos !== this.selectionStart)) {
         this.cursorPos = clickPos;
+        this.setCursorPos();
         this.updateSelection(this.cursorPos, this.cursorPos);
     }
 
@@ -2600,11 +2650,10 @@ TextInput.prototype.onMouseUp = function(e) {
  *
  * @method updateTextState
  */
-TextInput.prototype.updateTextState = function() {
+TextInput.prototype.updateTextState = function () {
     var text = InputWrapper.getText();
 
-    if (text !== this.text)
-    {
+    if (text !== this.text) {
         this.text = text;
     }
 
@@ -2612,8 +2661,8 @@ TextInput.prototype.updateTextState = function() {
     if (this.updateSelection(sel[0], sel[1])) {
         this.cursorPos = sel[0];
     }
+    this.setCursorPos();
 };
-
 },{"../../utils/InputWrapper":30,"../Control":2,"./InputControl":6}],14:[function(require,module,exports){
 var Button = require('./Button');
 
@@ -4259,7 +4308,7 @@ InputWrapper.getText = function() {
 
 /**
  * get text value to hiddenInput
- * @param {String}
+ * @param {String} text
  */
 InputWrapper.setText = function(text) {
     if (InputWrapper.hiddenInput) {
@@ -4270,6 +4319,21 @@ InputWrapper.setText = function(text) {
     }
 };
 
+InputWrapper.setType = function(type) {
+    if (InputWrapper.hiddenInput) {
+        InputWrapper.hiddenInput.type = type;
+    } else {
+        InputWrapper._type = type;
+    }
+};
+
+InputWrapper.getType = function() {
+    if (InputWrapper.hiddenInput) {
+        return InputWrapper.hiddenInput.type;
+    } else {
+        return InputWrapper._type;
+    }
+};
 },{}],31:[function(require,module,exports){
 /**
  * Scale 9 Container.

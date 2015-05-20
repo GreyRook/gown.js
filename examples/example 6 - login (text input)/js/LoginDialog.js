@@ -63,7 +63,7 @@ var LoginDialog = function() {
         fill: '#ffffff',
         font: '12px fontawesome'
     });
-    this.pass = new IconTextInput(lock_icon, '');
+    this.pass = new IconTextInput(lock_icon, '', null, true);
     grp.addChild(this.pass);
 
     this.submitButton = new PIXI_UI.Button();

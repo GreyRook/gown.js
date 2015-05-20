@@ -15,7 +15,7 @@ var Skinable = require('../Skinable'),
  */
 function InputControl(text, theme) {
     Skinable.call(this, theme);
-    this.text = text || ' ';
+    this.text = text || '';
     // create DOM Input (if we need one)
     InputWrapper.createInput();
     this.hasFocus = false;
@@ -66,11 +66,11 @@ InputControl.prototype.onKeyDown = function() {
 InputControl.prototype.clickPos = function(x)
 {
 
-    var text = this.pixiText,
-        totalWidth = 0,
+    var text = this.pixiText.text,
+        totalWidth = this.pixiText.x,
         pos = text.length;
 
-    if (x < this.textWidth(text))
+    if (x < this.textWidth(text) + totalWidth)
     {
         // loop through each character to identify the position
         for (var i=0; i<text.length; i++)
@@ -85,6 +85,17 @@ InputControl.prototype.clickPos = function(x)
     }
 
     return this._clipPos[0] + pos;
+};
+
+InputControl.prototype.posToCoord = function(pos) {
+    var text = this.pixiText.text,
+        totalWidth = this.pixiText.x;
+
+    if (pos < text.length) {
+        return totalWidth + this.textWidth(text.substring(0, pos));
+    } else {
+        return totalWidth + this.textWidth(text);
+    }
 };
 
 /**
@@ -128,17 +139,17 @@ InputControl.prototype.textWidth = function(text) {
  */
 InputControl.prototype.focus = function () {
     // is already current input
-    if (InputControl.currentInput === this) {
+    if (PIXI_UI.InputControl.currentInput === this) {
         return;
     }
 
     // drop focus
-    if (InputControl.currentInput) {
-        InputControl.currentInput.blur();
+    if (PIXI_UI.InputControl.currentInput) {
+        PIXI_UI.InputControl.currentInput.blur();
     }
 
     // set focus
-    InputControl.currentInput = this;
+    PIXI_UI.InputControl.currentInput = this;
     this.hasFocus = true;
 
     // check custom focus event
@@ -192,8 +203,8 @@ InputControl.prototype.onfocus = function () {
  * @method blur
  */
 InputControl.prototype.blur = function() {
-    if (InputControl.currentInput === this) {
-        InputControl.currentInput = null;
+    if (PIXI_UI.InputControl.currentInput === this) {
+        PIXI_UI.InputControl.currentInput = null;
         this.hasFocus = false;
 
         // blur hidden input
@@ -212,10 +223,10 @@ InputControl.prototype.onblur = function() {
 
 // blur current input
 InputControl.blur = function() {
-    if (InputControl.currentInput &&
-        !InputControl.currentInput._mouseDown) {
-        InputControl.currentInput.blur();
-        InputControl.currentInput = null;
+    if (PIXI_UI.InputControl.currentInput &&
+        !PIXI_UI.InputControl.currentInput._mouseDown) {
+        PIXI_UI.InputControl.currentInput.blur();
+        PIXI_UI.InputControl.currentInput = null;
     }
 };
 window.addEventListener('blur', InputControl.blur, false);
