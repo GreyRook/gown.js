@@ -160,7 +160,7 @@ InputWrapper.getText = function() {
 
 /**
  * get text value to hiddenInput
- * @param {String}
+ * @param {String} text
  */
 InputWrapper.setText = function(text) {
     if (InputWrapper.hiddenInput) {
@@ -168,5 +168,21 @@ InputWrapper.setText = function(text) {
         InputWrapper.hiddenInput[textProp] = text;
     } else {
         InputWrapper._text = text;
+    }
+};
+
+InputWrapper.setType = function(type) {
+    if (InputWrapper.hiddenInput) {
+        InputWrapper.hiddenInput.type = type;
+    } else {
+        InputWrapper._type = type;
+    }
+};
+
+InputWrapper.getType = function() {
+    if (InputWrapper.hiddenInput) {
+        return InputWrapper.hiddenInput.type;
+    } else {
+        return InputWrapper._type;
     }
 };
