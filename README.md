@@ -6,18 +6,20 @@ UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feat
 [![Inline docs](http://inch-ci.org/github/brean/pixi_ui.svg?branch=master)](http://inch-ci.org/github/brean/pixi_ui)
 [![Build Status](https://travis-ci.org/brean/pixi_ui.svg?branch=master)](https://travis-ci.org/brean/pixi_ui)
 
+
 Features
 ========
 
  1. Basic UI components
      - **Button**: simple Button, with label and background, easy to extend using themes
-     - **TextInput**: keyboard/touch text input
      - **ToggleButton**: a button with on/off state
+     - **Slider** a simple slider with modifyable start and end value
  1. Layouting
      - **LayoutGroup**: a component to create horizontal, vertical or tile-based layouts
  1. Scrollable container
      - **ScrollArea**: a viewport that can be scrolled using mouse (including mouse wheel) or touch gestures.  When its content is a LayoutGroup the scroll behaviour will be dependent on its layout: a horizontal layoutgroup will default to horizontal scrolling, vertical layout to vertical scrolling.  But you are in control and can manually overwrite the scroll behaviour.
- 1. **Text Input**: basic text and password input (based on [PIXI Input](https://github.com/SebastianNette/PIXI.Input) )
+     - **ScrollBar**: providing a scroll thumb that can be moved. gets automatically oriented on the given ScrollArea
+ 1. A Text input providing text and password input (based on [PIXI Input](https://github.com/SebastianNette/PIXI.Input) )
  1. Basic shapes that provide width and height that can be changed easily (for use in themes for example)
 
 
@@ -62,6 +64,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - find a nicer name (pixi_ui does not roll that easily off the tongue)
  - better and more detailed documentation!
+ - more (unit) tests/better coverage
  - How-To tutorial and beginners documentation!
  - mouse wheel support
  - real viewport(s) for ScrollArea ?
@@ -70,16 +73,21 @@ This list is not ordered by priority nor does it contain any promise that those 
  - handle if pixi_ui gets imported before pixi (?)
  - disabled-state for controls
  - more controls (and examples) for:
-   - Label
-   - DOMComponent
-   - Dialog
-   - Slider
-   - List (Item Renderer)
-   - PickerList
+   - Label (not needed - just use PIXI.Text?)
    - Checkbox
    - RadioBox
    - Toggle
+   - TextArea
+   - Select (drop-down list)
+   - DOMComponent
+   - List (Item Renderer)
+     - PickerList
+   - Table
    - Gauge
+   - charts
+     - line chart
+     - pie chart
+     - bar chart
    - NumericStepper
    - ProgressBar
    - ScaleTool (to change width/height of a control)
@@ -93,13 +101,19 @@ This list is not ordered by priority nor does it contain any promise that those 
    - Arc (e.g. for gauge)
    - PolyStar/Hex/Pentagon
    - Polyggon
- - transitions
+ - Screen & Window management
+   - Default Dialogs
+     - confirm
+     - alert/ok
+     - prompt/input
+ - Screen transitions
  - Animations (transition animations?)
  - better testing using js-imagediff and grunt ([like EaselJS does](http://blog.createjs.com/unit-tests-in-easeljs-preloadjs/))
- - Drag-and-Drop
+ - Drag-and-Drop support (see [PIXI.draggalbe](https://github.com/SebastianNette/PIXI.draggable) )
  - Gestue helper (pitch-zoom)
- - better/more async testing
  - evaluate cocoonjs support
+ - generate UI from JSON or XML file
+ - UI Designer
 
 Known Bugs
 ==========
