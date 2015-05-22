@@ -17,6 +17,7 @@ Features
      - **LayoutGroup**: a component to create horizontal, vertical or tile-based layouts
  1. Scrollable container
      - **ScrollArea**: a viewport that can be scrolled using mouse (including mouse wheel) or touch gestures.  When its content is a LayoutGroup the scroll behaviour will be dependent on its layout: a horizontal layoutgroup will default to horizontal scrolling, vertical layout to vertical scrolling.  But you are in control and can manually overwrite the scroll behaviour.
+ 1. **Text Input**: basic text and password input (based on [PIXI Input](https://github.com/SebastianNette/PIXI.Input) )
  1. Basic shapes that provide width and height that can be changed easily (for use in themes for example)
 
 
@@ -59,8 +60,6 @@ TODO
 ======
 This list is not ordered by priority nor does it contain any promise that those items will be implemented.
 
- - run tests through testem
- - jasmine coverage
  - find a nicer name (pixi_ui does not roll that easily off the tongue)
  - better and more detailed documentation!
  - How-To tutorial and beginners documentation!
@@ -68,7 +67,7 @@ This list is not ordered by priority nor does it contain any promise that those 
  - real viewport(s) for ScrollArea ?
  - build/compress themes
  - benchmarking capabilities and performance optimisation
- - handle if pixi_ui gets imported before pixi
+ - handle if pixi_ui gets imported before pixi (?)
  - disabled-state for controls
  - more controls (and examples) for:
    - Label
