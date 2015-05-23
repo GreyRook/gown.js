@@ -15,10 +15,13 @@ module.exports = function(config) {
             'test/src/*.js',
             'test/setup.js',
             'test/unit/*.test.js',
-            {pattern: 'test/**/*.png', watched: false, included: false, served: true},
+            {pattern: 'test/img/*.png', watched: false, included: false, served: true},
             {pattern: 'themes/assets/aeon/*', watched: false, included: false, served: true}
         ],
-
+        proxies:  {
+            '/test/img/': '/base/test/img/',
+            '/themes/': '/base/themes/'
+        },
         browserify: {
             debug: true,
             extensions: [".js", ".hbs"],
@@ -31,7 +34,6 @@ module.exports = function(config) {
                 });
             }
         },
-
         // list of files to exclude
         //exclude : [],
 

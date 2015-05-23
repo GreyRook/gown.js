@@ -64,15 +64,16 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - find a nicer name (pixi_ui does not roll that easily off the tongue)
  - better and more detailed documentation!
+ - mouse wheel support
  - more (unit) tests/better coverage
    - test Application
-   - test Slider and SliderData
+   - test Scrollable, Slider and SliderData
    - test ScrollBar, ScrollThumb and ScrollArea
    - test InputControl and InputWrapper
    - test position
+   - more tests for Shapes
    - ignore renderAreaWebGL and renderWebGL in blanket tests
  - How-To tutorial and beginners documentation!
- - mouse wheel support
  - real viewport(s) for ScrollArea ?
  - build/compress themes
  - benchmarking capabilities and performance optimisation

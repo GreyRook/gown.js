@@ -1,1 +1,1 @@
-karma start karma.conf.js
+karma start karma.conf.js --browsers Firefox
