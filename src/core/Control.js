@@ -65,10 +65,10 @@ Control.prototype.renderCanvas = function(renderer) {
  * get local mouse position from PIXI.InteractionData
  *
  * @method mousePos
- * @returns {x: Number, y: Number}
+ * @returns {PIXI.Point}
  */
 Control.prototype.mousePos = function(e) {
-    return e.data.getLocalPosition(e.target || this);
+    return e.data.getLocalPosition(this);
 };
 
 /**

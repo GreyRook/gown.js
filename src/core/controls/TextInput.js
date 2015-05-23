@@ -116,6 +116,9 @@ Object.defineProperty(TextInput.prototype, 'value', {
     }
 });
 
+/**
+ * set text and type of DOM text input
+ */
 TextInput.prototype.onfocus = function() {
     InputWrapper.setText(this.value);
     if (this._pwd) {
