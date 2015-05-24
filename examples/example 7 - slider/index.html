@@ -22,31 +22,33 @@
     var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
+    var progress_theme = new PIXI_UI.AeonTheme(
+            ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
+
     function onComplete() {
-        var txt = new PIXI.Text(
-            '0',
-            {
-                fill: '#000000',
-                font: 'bold 14px Arial'
+        progress_theme.setSkin(
+            PIXI_UI.ScrollBar.SKIN_NAME,
+            "horizontal_progress",
+            function () {
+                return new PIXI_UI.Rect(0xff0000, 1.0, 20, 20);
             }
         );
+
+        var slider = new PIXI_UI.Slider(null, progress_theme);
+
+        var txt = new PIXI_UI.TextInput('0');
+        txt.change = function(text) {
+            slider.value = parseFloat(text);
+        };
+
         txt.y = 100;
 
-        var progress_theme = new PIXI_UI.AeonTheme(
-                ["../../themes/assets/aeon/aeon_desktop.json"]);
-        progress_theme.loadComplete();
-        progress_theme.setSkin(
-                PIXI_UI.ScrollBar.SKIN_NAME,
-                "horizontal_progress",
-                function () {
-                    return new PIXI_UI.Rect(0xff0000, 1.0, 20, 20);
-                }
-        );
 
-        var slider = new PIXI_UI.Slider(progress_theme);
         slider.change = function(sliderData) {
-            txt.setText(sliderData.value);
-            console.log(sliderData.value);
+            txt.text = sliderData.value;
+            if (window.console.log) {
+                console.log(sliderData.value);
+            }
         };
         slider.width = 300;
         slider.minimum = 0;
@@ -57,9 +59,6 @@
 
         requestAnimationFrame(animate);
     }
-
-    var theme = new PIXI_UI.AeonTheme(
-            ['../../themes/assets/aeon/aeon_desktop.json'], onComplete);
 
     function animate() {
         // render the stage

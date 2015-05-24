@@ -64,6 +64,7 @@ function TextInput(text, displayAsPassword, theme) {
     this.cursor = new PIXI.Text('|', this.theme.textStyle);
     this.addChild(this.cursor);
 
+    // selection background
     this.selectionBg = new PIXI.Graphics();
     this.addChildAt(this.selectionBg, 0);
 
@@ -99,6 +100,11 @@ Object.defineProperty(TextInput.prototype, 'text', {
         return this._text;
     },
     set: function (text) {
+        text += ''; // add '' to assure text is parsed as string
+        if (this._origText === text) {
+            // return if text has not changed
+            return;
+        }
         this._origText = text;
         if (this._displayAsPassword) {
             text = text.replace(/./gi, '*');
@@ -110,8 +116,16 @@ Object.defineProperty(TextInput.prototype, 'text', {
         } else {
             this.pixiText.text = text;
         }
-        if (this.onTextChanges) {
-            this.onTextChanges();
+
+        // update text input if this text field has the focus
+        if (this.hasFocus) {
+            InputWrapper.setText(this.value);
+        }
+
+        // reposition cursor
+        this._cursorNeedsUpdate = true;
+        if (this.change) {
+            this.change(text);
         }
     }
 });
@@ -146,6 +160,8 @@ Object.defineProperty(TextInput.prototype, 'value', {
 
 /**
  * set text and type of DOM text input
+ *
+ * @method onfocus
  */
 TextInput.prototype.onfocus = function() {
     InputWrapper.setText(this.value);
@@ -160,6 +176,7 @@ TextInput.prototype.onfocus = function() {
 /**
  * set selected text
  *
+ * @method updateSelection
  * @param start
  * @param end
  * @returns {boolean}
