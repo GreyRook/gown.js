@@ -76,12 +76,12 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
     bgCanvas.width = width || 256;
     bgCanvas.height = height || 256;
     var ctx = bgCanvas.getContext('2d');
-    var linearGradient = ctx.createLinearGradient(0,0,0,height);
+    var linearGradient = ctx.createLinearGradient(0, 0, 0, bgCanvas.height);
     for (var i = 0; i < gradient.length; i++) {
         linearGradient.addColorStop(i, gradient[i]);
     }
     ctx.fillStyle = linearGradient;
-    ctx.fillRect(0,0,width,height);
+    ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
     return PIXI.Texture.fromCanvas(bgCanvas);
 };
 
