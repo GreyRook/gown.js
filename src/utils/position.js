@@ -16,7 +16,7 @@ function centerVertical(elem, parent) {
  */
 function bottom(elem, parent) {
     parent = parent || elem.parent;
-    elem.y = parent.y - elem.height;
+    elem.y = parent.height - elem.height;
 }
 
 /**
