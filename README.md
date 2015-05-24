@@ -70,7 +70,6 @@ This list is not ordered by priority nor does it contain any promise that those 
    - test Scrollable, Slider and SliderData
    - test ScrollBar, ScrollThumb and ScrollArea
    - test InputControl and InputWrapper
-   - test position
    - more tests for Shapes
    - ignore renderAreaWebGL and renderWebGL in blanket tests
  - How-To tutorial and beginners documentation!
@@ -85,10 +84,10 @@ This list is not ordered by priority nor does it contain any promise that those 
    - RadioBox
    - Toggle
    - TextArea
-   - Select (drop-down list)
    - DOMComponent
    - List (Item Renderer)
      - PickerList
+       - Select (drop-down list for desktop)
    - Table
    - Gauge
    - charts
@@ -99,7 +98,8 @@ This list is not ordered by priority nor does it contain any promise that those 
    - ProgressBar
    - ScaleTool (to change width/height of a control)
    - ScrollContainer (sth. with the same API as feathers)
- - more examples:
+ - cleanup-functions to free memory/remove event listener etc. (take a look at/extend pixi destroy funtion)
+ - more examples: 
    - ToggleButton
    - component explorer ([like Feathers UI](http://feathersui.com/examples/components-explorer/))
    - scrolling
@@ -114,7 +114,7 @@ This list is not ordered by priority nor does it contain any promise that those 
      - alert/ok
      - prompt/input
  - Screen transitions
- - Animations (transition animations?)
+ - Animations (transition animations - see feathers -> motion -> transition ?)
  - better testing using js-imagediff and grunt ([like EaselJS does](http://blog.createjs.com/unit-tests-in-easeljs-preloadjs/))
  - Drag-and-Drop support (see [PIXI.draggalbe](https://github.com/SebastianNette/PIXI.draggable) )
  - Gestue helper (pitch-zoom)

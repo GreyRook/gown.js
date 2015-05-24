@@ -40,7 +40,7 @@ function Application(background, fullscreen, renderer, stage) {
     this.animate();
 
     this.background = background;
-    this.fullscreen = fullscreen;
+    this.fullscreen = fullscreen || false;
 }
 
 Application.prototype = Object.create( Control.prototype );
@@ -66,14 +66,15 @@ Application.prototype.animate = function() {
 
 /**
  * creates a gradient rect that can be used as background
+ * (uses a separate canvas to create a new Texture)
  *
  * @method _createGradientRect
  * @private
  */
-Application.prototype._createGradientRect = function(width, height, gradient) {
+Application.prototype._createGradientRect = function(gradient, width, height) {
     var bgCanvas = document.createElement('canvas');
-    bgCanvas.width = width;
-    bgCanvas.height = height;
+    bgCanvas.width = width || 256;
+    bgCanvas.height = height || 256;
     var ctx = bgCanvas.getContext('2d');
     var linearGradient = ctx.createLinearGradient(0,0,0,height);
     for (var i = 0; i < gradient.length; i++) {
@@ -82,6 +83,24 @@ Application.prototype._createGradientRect = function(width, height, gradient) {
     ctx.fillStyle = linearGradient;
     ctx.fillRect(0,0,width,height);
     return PIXI.Texture.fromCanvas(bgCanvas);
+};
+
+/**
+ * clean application: remove event listener, free memory
+ * (can also remove the canvas from the DOM tree if wanted)
+ *
+ * @method cleanup
+ * @param removeCanvas destroys the canvas and remove it from the dom tree
+ */
+Application.prototype.cleanup = function(removeCanvas) {
+    removeCanvas = removeCanvas || true;
+    if (removeCanvas) {
+        document.body.removeChild(this._renderer.view);
+    }
+    this._stage = null;
+    this._renderer = null;
+    this._removeBackground();
+    this.fullscreen = false; // remove event listener
 };
 
 /**
@@ -106,6 +125,18 @@ Application.prototype.onresize = function() {
 };
 
 /**
+ * remove background
+ * @method _removeBackground
+ * @private
+ */
+Application.prototype._removeBackground = function() {
+    if (this.bg) {
+        this.removeChild(this.bg);
+        this.bg = null;
+    }
+};
+
+/**
  * set fullscreen and resize to screen size
  *
  * @property enabled
@@ -117,9 +148,10 @@ Object.defineProperty(Application.prototype, 'fullscreen', {
     },
     set: function(value) {
         if (this._fullscreen && !value) {
-            window.removeEventListener('resize');
+            window.removeEventListener('resize', this._onresize);
         } else if (!this._fullscreen && value) {
-            window.addEventListener('resize', this.onresize.bind(this));
+            this._onresize = this.onresize.bind(this);
+            window.addEventListener('resize', this._onresize);
         }
         this._fullscreen = value;
     }
@@ -139,12 +171,9 @@ Object.defineProperty(Application.prototype, 'background', {
         if (value === this._background) {
             return;
         }
-        if (this.bg) {
-            this.removeChild(this.bg);
-            this.bg = null;
-        }
+        this._removeBackground();
         if (value instanceof Array) {
-            this.bg = new PIXI.Sprite(this._createGradientRect(256, 256, value));
+            this.bg = new PIXI.Sprite(this._createGradientRect(value));
             this.bg.width = this._width;
             this.bg.height = this._height;
             this.addChildAt(this.bg, 0);
