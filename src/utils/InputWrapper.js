@@ -88,12 +88,12 @@ InputWrapper.createInput = function()
  * key to get text ('value' for default input field)
  * @type {string}
  * @static
+ * @private
  */
 InputWrapper.textProp = 'value';
 
 /**
  * activate the text input
- * @returns {DOMObject}
  */
 InputWrapper.focus = function()
 {
@@ -104,7 +104,6 @@ InputWrapper.focus = function()
 
 /**
  * deactivate the text input
- * @returns {DOMObject}
  */
 InputWrapper.blur = function()
 {
@@ -168,6 +167,22 @@ InputWrapper.setText = function(text) {
         InputWrapper.hiddenInput[textProp] = text;
     } else {
         InputWrapper._text = text;
+    }
+};
+
+/**
+ * set max. length setting it to 0 will allow unlimited text input
+ * @param length
+ */
+InputWrapper.setMaxLength = function(length) {
+    if (InputWrapper.hiddenInput) {
+        if (!length || length < 0) {
+            InputWrapper.hiddenInput.removeAttribute('maxlength');
+        } else {
+            InputWrapper.hiddenInput.setAttribute('maxlength', length);
+        }
+    } else {
+        InputWrapper._maxLength = length;
     }
 };
 

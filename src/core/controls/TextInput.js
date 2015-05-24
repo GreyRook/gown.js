@@ -8,10 +8,13 @@ var Control = require('../Control'),
  * @class TextInput
  * @extends PIXI_UI.InputControl
  * @memberof PIXI_UI
+ * @param text editable text shown in input
+ * @param displayAsPassword Display TextInput as Password (default false)
+ * @theme default theme
  * @constructor
  */
 
-function TextInput(text, theme, pwd) {
+function TextInput(text, displayAsPassword, theme) {
     // show and load background image as skin (exploiting skin states)
     this.skinName = this.skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || TextInput.stateNames;
@@ -20,14 +23,7 @@ function TextInput(text, theme, pwd) {
 
     InputControl.call(this, text, theme);
 
-    // caret/selection sprite
-    this.cursor = new PIXI.Text('|', this.theme.textStyle);
-    this.addChild(this.cursor);
-
-    this.selectionBg = new PIXI.Graphics();
-    this.addChildAt(this.selectionBg, 0);
-
-    this._pwd = pwd || false;
+    this._displayAsPassword = displayAsPassword || false;
 
     /**
      * timer used to indicate if the cursor is shown
@@ -64,6 +60,13 @@ function TextInput(text, theme, pwd) {
      */
     this.selection = [0, 0];
 
+    // caret/selection sprite
+    this.cursor = new PIXI.Text('|', this.theme.textStyle);
+    this.addChild(this.cursor);
+
+    this.selectionBg = new PIXI.Graphics();
+    this.addChildAt(this.selectionBg, 0);
+
     // set up events
     this.boundOnMouseUp = this.onMouseUp.bind(this);
     this.boundOnMouseUpOutside = this.onMouseUpOutside.bind(this);
@@ -85,7 +88,8 @@ module.exports = TextInput;
 TextInput.SKIN_NAME = 'text_input';
 
 /**
- * set the text that is shown inside the input field
+ * set the text that is shown inside the input field.
+ * calls onTextChange callback if text changes
  *
  * @property text
  * @type String
@@ -96,7 +100,7 @@ Object.defineProperty(TextInput.prototype, 'text', {
     },
     set: function (text) {
         this._origText = text;
-        if (this._pwd) {
+        if (this._displayAsPassword) {
             text = text.replace(/./gi, '*');
         }
         this._text = text || '';
@@ -104,9 +108,33 @@ Object.defineProperty(TextInput.prototype, 'text', {
             this.pixiText = new PIXI.Text(text, this.theme.textStyle);
             this.addChild(this.pixiText);
         } else {
-            //this.pixiText.setText(text);
             this.pixiText.text = text;
         }
+        if (this.onTextChanges) {
+            this.onTextChanges();
+        }
+    }
+});
+
+/**
+ * The maximum number of characters that may be entered. If 0,
+ * any number of characters may be entered.
+ * (same as maxLength for DOM inputs)
+ *
+ * @default 0
+ * @property maxChars
+ * @type String
+ */
+Object.defineProperty(TextInput.prototype, 'maxChars', {
+    get: function () {
+        return this._maxChars;
+    },
+    set: function (value) {
+        if (this._maxChars === value) {
+            return;
+        }
+        InputWrapper.setMaxLength(value);
+        this._maxChars = value;
     }
 });
 
@@ -121,7 +149,8 @@ Object.defineProperty(TextInput.prototype, 'value', {
  */
 TextInput.prototype.onfocus = function() {
     InputWrapper.setText(this.value);
-    if (this._pwd) {
+    InputWrapper.setMaxLength(this.maxChars);
+    if (this._displayAsPassword) {
         InputWrapper.setType('password');
     } else {
         InputWrapper.setType('text');
