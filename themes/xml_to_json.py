@@ -1,6 +1,7 @@
 import os
 import xml.etree.ElementTree as ET
 import json
+import argparse
 from PIL import Image
 
 
@@ -40,7 +41,7 @@ def image_meta(filename):
     im = Image.open(filename)
     return {
         "version": "1.0",
-        "image": filename,
+        "image": os.path.split(filename)[1],
         "size": {
             "w": im.size[0],
             "h": im.size[1]
@@ -48,13 +49,22 @@ def image_meta(filename):
     }
 
 
-def main():
-    filename = 'aeon_desktop.xml'
-    root, frames = parse_xml(filename)
-    meta = image_meta(root.attrib['imagePath'])
+def convert(path):
+    base_path = os.path.split(path)[0]
+    root, frames = parse_xml(path)
+    meta = image_meta(os.path.join(base_path, root.attrib['imagePath']))
     data = {"frames": frames, "meta": meta}
-    json_file = file(os.path.splitext(filename)[0] + '.json', 'w')
+    json_file = file(os.path.splitext(path)[0] + '.json', 'w')
     json.dump(data, json_file, indent=2)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Convert XML theme from feathers to XML for pixi_ui.')
+    parser.add_argument('path', type=str,
+                        help='path to xml file')
+    args = parser.parse_args()
+    convert(args.path)
 
 
 if __name__ == '__main__':
