@@ -1,0 +1,7 @@
+files:
+  # define files included in the analysis
+  included:
+    - src/**/*.js
+  # define files excluded from the analysis
+  excluded:
+    - src/**/index.js
