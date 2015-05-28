@@ -14,52 +14,77 @@
     <script src="../../bin/pixi_ui.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
     <script src="../../themes/ShapeTheme.js"></script>
+    <script src="../../themes/MetalWorksMobileTheme.js"></script>
 </head>
 <body>
 <script>
     var stage = new PIXI.Container();
 
     var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
-    var btn;
     document.body.appendChild(renderer.view);
 
-    function onComplete() {
+    var aeontheme;
+
+    function onCompleteAeon() {
         // initialize theme
+        var aeonbtn;
+        aeonbtn = new PIXI_UI.Button(aeontheme);
+        aeonbtn.width = 150;
+        aeonbtn.height = 100;
+        aeonbtn.x = 20;
+        aeonbtn.y = 30;
+        aeonbtn.label = "first";
+        stage.addChild(aeonbtn);
 
-        btn = new PIXI_UI.Button();
-        btn.width = 150;
-        btn.height = 100;
-        btn.x = 20;
-        btn.y = 30;
-        btn.label = "first";
-        stage.addChild(btn);
-
-        btn.tap = btn.click = function (evt) {
+        aeonbtn.tap = aeonbtn.click = function (evt) {
             if (window.console) {
                 console.log("you clicked the first button!");
             }
         };
 
-        var theme = new PIXI_UI.ShapeTheme();
-        btn = new PIXI_UI.Button(theme);
-        btn.width = 150;
-        btn.height = 100;
-        btn.x = 170;
-        btn.y = 30;
-        btn.label = "second";
-        stage.addChild(btn);
+        requestAnimationFrame(animate);
+    }
 
-        btn.tap = btn.click = function (evt) {
+    aeontheme = new PIXI_UI.AeonTheme(
+        ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
+
+    var shapetheme = new PIXI_UI.ShapeTheme();
+    var btn = new PIXI_UI.Button(shapetheme);
+    btn.width = 150;
+    btn.height = 100;
+    btn.x = 170;
+    btn.y = 30;
+    btn.label = "second";
+    stage.addChild(btn);
+
+    btn.tap = btn.click = function (evt) {
+        if (window.console) {
+            console.log("you clicked the second button!");
+        }
+    };
+
+    function onCompleteMetal() {
+        // initialize theme
+
+        var metalbtn = new PIXI_UI.Button(metaltheme);
+        metalbtn.width = 150;
+        metalbtn.height = 100;
+        metalbtn.x = 320;
+        metalbtn.y = 30;
+        metalbtn.label = "third";
+        stage.addChild(metalbtn);
+
+        metalbtn.tap = metalbtn.click = function (evt) {
             if (window.console) {
-                console.log("you clicked the second button!");
+                console.log("you clicked the third button!");
             }
         };
 
         requestAnimationFrame(animate);
     }
-    
-    var theme = new PIXI_UI.AeonTheme(
-        ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
+
+    var metaltheme = new PIXI_UI.MetalWorksMobileTheme(
+            ["../../themes/assets/metalworks/metalworks.json"], onCompleteMetal);
 
     function animate() {
         // render the stage

@@ -20,6 +20,7 @@ function Theme(global) {
     if (global === true || global === undefined) {
         PIXI_UI.theme = this;
     }
+    this.textureCache = null;
 }
 module.exports = Theme;
 
@@ -44,9 +45,19 @@ Theme.prototype.setSkin = function(comp, id, skin) {
  * @param jsonPath {Array}
  */
 Theme.prototype.loadImage = function(jsonPath) {
+    this._jsonPath = jsonPath;
     PIXI_UI.loader
         .add(jsonPath)
         .load(this.loadComplete.bind(this));
+};
+
+/**
+ * executed when loadImage has finished
+ *
+ * @method loadComplete
+ */
+Theme.prototype.loadComplete = function(loader, resources) {
+    this.textureCache = resources.resources[this._jsonPath].textures;
 };
 
 /**
@@ -58,8 +69,15 @@ Theme.prototype.loadImage = function(jsonPath) {
  * @returns {Function}
  */
 Theme.prototype.getScaleContainer = function(name, grid) {
+    var scope = this;
     return function() {
-        return ScaleContainer.fromFrame(name, grid);
+        var texture = scope.textureCache[name];
+        if(!texture) {
+            throw new Error('The frameId "' + name + '" does not exist ' +
+            'in the texture cache');
+        }
+        return new ScaleContainer(texture, grid);
+
     };
 };
 
@@ -71,8 +89,9 @@ Theme.prototype.getScaleContainer = function(name, grid) {
  * @returns {Function}
  */
 Theme.prototype.getImage = function(name) {
+    var scope = this;
     return function() {
-        return PIXI.Sprite.fromImage(name);
+        return new PIXI.Sprite(scope.textureCache[name]);
     };
 };
 

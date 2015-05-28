@@ -17,7 +17,9 @@ function MetalWorksMobileTheme(jsonPath, onComplete, global) {
 MetalWorksMobileTheme.prototype = Object.create( PIXI_UI.Theme.prototype );
 MetalWorksMobileTheme.prototype.constructor = MetalWorksMobileTheme;
 
-MetalWorksMobileTheme.prototype.loadComplete = function() {
+MetalWorksMobileTheme.prototype.themeLoadComplete = PIXI_UI.Theme.prototype.loadComplete;
+MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
+    this.themeLoadComplete(this, loader, resources);
     var b = PIXI_UI.Button;
     var bg = MetalWorksMobileTheme.BUTTON_SCALE_9_GRID;
 

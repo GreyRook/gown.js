@@ -11,7 +11,9 @@ function AeonTheme(jsonPath, onComplete, global) {
 AeonTheme.prototype = Object.create( PIXI_UI.Theme.prototype );
 AeonTheme.prototype.constructor = AeonTheme;
 
-AeonTheme.prototype.loadComplete = function() {
+AeonTheme.prototype.themeLoadComplete = PIXI_UI.Theme.prototype.loadComplete;
+AeonTheme.prototype.loadComplete = function(loader, resources) {
+    this.themeLoadComplete(this, loader, resources);
     var b = PIXI_UI.Button;
     var bg = AeonTheme.BUTTON_SCALE_9_GRID;
 
