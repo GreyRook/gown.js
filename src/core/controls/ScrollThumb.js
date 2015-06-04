@@ -1,5 +1,4 @@
-var Button = require('./Button'),
-    Skinable = require('../Skinable');
+var Button = require('./Button');
 
 /**
  * thumb button that can be moved on the scrollbar
