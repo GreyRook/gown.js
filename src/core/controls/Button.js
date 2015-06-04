@@ -87,6 +87,8 @@ Button.prototype.preloadSkins = function() {
         if (skin) {
             this.addChildAt(skin, 0);
             skin.alpha = 0.0;
+            skin.width = this.width;
+            skin.height = this.height;
         }
     }
 };
@@ -148,7 +150,7 @@ Button.prototype.handleEvent = function(type) {
         this._pressed = true;
     } else if (type === Button.UP) {
         this._pressed = false;
-        if (this._over) {
+        if (this._over && this.theme.hoverSkin) {
             this.currentState = Button.HOVER;
         } else {
             this.currentState = Button.UP;
@@ -157,7 +159,7 @@ Button.prototype.handleEvent = function(type) {
         this._over = true;
         if (this._pressed) {
             this.currentState = Button.DOWN;
-        } else {
+        } else if (this.theme.hoverSkin) {
             this.currentState = Button.HOVER;
         }
     } else  { // type === rollout and default

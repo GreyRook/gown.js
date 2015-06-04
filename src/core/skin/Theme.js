@@ -21,6 +21,12 @@ function Theme(global) {
         PIXI_UI.theme = this;
     }
     this.textureCache = null;
+    // own skin for scroll/slider track
+    // (uses the default button skin otherwise)
+    this.thumbSkin = true;
+
+    // desktop themes have a hover skin if the mouse moves over the button
+    this.hoverSkin = true;
 }
 module.exports = Theme;
 

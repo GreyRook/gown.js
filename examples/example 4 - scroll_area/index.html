@@ -57,9 +57,9 @@
         requestAnimationFrame(animate);
     }
 
+    PIXI_UI.loader.add("img/rainbow.png");
     var theme = new PIXI_UI.AeonTheme(
-            ["../../themes/assets/aeon/aeon_desktop.json",
-             "img/rainbow.png"], onComplete);
+            "../../themes/assets/aeon/aeon_desktop.json", onComplete);
 
     function animate() {
         // render the stage

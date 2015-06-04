@@ -47,10 +47,10 @@ Skinable.prototype.setTheme = function(theme) {
 /**
  * remove old skin and add new one
  *
- * @method changeState
+ * @method changeSkin
  * @param skin {DisplayObject}
  */
-Skinable.prototype.changeState = function(skin) {
+Skinable.prototype.changeSkin = function(skin) {
     if (this._currentSkin !== skin) {
         this._lastSkin = this._currentSkin;
         this.addChildAt(skin, 0);
@@ -106,7 +106,7 @@ Skinable.prototype.redraw = function() {
         this._lastSkin = null;
     }
     if (this.invalidState) {
-        this.fromSkin(this._currentState, this.changeState);
+        this.fromSkin(this._currentState, this.changeSkin);
     }
     if (this._currentSkin &&
         this.invalidDimensions &&

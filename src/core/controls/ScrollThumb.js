@@ -1,4 +1,5 @@
-var Button = require('./Button');
+var Button = require('./Button'),
+    Skinable = require('../Skinable');
 
 /**
  * thumb button that can be moved on the scrollbar
@@ -10,15 +11,18 @@ var Button = require('./Button');
  */
 function ScrollThumb(scrollable, theme) {
     this.scrollable = scrollable;
-    this.skinName = this.skinName || ScrollThumb.SKIN_NAME;
-    this._validStates = [
-        'horizontal_up', 'vertical_up',
-        'horizontal_down', 'vertical_down',
-        'horizontal_hover', 'vertical_hover'];
+    var defaultSkin = ScrollThumb.SKIN_NAME;
+    if (!theme.thumbSkin) {
+        defaultSkin = Button.SKIN_NAME;
+    }
+    this.skinName = this.skinName || defaultSkin;
+    if (theme.thumbSkin) {
+        this._validStates = ScrollThumb.THUMB_STATES;
+    }
+    this.width = theme.thumbSize || 20;
+    this.height = theme.thumbSize || 20;
     Button.call(this, theme);
     this.invalidTrack = true;
-    this.width = 20;
-    this.height = 20;
 
     this.touchmove = this.mousemove;
     /* jshint unused: false */
@@ -34,6 +38,12 @@ module.exports = ScrollThumb;
 
 ScrollThumb.SKIN_NAME = 'scroll_thumb';
 
+ScrollThumb.THUMB_STATES = [
+    'horizontal_up', 'vertical_up',
+    'horizontal_down', 'vertical_down',
+    'horizontal_hover', 'vertical_hover'
+];
+
 var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'currentState');
 
 /**
@@ -44,7 +54,10 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'cu
  */
 Object.defineProperty(ScrollThumb.prototype, 'currentState',{
     set: function(value) {
-        value = this.scrollable.orientation + '_' + value;
+        if (this.theme.thumbSkin) {
+            // use skin including orientation instead of default skin
+            value = this.scrollable.orientation + '_' + value;
+        }
         originalCurrentState.set.call(this, value);
     }
 });
@@ -97,7 +110,7 @@ ScrollThumb.prototype.showTrack = function(skin) {
  */
 ScrollThumb.prototype.redraw = function() {
     this.redrawSkinable();
-    if (this.invalidTrack) {
+    if (this.invalidTrack && this.theme.thumbSkin) {
         this.fromSkin(this.scrollable.orientation+'_thumb', this.showTrack);
     }
 };
