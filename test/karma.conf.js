@@ -1,5 +1,3 @@
-var to5ify = require('6to5ify');
-var hbsfy = require('hbsfy');
 var cover = require('browserify-istanbul');
 
 module.exports = function(config) {
@@ -24,13 +22,11 @@ module.exports = function(config) {
         },
         browserify: {
             debug: true,
-            extensions: [".js", ".hbs"],
+            extensions: [".js"],
             configure: function(bundle){
                 bundle.on('prebundle', function(){
                     bundle
-                        .transform(to5ify)
-                        .transform(hbsfy)
-                        .transform(cover({}));
+                        .transform(cover);
                 });
             }
         },
@@ -43,7 +39,7 @@ module.exports = function(config) {
         reporters : ['spec', 'coverage', 'progress'],
 
         'coverageReporter': {
-            'type' : 'text'
+            'type' : 'html'
         },
 
         // enable / disable colors in the output (reporters and logs)
