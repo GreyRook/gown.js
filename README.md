@@ -40,6 +40,7 @@ Folder structure
  - themes - basic UI example themes
 
   - **AeonTheme**.js A theme based on Feather's [AeonDesktopTheme](https://github.com/joshtynjala/feathers/tree/master/themes/AeonDesktopTheme) making use of 9-tiled images
+  - **MetalWorksMobileTheme**.js a theme based on Feather's [MetalWorksMobileTheme](https://github.com/joshtynjala/feathers/tree/master/themes/MetalWorksMobileTheme)
   - **Themes/ShapeTheme**.js a theme using only basic shapes.
 
 
