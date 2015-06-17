@@ -206,10 +206,10 @@ Skinable.prototype.setTheme = function(theme) {
 /**
  * remove old skin and add new one
  *
- * @method changeState
+ * @method changeSkin
  * @param skin {DisplayObject}
  */
-Skinable.prototype.changeState = function(skin) {
+Skinable.prototype.changeSkin = function(skin) {
     if (this._currentSkin !== skin) {
         this._lastSkin = this._currentSkin;
         this.addChildAt(skin, 0);
@@ -265,7 +265,7 @@ Skinable.prototype.redraw = function() {
         this._lastSkin = null;
     }
     if (this.invalidState) {
-        this.fromSkin(this._currentState, this.changeState);
+        this.fromSkin(this._currentState, this.changeSkin);
     }
     if (this._currentSkin &&
         this.invalidDimensions &&
@@ -580,6 +580,8 @@ Button.prototype.preloadSkins = function() {
         if (skin) {
             this.addChildAt(skin, 0);
             skin.alpha = 0.0;
+            skin.width = this.width;
+            skin.height = this.height;
         }
     }
 };
@@ -641,7 +643,7 @@ Button.prototype.handleEvent = function(type) {
         this._pressed = true;
     } else if (type === Button.UP) {
         this._pressed = false;
-        if (this._over) {
+        if (this._over && this.theme.hoverSkin) {
             this.currentState = Button.HOVER;
         } else {
             this.currentState = Button.UP;
@@ -650,7 +652,7 @@ Button.prototype.handleEvent = function(type) {
         this._over = true;
         if (this._pressed) {
             this.currentState = Button.DOWN;
-        } else {
+        } else if (this.theme.hoverSkin) {
             this.currentState = Button.HOVER;
         }
     } else  { // type === rollout and default
@@ -1778,15 +1780,18 @@ var Button = require('./Button');
  */
 function ScrollThumb(scrollable, theme) {
     this.scrollable = scrollable;
-    this.skinName = this.skinName || ScrollThumb.SKIN_NAME;
-    this._validStates = [
-        'horizontal_up', 'vertical_up',
-        'horizontal_down', 'vertical_down',
-        'horizontal_hover', 'vertical_hover'];
+    var defaultSkin = ScrollThumb.SKIN_NAME;
+    if (!theme.thumbSkin) {
+        defaultSkin = Button.SKIN_NAME;
+    }
+    this.skinName = this.skinName || defaultSkin;
+    if (theme.thumbSkin) {
+        this._validStates = ScrollThumb.THUMB_STATES;
+    }
+    this.width = theme.thumbSize || 20;
+    this.height = theme.thumbSize || 20;
     Button.call(this, theme);
     this.invalidTrack = true;
-    this.width = 20;
-    this.height = 20;
 
     this.touchmove = this.mousemove;
     /* jshint unused: false */
@@ -1802,6 +1807,12 @@ module.exports = ScrollThumb;
 
 ScrollThumb.SKIN_NAME = 'scroll_thumb';
 
+ScrollThumb.THUMB_STATES = [
+    'horizontal_up', 'vertical_up',
+    'horizontal_down', 'vertical_down',
+    'horizontal_hover', 'vertical_hover'
+];
+
 var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'currentState');
 
 /**
@@ -1812,7 +1823,10 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'cu
  */
 Object.defineProperty(ScrollThumb.prototype, 'currentState',{
     set: function(value) {
-        value = this.scrollable.orientation + '_' + value;
+        if (this.theme.thumbSkin) {
+            // use skin including orientation instead of default skin
+            value = this.scrollable.orientation + '_' + value;
+        }
         originalCurrentState.set.call(this, value);
     }
 });
@@ -1865,7 +1879,7 @@ ScrollThumb.prototype.showTrack = function(skin) {
  */
 ScrollThumb.prototype.redraw = function() {
     this.redrawSkinable();
-    if (this.invalidTrack) {
+    if (this.invalidTrack && this.theme.thumbSkin) {
         this.fromSkin(this.scrollable.orientation+'_thumb', this.showTrack);
     }
 };
@@ -4199,6 +4213,13 @@ function Theme(global) {
     if (global === true || global === undefined) {
         PIXI_UI.theme = this;
     }
+    this.textureCache = null;
+    // own skin for scroll/slider track
+    // (uses the default button skin otherwise)
+    this.thumbSkin = true;
+
+    // desktop themes have a hover skin if the mouse moves over the button
+    this.hoverSkin = true;
 }
 module.exports = Theme;
 
@@ -4223,9 +4244,19 @@ Theme.prototype.setSkin = function(comp, id, skin) {
  * @param jsonPath {Array}
  */
 Theme.prototype.loadImage = function(jsonPath) {
+    this._jsonPath = jsonPath;
     PIXI_UI.loader
         .add(jsonPath)
         .load(this.loadComplete.bind(this));
+};
+
+/**
+ * executed when loadImage has finished
+ *
+ * @method loadComplete
+ */
+Theme.prototype.loadComplete = function(loader, resources) {
+    this.textureCache = resources.resources[this._jsonPath].textures;
 };
 
 /**
@@ -4237,8 +4268,15 @@ Theme.prototype.loadImage = function(jsonPath) {
  * @returns {Function}
  */
 Theme.prototype.getScaleContainer = function(name, grid) {
+    var scope = this;
     return function() {
-        return ScaleContainer.fromFrame(name, grid);
+        var texture = scope.textureCache[name];
+        if(!texture) {
+            throw new Error('The frameId "' + name + '" does not exist ' +
+            'in the texture cache');
+        }
+        return new ScaleContainer(texture, grid);
+
     };
 };
 
@@ -4250,8 +4288,9 @@ Theme.prototype.getScaleContainer = function(name, grid) {
  * @returns {Function}
  */
 Theme.prototype.getImage = function(name) {
+    var scope = this;
     return function() {
-        return PIXI.Sprite.fromImage(name);
+        return new PIXI.Sprite(scope.textureCache[name]);
     };
 };
 
