@@ -5,6 +5,7 @@ UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feat
 
 [![Inline docs](http://inch-ci.org/github/brean/pixi_ui.svg?branch=master)](http://inch-ci.org/github/brean/pixi_ui)
 [![Build Status](https://travis-ci.org/brean/pixi_ui.svg?branch=master)](https://travis-ci.org/brean/pixi_ui)
+[![npm version](https://badge.fury.io/js/pixi_ui.svg)](http://badge.fury.io/js/pixi_ui)
 
 
 Features
