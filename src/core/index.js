@@ -17,6 +17,7 @@ module.exports = {
     Button:                 require('./controls/Button'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
+    PickerList:             require('./controls/PickerList'),
     Scrollable:             require('./controls/Scrollable'),
     ScrollArea:             require('./controls/ScrollArea'),
     ScrollBar:              require('./controls/ScrollBar'),

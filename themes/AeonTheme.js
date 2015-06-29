@@ -83,6 +83,16 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("vertical-scroll-bar-thumb-icon"));
     }
 
+    if (PIXI_UI.PickerList) {
+        var pl = PIXI_UI.PickerList;
+        this.setSkin(pl.SKIN_NAME, "picker_list_" + b.UP,
+            this.getImage("picker-list-up-icon"));
+        this.setSkin(pl.SKIN_NAME, "picker_list_" + b.DOWN,
+            this.getImage("picker-list-down-icon"));
+        this.setSkin(pl.SKIN_NAME, "picker_list_" + b.HOVER,
+            this.getImage("picker-list-hover-icon"));
+    }
+
     if (PIXI_UI.TextInput) {
         var ti = PIXI_UI.TextInput;
         this.setSkin(ti.SKIN_NAME, "background",
