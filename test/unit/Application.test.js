@@ -11,7 +11,7 @@ describe("test Application", function() {
 
     it("create and remove Application instance", function() {
         var app = new PIXI_UI.Application(0xff0000);
-        app.cleanup();
+        app.dispose();
         app = null;
     });
     it("test application fullscreen works", function() {
@@ -24,7 +24,7 @@ describe("test Application", function() {
         app.fullscreen = false;
         expect(app.fullscreen).equals(false);
 
-        app.cleanup();
+        app.dispose();
         app = null;
     });
 });

@@ -89,10 +89,10 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method cleanup
+ * @method dispose
  * @param removeCanvas destroys the canvas and remove it from the dom tree
  */
-Application.prototype.cleanup = function(removeCanvas) {
+Application.prototype.dispose = function(removeCanvas) {
     removeCanvas = removeCanvas || true;
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
