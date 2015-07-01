@@ -87,8 +87,12 @@ Button.prototype.preloadSkins = function() {
         if (skin) {
             this.addChildAt(skin, 0);
             skin.alpha = 0.0;
-            skin.width = this.width;
-            skin.height = this.height;
+            if (this.width) {
+                skin.width = this.width;
+            }
+            if (this.height) {
+                skin.height = this.height;
+            }
         }
     }
 };
