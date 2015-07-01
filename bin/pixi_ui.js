@@ -15,7 +15,7 @@ core.loader = PIXI.loader;
 global.PIXI_UI = core;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./core":15,"./utils":33}],2:[function(require,module,exports){
+},{"./core":16,"./utils":34}],2:[function(require,module,exports){
 /**
  * base for all UI controls (see controls/)
  * based on pixi-DisplayContainer that supports adding children, so all
@@ -395,10 +395,10 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method cleanup
+ * @method dispose
  * @param removeCanvas destroys the canvas and remove it from the dom tree
  */
-Application.prototype.cleanup = function(removeCanvas) {
+Application.prototype.dispose = function(removeCanvas) {
     removeCanvas = removeCanvas || true;
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
@@ -616,7 +616,7 @@ Button.prototype.updateDimensions = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
     }
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
@@ -1001,7 +1001,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":30,"../Skinable":3}],7:[function(require,module,exports){
+},{"../../utils/InputWrapper":31,"../Skinable":3}],7:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1265,7 +1265,40 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
         return height;
     }
 });
-},{"../Control":2,"../layout/ViewPortBounds":23}],8:[function(require,module,exports){
+},{"../Control":2,"../layout/ViewPortBounds":24}],8:[function(require,module,exports){
+var Control = require('../Control');
+
+/**
+ * PickerList allows the user to select an option from a list
+ *
+ * @class PickerList
+ * @extends PIXI_UI.Control
+ * @memberof PIXI_UI
+ * @constructor
+ */
+function PickerList() {
+    // TODO: inherit Button?
+    Control.call(this);
+    this._dataProvider = [];
+
+    // selected item
+    // TODO: create setter that updates the list
+    this.selectedIndex = -1;
+    // TODO: toggle button?
+}
+
+PickerList.prototype = Object.create( Control.prototype );
+PickerList.prototype.constructor = PickerList;
+module.exports = PickerList;
+
+// name of skin that will be applied
+Button.SKIN_NAME = 'pickerlist';
+
+// TODO: prompt
+// TODO: PopupManager (?)
+// TODO: createButton
+// TODO: createList
+},{"../Control":2}],9:[function(require,module,exports){
 var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1491,7 +1524,7 @@ ScrollArea.prototype.drawMask = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
     }
 };
 
@@ -1684,7 +1717,7 @@ Object.defineProperty(ScrollArea.prototype, 'height', {
     }
 });
 
-},{"../Control":2,"../layout/LayoutAlignment":18}],9:[function(require,module,exports){
+},{"../Control":2,"../layout/LayoutAlignment":19}],10:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1767,7 +1800,7 @@ ScrollBar.prototype.thumbMoved = function(x, y) {
     }
 };
 
-},{"../layout/LayoutAlignment":18,"./Scrollable":11}],10:[function(require,module,exports){
+},{"../layout/LayoutAlignment":19,"./Scrollable":12}],11:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -1918,7 +1951,7 @@ ScrollThumb.prototype.move = function(x, y) {
     }
     return false;
 };
-},{"./Button":5}],11:[function(require,module,exports){
+},{"./Button":5}],12:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
 /**
@@ -2269,7 +2302,7 @@ Object.defineProperty(Scrollable.prototype, 'height', {
     }
 });
 
-},{"../Skinable":3,"./ScrollThumb":10}],12:[function(require,module,exports){
+},{"../Skinable":3,"./ScrollThumb":11}],13:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     SliderData = require('../../utils/SliderData');
 
@@ -2440,7 +2473,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":32,"./Scrollable":11}],13:[function(require,module,exports){
+},{"../../utils/SliderData":33,"./Scrollable":12}],14:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2810,7 +2843,7 @@ TextInput.prototype.updateTextState = function () {
     }
     this.setCursorPos();
 };
-},{"../../utils/InputWrapper":30,"../Control":2,"./InputControl":6}],14:[function(require,module,exports){
+},{"../../utils/InputWrapper":31,"../Control":2,"./InputControl":6}],15:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2916,7 +2949,7 @@ ToggleButton.prototype.handleEvent = function(type) {
     this.buttonHandleEvent(type);
 };
 
-},{"./Button":5}],15:[function(require,module,exports){
+},{"./Button":5}],16:[function(require,module,exports){
 /**
  * @file        Main export of the PIXI_UI core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2936,6 +2969,7 @@ module.exports = {
     Button:                 require('./controls/Button'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
+    PickerList:             require('./controls/PickerList'),
     Scrollable:             require('./controls/Scrollable'),
     ScrollArea:             require('./controls/ScrollArea'),
     ScrollBar:              require('./controls/ScrollBar'),
@@ -2965,7 +2999,7 @@ module.exports = {
     Theme:           require('./skin/Theme')
 };
 
-},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/ScrollArea":8,"./controls/ScrollBar":9,"./controls/ScrollThumb":10,"./controls/Scrollable":11,"./controls/Slider":12,"./controls/TextInput":13,"./controls/ToggleButton":14,"./layout/HorizontalLayout":16,"./layout/Layout":17,"./layout/LayoutAlignment":18,"./layout/TiledColumnsLayout":19,"./layout/TiledLayout":20,"./layout/TiledRowsLayout":21,"./layout/VerticalLayout":22,"./layout/ViewPortBounds":23,"./shapes/Diamond":24,"./shapes/Ellipse":25,"./shapes/Line":26,"./shapes/Rect":27,"./shapes/Shape":28,"./skin/Theme":29}],16:[function(require,module,exports){
+},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/PickerList":8,"./controls/ScrollArea":9,"./controls/ScrollBar":10,"./controls/ScrollThumb":11,"./controls/Scrollable":12,"./controls/Slider":13,"./controls/TextInput":14,"./controls/ToggleButton":15,"./layout/HorizontalLayout":17,"./layout/Layout":18,"./layout/LayoutAlignment":19,"./layout/TiledColumnsLayout":20,"./layout/TiledLayout":21,"./layout/TiledRowsLayout":22,"./layout/VerticalLayout":23,"./layout/ViewPortBounds":24,"./shapes/Diamond":25,"./shapes/Ellipse":26,"./shapes/Line":27,"./shapes/Rect":28,"./shapes/Shape":29,"./skin/Theme":30}],17:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2986,7 +3020,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":18}],17:[function(require,module,exports){
+},{"./LayoutAlignment":19}],18:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -3209,7 +3243,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3396,7 +3430,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":17}],19:[function(require,module,exports){
+},{"./Layout":18}],20:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3442,7 +3476,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":20}],20:[function(require,module,exports){
+},{"./TiledLayout":21}],21:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3748,7 +3782,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":17}],21:[function(require,module,exports){
+},{"./Layout":18}],22:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3794,7 +3828,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":20}],22:[function(require,module,exports){
+},{"./TiledLayout":21}],23:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3815,7 +3849,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":18}],23:[function(require,module,exports){
+},{"./LayoutAlignment":19}],24:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3856,7 +3890,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3891,7 +3925,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":28}],25:[function(require,module,exports){
+},{"./Shape":29}],26:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3922,7 +3956,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":28}],26:[function(require,module,exports){
+},{"./Shape":29}],27:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3978,7 +4012,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":28}],27:[function(require,module,exports){
+},{"./Shape":29}],28:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -4033,7 +4067,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":28}],28:[function(require,module,exports){
+},{"./Shape":29}],29:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -4190,7 +4224,7 @@ Shape.prototype.redraw = function() {
     this._drawShape();
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
 
 /**
@@ -4317,7 +4351,7 @@ Theme.prototype.getSkin = function(comp, state) {
 Theme.removeTheme = function() {
     PIXI_UI.theme = undefined;
 };
-},{"../../utils/ScaleContainer":31}],30:[function(require,module,exports){
+},{"../../utils/ScaleContainer":32}],31:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4521,7 +4555,7 @@ InputWrapper.getType = function() {
         return InputWrapper._type;
     }
 };
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4613,7 +4647,7 @@ module.exports = ScaleContainer;
  * @private
  */
 ScaleContainer.prototype._getTexture = function(x, y, w, h) {
-    var frame = new PIXI.math.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
+    var frame = new PIXI.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
     var t = new PIXI.Texture(this.baseTexture, frame, frame.clone(), null);
     return new PIXI.Sprite(t);
 };
@@ -4767,7 +4801,7 @@ ScaleContainer.prototype.renderCanvas = function(renderer) {
     return PIXI.Container.prototype.renderCanvas.call(this, renderer);
 };
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4789,7 +4823,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /**
  * @file        Main export of the PIXI_UI util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4807,7 +4841,7 @@ module.exports = {
     ScaleContainer:         require('./ScaleContainer'),
     SliderData:             require('./SliderData')
 };
-},{"./InputWrapper":30,"./ScaleContainer":31,"./SliderData":32,"./mouseWheelSupport":34,"./position":35}],34:[function(require,module,exports){
+},{"./InputWrapper":31,"./ScaleContainer":32,"./SliderData":33,"./mouseWheelSupport":35,"./position":36}],35:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -4874,7 +4908,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
