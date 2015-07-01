@@ -81,12 +81,12 @@ MetalWorksMobileTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(5, 5, 50, 50);
 MetalWorksMobileTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(8, 8, 44, 44);
 MetalWorksMobileTheme.DEFAULT_SCALE9_GRID = new PIXI.Rectangle(5, 5, 22, 22);
 /*
-MetalWorksMobileTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI..Rectangle(5, 2, 42, 6);
-MetalWorksMobileTheme.HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI..Rectangle(1, 2, 2, 11);
-MetalWorksMobileTheme.HORIZONTAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI..Rectangle(2, 2, 10, 11);
-MetalWorksMobileTheme.TEXT_INPUT_SCALE_9_GRID = new PIXI..Rectangle(2, 2, 148, 18);
-MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI..Rectangle(2, 5, 6, 42);
-MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI..Rectangle(2, 1, 11, 2);
-MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI..Rectangle(2, 2, 11, 10);
+MetalWorksMobileTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(5, 2, 42, 6);
+MetalWorksMobileTheme.HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(1, 2, 2, 11);
+MetalWorksMobileTheme.HORIZONTAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 10, 11);
+MetalWorksMobileTheme.TEXT_INPUT_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 148, 18);
+MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(2, 5, 6, 42);
+MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(2, 1, 11, 2);
+MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 11, 10);
 */
 PIXI_UI.MetalWorksMobileTheme = MetalWorksMobileTheme;
