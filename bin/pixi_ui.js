@@ -1292,7 +1292,7 @@ PickerList.prototype.constructor = PickerList;
 module.exports = PickerList;
 
 // name of skin that will be applied
-Button.SKIN_NAME = 'pickerlist';
+PickerList.SKIN_NAME = 'pickerlist';
 
 // TODO: prompt
 // TODO: PopupManager (?)
