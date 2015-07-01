@@ -37,6 +37,4 @@ ShapeTheme.prototype.setSkins = function() {
     }
 };
 
-ShapeTheme.BUTTON_SCALE_9_GRID = new PIXI.math.Rectangle(6, 6, 70, 10);
-
 PIXI_UI.ShapeTheme = ShapeTheme;
