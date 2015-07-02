@@ -40,6 +40,19 @@ Skinable.prototype.changeSkin = function(skin) {
     this.skinableChangeSkin(skin);
 };
 
+PickerList.prototype.skinableFromSkin = Skinable.prototype.fromSkin;
+/**
+ * get image from skin (will execute a callback with the loaded skin
+ * when it is loaded or call it directly when it already is loaded)
+ *
+ * @method fromSkin
+ * @param name name of the state
+ * @param callback callback that is executed if the skin is loaded
+ */
+PickerList.prototype.fromSkin = function(name, callback) {
+    this.skinableFromSkin(name, callback);
+};
+
 // TODO: prompt
 // TODO: PopupManager (?)
 // TODO: createButton
