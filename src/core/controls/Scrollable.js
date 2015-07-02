@@ -15,7 +15,7 @@ function Scrollable(thumb, theme) {
 
     this.orientation = this.orientation || Scrollable.HORIZONTAL;
 
-    this.thumb = thumb || new ScrollThumb(this, theme);
+    this.thumb = thumb || new ScrollThumb(this, this.theme);
     this.addChild(this.thumb);
 
     this.invalidTrack = true;
