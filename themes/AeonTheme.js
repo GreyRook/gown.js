@@ -85,6 +85,23 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
 
     if (PIXI_UI.PickerList) {
         var pl = PIXI_UI.PickerList;
+        tb = PIXI_UI.ToggleButton;
+        sbg = AeonTheme.SELECTED_BUTTON_SCALE_9_GRID;
+
+        this.setSkin(pl.SKIN_NAME, b.UP,
+            this.getScaleContainer("button-up-skin", bg));
+        this.setSkin(pl.SKIN_NAME, b.DOWN,
+            this.getScaleContainer("button-down-skin", bg));
+        this.setSkin(pl.SKIN_NAME, b.HOVER,
+            this.getScaleContainer("button-hover-skin", bg));
+
+        this.setSkin(pl.SKIN_NAME, tb.SELECTED_UP,
+            this.getScaleContainer("button-selected-down-skin", sbg));
+        this.setSkin(pl.SKIN_NAME, tb.SELECTED_DOWN,
+            this.getScaleContainer("button-selected-down-skin", sbg));
+        this.setSkin(pl.SKIN_NAME, tb.SELECTED_HOVER,
+            this.getScaleContainer("button-down-skin", sbg));
+
         this.setSkin(pl.SKIN_NAME, "picker_list_" + b.UP,
             this.getImage("picker-list-up-icon"));
         this.setSkin(pl.SKIN_NAME, "picker_list_" + b.DOWN,

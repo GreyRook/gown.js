@@ -62,6 +62,18 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
                 MetalWorksMobileTheme.DEFAULT_SCALE9_GRID));
     }
 
+    if (PIXI_UI.PickerList) {
+        var pl = PIXI_UI.PickerList;
+
+        this.setSkin(pl.SKIN_NAME, b.UP,
+            this.getScaleContainer("button-up-skin", bg));
+        this.setSkin(pl.SKIN_NAME, b.DOWN,
+            this.getScaleContainer("button-down-skin", bg));
+
+        this.setSkin(pl.SKIN_NAME, "picker_list_" + b.UP,
+            this.getImage("picker-list-icon"));
+    }
+
     /*
     if (PIXI_UI.TextInput) {
         var ti = PIXI_UI.TextInput;

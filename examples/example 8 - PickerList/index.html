@@ -30,15 +30,17 @@
             ["../../themes/assets/aeon/aeon_desktop.json"], aeonComplete);
 
     function metalComplete() {
-        var picker = new PIXI_UI.PickerList(null, metal_theme);
+        var picker = new PIXI_UI.PickerList(metal_theme);
         picker.x = 400;
-        picker.width = 100;
+        picker.width = 200;
+        picker.height = 40;
         stage.addChild(picker);
     }
 
     function aeonComplete() {
-        var picker = new PIXI_UI.PickerList(null, aeon_theme);
+        var picker = new PIXI_UI.PickerList(aeon_theme);
         picker.width = 100;
+        picker.height = 25;
         stage.addChild(picker);
 
         requestAnimationFrame(animate);
