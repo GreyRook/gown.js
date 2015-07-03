@@ -96,9 +96,9 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getScaleContainer("button-hover-skin", bg));
 
         this.setSkin(pl.SKIN_NAME, tb.SELECTED_UP,
-            this.getScaleContainer("button-selected-down-skin", sbg));
+            this.getScaleContainer("button-down-skin", sbg));
         this.setSkin(pl.SKIN_NAME, tb.SELECTED_DOWN,
-            this.getScaleContainer("button-selected-down-skin", sbg));
+            this.getScaleContainer("button-down-skin", sbg));
         this.setSkin(pl.SKIN_NAME, tb.SELECTED_HOVER,
             this.getScaleContainer("button-down-skin", sbg));
 

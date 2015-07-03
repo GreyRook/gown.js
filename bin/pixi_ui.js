@@ -1289,6 +1289,7 @@ function PickerList(theme) {
     // selected item
     // TODO: create setter that updates the list
     this.selectedIndex = -1;
+    this.invalidIcon = true
 }
 
 PickerList.prototype = Object.create( ToggleButton.prototype );
@@ -1298,36 +1299,42 @@ module.exports = PickerList;
 // name of skin that will be applied
 PickerList.SKIN_NAME = 'pickerlist';
 
-PickerList.prototype.skinableChangeSkin = Skinable.prototype.changeSkin;
 /**
- * remove old skin and add new one
+ * show icon for selection
  *
- * @method changeSkin
- * @param skin {DisplayObject}
+ * @method showIcon
+ * @param skin
  */
-Skinable.prototype.changeSkin = function(skin) {
-    if (this._currentSkin !== skin) {
+PickerList.prototype.showIcon = function(skin) {
+    if (this.iconSkin !== skin) {
+        if(this.iconSkin) {
+            this.removeChild(this.iconSkin);
+        }
 
+        this.addChild(skin);
+        this.iconSkin = skin;
     }
-    this.skinableChangeSkin(skin);
+    skin.x = this.width - skin.getBounds().width - 10;
+    skin.y = Math.floor((this.height - skin.getBounds().height )/ 2);
+    this.invalidIcon = false;
 };
 
-PickerList.prototype.skinableFromSkin = Skinable.prototype.fromSkin;
 /**
- * get image from skin (will execute a callback with the loaded skin
- * when it is loaded or call it directly when it already is loaded)
+ * redraw the skin
  *
- * @method fromSkin
- * @param name name of the state
- * @param callback callback that is executed if the skin is loaded
+ * @method redraw
  */
-PickerList.prototype.fromSkin = function(name, callback) {
-    this.skinableFromSkin(name, callback);
+PickerList.prototype.redraw = function() {
+    this.redrawSkinable();
+    if (this.invalidIcon) {
+        this.fromSkin('picker_list_'+this._currentState, this.showIcon);
+    }
 };
+
 
 // TODO: prompt
 // TODO: PopupManager (?)
-// TODO: createButton
+// TODO: createButton/ListItem
 // TODO: createList
 },{"../Skinable":3,"./ToggleButton":15}],9:[function(require,module,exports){
 var Control = require('../Control'),
