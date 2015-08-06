@@ -223,7 +223,7 @@ ScrollArea.prototype.drawMask = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
     }
 };
 

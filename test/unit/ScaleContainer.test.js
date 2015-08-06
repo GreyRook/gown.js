@@ -1,7 +1,7 @@
 describe("test scalable/tialbe container", function() {
     it("no image loaded - should throw", function() {
 
-        var rect = new PIXI.math.Rectangle(10,10,1,1);
+        var rect = new PIXI.Rectangle(10,10,1,1);
         var img = "unloadable_image.png";
         expect(function() {
             PIXI_UI.utils.ScaleContainer.fromFrame(img, rect);
@@ -14,7 +14,7 @@ describe("test scalable/tialbe container", function() {
         loader.add("/test/img/scale9.png");
 
         loader.load(function() {
-            var rect = new PIXI.math.Rectangle(10,10,1,1);
+            var rect = new PIXI.Rectangle(10,10,1,1);
             var scale = PIXI_UI.utils.ScaleContainer.fromFrame("/test/img/scale9.png", rect);
 
             scale.width = 100;

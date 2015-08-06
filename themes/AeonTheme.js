@@ -97,14 +97,14 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
     }
 };
 
-AeonTheme.BUTTON_SCALE_9_GRID = new PIXI.math.Rectangle(6, 6, 70, 10);
-AeonTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.math.Rectangle(6, 6, 52, 10);
-AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.math.Rectangle(5, 2, 42, 6);
-AeonTheme.HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.math.Rectangle(1, 2, 2, 11);
-AeonTheme.HORIZONTAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.math.Rectangle(2, 2, 10, 11);
-AeonTheme.TEXT_INPUT_SCALE_9_GRID = new PIXI.math.Rectangle(2, 2, 148, 18);
-AeonTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.math.Rectangle(2, 5, 6, 42);
-AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.math.Rectangle(2, 1, 11, 2);
-AeonTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.math.Rectangle(2, 2, 11, 10);
+AeonTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(6, 6, 70, 10);
+AeonTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(6, 6, 52, 10);
+AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(5, 2, 42, 6);
+AeonTheme.HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(1, 2, 2, 11);
+AeonTheme.HORIZONTAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 10, 11);
+AeonTheme.TEXT_INPUT_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 148, 18);
+AeonTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(2, 5, 6, 42);
+AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(2, 1, 11, 2);
+AeonTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 11, 10);
 
 PIXI_UI.AeonTheme = AeonTheme;
