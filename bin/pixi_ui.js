@@ -620,7 +620,7 @@ Button.prototype.updateDimensions = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
     }
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
@@ -1495,7 +1495,7 @@ ScrollArea.prototype.drawMask = function() {
         this.hitArea.width = this.width;
         this.hitArea.height = this.height;
     } else {
-        this.hitArea = new PIXI.math.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
     }
 };
 
@@ -4617,7 +4617,7 @@ module.exports = ScaleContainer;
  * @private
  */
 ScaleContainer.prototype._getTexture = function(x, y, w, h) {
-    var frame = new PIXI.math.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
+    var frame = new PIXI.Rectangle(this.frame.x+x, this.frame.y+y, w, h);
     var t = new PIXI.Texture(this.baseTexture, frame, frame.clone(), null);
     return new PIXI.Sprite(t);
 };
