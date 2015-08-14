@@ -1,5 +1,4 @@
-var ToggleButton = require('./ToggleButton'),
-    Skinable = require('../Skinable');
+var ToggleButton = require('./ToggleButton');
 
 /**
  * PickerList allows the user to select an option from a list
@@ -14,10 +13,7 @@ function PickerList(theme) {
     ToggleButton.call(this, theme);
     this._dataProvider = [];
 
-    // selected item
-    // TODO: create setter that updates the list
-    this.selectedIndex = -1;
-    this.invalidIcon = true
+    this.invalidIcon = true;
 }
 
 PickerList.prototype = Object.create( ToggleButton.prototype );
@@ -59,7 +55,7 @@ PickerList.prototype.redraw = function() {
     }
 };
 
-
+// TODO: setter/gettter for List to get selectedItem or set dataProvider
 // TODO: prompt
 // TODO: PopupManager (?)
 // TODO: createButton/ListItem
