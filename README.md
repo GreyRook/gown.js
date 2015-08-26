@@ -36,7 +36,7 @@ Folder structure
 
  - src - source code for pixi_ui
 
- - test - unit tests, run coverage_karma_istanbul.sh to get a table providing all files and their coverage, run coverage_blanket to start a web server that shows you the coverage for all lines of the generated browserify output file. 
+ - test - unit tests, run coverage_karma_istanbul.sh to get a table providing all files and their coverage, run coverage_blanket to start a web server that shows you the coverage for all lines of the generated browserify output file.
 
  - themes - basic UI example themes
 
@@ -51,11 +51,11 @@ Theming
  - Using the python script *themes/xml_to_json.py* you can convert your XML file from [feathers-ui](http://feathersui.com) into JSON so the default PIXI loader can parse it.
 
   - example:
-   
-     .. code :: bash
 
-       python xml_to_json.py assets/aeon/aeon_desktop.xml
-     
+   ```bash  
+   python xml_to_json.py assets/aeon/aeon_desktop.xml
+   ```
+   
    the script requires [PIL](http://www.pythonware.com/products/pil/) (or [Pillow](http://python-pillow.github.io/)) to determine the texture width/height
 
  - It is possible to have different themes in one project
@@ -156,7 +156,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - cleanup-functions to free memory/remove event listener etc. (take a look at/extend pixi destroy funtion)
 
- - more examples: 
+ - more examples:
 
    - ToggleButton
 
