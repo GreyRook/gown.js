@@ -3,8 +3,8 @@
 
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
 
-[![Inline docs](http://inch-ci.org/github/brean/gown.svg?branch=master)](http://inch-ci.org/github/brean/gown)
-[![Build Status](https://travis-ci.org/brean/gown.svg?branch=master)](https://travis-ci.org/brean/gown)
+[![Inline docs](http://inch-ci.org/github/brean/gown.js.svg?branch=master)](http://inch-ci.org/github/brean/gown.js)
+[![Build Status](https://travis-ci.org/brean/gown.js.svg?branch=master)](https://travis-ci.org/brean/gown.js)
 
 
 Features
@@ -199,4 +199,4 @@ This list is not ordered by priority nor does it contain any promise that those 
 
 Known Bugs
 ==========
-see [Issues](https://github.com/brean/gown/issues/)
+see [Issues](https://github.com/brean/gown.js/issues/)
