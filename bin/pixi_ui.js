@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.PIXI_UI = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.GOWN = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (global){
 var core = module.exports = require('./core');
 
@@ -11,8 +11,8 @@ core.loader = PIXI.loader;
 // mixin the deprecation features.
 //Object.assign(core, require('./deprecation'));
 
-// export PIXI_UI globally.
-global.PIXI_UI = core;
+// export GOWN globally.
+global.GOWN = core;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
 },{"./core":15,"./utils":33}],2:[function(require,module,exports){
@@ -22,7 +22,7 @@ global.PIXI_UI = core;
  * controls are container
  * @class Control
  * @extends PIXI.Container
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Control() {
@@ -163,14 +163,14 @@ var Control = require('./Control');
  * Control that requires a theme (e.g. a button)
  *
  * @class Skinable
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
+ * @extends GOWN.Control
+ * @memberof GOWN
  * @constructor
  */
 function Skinable(theme) {
     Control.call(this);
     this.skinCache = {};
-    this.setTheme(theme || PIXI_UI.theme);
+    this.setTheme(theme || GOWN.theme);
 
     if (this.theme === undefined) {
         throw new Error('you need to define a theme first');
@@ -312,8 +312,8 @@ var Control = require('../Control');
  * background.
  *
  * @class Application
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
+ * @extends GOWN.Control
+ * @memberof GOWN
  * @constructor
  * @param background {Number | Array} a background color or a list of colors
  *  that will be used as vertical gradient
@@ -498,8 +498,8 @@ var Skinable = require('../Skinable');
  * centered on it
  *
  * @class Button
- * @extends PIXI_UI.Skinable
- * @memberof PIXI_UI
+ * @extends GOWN.Skinable
+ * @memberof GOWN
  * @constructor
  */
 function Button(theme) {
@@ -783,8 +783,8 @@ var Skinable = require('../Skinable'),
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class InputControl
- * @extends PIXI_UI.Skinable
- * @memberof PIXI_UI
+ * @extends GOWN.Skinable
+ * @memberof GOWN
  * @constructor
  */
 function InputControl(text, theme) {
@@ -819,7 +819,7 @@ module.exports = InputControl;
  * currently selected input control (used for tab index)
  *
  * @property currentInput
- * @type PIXI_UI.InputControl
+ * @type GOWN.InputControl
  * @static
  */
 InputControl.currentInput = null;
@@ -913,17 +913,17 @@ InputControl.prototype.textWidth = function(text) {
  */
 InputControl.prototype.focus = function () {
     // is already current input
-    if (PIXI_UI.InputControl.currentInput === this) {
+    if (GOWN.InputControl.currentInput === this) {
         return;
     }
 
     // drop focus
-    if (PIXI_UI.InputControl.currentInput) {
-        PIXI_UI.InputControl.currentInput.blur();
+    if (GOWN.InputControl.currentInput) {
+        GOWN.InputControl.currentInput.blur();
     }
 
     // set focus
-    PIXI_UI.InputControl.currentInput = this;
+    GOWN.InputControl.currentInput = this;
     this.hasFocus = true;
 
     // check custom focus event
@@ -977,8 +977,8 @@ InputControl.prototype.onfocus = function () {
  * @method blur
  */
 InputControl.prototype.blur = function() {
-    if (PIXI_UI.InputControl.currentInput === this) {
-        PIXI_UI.InputControl.currentInput = null;
+    if (GOWN.InputControl.currentInput === this) {
+        GOWN.InputControl.currentInput = null;
         this.hasFocus = false;
 
         // blur hidden input
@@ -997,10 +997,10 @@ InputControl.prototype.onblur = function() {
 
 // blur current input
 InputControl.blur = function() {
-    if (PIXI_UI.InputControl.currentInput &&
-        !PIXI_UI.InputControl.currentInput._mouseDown) {
-        PIXI_UI.InputControl.currentInput.blur();
-        PIXI_UI.InputControl.currentInput = null;
+    if (GOWN.InputControl.currentInput &&
+        !GOWN.InputControl.currentInput._mouseDown) {
+        GOWN.InputControl.currentInput.blur();
+        GOWN.InputControl.currentInput = null;
     }
 };
 window.addEventListener('blur', InputControl.blur, false);
@@ -1013,8 +1013,8 @@ var Control = require('../Control'),
  * The LayoutGroup allows you to add PIXI.js children that will be positioned
  *
  * @class LayoutGroup
- * @extends PIXI_UI.Layout
- * @memberof PIXI_UI
+ * @extends GOWN.Layout
+ * @memberof GOWN
  * @constructor
  */
 function LayoutGroup() {
@@ -1278,8 +1278,8 @@ var Control = require('../Control'),
  * of the ScrollArea defines the viewport.
  *
  * @class ScrollArea
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
+ * @extends GOWN.Control
+ * @memberof GOWN
  * @constructor
  */
 function ScrollArea(content, addListener, scrolldelta, bar) {
@@ -1697,8 +1697,8 @@ var Scrollable = require('./Scrollable'),
  * hosting some Viewport (e.g. a ScrollArea or a Texture)
  *
  * @class ScrollArea
- * @extends PIXI_UI.Scrollable
- * @memberof PIXI_UI
+ * @extends GOWN.Scrollable
+ * @memberof GOWN
  * @constructor
  */
 function ScrollBar(scrollArea, thumb, theme) {
@@ -1778,8 +1778,8 @@ var Button = require('./Button');
  * thumb button that can be moved on the scrollbar
  *
  * @class ScrollThumb
- * @extends PIXI_UI.Button
- * @memberof PIXI_UI
+ * @extends GOWN.Button
+ * @memberof GOWN
  * @constructor
  */
 function ScrollThumb(scrollable, theme) {
@@ -1899,7 +1899,7 @@ ScrollThumb.prototype.redraw = function() {
  * @method move
  */
 ScrollThumb.prototype.move = function(x, y) {
-    if (this.scrollable.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+    if (this.scrollable.orientation === GOWN.Scrollable.HORIZONTAL) {
         if (isNaN(x)) {
             return false;
         }
@@ -1928,8 +1928,8 @@ var Skinable = require('../Skinable'),
 /**
  * scroll bar or slider
  * @class Scrollable
- * @extends PIXI_UI.Scrollable
- * @memberof PIXI_UI
+ * @extends GOWN.Scrollable
+ * @memberof GOWN
  * @constructor
  */
 
@@ -2281,8 +2281,8 @@ var Scrollable = require('./Scrollable'),
  * Simple slider with min. and max. value
  *
  * @class Slider
- * @extends PIXI_UI.Scrollable
- * @memberof PIXI_UI
+ * @extends GOWN.Scrollable
+ * @memberof GOWN
  * @constructor
  */
 
@@ -2453,8 +2453,8 @@ var Control = require('../Control'),
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class TextInput
- * @extends PIXI_UI.InputControl
- * @memberof PIXI_UI
+ * @extends GOWN.InputControl
+ * @memberof GOWN
  * @param text editable text shown in input
  * @param displayAsPassword Display TextInput as Password (default false)
  * @theme default theme
@@ -2822,8 +2822,8 @@ var Button = require('./Button');
  * is pressed or not.
  *
  * @class ToggleButton
- * @extends PIXI_UI.Button
- * @memberof PIXI_UI
+ * @extends GOWN.Button
+ * @memberof GOWN
  * @constructor
  */
 function ToggleButton(theme) {
@@ -2922,7 +2922,7 @@ ToggleButton.prototype.handleEvent = function(type) {
 
 },{"./Button":5}],15:[function(require,module,exports){
 /**
- * @file        Main export of the PIXI_UI core library
+ * @file        Main export of the GOWN core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
  * @copyright   2015 Andreas Bresser
  * @license     {@link https://github.com/brean/pixi_ui/blob/master/LICENSE|Apache License}
@@ -2977,8 +2977,8 @@ var LayoutAlignment = require('./LayoutAlignment');
  * LayoutAlignment.HORIZONTAL_ALIGNMENT
  *
  * @class HorizontalLayout
- * @extends PIXI_UI.LayoutAlignment
- * @memberof PIXI_UI
+ * @extends GOWN.LayoutAlignment
+ * @memberof GOWN
  * @constructor
  */
 function HorizontalLayout() {
@@ -2995,7 +2995,7 @@ module.exports = HorizontalLayout;
  * basic layout stub - see LayoutAlignment
  *
  * @class Layout
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Layout() {
@@ -3220,8 +3220,8 @@ var Layout = require('./Layout');
  * basic layout
  *
  * @class LayoutAlignment
- * @extends PIXI_UI.Layout
- * @memberof PIXI_UI
+ * @extends GOWN.Layout
+ * @memberof GOWN
  * @constructor
  */
 function LayoutAlignment() {
@@ -3408,8 +3408,8 @@ var TiledLayout = require('./TiledLayout');
  * (roughly based on starling TiledColumnsLayout)
  *
  * @class TiledColumnsLayout
- * @extends PIXI_UI.TiledLayout
- * @memberof PIXI_UI
+ * @extends GOWN.TiledLayout
+ * @memberof GOWN
  * @constructor
  */
 
@@ -3453,8 +3453,8 @@ var Layout = require('./Layout');
  * TiledLayout a layout for tiled rows/columns
  *
  * @class TiledLayout
- * @extends PIXI_UI.Layout
- * @memberof PIXI_UI
+ * @extends GOWN.Layout
+ * @memberof GOWN
  * @constructor
  */
 function TiledLayout() {
@@ -3760,8 +3760,8 @@ var TiledLayout = require('./TiledLayout');
  * (roughly based on starling TiledRowsLayout)
  *
  * @class TiledRowsLayout
- * @extends PIXI_UI.TiledLayout
- * @memberof PIXI_UI
+ * @extends GOWN.TiledLayout
+ * @memberof GOWN
  * @constructor
  */
 function TiledRowsLayout() {
@@ -3806,8 +3806,8 @@ var LayoutAlignment = require('./LayoutAlignment');
  * LayoutAlignment.VERTICAL_ALIGNMENT
  *
  * @class VerticalLayout
- * @extends PIXI_UI.LayoutAlignment
- * @memberof PIXI_UI
+ * @extends GOWN.LayoutAlignment
+ * @memberof GOWN
  * @constructor
  */
 function VerticalLayout() {
@@ -3824,7 +3824,7 @@ module.exports = VerticalLayout;
  * define viewport dimensions
  *
  * @class HorizontalLayout
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function ViewPortBounds() {
@@ -3867,8 +3867,8 @@ var Shape = require('./Shape');
  * basic diamond shape
  *
  * @class Diamond
- * @extends PIXI_UI.Shape
- * @memberof PIXI_UI
+ * @extends GOWN.Shape
+ * @memberof GOWN
  * @constructor
  */
 function Diamond(color, alpha, width, height) {
@@ -3902,8 +3902,8 @@ var Shape = require('./Shape');
  * basic ellipse shape
  *
  * @class Ellipse
- * @extends PIXI_UI.Shape
- * @memberof PIXI_UI
+ * @extends GOWN.Shape
+ * @memberof GOWN
  * @constructor
  */
 function Ellipse(color, alpha, width, height) {
@@ -3933,8 +3933,8 @@ var Shape = require('./Shape');
  * basic line
  *
  * @class Line
- * @extends PIXI_UI.Shape
- * @memberof PIXI_UI
+ * @extends GOWN.Shape
+ * @memberof GOWN
  * @constructor
  */
 
@@ -3989,8 +3989,8 @@ var Shape = require('./Shape');
  * basic rectangular shape
  *
  * @class Rect
- * @extends PIXI_UI.Shape
- * @memberof PIXI_UI
+ * @extends GOWN.Shape
+ * @memberof GOWN
  * @constructor
  */
 
@@ -4043,7 +4043,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
  *
  * @class Shape
  * @extends PIXI.Graphics
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Shape(color, alpha, width, height) {
@@ -4201,7 +4201,7 @@ var ScaleContainer = require('../../utils/ScaleContainer');
  * basic theming/skinning.
  *
  * @class Theme
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Theme(global) {
@@ -4215,7 +4215,7 @@ function Theme(global) {
     this.textStyle.font = this.textStyle.font || '12px Arial';
 
     if (global === true || global === undefined) {
-        PIXI_UI.theme = this;
+        GOWN.theme = this;
     }
     this.textureCache = null;
     // own skin for scroll/slider track
@@ -4249,7 +4249,7 @@ Theme.prototype.setSkin = function(comp, id, skin) {
  */
 Theme.prototype.loadImage = function(jsonPath) {
     this._jsonPath = jsonPath;
-    PIXI_UI.loader
+    GOWN.loader
         .add(jsonPath)
         .load(this.loadComplete.bind(this));
 };
@@ -4319,7 +4319,7 @@ Theme.prototype.getSkin = function(comp, state) {
  * @method removeTheme
  */
 Theme.removeTheme = function() {
-    PIXI_UI.theme = undefined;
+    GOWN.theme = undefined;
 };
 },{"../../utils/ScaleContainer":31}],30:[function(require,module,exports){
 /**
@@ -4329,7 +4329,7 @@ Theme.removeTheme = function() {
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class InputWrapper
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @static
  */
 function InputWrapper()
@@ -4369,21 +4369,21 @@ InputWrapper.createInput = function()
         // add blur handler
         input.addEventListener('blur', function()
         {
-            if (PIXI_UI.InputControl.currentInput)
+            if (GOWN.InputControl.currentInput)
             {
-                PIXI_UI.InputControl.currentInput.onMouseUpOutside();
+                GOWN.InputControl.currentInput.onMouseUpOutside();
             }
         }, false);
 
         // on key down
         input.addEventListener('keydown', function(e)
         {
-            if (PIXI_UI.InputControl.currentInput)
+            if (GOWN.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (PIXI_UI.InputControl.currentInput.hasFocus)
+                if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    PIXI_UI.InputControl.currentInput.onKeyDown(e);
+                    GOWN.InputControl.currentInput.onKeyDown(e);
                 }
             }
         });
@@ -4391,12 +4391,12 @@ InputWrapper.createInput = function()
         // on key up
         input.addEventListener('keyup', function(e)
         {
-            if(PIXI_UI.InputControl.currentInput)
+            if(GOWN.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (PIXI_UI.InputControl.currentInput.hasFocus)
+                if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    PIXI_UI.InputControl.currentInput.onKeyUp(e);
+                    GOWN.InputControl.currentInput.onKeyUp(e);
                 }
             }
         });
@@ -4532,7 +4532,7 @@ InputWrapper.getType = function() {
  *
  * @class ScaleContainer
  * @extends PIXI.Container
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 
@@ -4776,7 +4776,7 @@ ScaleContainer.prototype.renderCanvas = function(renderer) {
  * Holds all information related to a Slider change event
  *
  * @class SliderData
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function SliderData()
@@ -4795,7 +4795,7 @@ module.exports = SliderData;
 
 },{}],33:[function(require,module,exports){
 /**
- * @file        Main export of the PIXI_UI util library
+ * @file        Main export of the GOWN util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
  * @copyright   2015 Andreas Bresser
  * @license     {@link https://github.com/brean/pixi_ui/blob/master/LICENSE|Apache License}
@@ -4827,10 +4827,10 @@ module.exports = {
 function mouseWheelSupport(stage, enable) {
     var canvas = stage.canvas;
     if (enable || enable === undefined) {
-        if (PIXI_UI._mouseWheelHandler !== undefined) {
+        if (GOWN._mouseWheelHandler !== undefined) {
             return;
         }
-        PIXI_UI._mouseWheelHandler = function(event) {
+        GOWN._mouseWheelHandler = function(event) {
             event = window.event || event;
             var delta = Math.max(-1, Math.min(1,
                 (event.wheelDelta || -event.detail)));
@@ -4853,27 +4853,27 @@ function mouseWheelSupport(stage, enable) {
         };
         if (canvas.addEventListener) {
             canvas.addEventListener('mousewheel',
-                PIXI_UI._mouseWheelHandler, false);
+                GOWN._mouseWheelHandler, false);
             canvas.addEventListener('DOMMouseScroll',
-                PIXI_UI._mouseWheelHandler, false);
+                GOWN._mouseWheelHandler, false);
         } else {
             canvas.attachEvent('onmousewheel',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
         }
     } else {
-        if (PIXI_UI._mouseWheelHandler === undefined) {
+        if (GOWN._mouseWheelHandler === undefined) {
             return;
         }
         if (canvas.removeEventListener) {
             canvas.removeEventListener('mousewheel',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
             canvas.removeEventListener('DOMMouseScroll',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
         } else {
             canvas.detachEvent('onmousewheel',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
         }
-        PIXI_UI._mouseWheelHandler = undefined;
+        GOWN._mouseWheelHandler = undefined;
     }
 }
 

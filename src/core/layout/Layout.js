@@ -2,7 +2,7 @@
  * basic layout stub - see LayoutAlignment
  *
  * @class Layout
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Layout() {

@@ -2,7 +2,7 @@
  * Holds all information related to a Slider change event
  *
  * @class SliderData
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function SliderData()

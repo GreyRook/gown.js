@@ -25,9 +25,9 @@
         "default"       : {
             "outputSourceFiles" : true
         },
-        "systemName"    : "PIXI_UI",
+        "systemName"    : "GOWN",
         "footer"        : "UI-System for PIXI by Andreas Bresser",
-        "copyright"     : "PIXI_UI Copyright © 2015 Andreas Bresser.",
+        "copyright"     : "GOWN Copyright © 2015 Andreas Bresser.",
         "navType"       : "vertical",
         "theme"         : "cerulean",
         "linenums"      : true,

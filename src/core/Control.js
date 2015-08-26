@@ -4,7 +4,7 @@
  * controls are container
  * @class Control
  * @extends PIXI.Container
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Control() {

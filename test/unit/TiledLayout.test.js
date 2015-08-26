@@ -6,17 +6,17 @@
 describe("Tiled Layout tests", function() {
     beforeEach(function(){
         // cleanup - make sure global theme is not set
-        PIXI_UI.Theme.removeTheme();
-        new PIXI_UI.TestTheme();
+        GOWN.Theme.removeTheme();
+        new GOWN.TestTheme();
     });
     function basicGroup(num_buttons) {
-        var grp = new PIXI_UI.LayoutGroup();
-        grp.layout = new PIXI_UI.TiledColumnsLayout();
+        var grp = new GOWN.LayoutGroup();
+        grp.layout = new GOWN.TiledColumnsLayout();
         grp.width = 100;
         grp.height = 100;
         var btn;
         for (var i=0; i < num_buttons; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.width = 10;
             btn.height = 10;
             grp.addChild(btn);
@@ -25,7 +25,7 @@ describe("Tiled Layout tests", function() {
     }
     it("basics", function () {
         // do not layout empty group
-        var layout = new PIXI_UI.TiledLayout();
+        var layout = new GOWN.TiledLayout();
         layout.layout([]);
         layout.layout([null]);
     });
@@ -39,14 +39,14 @@ describe("Tiled Layout tests", function() {
             expect(last_first_column_bottom.y).equal(90);
 
             // change layout
-            grp.layout = new PIXI_UI.TiledRowsLayout();
+            grp.layout = new GOWN.TiledRowsLayout();
             grp.redraw();
             var last_first_row_right = grp.children[grp.children.length-2];
             expect(last.x).equal(0);
             expect(last_first_row_right.x).equal(90);
 
             // change layout orientation
-            grp.layout._orientation = PIXI_UI.TiledLayout.ORIENTATION_COLUMNS;
+            grp.layout._orientation = GOWN.TiledLayout.ORIENTATION_COLUMNS;
             grp.layout._needUpdate = true;
             grp.redraw();
             expect(last.y).equal(0);
@@ -55,22 +55,22 @@ describe("Tiled Layout tests", function() {
     );
     it("use square tiles",
         function() {
-            var grp = new PIXI_UI.LayoutGroup();
-            grp.layout = new PIXI_UI.TiledRowsLayout();
+            var grp = new GOWN.LayoutGroup();
+            grp.layout = new GOWN.TiledRowsLayout();
             grp.width = 1000;
             grp.height = 1000;
             grp.layout.useSquareTiles = true;
             
             var btn;
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.height = 200;
             grp.addChild(btn);
 
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.width = 10;
             grp.addChild(btn);
 
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.width = 200;
             btn._needUpdate = true;
             grp.addChild(btn);

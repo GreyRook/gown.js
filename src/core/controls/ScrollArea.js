@@ -6,8 +6,8 @@ var Control = require('../Control'),
  * of the ScrollArea defines the viewport.
  *
  * @class ScrollArea
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
+ * @extends GOWN.Control
+ * @memberof GOWN
  * @constructor
  */
 function ScrollArea(content, addListener, scrolldelta, bar) {

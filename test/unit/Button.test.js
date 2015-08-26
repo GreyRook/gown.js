@@ -1,12 +1,12 @@
 describe("Button", function() {
     beforeEach(function(){
         // cleanup - make sure global theme is not set
-        PIXI_UI.Theme.removeTheme();
-        new PIXI_UI.TestTheme();
+        GOWN.Theme.removeTheme();
+        new GOWN.TestTheme();
     });
 
     it("update when button label changes", function() {
-        var btn = new PIXI_UI.Button();
+        var btn = new GOWN.Button();
         btn.label = "Hello World";
         expect(btn.updateLabel).equal(true);
         btn.redraw();
@@ -24,22 +24,22 @@ describe("Button", function() {
 
     it("a clicked button states are correct (first 'down' then 'up')",
         function() {
-            var btn = new PIXI_UI.Button();
+            var btn = new GOWN.Button();
             expect(btn._pressed).not.equal(true);
-            expect(btn.currentState).equal(PIXI_UI.Button.UP);
+            expect(btn.currentState).equal(GOWN.Button.UP);
 
             // change button state based on fake events
             btn.mousedown();
             expect(btn._pressed).equal(true);
-            expect(btn.currentState).equal(PIXI_UI.Button.DOWN);
+            expect(btn.currentState).equal(GOWN.Button.DOWN);
             // fake mouseup
             btn.mouseup();
             expect(btn._pressed).equal(false);
-            expect(btn.currentState).equal(PIXI_UI.Button.UP);
+            expect(btn.currentState).equal(GOWN.Button.UP);
         }
     );
     it("we can not click a disabled button", function() {
-        var Button = PIXI_UI.Button;
+        var Button = GOWN.Button;
         var btn = new Button();
         expect(btn.enabled).equal(true);
         expect(btn._pressed).equal(false);

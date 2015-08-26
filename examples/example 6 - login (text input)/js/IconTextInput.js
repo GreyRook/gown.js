@@ -9,17 +9,17 @@
  */
 
 var IconTextInput = function(icon, text, displayAsPassword, theme) {
-    PIXI_UI.TextInput.call(this, text, displayAsPassword, theme);
+    GOWN.TextInput.call(this, text, displayAsPassword, theme);
     this.icon  = icon;
 
-    this.bg = new PIXI_UI.Rect(0x111111, 0.5, 360, 46, 5);
+    this.bg = new GOWN.Rect(0x111111, 0.5, 360, 46, 5);
     this.icon.x = 7;
 
     this.addChild(this.bg);
 
     this.addChild(icon);
 
-    var pos = PIXI_UI.utils.position;
+    var pos = GOWN.utils.position;
     pos.centerVertical(this.icon, this.bg);
     this.interactive = true;
 
@@ -29,11 +29,11 @@ var IconTextInput = function(icon, text, displayAsPassword, theme) {
     pos.centerVertical(this.pixiText);
 };
 
-IconTextInput.prototype = Object.create( PIXI_UI.TextInput.prototype );
+IconTextInput.prototype = Object.create( GOWN.TextInput.prototype );
 IconTextInput.prototype.constructor = IconTextInput;
 
 IconTextInput.prototype.setCursorPos = function() {
-    PIXI_UI.TextInput.prototype.setCursorPos.call(this);
+    GOWN.TextInput.prototype.setCursorPos.call(this);
     this.cursor.x += this.icon.width + this.icon.x*2;
-    PIXI_UI.utils.position.centerVertical(this.cursor);
+    GOWN.utils.position.centerVertical(this.cursor);
 };

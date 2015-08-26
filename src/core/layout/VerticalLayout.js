@@ -5,8 +5,8 @@ var LayoutAlignment = require('./LayoutAlignment');
  * LayoutAlignment.VERTICAL_ALIGNMENT
  *
  * @class VerticalLayout
- * @extends PIXI_UI.LayoutAlignment
- * @memberof PIXI_UI
+ * @extends GOWN.LayoutAlignment
+ * @memberof GOWN
  * @constructor
  */
 function VerticalLayout() {

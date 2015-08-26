@@ -5,8 +5,8 @@ var TiledLayout = require('./TiledLayout');
  * (roughly based on starling TiledColumnsLayout)
  *
  * @class TiledColumnsLayout
- * @extends PIXI_UI.TiledLayout
- * @memberof PIXI_UI
+ * @extends GOWN.TiledLayout
+ * @memberof GOWN
  * @constructor
  */
 

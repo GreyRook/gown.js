@@ -5,7 +5,7 @@
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class InputWrapper
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @static
  */
 function InputWrapper()
@@ -45,21 +45,21 @@ InputWrapper.createInput = function()
         // add blur handler
         input.addEventListener('blur', function()
         {
-            if (PIXI_UI.InputControl.currentInput)
+            if (GOWN.InputControl.currentInput)
             {
-                PIXI_UI.InputControl.currentInput.onMouseUpOutside();
+                GOWN.InputControl.currentInput.onMouseUpOutside();
             }
         }, false);
 
         // on key down
         input.addEventListener('keydown', function(e)
         {
-            if (PIXI_UI.InputControl.currentInput)
+            if (GOWN.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (PIXI_UI.InputControl.currentInput.hasFocus)
+                if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    PIXI_UI.InputControl.currentInput.onKeyDown(e);
+                    GOWN.InputControl.currentInput.onKeyDown(e);
                 }
             }
         });
@@ -67,12 +67,12 @@ InputWrapper.createInput = function()
         // on key up
         input.addEventListener('keyup', function(e)
         {
-            if(PIXI_UI.InputControl.currentInput)
+            if(GOWN.InputControl.currentInput)
             {
                 e = e || window.event;
-                if (PIXI_UI.InputControl.currentInput.hasFocus)
+                if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    PIXI_UI.InputControl.currentInput.onKeyUp(e);
+                    GOWN.InputControl.currentInput.onKeyUp(e);
                 }
             }
         });
