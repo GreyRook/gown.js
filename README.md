@@ -1,4 +1,4 @@
-PIXI_UI
+![goon.js](http://i.imgur.com/cD9hRVx.png)
 ===========
 
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
@@ -55,7 +55,7 @@ Theming
    ```bash  
    python xml_to_json.py assets/aeon/aeon_desktop.xml
    ```
-   
+
    the script requires [PIL](http://www.pythonware.com/products/pil/) (or [Pillow](http://python-pillow.github.io/)) to determine the texture width/height
 
  - It is possible to have different themes in one project
