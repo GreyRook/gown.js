@@ -13,10 +13,10 @@
 function mouseWheelSupport(stage, enable) {
     var canvas = stage.canvas;
     if (enable || enable === undefined) {
-        if (PIXI_UI._mouseWheelHandler !== undefined) {
+        if (GOWN._mouseWheelHandler !== undefined) {
             return;
         }
-        PIXI_UI._mouseWheelHandler = function(event) {
+        GOWN._mouseWheelHandler = function(event) {
             event = window.event || event;
             var delta = Math.max(-1, Math.min(1,
                 (event.wheelDelta || -event.detail)));
@@ -39,27 +39,27 @@ function mouseWheelSupport(stage, enable) {
         };
         if (canvas.addEventListener) {
             canvas.addEventListener('mousewheel',
-                PIXI_UI._mouseWheelHandler, false);
+                GOWN._mouseWheelHandler, false);
             canvas.addEventListener('DOMMouseScroll',
-                PIXI_UI._mouseWheelHandler, false);
+                GOWN._mouseWheelHandler, false);
         } else {
             canvas.attachEvent('onmousewheel',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
         }
     } else {
-        if (PIXI_UI._mouseWheelHandler === undefined) {
+        if (GOWN._mouseWheelHandler === undefined) {
             return;
         }
         if (canvas.removeEventListener) {
             canvas.removeEventListener('mousewheel',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
             canvas.removeEventListener('DOMMouseScroll',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
         } else {
             canvas.detachEvent('onmousewheel',
-                PIXI_UI._mouseWheelHandler);
+                GOWN._mouseWheelHandler);
         }
-        PIXI_UI._mouseWheelHandler = undefined;
+        GOWN._mouseWheelHandler = undefined;
     }
 }
 

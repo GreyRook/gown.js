@@ -5,8 +5,8 @@
 describe("object instances", function() {
     beforeEach(function(){
         // cleanup - make sure global theme is not set
-        PIXI_UI.Theme.removeTheme();
-        new PIXI_UI.TestTheme();
+        GOWN.Theme.removeTheme();
+        new GOWN.TestTheme();
     });
     function checkInvalid(ctrl) {
         expect(ctrl).not.equal(null);
@@ -17,13 +17,13 @@ describe("object instances", function() {
 
     it("make sure all graphic elements are invalid after creation", function() {
         var elems = [
-            new PIXI_UI.Skinable(),
-            new PIXI_UI.Button()
+            new GOWN.Skinable(),
+            new GOWN.Button()
         ];
         for (var i = 0; i < elems.length; i++) {
             checkInvalid(elems[i]);
         }
-        var btn = new PIXI_UI.Button();
+        var btn = new GOWN.Button();
         btn.updateDimensions();
     });
 });

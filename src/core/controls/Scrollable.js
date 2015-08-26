@@ -3,8 +3,8 @@ var Skinable = require('../Skinable'),
 /**
  * scroll bar or slider
  * @class Scrollable
- * @extends PIXI_UI.Scrollable
- * @memberof PIXI_UI
+ * @extends GOWN.Scrollable
+ * @memberof GOWN
  * @constructor
  */
 

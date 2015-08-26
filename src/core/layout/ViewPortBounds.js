@@ -2,7 +2,7 @@
  * define viewport dimensions
  *
  * @class HorizontalLayout
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function ViewPortBounds() {

@@ -9,8 +9,8 @@ var Skinable = require('../Skinable'),
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class InputControl
- * @extends PIXI_UI.Skinable
- * @memberof PIXI_UI
+ * @extends GOWN.Skinable
+ * @memberof GOWN
  * @constructor
  */
 function InputControl(text, theme) {
@@ -45,7 +45,7 @@ module.exports = InputControl;
  * currently selected input control (used for tab index)
  *
  * @property currentInput
- * @type PIXI_UI.InputControl
+ * @type GOWN.InputControl
  * @static
  */
 InputControl.currentInput = null;
@@ -139,17 +139,17 @@ InputControl.prototype.textWidth = function(text) {
  */
 InputControl.prototype.focus = function () {
     // is already current input
-    if (PIXI_UI.InputControl.currentInput === this) {
+    if (GOWN.InputControl.currentInput === this) {
         return;
     }
 
     // drop focus
-    if (PIXI_UI.InputControl.currentInput) {
-        PIXI_UI.InputControl.currentInput.blur();
+    if (GOWN.InputControl.currentInput) {
+        GOWN.InputControl.currentInput.blur();
     }
 
     // set focus
-    PIXI_UI.InputControl.currentInput = this;
+    GOWN.InputControl.currentInput = this;
     this.hasFocus = true;
 
     // check custom focus event
@@ -203,8 +203,8 @@ InputControl.prototype.onfocus = function () {
  * @method blur
  */
 InputControl.prototype.blur = function() {
-    if (PIXI_UI.InputControl.currentInput === this) {
-        PIXI_UI.InputControl.currentInput = null;
+    if (GOWN.InputControl.currentInput === this) {
+        GOWN.InputControl.currentInput = null;
         this.hasFocus = false;
 
         // blur hidden input
@@ -223,10 +223,10 @@ InputControl.prototype.onblur = function() {
 
 // blur current input
 InputControl.blur = function() {
-    if (PIXI_UI.InputControl.currentInput &&
-        !PIXI_UI.InputControl.currentInput._mouseDown) {
-        PIXI_UI.InputControl.currentInput.blur();
-        PIXI_UI.InputControl.currentInput = null;
+    if (GOWN.InputControl.currentInput &&
+        !GOWN.InputControl.currentInput._mouseDown) {
+        GOWN.InputControl.currentInput.blur();
+        GOWN.InputControl.currentInput = null;
     }
 };
 window.addEventListener('blur', InputControl.blur, false);

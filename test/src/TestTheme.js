@@ -1,9 +1,9 @@
 /**
  * test theme - to test/simulate asset loading for jasmine
  */
-PIXI_UI.TestTheme = function(global) {
-    PIXI_UI.Theme.call(this, global);
+GOWN.TestTheme = function(global) {
+    GOWN.Theme.call(this, global);
 };
 
-PIXI_UI.TestTheme.prototype = Object.create( PIXI_UI.Theme.prototype );
-PIXI_UI.TestTheme.prototype.constructor = PIXI_UI.TestTheme;
+GOWN.TestTheme.prototype = Object.create( GOWN.Theme.prototype );
+GOWN.TestTheme.prototype.constructor = GOWN.TestTheme;

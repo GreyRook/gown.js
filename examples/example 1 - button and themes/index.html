@@ -28,7 +28,7 @@
     function onCompleteAeon() {
         // initialize theme
         var aeonbtn;
-        aeonbtn = new PIXI_UI.Button(aeontheme);
+        aeonbtn = new GOWN.Button(aeontheme);
         aeonbtn.width = 150;
         aeonbtn.height = 100;
         aeonbtn.x = 20;
@@ -45,11 +45,11 @@
         requestAnimationFrame(animate);
     }
 
-    aeontheme = new PIXI_UI.AeonTheme(
+    aeontheme = new GOWN.AeonTheme(
         ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
 
-    var shapetheme = new PIXI_UI.ShapeTheme();
-    var btn = new PIXI_UI.Button(shapetheme);
+    var shapetheme = new GOWN.ShapeTheme();
+    var btn = new GOWN.Button(shapetheme);
     btn.width = 150;
     btn.height = 100;
     btn.x = 170;
@@ -66,7 +66,7 @@
     function onCompleteMetal() {
         // initialize theme
 
-        var metalbtn = new PIXI_UI.Button(metaltheme);
+        var metalbtn = new GOWN.Button(metaltheme);
         metalbtn.width = 150;
         metalbtn.height = 100;
         metalbtn.x = 320;
@@ -83,7 +83,7 @@
         requestAnimationFrame(animate);
     }
 
-    var metaltheme = new PIXI_UI.MetalWorksMobileTheme(
+    var metaltheme = new GOWN.MetalWorksMobileTheme(
             ["../../themes/assets/metalworks/metalworks.json"], onCompleteMetal);
 
     function animate() {

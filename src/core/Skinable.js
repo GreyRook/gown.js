@@ -4,14 +4,14 @@ var Control = require('./Control');
  * Control that requires a theme (e.g. a button)
  *
  * @class Skinable
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
+ * @extends GOWN.Control
+ * @memberof GOWN
  * @constructor
  */
 function Skinable(theme) {
     Control.call(this);
     this.skinCache = {};
-    this.setTheme(theme || PIXI_UI.theme);
+    this.setTheme(theme || GOWN.theme);
 
     if (this.theme === undefined) {
         throw new Error('you need to define a theme first');

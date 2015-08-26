@@ -3,7 +3,7 @@
  *
  * @class Shape
  * @extends PIXI.Graphics
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Shape(color, alpha, width, height) {

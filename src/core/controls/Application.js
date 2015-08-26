@@ -6,8 +6,8 @@ var Control = require('../Control');
  * background.
  *
  * @class Application
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
+ * @extends GOWN.Control
+ * @memberof GOWN
  * @constructor
  * @param background {Number | Array} a background color or a list of colors
  *  that will be used as vertical gradient
