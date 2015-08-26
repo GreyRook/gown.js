@@ -1,18 +1,18 @@
 # Note
-One aim of pixi_ui is to make it as easy as possible for existing pixi.js contributors
-to contribute to pixi_ui. So the guidelines are the same as for pixi.js
+One aim of gown.js is to make it as easy as possible for existing pixi.js contributors
+to contribute to gown.js. So the guidelines are the same as for pixi.js
 
 
 # How to contribute
 
-It is essential to the development of pixi_ui that the community is empowered
+It is essential to the development of gown.js that the community is empowered
 to make changes and get them into the library. Here are some guidlines to make
 that process silky smooth for all involved.
 
 ## Reporting issues
 
 To report a bug, request a feature, or even ask a question, make use of the GitHub Issues
-section for [pixi_ui][0]. When submitting an issue please take the following steps:
+section for [gown.js][0]. When submitting an issue please take the following steps:
 
 1. **Seach for existing issues.** Your question or bug may have already been answered or fixed,
 be sure to search the issues first before putting in a duplicate issue.
@@ -33,7 +33,7 @@ To setup for making changes you will need node.js, and grunt installed. You can 
 from [nodejs.org][3]. After it has been installed open a console and run `npm i -g grunt-cli` to
 install the global `grunt` executable.
 
-After that you can clone the pixi_ui repository, and run `npm i` inside the cloned folder.
+After that you can clone the gown.js repository, and run `npm i` inside the cloned folder.
 This will install dependencies necessary for building the project. Once that is ready, make your
 changes and submit a Pull Request. When submitting a PR follow these guidlines:
 
@@ -61,7 +61,7 @@ changing only whitespace or trash files will likely get your PR closed.
 
 - Follow conventions already in the code, and listen to jshint.
 
-[0]: https://github.com/brean/pixi_ui/issues
+[0]: https://github.com/brean/gown.js/issues
 [1]: http://jsfiddle.net
 [2]: http://jsbin.com/
 [3]: http://nodejs.org

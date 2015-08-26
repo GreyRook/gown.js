@@ -32,7 +32,7 @@ function rebundle(devBundle) {
     var stream = this.bundle()
         .on('error', handleErrors.handler)
         .pipe(handleErrors())
-        .pipe(source('pixi_ui.js'))
+        .pipe(source('gown.js'))
         .pipe(buffer());
 
     if (devBundle) {

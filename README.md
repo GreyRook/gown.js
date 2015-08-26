@@ -107,7 +107,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - benchmarking capabilities and performance optimisation
 
- - handle if gown gets imported before pixi (?)
+ - handle if gown.js gets imported before pixi (?)
 
  - disabled-state for controls
 

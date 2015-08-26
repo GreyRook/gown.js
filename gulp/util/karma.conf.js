@@ -9,7 +9,7 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'bin/pixi_ui.js',
+            'bin/gown.js',
             'test/lib/**/*.js',
             'test/unit/{bin,src}/**/*.js',
             // 'test/functional/**/*.js',
