@@ -60,7 +60,7 @@ def convert(path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Convert XML theme from feathers to XML for pixi_ui.')
+        description='Convert XML theme from feathers to XML for gown.js.')
     parser.add_argument('path', type=str,
                         help='path to xml file')
     args = parser.parse_args()
