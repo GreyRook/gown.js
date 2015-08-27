@@ -6,7 +6,7 @@
   "main": "./src/index.js",
   "homepage": "http://github.com/brean/gown.js/",
   "bugs": "https://github.com/brean/gown.js/issues",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "licenseUrl": "http://opensource.org/licenses/Apache-2.0",
   "repository": {
     "type": "git",

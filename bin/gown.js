@@ -2922,7 +2922,7 @@ ToggleButton.prototype.handleEvent = function(type) {
 
 },{"./Button":5}],15:[function(require,module,exports){
 /**
- * @file        Main export of the GOWN core library
+ * @file        Main export of the gown.js core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
  * @copyright   2015 Andreas Bresser
  * @license     {@link https://github.com/brean/gown.js/blob/master/LICENSE|Apache License}
@@ -4795,7 +4795,7 @@ module.exports = SliderData;
 
 },{}],33:[function(require,module,exports){
 /**
- * @file        Main export of the GOWN util library
+ * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
  * @copyright   2015 Andreas Bresser
  * @license     {@link https://github.com/brean/gown.js/blob/master/LICENSE|Apache License}
