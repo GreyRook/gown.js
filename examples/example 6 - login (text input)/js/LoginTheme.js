@@ -1,5 +1,5 @@
 var LoginTheme = function(jsonPath, onComplete, global) {
-    PIXI_UI.AeonTheme.call(this, jsonPath, onComplete, global);
+    GOWN.AeonTheme.call(this, jsonPath, onComplete, global);
     this.textStyle = {
         "fill": "#ffffff",
         "font": "12px Arial"
@@ -7,5 +7,5 @@ var LoginTheme = function(jsonPath, onComplete, global) {
 };
 
 
-LoginTheme.prototype = Object.create( PIXI_UI.AeonTheme.prototype );
+LoginTheme.prototype = Object.create( GOWN.AeonTheme.prototype );
 LoginTheme.prototype.constructor = LoginTheme;

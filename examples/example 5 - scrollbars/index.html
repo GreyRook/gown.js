@@ -11,7 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/pixi_ui.js"></script>
+    <script src="../../bin/gown.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
     <script src="../../themes/ShapeTheme.js"></script>
 </head>
@@ -30,52 +30,52 @@
 
         // HORIZONTAL
 
-        inner_horizontal = new PIXI_UI.LayoutGroup();
-        inner_horizontal.layout = new PIXI_UI.HorizontalLayout();
+        inner_horizontal = new GOWN.LayoutGroup();
+        inner_horizontal.layout = new GOWN.HorizontalLayout();
         inner_horizontal.layout.gap = 10;
 
         // add some buttons
         for (i = 0; i < 100; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.height = 25;
             btn.width = 80;
             btn.label = (i+1)+". button";
             inner_horizontal.addChild(btn);
         }
-        inner_scroll_horizontal = new PIXI_UI.ScrollArea();
+        inner_scroll_horizontal = new GOWN.ScrollArea();
         inner_scroll_horizontal.width = 500;
 
         inner_scroll_horizontal.content = inner_horizontal;
         inner_scroll_horizontal.x = 200;
         stage.addChild(inner_scroll_horizontal);
 
-        sb_horizontal = new PIXI_UI.ScrollBar(inner_scroll_horizontal);
+        sb_horizontal = new GOWN.ScrollBar(inner_scroll_horizontal);
         stage.addChild(sb_horizontal);
         sb_horizontal.y = inner_scroll_horizontal.height;
         sb_horizontal.x = inner_scroll_horizontal.x;
         sb_horizontal.width = inner_scroll_horizontal.width;
 
         // VERTICAL
-        var grp = new PIXI_UI.LayoutGroup();
-        var inner = new PIXI_UI.LayoutGroup();
-        inner.layout = new PIXI_UI.VerticalLayout();
+        var grp = new GOWN.LayoutGroup();
+        var inner = new GOWN.LayoutGroup();
+        inner.layout = new GOWN.VerticalLayout();
         inner.layout.gap = 10;
 
         // add some buttons
         for (i = 0; i < 12; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.height = 25;
             btn.width = 80;
             btn.label = (i+1)+". button";
             inner.addChild(btn);
         }
-        var inner_scroll = new PIXI_UI.ScrollArea(inner);
+        var inner_scroll = new GOWN.ScrollArea(inner);
         inner_scroll.width = 100;
         inner_scroll.height = 150;
         grp.addChild(inner_scroll);
 
 
-        var sb = new PIXI_UI.ScrollBar(inner_scroll);
+        var sb = new GOWN.ScrollBar(inner_scroll);
         grp.addChild(sb);
         sb.x = inner_scroll.width;
         sb.height = inner_scroll.height;
@@ -86,7 +86,7 @@
         requestAnimationFrame(animate);
     }
 
-    var theme = new PIXI_UI.AeonTheme(
+    var theme = new GOWN.AeonTheme(
             ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
 
     function animate() {

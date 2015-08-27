@@ -4,8 +4,8 @@ var Layout = require('./Layout');
  * TiledLayout a layout for tiled rows/columns
  *
  * @class TiledLayout
- * @extends PIXI_UI.Layout
- * @memberof PIXI_UI
+ * @extends GOWN.Layout
+ * @memberof GOWN
  * @constructor
  */
 function TiledLayout() {

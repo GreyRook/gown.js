@@ -1,11 +1,11 @@
 describe("Alignment tests", function() {
     function basicGroup() {
-        var grp = new PIXI_UI.LayoutGroup();
-        grp.layout = new PIXI_UI.HorizontalLayout();
+        var grp = new GOWN.LayoutGroup();
+        grp.layout = new GOWN.HorizontalLayout();
         grp.width = 1000;
         var btn;
         for (var i=0; i < 4; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.percentWidth = 100;
             grp.addChild(btn);
         }
@@ -13,29 +13,29 @@ describe("Alignment tests", function() {
     }
     beforeEach(function(){
         // cleanup - make sure global theme is not set
-        PIXI_UI.Theme.removeTheme();
-        new PIXI_UI.TestTheme();
+        GOWN.Theme.removeTheme();
+        new GOWN.TestTheme();
     });
     it("needUpdate should be true when sth. added to the LayoutGroup " +
         "(trigger redraw)", function() {
-        var grp = new PIXI_UI.LayoutGroup();
-        grp.layout = new PIXI_UI.VerticalLayout();
+        var grp = new GOWN.LayoutGroup();
+        grp.layout = new GOWN.VerticalLayout();
         grp.redraw();
         expect(grp._needUpdate).equal(false);
 
-        var btn = new PIXI_UI.Button();
+        var btn = new GOWN.Button();
         grp.addChild(btn);
         expect(grp._needUpdate).equal(true);
         grp.redraw();
         expect(grp._needUpdate).equal(false);
     });
     it("make sure layouting calculations are correct", function() {
-        var grp = new PIXI_UI.LayoutGroup();
-        grp.layout = new PIXI_UI.HorizontalLayout();
+        var grp = new GOWN.LayoutGroup();
+        grp.layout = new GOWN.HorizontalLayout();
         grp.width = 100;
         var btn;
         for (var i=0; i < 4; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.percentWidth = 100;
             grp.addChild(btn);
         }
@@ -44,10 +44,10 @@ describe("Alignment tests", function() {
         expect(btn.width).equal(25);
     });
     it("assure percentages are more important than explicit pixel parameters", function() {
-        var grp = new PIXI_UI.LayoutGroup();
-        grp.layout = new PIXI_UI.HorizontalLayout();
+        var grp = new GOWN.LayoutGroup();
+        grp.layout = new GOWN.HorizontalLayout();
         grp.width = 120;
-        var btn = new PIXI_UI.Button();
+        var btn = new GOWN.Button();
         btn.percentWidth = 100;
         grp.addChild(btn);
         expect(grp._needUpdate).equal(true);
@@ -106,7 +106,7 @@ describe("Alignment tests", function() {
         expect(Math.round(btn.width)).equal(210);
 
         // switch alignment and check paddingTop and paddingBottom
-        grp.layout.alignment = PIXI_UI.LayoutAlignment.VERTICAL_ALIGNMENT;
+        grp.layout.alignment = GOWN.LayoutAlignment.VERTICAL_ALIGNMENT;
         grp.height = 500;
         for (var i=0; i < 4; i++) {
             grp.getChildAt(i).percentHeight = 100;

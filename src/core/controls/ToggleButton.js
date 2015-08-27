@@ -5,8 +5,8 @@ var Button = require('./Button');
  * is pressed or not.
  *
  * @class ToggleButton
- * @extends PIXI_UI.Button
- * @memberof PIXI_UI
+ * @extends GOWN.Button
+ * @memberof GOWN
  * @constructor
  */
 function ToggleButton(theme) {

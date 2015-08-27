@@ -4,8 +4,8 @@ var Button = require('./Button');
  * thumb button that can be moved on the scrollbar
  *
  * @class ScrollThumb
- * @extends PIXI_UI.Button
- * @memberof PIXI_UI
+ * @extends GOWN.Button
+ * @memberof GOWN
  * @constructor
  */
 function ScrollThumb(scrollable, theme) {
@@ -125,7 +125,7 @@ ScrollThumb.prototype.redraw = function() {
  * @method move
  */
 ScrollThumb.prototype.move = function(x, y) {
-    if (this.scrollable.orientation === PIXI_UI.Scrollable.HORIZONTAL) {
+    if (this.scrollable.orientation === GOWN.Scrollable.HORIZONTAL) {
         if (isNaN(x)) {
             return false;
         }

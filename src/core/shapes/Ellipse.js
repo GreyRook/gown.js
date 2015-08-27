@@ -4,8 +4,8 @@ var Shape = require('./Shape');
  * basic ellipse shape
  *
  * @class Ellipse
- * @extends PIXI_UI.Shape
- * @memberof PIXI_UI
+ * @extends GOWN.Shape
+ * @memberof GOWN
  * @constructor
  */
 function Ellipse(color, alpha, width, height) {

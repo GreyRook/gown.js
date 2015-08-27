@@ -1,14 +1,14 @@
 describe("ToggleButton", function() {
     beforeEach(function(){
         // cleanup - make sure global theme is not set
-        PIXI_UI.Theme.removeTheme();
-        new PIXI_UI.TestTheme();
+        GOWN.Theme.removeTheme();
+        new GOWN.TestTheme();
     });
 
     it("test toggle states", function() {
-        var tb = PIXI_UI.ToggleButton;
-        var b = PIXI_UI.Button;
-        var btn = new PIXI_UI.ToggleButton();
+        var tb = GOWN.ToggleButton;
+        var b = GOWN.Button;
+        var btn = new GOWN.ToggleButton();
 
         expect(btn._currentState).equal(b.UP);
         expect(btn.selected).equal(false);

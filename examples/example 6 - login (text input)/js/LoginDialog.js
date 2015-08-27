@@ -6,12 +6,12 @@
  * a simple dialog with a email and password text input
  */
 var LoginDialog = function() {
-    PIXI_UI.Control.call(this);
+    GOWN.Control.call(this);
     // background
-    this.bg = new PIXI_UI.Rect(0x515151, 0.7, 200, 350, 5);
+    this.bg = new GOWN.Rect(0x515151, 0.7, 200, 350, 5);
     this.addChild(this.bg);
 
-    this.login_bg = new PIXI_UI.Rect(0x111111, 0.5, 200, 100, 5);
+    this.login_bg = new GOWN.Rect(0x111111, 0.5, 200, 100, 5);
     this.login_bg.y = 250;
     this.addChild(this.login_bg);
 
@@ -22,9 +22,9 @@ var LoginDialog = function() {
 
     this.height = 380;
 
-    var grp = new PIXI_UI.LayoutGroup();
+    var grp = new GOWN.LayoutGroup();
     this.grp = grp;
-    grp.layout = new PIXI_UI.VerticalLayout();
+    grp.layout = new GOWN.VerticalLayout();
     grp.y = 20;
     grp.x = 10;
 
@@ -66,7 +66,7 @@ var LoginDialog = function() {
     this.pass = new IconTextInput(lock_icon, '', true);
     grp.addChild(this.pass);
 
-    this.submitButton = new PIXI_UI.Button();
+    this.submitButton = new GOWN.Button();
     this.submitButton.label = "sign in";
     this.submitButton.width = 150;
     this.submitButton.height = 40;
@@ -74,7 +74,7 @@ var LoginDialog = function() {
 
 };
 
-LoginDialog.prototype = Object.create( PIXI_UI.Control.prototype );
+LoginDialog.prototype = Object.create( GOWN.Control.prototype );
 LoginDialog.prototype.constructor = LoginDialog;
 
 /**
@@ -86,7 +86,7 @@ LoginDialog.prototype.onresize = function(width, height) {
     var _width = Math.min(width, this.minWidth);
     _width = Math.max(_width, this.maxWidth);
     this.width = _width;
-    var pos = PIXI_UI.utils.position;
+    var pos = GOWN.utils.position;
     // center text
     pos.centerHorizontal(this.loginText, this);
     // center

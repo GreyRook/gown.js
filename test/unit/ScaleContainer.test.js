@@ -4,18 +4,18 @@ describe("test scalable/tialbe container", function() {
         var rect = new PIXI.Rectangle(10,10,1,1);
         var img = "unloadable_image.png";
         expect(function() {
-            PIXI_UI.utils.ScaleContainer.fromFrame(img, rect);
+            GOWN.utils.ScaleContainer.fromFrame(img, rect);
         }).throw();
     });
 
     it("make sure calculations are correct", function(done) {
 
-        var loader = PIXI_UI.loader;
+        var loader = GOWN.loader;
         loader.add("/test/img/scale9.png");
 
         loader.load(function() {
             var rect = new PIXI.Rectangle(10,10,1,1);
-            var scale = PIXI_UI.utils.ScaleContainer.fromFrame("/test/img/scale9.png", rect);
+            var scale = GOWN.utils.ScaleContainer.fromFrame("/test/img/scale9.png", rect);
 
             scale.width = 100;
             scale.height = 200;

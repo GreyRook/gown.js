@@ -11,7 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/pixi_ui.js"></script>
+    <script src="../../bin/gown.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
     <script src="../../themes/ShapeTheme.js"></script>
 </head>
@@ -24,17 +24,17 @@
     document.body.appendChild(renderer.view);
 
     function onComplete() {
-        grp = new PIXI_UI.LayoutGroup();
+        grp = new GOWN.LayoutGroup();
         grp.x = 20;
         grp.y = 30;
         grp.width = Math.floor(sizes.w - (grp.x*2));
-        grp.layout = new PIXI_UI.HorizontalLayout();
+        grp.layout = new GOWN.HorizontalLayout();
         grp.layout.gap = 10;
         stage.addChild(grp);
 
         // create layout container and add some buttons
         for (var i = 0; i < 10; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.percentWidth = 100;
             btn.height = 25;
             btn.label = (i+1)+". button";
@@ -46,7 +46,7 @@
         requestAnimationFrame(animate);
     }
 
-    var theme = new PIXI_UI.AeonTheme(
+    var theme = new GOWN.AeonTheme(
             ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
 
     function animate() {

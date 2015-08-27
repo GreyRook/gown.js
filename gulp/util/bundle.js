@@ -32,7 +32,7 @@ function rebundle(devBundle) {
     var stream = this.bundle()
         .on('error', handleErrors.handler)
         .pipe(handleErrors())
-        .pipe(source('pixi_ui.js'))
+        .pipe(source('gown.js'))
         .pipe(buffer());
 
     if (devBundle) {
@@ -48,7 +48,7 @@ function rebundle(devBundle) {
 function createBundler(args) {
     args = args || {};
     args.debug = true;
-    args.standalone = 'PIXI_UI';
+    args.standalone = 'GOWN';
 
     var bundle = browserify(paths.jsEntry, args),
         argv = require('minimist')(process.argv.slice(2)),

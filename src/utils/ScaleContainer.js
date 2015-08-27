@@ -4,7 +4,7 @@
  *
  * @class ScaleContainer
  * @extends PIXI.Container
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 

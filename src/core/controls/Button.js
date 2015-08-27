@@ -5,8 +5,8 @@ var Skinable = require('../Skinable');
  * centered on it
  *
  * @class Button
- * @extends PIXI_UI.Skinable
- * @memberof PIXI_UI
+ * @extends GOWN.Skinable
+ * @memberof GOWN
  * @constructor
  */
 function Button(theme) {
