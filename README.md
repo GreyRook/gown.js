@@ -1,11 +1,10 @@
-PIXI_UI
+![gown.js](http://i.imgur.com/cD9hRVx.png)
 ===========
 
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
 
-[![Inline docs](http://inch-ci.org/github/brean/pixi_ui.svg?branch=master)](http://inch-ci.org/github/brean/pixi_ui)
-[![Build Status](https://travis-ci.org/brean/pixi_ui.svg?branch=master)](https://travis-ci.org/brean/pixi_ui)
-[![npm version](https://badge.fury.io/js/pixi_ui.svg)](http://badge.fury.io/js/pixi_ui)
+[![Inline docs](http://inch-ci.org/github/brean/gown.js.svg?branch=master)](http://inch-ci.org/github/brean/gown.js)
+[![Build Status](https://travis-ci.org/brean/gown.js.svg?branch=master)](https://travis-ci.org/brean/gown.js)
 
 
 Features
@@ -34,9 +33,9 @@ Folder structure
 
  - lib - required libraries (just pixi-dev)
 
- - src - source code for pixi_ui
+ - src - source code for gown.js
 
- - test - unit tests, run coverage_karma_istanbul.sh to get a table providing all files and their coverage, run coverage_blanket to start a web server that shows you the coverage for all lines of the generated browserify output file. 
+ - test - unit tests, run coverage_karma_istanbul.sh to get a table providing all files and their coverage, run coverage_blanket to start a web server that shows you the coverage for all lines of the generated browserify output file.
 
  - themes - basic UI example themes
 
@@ -51,11 +50,11 @@ Theming
  - Using the python script *themes/xml_to_json.py* you can convert your XML file from [feathers-ui](http://feathersui.com) into JSON so the default PIXI loader can parse it.
 
   - example:
-   
-     .. code :: bash
 
-       python xml_to_json.py assets/aeon/aeon_desktop.xml
-     
+   ```bash  
+   python xml_to_json.py assets/aeon/aeon_desktop.xml
+   ```
+
    the script requires [PIL](http://www.pythonware.com/products/pil/) (or [Pillow](http://python-pillow.github.io/)) to determine the texture width/height
 
  - It is possible to have different themes in one project
@@ -65,7 +64,7 @@ Theming
 
 Under the hood
 --------------
-Center of the theming system is the "skins"-object. It holds unique names of different controls as key (e.g. "button" as identifier for pixi_ui.Button) and nested objects as value. These nested objects allow you to save different graphics for different skins (e.g. "down" when the user pressed a button down). The graphic for the state can be an images but also any kind of shape (you can set everything that can be added to a PIXI-DisplayObjectContainer as skin).
+Center of the theming system is the "skins"-object. It holds unique names of different controls as key (e.g. "button" as identifier for GOWN.Button) and nested objects as value. These nested objects allow you to save different graphics for different skins (e.g. "down" when the user pressed a button down). The graphic for the state can be an images but also any kind of shape (you can set everything that can be added to a PIXI-DisplayObjectContainer as skin).
 It is important that the variable width/height of your skin can be changed so your skin can be layouted correctly.
 Every control need its own instance for the skin, so you have to wrap it in a function that creates a new instance of the skin.
 
@@ -81,8 +80,6 @@ So you can change the properties of the component. The setter/getter for this pr
 TODO
 ======
 This list is not ordered by priority nor does it contain any promise that those items will be implemented.
-
- - find a nicer name (pixi_ui does not roll that easily off the tongue)
 
  - better and more detailed documentation!
 
@@ -110,7 +107,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - benchmarking capabilities and performance optimisation
 
- - handle if pixi_ui gets imported before pixi (?)
+ - handle if gown.js gets imported before pixi (?)
 
  - disabled-state for controls
 
@@ -156,7 +153,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - cleanup-functions to free memory/remove event listener etc. (take a look at/extend pixi destroy funtion)
 
- - more examples: 
+ - more examples:
 
    - ToggleButton
 
@@ -202,4 +199,4 @@ This list is not ordered by priority nor does it contain any promise that those 
 
 Known Bugs
 ==========
-see [Issues](https://github.com/brean/pixi_ui/issues/)
+see [Issues](https://github.com/brean/gown.js/issues/)

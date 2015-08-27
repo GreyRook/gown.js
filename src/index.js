@@ -9,5 +9,5 @@ core.loader = PIXI.loader;
 // mixin the deprecation features.
 //Object.assign(core, require('./deprecation'));
 
-// export PIXI_UI globally.
-global.PIXI_UI = core;
+// export GOWN globally.
+global.GOWN = core;

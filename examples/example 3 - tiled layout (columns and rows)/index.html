@@ -11,7 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/pixi_ui.js"></script>
+    <script src="../../bin/gown.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
     <script src="../../themes/ShapeTheme.js"></script>
 
@@ -25,36 +25,36 @@
     document.body.appendChild(renderer.view);
 
     function onComplete() {
-        grp = new PIXI_UI.LayoutGroup();
+        grp = new GOWN.LayoutGroup();
         grp.x = 20;
         grp.y = 60;
         grp.width = sizes.w - (grp.x*2);
         grp.height = sizes.h - (grp.y*2);
 
-        grp.layout = new PIXI_UI.TiledColumnsLayout();
+        grp.layout = new GOWN.TiledColumnsLayout();
         grp.layout.gap = 10;
         stage.addChild(grp);
 
         // create layout container and add some buttons
         for (var i = 0; i < 100; i++) {
-            btn = new PIXI_UI.Button();
+            btn = new GOWN.Button();
             btn.width = 80;
             btn.height = 25;
             btn.label = (i+1)+". button";
             grp.addChild(btn);
         }
 
-        var toggleButton = new PIXI_UI.ToggleButton();
+        var toggleButton = new GOWN.ToggleButton();
         toggleButton.label = "switch row/column layout";
         toggleButton.width = 300;
         toggleButton.height = 25;
 
         toggleButton.x = toggleButton.y = 20;
         toggleButton.click = toggleButton.tap = function () {
-            if (grp.layout._orientation == PIXI_UI.TiledLayout.ORIENTATION_ROWS) {
-                grp.layout._orientation = PIXI_UI.TiledLayout.ORIENTATION_COLUMNS;
+            if (grp.layout._orientation == GOWN.TiledLayout.ORIENTATION_ROWS) {
+                grp.layout._orientation = GOWN.TiledLayout.ORIENTATION_COLUMNS;
             } else {
-                grp.layout._orientation = PIXI_UI.TiledLayout.ORIENTATION_ROWS;
+                grp.layout._orientation = GOWN.TiledLayout.ORIENTATION_ROWS;
             }
             grp.layout._needUpdate = true;
         };
@@ -64,7 +64,7 @@
         requestAnimationFrame(animate);
     }
 
-    var theme = new PIXI_UI.AeonTheme(
+    var theme = new GOWN.AeonTheme(
             ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
 
     function animate() {

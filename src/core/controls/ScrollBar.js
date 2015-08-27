@@ -6,8 +6,8 @@ var Scrollable = require('./Scrollable'),
  * hosting some Viewport (e.g. a ScrollArea or a Texture)
  *
  * @class ScrollArea
- * @extends PIXI_UI.Scrollable
- * @memberof PIXI_UI
+ * @extends GOWN.Scrollable
+ * @memberof GOWN
  * @constructor
  */
 function ScrollBar(scrollArea, thumb, theme) {

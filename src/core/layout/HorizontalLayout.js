@@ -5,8 +5,8 @@ var LayoutAlignment = require('./LayoutAlignment');
  * LayoutAlignment.HORIZONTAL_ALIGNMENT
  *
  * @class HorizontalLayout
- * @extends PIXI_UI.LayoutAlignment
- * @memberof PIXI_UI
+ * @extends GOWN.LayoutAlignment
+ * @memberof GOWN
  * @constructor
  */
 function HorizontalLayout() {

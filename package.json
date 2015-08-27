@@ -1,16 +1,16 @@
 {
-  "name": "pixi_ui",
+  "name": "gown.js",
   "version": "0.0.0",
   "description": "Pixi UI provides basic UI components for Pixi.js. Inspired by feathers UI",
   "author": "Andreas Bresser",
   "main": "./src/index.js",
-  "homepage": "http://github.com/brean/pixi_ui/",
-  "bugs": "https://github.com/brean/pixi_ui/issues",
-  "license": "Apache 2.0",
+  "homepage": "http://github.com/brean/gown.js/",
+  "bugs": "https://github.com/brean/gown.js/issues",
+  "license": "Apache-2.0",
   "licenseUrl": "http://opensource.org/licenses/Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/brean/pixi_ui.git"
+    "url": "https://github.com/brean/gown.js.git"
   },
   "scripts": {
     "test": "gulp && testem ci",

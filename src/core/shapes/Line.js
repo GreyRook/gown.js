@@ -4,8 +4,8 @@ var Shape = require('./Shape');
  * basic line
  *
  * @class Line
- * @extends PIXI_UI.Shape
- * @memberof PIXI_UI
+ * @extends GOWN.Shape
+ * @memberof GOWN
  * @constructor
  */
 

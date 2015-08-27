@@ -5,8 +5,8 @@
 describe("calculate positions of objects", function() {
     beforeEach(function(){
         // cleanup - make sure global theme is not set
-        PIXI_UI.Theme.removeTheme();
-        new PIXI_UI.TestTheme();
+        GOWN.Theme.removeTheme();
+        new GOWN.TestTheme();
     });
 
     it("center", function() {
@@ -20,7 +20,7 @@ describe("calculate positions of objects", function() {
         parent.height = 41;
         parent.width = 51;
 
-        PIXI_UI.utils.position.center(graphics);
+        GOWN.utils.position.center(graphics);
 
         expect(graphics.y).equal(10);
         expect(graphics.x).equal(20);
@@ -35,7 +35,7 @@ describe("calculate positions of objects", function() {
 
         parent.height = 41;
 
-        PIXI_UI.utils.position.bottom(graphics);
+        GOWN.utils.position.bottom(graphics);
 
         expect(graphics.y).equal(21);
     });

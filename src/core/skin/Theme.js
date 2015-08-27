@@ -4,7 +4,7 @@ var ScaleContainer = require('../../utils/ScaleContainer');
  * basic theming/skinning.
  *
  * @class Theme
- * @memberof PIXI_UI
+ * @memberof GOWN
  * @constructor
  */
 function Theme(global) {
@@ -18,7 +18,7 @@ function Theme(global) {
     this.textStyle.font = this.textStyle.font || '12px Arial';
 
     if (global === true || global === undefined) {
-        PIXI_UI.theme = this;
+        GOWN.theme = this;
     }
     this.textureCache = null;
     // own skin for scroll/slider track
@@ -52,7 +52,7 @@ Theme.prototype.setSkin = function(comp, id, skin) {
  */
 Theme.prototype.loadImage = function(jsonPath) {
     this._jsonPath = jsonPath;
-    PIXI_UI.loader
+    GOWN.loader
         .add(jsonPath)
         .load(this.loadComplete.bind(this));
 };
@@ -122,5 +122,5 @@ Theme.prototype.getSkin = function(comp, state) {
  * @method removeTheme
  */
 Theme.removeTheme = function() {
-    PIXI_UI.theme = undefined;
+    GOWN.theme = undefined;
 };

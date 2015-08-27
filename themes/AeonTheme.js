@@ -1,5 +1,5 @@
 function AeonTheme(jsonPath, onComplete, global) {
-    PIXI_UI.Theme.call(this, global);
+    GOWN.Theme.call(this, global);
     this._onComplete = onComplete;
     if (jsonPath) {
         this.loadImage(jsonPath);
@@ -8,13 +8,13 @@ function AeonTheme(jsonPath, onComplete, global) {
     }
 }
 
-AeonTheme.prototype = Object.create( PIXI_UI.Theme.prototype );
+AeonTheme.prototype = Object.create( GOWN.Theme.prototype );
 AeonTheme.prototype.constructor = AeonTheme;
 
-AeonTheme.prototype.themeLoadComplete = PIXI_UI.Theme.prototype.loadComplete;
+AeonTheme.prototype.themeLoadComplete = GOWN.Theme.prototype.loadComplete;
 AeonTheme.prototype.loadComplete = function(loader, resources) {
     this.themeLoadComplete(this, loader, resources);
-    var b = PIXI_UI.Button;
+    var b = GOWN.Button;
     var bg = AeonTheme.BUTTON_SCALE_9_GRID;
 
     this.setSkin(b.SKIN_NAME, b.UP,
@@ -25,8 +25,8 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
         this.getScaleContainer("button-hover-skin", bg));
 
 
-    if (PIXI_UI.ToggleButton) {
-        var tb = PIXI_UI.ToggleButton;
+    if (GOWN.ToggleButton) {
+        var tb = GOWN.ToggleButton;
         var sbg = AeonTheme.SELECTED_BUTTON_SCALE_9_GRID;
 
         this.setSkin(tb.SKIN_NAME, b.UP,
@@ -45,8 +45,8 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
     }
 
 
-    if (PIXI_UI.ScrollBar) {
-        var sb = PIXI_UI.ScrollBar;
+    if (GOWN.ScrollBar) {
+        var sb = GOWN.ScrollBar;
 
         this.setSkin(sb.SKIN_NAME, "horizontal_track",
             this.getScaleContainer("horizontal-scroll-bar-track-skin",
@@ -55,8 +55,8 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getScaleContainer("vertical-scroll-bar-track-skin",
                 AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID));
     }
-    if (PIXI_UI.ScrollThumb) {
-        var st = PIXI_UI.ScrollThumb;
+    if (GOWN.ScrollThumb) {
+        var st = GOWN.ScrollThumb;
         this.setSkin(st.SKIN_NAME, "horizontal_" + b.UP,
             this.getScaleContainer("horizontal-scroll-bar-thumb-up-skin",
                 AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID));
@@ -83,9 +83,9 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("vertical-scroll-bar-thumb-icon"));
     }
 
-    if (PIXI_UI.PickerList) {
-        var pl = PIXI_UI.PickerList;
-        tb = PIXI_UI.ToggleButton;
+    if (GOWN.PickerList) {
+        var pl = GOWN.PickerList;
+        tb = GOWN.ToggleButton;
         sbg = AeonTheme.SELECTED_BUTTON_SCALE_9_GRID;
 
         this.setSkin(pl.SKIN_NAME, b.UP,
@@ -110,8 +110,8 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("picker-list-hover-icon"));
     }
 
-    if (PIXI_UI.TextInput) {
-        var ti = PIXI_UI.TextInput;
+    if (GOWN.TextInput) {
+        var ti = GOWN.TextInput;
         this.setSkin(ti.SKIN_NAME, "background",
             this.getScaleContainer("text-input-background-skin",
                 AeonTheme.TEXT_INPUT_SCALE_9_GRID));
@@ -134,4 +134,4 @@ AeonTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(2, 5, 6, 4
 AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(2, 1, 11, 2);
 AeonTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 11, 10);
 
-PIXI_UI.AeonTheme = AeonTheme;
+GOWN.AeonTheme = AeonTheme;

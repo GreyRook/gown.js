@@ -4,8 +4,8 @@ var Layout = require('./Layout');
  * basic layout
  *
  * @class LayoutAlignment
- * @extends PIXI_UI.Layout
- * @memberof PIXI_UI
+ * @extends GOWN.Layout
+ * @memberof GOWN
  * @constructor
  */
 function LayoutAlignment() {

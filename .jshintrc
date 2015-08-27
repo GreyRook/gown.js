@@ -38,7 +38,7 @@
         "performance": false,   // Depends on polyfill, simplifies usage
 
         // PIXI globals
-        "PIXI_UI": false,
+        "GOWN": false,
         "PIXI": false
     },
 

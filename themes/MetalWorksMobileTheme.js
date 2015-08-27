@@ -1,5 +1,5 @@
 function MetalWorksMobileTheme(jsonPath, onComplete, global) {
-    PIXI_UI.Theme.call(this, global);
+    GOWN.Theme.call(this, global);
 
     // drag-thumb for slider does not have a skin
     this.thumbSkin = false;
@@ -22,13 +22,13 @@ function MetalWorksMobileTheme(jsonPath, onComplete, global) {
     }
 }
 
-MetalWorksMobileTheme.prototype = Object.create( PIXI_UI.Theme.prototype );
+MetalWorksMobileTheme.prototype = Object.create( GOWN.Theme.prototype );
 MetalWorksMobileTheme.prototype.constructor = MetalWorksMobileTheme;
 
-MetalWorksMobileTheme.prototype.themeLoadComplete = PIXI_UI.Theme.prototype.loadComplete;
+MetalWorksMobileTheme.prototype.themeLoadComplete = GOWN.Theme.prototype.loadComplete;
 MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
     this.themeLoadComplete(this, loader, resources);
-    var b = PIXI_UI.Button;
+    var b = GOWN.Button;
     var bg = MetalWorksMobileTheme.BUTTON_SCALE_9_GRID;
 
     this.setSkin(b.SKIN_NAME, b.UP,
@@ -37,8 +37,8 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
         this.getScaleContainer("button-down-skin", bg));
 
 
-    if (PIXI_UI.ToggleButton) {
-        var tb = PIXI_UI.ToggleButton;
+    if (GOWN.ToggleButton) {
+        var tb = GOWN.ToggleButton;
         var sbg = MetalWorksMobileTheme.SELECTED_BUTTON_SCALE_9_GRID;
 
         this.setSkin(tb.SKIN_NAME, b.UP,
@@ -51,8 +51,8 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
         this.setSkin(tb.SKIN_NAME, tb.SELECTED_DOWN,
             this.getScaleContainer("button-down-skin", bg));
     }
-    if (PIXI_UI.ScrollBar) {
-        var sb = PIXI_UI.ScrollBar;
+    if (GOWN.ScrollBar) {
+        var sb = GOWN.ScrollBar;
         // "background-skin"
         this.setSkin(sb.SKIN_NAME, "horizontal_track",
             this.getScaleContainer("background-skin",
@@ -75,8 +75,8 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
     }
 
     /*
-    if (PIXI_UI.TextInput) {
-        var ti = PIXI_UI.TextInput;
+    if (GOWN.TextInput) {
+        var ti = GOWN.TextInput;
         this.setSkin(ti.SKIN_NAME, "background",
             this.getScaleContainer("text-input-background-skin",
                 MetalWorksMobileTheme.TEXT_INPUT_SCALE_9_GRID));
@@ -101,4 +101,4 @@ MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangl
 MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(2, 1, 11, 2);
 MetalWorksMobileTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 11, 10);
 */
-PIXI_UI.MetalWorksMobileTheme = MetalWorksMobileTheme;
+GOWN.MetalWorksMobileTheme = MetalWorksMobileTheme;

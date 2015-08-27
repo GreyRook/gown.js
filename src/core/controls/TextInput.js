@@ -6,8 +6,8 @@ var Control = require('../Control'),
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class TextInput
- * @extends PIXI_UI.InputControl
- * @memberof PIXI_UI
+ * @extends GOWN.InputControl
+ * @memberof GOWN
  * @param text editable text shown in input
  * @param displayAsPassword Display TextInput as Password (default false)
  * @theme default theme

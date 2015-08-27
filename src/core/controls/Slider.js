@@ -5,8 +5,8 @@ var Scrollable = require('./Scrollable'),
  * Simple slider with min. and max. value
  *
  * @class Slider
- * @extends PIXI_UI.Scrollable
- * @memberof PIXI_UI
+ * @extends GOWN.Scrollable
+ * @memberof GOWN
  * @constructor
  */
 
