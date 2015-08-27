@@ -1,4 +1,4 @@
-![goon.js](http://i.imgur.com/cD9hRVx.png)
+![gown.js](http://i.imgur.com/cD9hRVx.png)
 ===========
 
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
