@@ -200,3 +200,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 Known Bugs
 ==========
 see [Issues](https://github.com/brean/gown.js/issues/)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/brean/gown.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
