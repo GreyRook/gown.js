@@ -2,7 +2,10 @@
 languages:
   JavaScript: true
   Python: true
+engines:
+  eslint:
+    enabled: true
 exclude_paths:
- - "lib/"
- - "bin/"
- - "examples/"
+- "lib/**/*"
+- "bin/**/*"
+- "examples/**/*"
