@@ -5,6 +5,11 @@ languages:
 engines:
   eslint:
     enabled: true
+ratings:
+  paths:
+  - src/**
+  - test/src/**
+  - test/unit/*.js
 exclude_paths:
 - "lib/**/*"
 - "bin/**/*"
