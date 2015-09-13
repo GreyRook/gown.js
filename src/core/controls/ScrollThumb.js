@@ -54,8 +54,8 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'cu
 Object.defineProperty(ScrollThumb.prototype, 'currentState',{
     set: function(value) {
         if (this.theme.thumbSkin) {
-            // use skin including orientation instead of default skin
-            value = this.scrollable.orientation + '_' + value;
+            // use skin including direction instead of default skin
+            value = this.scrollable.direction + '_' + value;
         }
         originalCurrentState.set.call(this, value);
     }
@@ -110,7 +110,7 @@ ScrollThumb.prototype.showTrack = function(skin) {
 ScrollThumb.prototype.redraw = function() {
     this.redrawSkinable();
     if (this.invalidTrack && this.theme.thumbSkin) {
-        this.fromSkin(this.scrollable.orientation+'_thumb', this.showTrack);
+        this.fromSkin(this.scrollable.direction+'_thumb', this.showTrack);
     }
 };
 
@@ -125,7 +125,7 @@ ScrollThumb.prototype.redraw = function() {
  * @method move
  */
 ScrollThumb.prototype.move = function(x, y) {
-    if (this.scrollable.orientation === GOWN.Scrollable.HORIZONTAL) {
+    if (this.scrollable.direction === GOWN.Scrollable.HORIZONTAL) {
         if (isNaN(x)) {
             return false;
         }

@@ -26,6 +26,9 @@ module.exports = {
     Slider:                 require('./controls/Slider'),
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
+    Scroller:               require('./controls/Scroller'),
+    ScrollContainer:        require('./controls/ScrollContainer'),
+    ScrollText:             require('./controls/ScrollText'),
 
     // layout
     HorizontalLayout:     require('./layout/HorizontalLayout'),

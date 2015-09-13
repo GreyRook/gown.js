@@ -1,6 +1,10 @@
 var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
+// TODO: decreement/increment Button
+// TODO: thumbFactory?
+// TODO: this.showButtons
+
 /**
  * scoll bar with thumb
  * hosting some Viewport (e.g. a ScrollArea or a Texture)
@@ -14,12 +18,12 @@ function ScrollBar(scrollArea, thumb, theme) {
     this.scrollArea = scrollArea;
     this.skinName = this.skinName || ScrollBar.SKIN_NAME;
 
-    if (this.orientation === undefined) {
-        this.orientation = Scrollable.HORIZONTAL;
+    if (this.direction === undefined) {
+        this.direction = Scrollable.HORIZONTAL;
         if (scrollArea && scrollArea.content &&
             scrollArea.content.layout.alignment ===
                 LayoutAlignment.VERTICAL_ALIGNMENT) {
-            this.orientation = Scrollable.VERTICAL;
+            this.direction = Scrollable.VERTICAL;
         }
     }
     if (scrollArea) {
@@ -45,7 +49,7 @@ ScrollBar.prototype.scrollableredraw = Scrollable.prototype.redraw;
 ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
         if (this.scrollArea && this.thumb) {
-            if (this.orientation === Scrollable.HORIZONTAL) {
+            if (this.direction === Scrollable.HORIZONTAL) {
                 this.thumb.width = Math.max(20, this.scrollArea.width /
                     (this.scrollArea.content.width / this.scrollArea.width));
             } else {
@@ -66,7 +70,7 @@ ScrollBar.prototype.redraw = function() {
 ScrollBar.prototype.thumbMoved = function(x, y) {
     if (this.scrollArea && this.scrollArea.content) {
 
-        if (this.orientation === Scrollable.HORIZONTAL) {
+        if (this._direction === Scrollable.HORIZONTAL) {
             this.scrollArea._scrollContent(
                 -(this.scrollArea.content.width - this.scrollArea.width) *
                     (x / (this.scrollArea.width - this.thumb.width)),
@@ -79,3 +83,36 @@ ScrollBar.prototype.thumbMoved = function(x, y) {
         }
     }
 };
+
+/**
+ * Determines if the scroll bar's thumb can be dragged horizontally or
+ * vertically.
+ *
+ * @property direction
+ * @type String
+ */
+Object.defineProperty(ScrollBar.prototype, 'direction', {
+    get: function() {
+        return this._direction;
+    },
+    set: function(direction) {
+        this._direction = direction;
+        this.invalid = true;
+    }
+});
+
+/**
+ * value of the scrollbar
+ * TODO: put in Scrollable
+ *
+ * @property value
+ * @type Number
+ */
+Object.defineProperty(ScrollBar.prototype, 'value', {
+    get: function() {
+        return this._value;
+    },
+    set: function(value) {
+        this._value = value;
+    }
+});

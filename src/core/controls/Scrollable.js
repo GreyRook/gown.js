@@ -1,19 +1,21 @@
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
+
 /**
- * scroll bar or slider
+ * a scrollabe control provides a thumb that can be be moved along a fixed track.
+ * This is the common ground for ScrollBar and Slider
+ *
  * @class Scrollable
  * @extends GOWN.Scrollable
  * @memberof GOWN
  * @constructor
  */
-
 function Scrollable(thumb, theme) {
     this.mode = this.mode || Scrollable.DESKTOP_MODE;
 
     Skinable.call(this, theme);
 
-    this.orientation = this.orientation || Scrollable.HORIZONTAL;
+    this.direction = this.direction || Scrollable.HORIZONTAL;
 
     this.thumb = thumb || new ScrollThumb(this, this.theme);
     this.addChild(this.thumb);
@@ -89,6 +91,20 @@ Scrollable.prototype.handleDown = function(mouseData) {
 };
 
 /**
+ * @private
+ */
+Scrollable.prototype.decrement = function() {
+  this.value -= this._step;
+};
+
+/**
+ * @private
+ */
+Scrollable.prototype.increment = function() {
+  this.value += this._step;
+};
+
+/**
  * handle mouse up/touch end
  *
  * @method handleUp
@@ -154,7 +170,7 @@ Scrollable.prototype._updateProgressSkin = function() {
     if (!this.progressSkin) {
         return;
     }
-    if(this.orientation === Scrollable.HORIZONTAL) {
+    if(this.direction === Scrollable.HORIZONTAL) {
         var progressPosX = this.thumb.x + this.thumb.width / 2;
         if (this.inverse) {
             this.progressSkin.x = progressPosX;
@@ -266,10 +282,10 @@ Scrollable.prototype.showProgress = function(skin) {
  */
 Scrollable.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
-        this.fromSkin(this.orientation+'_progress', this.showProgress);
-        this.fromSkin(this.orientation+'_track', this.showTrack);
+        this.fromSkin(this.direction+'_progress', this.showProgress);
+        this.fromSkin(this.direction+'_track', this.showTrack);
         if (this.skin) {
-            if (this.orientation === Scrollable.HORIZONTAL) {
+            if (this.direction === Scrollable.HORIZONTAL) {
                 this.skin.width = this.width;
             } else {
                 this.skin.height = this.height;
@@ -314,7 +330,7 @@ Object.defineProperty(Scrollable.prototype, 'inverse', {
         if (inverse !== this._inverse) {
             this._inverse = inverse;
 
-            if (this.orientation === Scrollable.HORIZONTAL) {
+            if (this.direction === Scrollable.HORIZONTAL) {
                 this.moveThumb(0, this.width - this.thumb.x);
             } else {
                 this.moveThumb(0, this.height - this.thumb.y);

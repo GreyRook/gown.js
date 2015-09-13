@@ -1,19 +1,23 @@
-var Control = require('../Control');
+var Skinable = require('../Skinable');
 
 /**
- * The Scroller hosts some content that can be scrolled. The width/height
- * of the Scroller defines the viewport.
+ * Allows horizontal and vertical scrolling of a view port.
+ * Not meant to be used as a standalone container or component.
+ * Generally meant to be the super class of another component that needs to
+ * support scrolling.
+ * To put components in a generic scrollable container (with optional layout),
+ * see ScrollContainer. To scroll long passages of text, see ScrollText.
  *
  * @class Scroller
- * @extends PIXI_UI.Control
- * @memberof PIXI_UI
+ * @extends GOWN.Control
+ * @memberof GOWN
  * @constructor
  */
-function Scroller() {
-    Control.call(this);
+function Scroller(theme) {
+    Skinable.call(this, theme);
 }
 
-Scroller.prototype = Object.create( Control.prototype );
+Scroller.prototype = Object.create( Skinable.prototype );
 Scroller.prototype.constructor = Scroller;
 module.exports = Scroller;
 
@@ -31,6 +35,8 @@ module.exports = Scroller;
  * @see #verticalScrollBarFactory
  */
 Scroller.prototype.createScrollBars = function() {
+    this.horizontalScrollBar = null;
+    this.verticalScrollBar = null;
 };
 
 // TODO: scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar

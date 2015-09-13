@@ -8,8 +8,8 @@ var Scroller = require('./Scroller');
  * @memberof PIXI_UI
  * @constructor
  */
-function List(theme, data) {
-    Scroller.call(this); // TODO: extend scroller?
+function List(dataProvider, theme) {
+    Scroller.call(theme); // TODO: extend scroller?
     this.skinName = this.skinName || List.SKIN_NAME;
 
     this._selectable = true;
@@ -17,7 +17,7 @@ function List(theme, data) {
     this._allowMultipleSelection = false;
     this._selectedIndices = [];
 
-    this.dataProvider = data;
+    this.dataProvider = dataProvider;
     this.itemRendererProperties = {};
 
     // TODO: set layout (defaults to VerticalLayout)

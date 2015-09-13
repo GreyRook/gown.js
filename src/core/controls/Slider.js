@@ -15,7 +15,7 @@ function Slider(thumb, theme) {
 
     this._minimum = this._minimum || 0;
     this._maximum = this._maximum || 100;
-    this.step = this.step || 0; //TODO: implement me!
+    this.step = this.step || 1; //TODO: implement me!
     this.page = this.page || 10; //TODO: implement me!
     this._value = this.minimum;
     this.change = null;
@@ -38,24 +38,24 @@ Slider.SKIN_NAME = 'scroll_bar';
  */
 Slider.prototype.thumbMoved = function(x, y) {
     var pos = 0;
-    if (this.orientation === Scrollable.HORIZONTAL) {
+    if (this.direction === Scrollable.HORIZONTAL) {
         pos = x;
     } else {
         pos = y;
     }
-    this.value = this.pixelToValue(pos);
+    this.value = this.locationToValue(pos);
 };
 
 /**
  * calculate value of slider based on current pixel position of thumb
  *
  * @param position
- * @method pixelToValue
+ * @method locationToValue
  * @returns Number value between minimum and maximum
  */
-Slider.prototype.pixelToValue = function(position) {
+Slider.prototype.locationToValue = function(position) {
     var max = 0;
-    if (this.orientation === Scrollable.HORIZONTAL) {
+    if (this.direction === Scrollable.HORIZONTAL) {
         max = this.maxWidth();
     } else {
         max = this.maxHeight();
@@ -70,12 +70,12 @@ Slider.prototype.pixelToValue = function(position) {
  * calculate current pixel position of thumb based on given value
  *
  * @param value
- * @method valueToPixel
+ * @method valueToLocation
  * @returns Number position of the scroll thumb in pixel
  */
-Slider.prototype.valueToPixel = function(value) {
+Slider.prototype.valueToLocation = function(value) {
     var max = 0;
-    if (this.orientation === Scrollable.HORIZONTAL) {
+    if (this.direction === Scrollable.HORIZONTAL) {
         max = this.maxWidth();
     } else {
         max = this.maxHeight();
@@ -109,8 +109,8 @@ Object.defineProperty(Slider.prototype, 'value', {
         }
 
         // move thumb
-        var pos = this.valueToPixel(value);
-        if (this.orientation === Scrollable.HORIZONTAL) {
+        var pos = this.valueToLocation(value);
+        if (this.direction === Scrollable.HORIZONTAL) {
             this.moveThumb(pos, 0);
         } else {
             this.moveThumb(0, pos);
