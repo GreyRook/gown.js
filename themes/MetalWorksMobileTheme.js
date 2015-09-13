@@ -62,8 +62,8 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
                 MetalWorksMobileTheme.DEFAULT_SCALE9_GRID));
     }
 
-    if (PIXI_UI.PickerList) {
-        var pl = PIXI_UI.PickerList;
+    if (GOWN.PickerList) {
+        var pl = GOWN.PickerList;
 
         this.setSkin(pl.SKIN_NAME, b.UP,
             this.getScaleContainer("button-up-skin", bg));

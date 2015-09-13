@@ -1,4 +1,4 @@
-var Scroller = require('../Scroller');
+var Scroller = require('./Scroller');
 
 /**
  * The basic list
