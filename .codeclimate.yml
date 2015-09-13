@@ -1,0 +1,14 @@
+# Save as .codeclimate.yml (note leading .) in project root directory
+engines:
+  eslint:
+    enabled: true
+ratings:
+  paths:
+  - src/**
+  - test/src/**
+  - test/unit/*.js
+exclude_paths:
+- "lib/**/*"
+- "bin/**/*"
+- "examples/**/*"
+- "test/libs/*"

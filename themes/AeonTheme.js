@@ -83,6 +83,7 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("vertical-scroll-bar-thumb-icon"));
     }
 
+<<<<<<< HEAD
     if (GOWN.PickerList) {
         var pl = GOWN.PickerList;
         tb = GOWN.ToggleButton;
@@ -110,6 +111,8 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("picker-list-hover-icon"));
     }
 
+=======
+>>>>>>> master
     if (GOWN.TextInput) {
         var ti = GOWN.TextInput;
         this.setSkin(ti.SKIN_NAME, "background",

@@ -1,3 +1,8 @@
+if (typeof PIXI === 'undefined') {
+  console.warn('pixi.js has to be loaded before loading gown.js');
+  return;
+}
+
 var core = module.exports = require('./core');
 
 // add core plugins.
@@ -11,3 +16,4 @@ core.loader = PIXI.loader;
 
 // export GOWN globally.
 global.GOWN = core;
+
