@@ -1,5 +1,4 @@
-var Control = require('../Control'),
-    LayoutAlignment = require('../layout/LayoutAlignment');
+var Control = require('../Control');
 
 /**
  * The Scroller hosts some content that can be scrolled. The width/height
@@ -32,7 +31,6 @@ module.exports = Scroller;
  * @see #verticalScrollBarFactory
  */
 Scroller.prototype.createScrollBars = function() {
-
-}
+};
 
 // TODO: scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
