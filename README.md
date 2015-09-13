@@ -100,6 +100,8 @@ This list is not ordered by priority nor does it contain any promise that those 
    - ignore renderAreaWebGL and renderWebGL in blanket tests
 
  - How-To tutorial and beginners documentation!
+ 
+ - examples-side (like [the one from pixi.js](http://pixijs.github.io/examples/) )
 
  - real viewport(s) for ScrollArea ?
 
