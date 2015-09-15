@@ -4642,12 +4642,14 @@ module.exports = ScaleContainer;
  * @private
  */
 ScaleContainer.prototype._applyScales = function(name, elem) {
-    elem.width = (Math.ceil(this.scaleOriginals[name].width *
-        this.worldTransform.a) /
-        this.worldTransform.a);
-    elem.height = (Math.ceil(this.scaleOriginals[name].height *
-        this.worldTransform.d) /
-        this.worldTransform.d);
+    if (this.scaleOriginals[name]) {
+        elem.width = (Math.ceil(this.scaleOriginals[name].width *
+            this.worldTransform.a) /
+            this.worldTransform.a);
+        elem.height = (Math.ceil(this.scaleOriginals[name].height *
+            this.worldTransform.d) /
+            this.worldTransform.d);
+    }
 };
 
 /**
@@ -4662,10 +4664,12 @@ ScaleContainer.prototype._updateScales = function() {
     var scaleOriginals = this.scaleOriginals = {};
 
     var scaleOriginal = function(name, elem) {
-        scaleOriginals[name] = {
-            width: elem.width,
-            height: elem.height
-        };
+        if (elem && elem.width && elem.height) {
+            scaleOriginals[name] = {
+                width: elem.width,
+                height: elem.height
+            };
+        }
     };
 
     scaleOriginal('tl', this.tl);
