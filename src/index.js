@@ -1,8 +1,8 @@
 if (typeof PIXI === 'undefined') {
     if (window.console) {
         window.console.warn('pixi.js has to be loaded before loading gown.js');
-        return;
     }
+    return;
 }
 
 var core = module.exports = require('./core');
