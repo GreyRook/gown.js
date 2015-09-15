@@ -1,27 +1,4 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.GOWN = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-(function (global){
-if (typeof PIXI === 'undefined') {
-  console.warn('pixi.js has to be loaded before loading gown.js');
-  return;
-}
-
-var core = module.exports = require('./core');
-
-// add core plugins.
-core.utils          = require('./utils');
-
-// use default pixi loader
-core.loader = PIXI.loader;
-
-// mixin the deprecation features.
-//Object.assign(core, require('./deprecation'));
-
-// export GOWN globally.
-global.GOWN = core;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
-},{"./core":15,"./utils":33}],2:[function(require,module,exports){
 /**
  * base for all UI controls (see controls/)
  * based on pixi-DisplayContainer that supports adding children, so all
@@ -162,7 +139,7 @@ Object.defineProperty(Control.prototype, 'height', {
         this.invalidDimensions = true;
     }
 });
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 var Control = require('./Control');
 
 /**
@@ -309,7 +286,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
         this.invalidState = true;
     }
 });
-},{"./Control":2}],4:[function(require,module,exports){
+},{"./Control":1}],3:[function(require,module,exports){
 var Control = require('../Control');
 
 /**
@@ -496,7 +473,7 @@ Object.defineProperty(Application.prototype, 'background', {
     }
 });
 
-},{"../Control":2}],5:[function(require,module,exports){
+},{"../Control":1}],4:[function(require,module,exports){
 var Skinable = require('../Skinable');
 
 /**
@@ -777,7 +754,7 @@ Object.defineProperty(Button.prototype, 'label', {
         this.updateLabel = true;
     }
 });
-},{"../Skinable":3}],6:[function(require,module,exports){
+},{"../Skinable":2}],5:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     InputWrapper = require('../../utils/InputWrapper');
 
@@ -1011,7 +988,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":30,"../Skinable":3}],7:[function(require,module,exports){
+},{"../../utils/InputWrapper":30,"../Skinable":2}],6:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1275,7 +1252,7 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
         return height;
     }
 });
-},{"../Control":2,"../layout/ViewPortBounds":23}],8:[function(require,module,exports){
+},{"../Control":1,"../layout/ViewPortBounds":22}],7:[function(require,module,exports){
 var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1694,7 +1671,7 @@ Object.defineProperty(ScrollArea.prototype, 'height', {
     }
 });
 
-},{"../Control":2,"../layout/LayoutAlignment":18}],9:[function(require,module,exports){
+},{"../Control":1,"../layout/LayoutAlignment":17}],8:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1777,7 +1754,7 @@ ScrollBar.prototype.thumbMoved = function(x, y) {
     }
 };
 
-},{"../layout/LayoutAlignment":18,"./Scrollable":11}],10:[function(require,module,exports){
+},{"../layout/LayoutAlignment":17,"./Scrollable":10}],9:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -1928,7 +1905,7 @@ ScrollThumb.prototype.move = function(x, y) {
     }
     return false;
 };
-},{"./Button":5}],11:[function(require,module,exports){
+},{"./Button":4}],10:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
 /**
@@ -2279,7 +2256,7 @@ Object.defineProperty(Scrollable.prototype, 'height', {
     }
 });
 
-},{"../Skinable":3,"./ScrollThumb":10}],12:[function(require,module,exports){
+},{"../Skinable":2,"./ScrollThumb":9}],11:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     SliderData = require('../../utils/SliderData');
 
@@ -2450,7 +2427,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":32,"./Scrollable":11}],13:[function(require,module,exports){
+},{"../../utils/SliderData":32,"./Scrollable":10}],12:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2820,7 +2797,7 @@ TextInput.prototype.updateTextState = function () {
     }
     this.setCursorPos();
 };
-},{"../../utils/InputWrapper":30,"../Control":2,"./InputControl":6}],14:[function(require,module,exports){
+},{"../../utils/InputWrapper":30,"../Control":1,"./InputControl":5}],13:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2926,7 +2903,7 @@ ToggleButton.prototype.handleEvent = function(type) {
     this.buttonHandleEvent(type);
 };
 
-},{"./Button":5}],15:[function(require,module,exports){
+},{"./Button":4}],14:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2975,7 +2952,7 @@ module.exports = {
     Theme:           require('./skin/Theme')
 };
 
-},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/ScrollArea":8,"./controls/ScrollBar":9,"./controls/ScrollThumb":10,"./controls/Scrollable":11,"./controls/Slider":12,"./controls/TextInput":13,"./controls/ToggleButton":14,"./layout/HorizontalLayout":16,"./layout/Layout":17,"./layout/LayoutAlignment":18,"./layout/TiledColumnsLayout":19,"./layout/TiledLayout":20,"./layout/TiledRowsLayout":21,"./layout/VerticalLayout":22,"./layout/ViewPortBounds":23,"./shapes/Diamond":24,"./shapes/Ellipse":25,"./shapes/Line":26,"./shapes/Rect":27,"./shapes/Shape":28,"./skin/Theme":29}],16:[function(require,module,exports){
+},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/InputControl":5,"./controls/LayoutGroup":6,"./controls/ScrollArea":7,"./controls/ScrollBar":8,"./controls/ScrollThumb":9,"./controls/Scrollable":10,"./controls/Slider":11,"./controls/TextInput":12,"./controls/ToggleButton":13,"./layout/HorizontalLayout":15,"./layout/Layout":16,"./layout/LayoutAlignment":17,"./layout/TiledColumnsLayout":18,"./layout/TiledLayout":19,"./layout/TiledRowsLayout":20,"./layout/VerticalLayout":21,"./layout/ViewPortBounds":22,"./shapes/Diamond":23,"./shapes/Ellipse":24,"./shapes/Line":25,"./shapes/Rect":26,"./shapes/Shape":27,"./skin/Theme":28}],15:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2996,7 +2973,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":18}],17:[function(require,module,exports){
+},{"./LayoutAlignment":17}],16:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -3219,7 +3196,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3406,7 +3383,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":17}],19:[function(require,module,exports){
+},{"./Layout":16}],18:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3452,7 +3429,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":20}],20:[function(require,module,exports){
+},{"./TiledLayout":19}],19:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3758,7 +3735,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":17}],21:[function(require,module,exports){
+},{"./Layout":16}],20:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3804,7 +3781,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":20}],22:[function(require,module,exports){
+},{"./TiledLayout":19}],21:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3825,7 +3802,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":18}],23:[function(require,module,exports){
+},{"./LayoutAlignment":17}],22:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3866,7 +3843,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],24:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3901,7 +3878,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":28}],25:[function(require,module,exports){
+},{"./Shape":27}],24:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3932,7 +3909,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":28}],26:[function(require,module,exports){
+},{"./Shape":27}],25:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3988,7 +3965,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":28}],27:[function(require,module,exports){
+},{"./Shape":27}],26:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -4043,7 +4020,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":28}],28:[function(require,module,exports){
+},{"./Shape":27}],27:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -4200,7 +4177,7 @@ Shape.prototype.redraw = function() {
     this._drawShape();
 };
 
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
 
 /**
@@ -4327,7 +4304,32 @@ Theme.prototype.getSkin = function(comp, state) {
 Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
-},{"../../utils/ScaleContainer":31}],30:[function(require,module,exports){
+},{"../../utils/ScaleContainer":31}],29:[function(require,module,exports){
+(function (global){
+if (typeof PIXI === 'undefined') {
+    if (window.console) {
+        window.console.warn('pixi.js has to be loaded before loading gown.js');
+        return;
+    }
+}
+
+var core = module.exports = require('./core');
+
+// add core plugins.
+core.utils          = require('./utils');
+
+// use default pixi loader
+core.loader = PIXI.loader;
+
+// mixin the deprecation features.
+//Object.assign(core, require('./deprecation'));
+
+// export GOWN globally.
+global.GOWN = core;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+
+},{"./core":14,"./utils":33}],30:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4609,12 +4611,75 @@ function ScaleContainer(texture, rect) {
         this.br = this._getTexture(lw + mw, th + ch, rw, bh);
         this.addChild(this.br);
     }
+
+
+    // apply scaling when the window gets resized using worldTansformation
+    var scope = this;
+    window.addEventListener('resize', function() {
+        scope._applyScales('tl', scope.tl);
+        scope._applyScales('tm', scope.tm);
+        scope._applyScales('tr', scope.tr);
+
+        scope._applyScales('cl', scope.cl);
+        scope._applyScales('cm', scope.cm);
+        scope._applyScales('cr', scope.cr);
+
+        scope._applyScales('bl', scope.bl);
+        scope._applyScales('bm', scope.bm);
+        scope._applyScales('br', scope.br);
+    });
 }
 
 // constructor
 ScaleContainer.prototype = Object.create( PIXI.Container.prototype );
 ScaleContainer.prototype.constructor = ScaleContainer;
 module.exports = ScaleContainer;
+
+/**
+ * apply scaling when the window gets resized using worldTansformation
+ *
+ * @method _applyScales
+ * @private
+ */
+ScaleContainer.prototype._applyScales = function(name, elem) {
+    elem.width = (Math.ceil(this.scaleOriginals[name].width *
+        this.worldTransform.a) /
+        this.worldTransform.a);
+    elem.height = (Math.ceil(this.scaleOriginals[name].height *
+        this.worldTransform.d) /
+        this.worldTransform.d);
+};
+
+/**
+ * set scaling width and height
+ *
+ * @method _applyScales
+ * @private
+ */
+ScaleContainer.prototype._updateScales = function() {
+    this._positionTilable();
+
+    var scaleOriginals = this.scaleOriginals = {};
+
+    var scaleOriginal = function(name, elem) {
+        scaleOriginals[name] = {
+            width: elem.width,
+            height: elem.height
+        };
+    };
+
+    scaleOriginal('tl', this.tl);
+    scaleOriginal('tm', this.tm);
+    scaleOriginal('tr', this.tr);
+
+    scaleOriginal('cl', this.cl);
+    scaleOriginal('cm', this.cm);
+    scaleOriginal('cr', this.cr);
+
+    scaleOriginal('bl', this.bl);
+    scaleOriginal('bm', this.bm);
+    scaleOriginal('br', this.br);
+};
 
 /**
  * create a new texture from a base-texture by given dimensions
@@ -4642,6 +4707,7 @@ Object.defineProperty(ScaleContainer.prototype, 'width', {
         if (this._width !== value) {
             this._width = value;
             this.invalid = true;
+            this._updateScales();
         }
     }
 });
@@ -4660,6 +4726,7 @@ Object.defineProperty(ScaleContainer.prototype, 'height', {
         if (this._height !== value) {
             this._height = value;
             this.invalid = true;
+            this._updateScales();
         }
     }
 });
@@ -4936,7 +5003,7 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}]},{},[1])(1)
+},{}]},{},[29])(29)
 });
 
 
