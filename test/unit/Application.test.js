@@ -11,7 +11,7 @@ describe("test Application", function() {
 
     it("create and remove Application instance", function() {
         var app = new GOWN.Application(0xff0000);
-        app.cleanup();
+        app.dispose();
         app = null;
     });
     it("test application fullscreen works", function() {
