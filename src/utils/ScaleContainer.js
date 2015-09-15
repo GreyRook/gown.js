@@ -75,12 +75,75 @@ function ScaleContainer(texture, rect) {
         this.br = this._getTexture(lw + mw, th + ch, rw, bh);
         this.addChild(this.br);
     }
+
+
+    // apply scaling when the window gets resized using worldTansformation
+    var scope = this;
+    window.addEventListener('resize', function() {
+        scope._applyScales('tl', scope.tl);
+        scope._applyScales('tm', scope.tm);
+        scope._applyScales('tr', scope.tr);
+
+        scope._applyScales('cl', scope.cl);
+        scope._applyScales('cm', scope.cm);
+        scope._applyScales('cr', scope.cr);
+
+        scope._applyScales('bl', scope.bl);
+        scope._applyScales('bm', scope.bm);
+        scope._applyScales('br', scope.br);
+    });
 }
 
 // constructor
 ScaleContainer.prototype = Object.create( PIXI.Container.prototype );
 ScaleContainer.prototype.constructor = ScaleContainer;
 module.exports = ScaleContainer;
+
+/**
+ * apply scaling when the window gets resized using worldTansformation
+ *
+ * @method _applyScales
+ * @private
+ */
+ScaleContainer.prototype._applyScales = function(name, elem) {
+    elem.width = (Math.ceil(this.scaleOriginals[name].width *
+        this.worldTransform.a) /
+        this.worldTransform.a);
+    elem.height = (Math.ceil(this.scaleOriginals[name].height *
+        this.worldTransform.d) /
+        this.worldTransform.d);
+};
+
+/**
+ * set scaling width and height
+ *
+ * @method _applyScales
+ * @private
+ */
+ScaleContainer.prototype._updateScales = function() {
+    this._positionTilable();
+
+    var scaleOriginals = this.scaleOriginals = {};
+
+    var scaleOriginal = function(name, elem) {
+        scaleOriginals[name] = {
+            width: elem.width,
+            height: elem.height
+        };
+    };
+
+    scaleOriginal('tl', this.tl);
+    scaleOriginal('tm', this.tm);
+    scaleOriginal('tr', this.tr);
+
+    scaleOriginal('cl', this.cl);
+    scaleOriginal('cm', this.cm);
+    scaleOriginal('cr', this.cr);
+
+    scaleOriginal('bl', this.bl);
+    scaleOriginal('bm', this.bm);
+    scaleOriginal('br', this.br);
+};
 
 /**
  * create a new texture from a base-texture by given dimensions
@@ -108,6 +171,7 @@ Object.defineProperty(ScaleContainer.prototype, 'width', {
         if (this._width !== value) {
             this._width = value;
             this.invalid = true;
+            this._updateScales();
         }
     }
 });
@@ -126,6 +190,7 @@ Object.defineProperty(ScaleContainer.prototype, 'height', {
         if (this._height !== value) {
             this._height = value;
             this.invalid = true;
+            this._updateScales();
         }
     }
 });

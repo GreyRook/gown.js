@@ -18,4 +18,3 @@ core.loader = PIXI.loader;
 
 // export GOWN globally.
 global.GOWN = core;
-
