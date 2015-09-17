@@ -285,29 +285,3 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     }
     return new ScaleContainer(texture, rect);
 };
-
-/**
- * Renders the object using the WebGL renderer
- *
- * @method renderWebGL
- * @param renderer
- * @private
- */
-/* istanbul ignore next */
-ScaleContainer.prototype.renderWebGL = function(renderer) {
-    this.redraw();
-    return PIXI.Container.prototype.renderWebGL.call(this, renderer);
-};
-
-/**
- * Renders the object using the Canvas renderer
- *
- * @method renderCanvas
- * @param renderer
- * @private
- */
-/* istanbul ignore next */
-ScaleContainer.prototype.renderCanvas = function(renderer) {
-    this.redraw();
-    return PIXI.Container.prototype.renderCanvas.call(this, renderer);
-};

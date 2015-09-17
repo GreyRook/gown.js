@@ -89,128 +89,23 @@ LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, height) {
         child.y > y - child.height;
 };
 
-/**
- * only render specific area
- * @method renderAreaWebGL
- * @param renderSession
- * @param x
- * @param y
- * @param width
- * @param height
- * @returns {boolean}
- */
-/* istanbul ignore next */
-LayoutGroup.prototype.renderAreaWebGL = function(renderer, x, y, width, height) {
-    this.redraw();
-
-    // if the object is not visible or the alpha is 0 then no need to render this element
-    if (!this.visible || this.worldAlpha <= 0 || !this.renderable)
-    {
-        return;
-    }
-
-    var i, j, child;
-
-    // do a quick check to see if this element has a mask or a filter.
-    if(this._mask || this._filters)
-    {
-        renderer.currentRenderer.flush();
-
-        // push filter first as we need to ensure the stencil buffer is correct for any masking
-        if (this._filters)
-        {
-            renderer.filterManager.pushFilter(this, this._filters);
-        }
-
-        if (this._mask)
-        {
-            renderer.maskManager.pushMask(this, this._mask);
-        }
-
-        renderer.currentRenderer.start();
-
-        // add this object to the batch, only rendered if it has a texture.
-        this._renderWebGL(renderer);
-
-        // simple render children!
-        for(i=0, j=this.children.length; i<j; i++)
-        {
-            // only render children if they are visible
-            child = this.children[i];
-            if (this.childIsRenderAble(child, x, y, width, height)) {
-                child.renderWebGL(renderer);
-            }
-        }
-
-        renderer.currentRenderer.flush();
-
-        if (this._mask)
-        {
-            renderer.maskManager.popMask(this, this._mask);
-        }
-
-        if (this._filters)
-        {
-            renderer.filterManager.popFilter();
-        }
-        renderer.currentRenderer.start();
-    }
-    else
-    {
-        this._renderWebGL(renderer);
-
-        // simple render children!
-        for(i=0, j=this.children.length; i<j; i++)
-        {
-            // only render children if they are visible
-            child = this.children[i];
-            if (this.childIsRenderAble(child, x, y, width, height)) {
-                child.renderWebGL(renderer);
-            }
-        }
-    }
-};
 
 /**
- * only render specific area
- * @method renderAreaWebCanvas
- * @param renderSession
- * @param x
- * @param y
- * @param width
- * @param height
- * @returns {boolean}
+ * Update renderable (culling of non visible objects)
+ *
+ * @method updateRenderable
+ * @param x X-position on the scroll-container
+ * @param y Y-position on the scroll-container
+ * @param width width of the viewport
+ * @param height height of the viewport
  */
-/* istanbul ignore next */
-LayoutGroup.prototype.renderAreaCanvas = function(renderer, x, y, width, height) {
-    this.redraw();
-
-    // if not visible or the alpha is 0 then no need to render this
-    if (!this.visible || this.alpha <= 0 || !this.renderable)
-    {
-        return;
-    }
-
-    if (this._mask)
-    {
-        renderer.maskManager.pushMask(this._mask, renderer);
-    }
-
-    this._renderCanvas(renderer);
-    for (var i = 0, j = this.children.length; i < j; ++i)
-    {
-        // only render children if they are visible
+LayoutGroup.prototype.updateRenderable = function(x, y, width, height) {
+    for(var i=0, j=this.children.length; i<j; i++) {
         var child = this.children[i];
-        if (this.childIsRenderAble(child, x, y, width, height)) {
-            child._renderCanvas(renderer);
-        }
-    }
-
-    if (this._mask)
-    {
-        renderer.maskManager.popMask(renderer);
+        child.renderable = this.childIsRenderAble(child, x, y, width, height);
     }
 };
+
 
 /**
  * The width of the group, will get the position and the width of the right child.
