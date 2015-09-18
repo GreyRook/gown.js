@@ -37,29 +37,17 @@ Control.prototype.setTheme = function(theme) {
 };
 
 /**
- * Renders the object using the WebGL renderer
+ * PIXI method to update the object transform for rendering
+ * Used to call redraw() before rendering
  *
- * @method renderWebGL
- * @param renderer
- * @private
+ * @method updateTransform
  */
-/* istanbul ignore next */
-Control.prototype.renderWebGL = function(renderer) {
-    this.redraw();
-    return PIXI.Container.prototype.renderWebGL.call(this, renderer);
-};
+Control.prototype.updateTransform = function() {
+    if(this.redraw) {
+        this.redraw();
+    }
 
-/**
- * Renders the object using the Canvas renderer
- *
- * @method renderCanvas
- * @param renderer
- * @private
- */
-/* istanbul ignore next */
-Control.prototype.renderCanvas = function(renderer) {
-    this.redraw();
-    return PIXI.Container.prototype.renderCanvas.call(this, renderer);
+    PIXI.Container.prototype.updateTransform.call(this);
 };
 
 /**
@@ -139,6 +127,7 @@ Object.defineProperty(Control.prototype, 'height', {
         this.invalidDimensions = true;
     }
 });
+
 },{}],2:[function(require,module,exports){
 var Control = require('./Control');
 
@@ -1080,128 +1069,23 @@ LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, height) {
         child.y > y - child.height;
 };
 
-/**
- * only render specific area
- * @method renderAreaWebGL
- * @param renderSession
- * @param x
- * @param y
- * @param width
- * @param height
- * @returns {boolean}
- */
-/* istanbul ignore next */
-LayoutGroup.prototype.renderAreaWebGL = function(renderer, x, y, width, height) {
-    this.redraw();
-
-    // if the object is not visible or the alpha is 0 then no need to render this element
-    if (!this.visible || this.worldAlpha <= 0 || !this.renderable)
-    {
-        return;
-    }
-
-    var i, j, child;
-
-    // do a quick check to see if this element has a mask or a filter.
-    if(this._mask || this._filters)
-    {
-        renderer.currentRenderer.flush();
-
-        // push filter first as we need to ensure the stencil buffer is correct for any masking
-        if (this._filters)
-        {
-            renderer.filterManager.pushFilter(this, this._filters);
-        }
-
-        if (this._mask)
-        {
-            renderer.maskManager.pushMask(this, this._mask);
-        }
-
-        renderer.currentRenderer.start();
-
-        // add this object to the batch, only rendered if it has a texture.
-        this._renderWebGL(renderer);
-
-        // simple render children!
-        for(i=0, j=this.children.length; i<j; i++)
-        {
-            // only render children if they are visible
-            child = this.children[i];
-            if (this.childIsRenderAble(child, x, y, width, height)) {
-                child.renderWebGL(renderer);
-            }
-        }
-
-        renderer.currentRenderer.flush();
-
-        if (this._mask)
-        {
-            renderer.maskManager.popMask(this, this._mask);
-        }
-
-        if (this._filters)
-        {
-            renderer.filterManager.popFilter();
-        }
-        renderer.currentRenderer.start();
-    }
-    else
-    {
-        this._renderWebGL(renderer);
-
-        // simple render children!
-        for(i=0, j=this.children.length; i<j; i++)
-        {
-            // only render children if they are visible
-            child = this.children[i];
-            if (this.childIsRenderAble(child, x, y, width, height)) {
-                child.renderWebGL(renderer);
-            }
-        }
-    }
-};
 
 /**
- * only render specific area
- * @method renderAreaWebCanvas
- * @param renderSession
- * @param x
- * @param y
- * @param width
- * @param height
- * @returns {boolean}
+ * Update renderable (culling of non visible objects)
+ *
+ * @method updateRenderable
+ * @param x X-position on the scroll-container
+ * @param y Y-position on the scroll-container
+ * @param width width of the viewport
+ * @param height height of the viewport
  */
-/* istanbul ignore next */
-LayoutGroup.prototype.renderAreaCanvas = function(renderer, x, y, width, height) {
-    this.redraw();
-
-    // if not visible or the alpha is 0 then no need to render this
-    if (!this.visible || this.alpha <= 0 || !this.renderable)
-    {
-        return;
-    }
-
-    if (this._mask)
-    {
-        renderer.maskManager.pushMask(this._mask, renderer);
-    }
-
-    this._renderCanvas(renderer);
-    for (var i = 0, j = this.children.length; i < j; ++i)
-    {
-        // only render children if they are visible
+LayoutGroup.prototype.updateRenderable = function(x, y, width, height) {
+    for(var i=0, j=this.children.length; i<j; i++) {
         var child = this.children[i];
-        if (this.childIsRenderAble(child, x, y, width, height)) {
-            child._renderCanvas(renderer);
-        }
-    }
-
-    if (this._mask)
-    {
-        renderer.maskManager.popMask(renderer);
+        child.renderable = this.childIsRenderAble(child, x, y, width, height);
     }
 };
+
 
 /**
  * The width of the group, will get the position and the width of the right child.
@@ -1252,6 +1136,7 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
         return height;
     }
 });
+
 },{"../Control":1,"../layout/ViewPortBounds":22}],7:[function(require,module,exports){
 var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
@@ -1482,129 +1367,17 @@ ScrollArea.prototype.drawMask = function() {
     }
 };
 
-/**
- * Renders the object using the WebGL renderer
- *
- * @method renderWebGL
- * @param renderer
- * @private
- */
-/* istanbul ignore next */
-ScrollArea.prototype.renderWebGL = function(renderer)
-{
-    // if the object is not visible or the alpha is 0 then no need to render this element
-    if (!this.visible || this.worldAlpha <= 0 || !this.renderable)
-    {
-        return;
-    }
-
-    this.redraw();
-
-    var i, j, child;
-
-    // do a quick check to see if this element has a mask or a filter.
-    if (this._mask || this._filters)
-    {
-        renderer.currentRenderer.flush();
-
-        // push filter first as we need to ensure the stencil buffer is correct for any masking
-        if (this._filters)
-        {
-            renderer.filterManager.pushFilter(this, this._filters);
-        }
-
-        if (this._mask)
-        {
-            renderer.maskManager.pushMask(this, this._mask);
-        }
-
-        renderer.currentRenderer.start();
-
-        // add this object to the batch, only rendered if it has a texture.
-        this._renderWebGL(renderer);
-
-        // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
-        {
-            child = this.children[i];
-            if (child.renderAreaWebGL) {
-                child.renderAreaWebGL(renderer, -this.content.x, -this.content.y, this.width, this.height);
-            } else {
-                child.renderWebGL(renderer);
-            }
-        }
-
-        renderer.currentRenderer.flush();
-
-        if (this._mask)
-        {
-            renderer.maskManager.popMask(this, this._mask);
-        }
-
-        if (this._filters)
-        {
-            renderer.filterManager.popFilter();
-        }
-        renderer.currentRenderer.start();
-    }
-    else
-    {
-        this._renderWebGL(renderer);
-
-        // simple render children!
-        for(i=0,j=this.children.length; i<j; i++)
-        {
-            child = this.children[i];
-            if (child.renderAreaWebGL) {
-                child.renderAreaWebGL(renderer, -this.content.x, -this.content.y, this.width, this.height);
-            } else {
-                child.renderWebGL(renderer);
-            }
-        }
-    }
-};
 
 /**
- * Renders the object using the Canvas renderer
+ * update mask as needed
  *
- * @method renderCanvas
- * @param renderer
- * @private
+ * @method redraw
  */
-/* istanbul ignore next */
-ScrollArea.prototype.renderCanvas = function(renderer)
-{
-    // if not visible or the alpha is 0 then no need to render this
-    if (!this.visible || this.alpha <= 0 || !this.renderable)
-    {
-        return;
-    }
-
-    this.redraw();
-
-    if (this._mask)
-    {
-        renderer.maskManager.pushMask(this._mask, renderer);
-    }
-
-    this._renderCanvas(renderer);
-    for(var i=0,j=this.children.length; i<j; i++)
-    {
-        var child = this.children[i];
-        if (child.renderAreaCanvas) {
-            child.renderAreaCanvas(renderer, -this.content.x, -this.content.y, this.width, this.height);
-        } else {
-            child.renderCanvas(renderer);
-        }
-    }
-
-    if (this._mask)
-    {
-        renderer.maskManager.popMask(renderer);
-    }
-};
-
 ScrollArea.prototype.redraw = function() {
+    if (this.content.updateRenderable) {
+        this.content.updateRenderable(-this.content.x, -this.content.y, this.width, this.height);
+    }
+
     if (this.invalid) {
         this.updateMask();
         this.invalid = false;
@@ -4109,27 +3882,6 @@ Object.defineProperty(Shape.prototype, 'alpha', {
     }
 });
 
-// renderer
-/* istanbul ignore next */
-Shape.prototype.renderWebGL = function(renderer) {
-    if (this.invalid) {
-        this.redraw();
-        this.invalid = false;
-    }
-    return PIXI.Graphics.prototype.renderWebGL.call(this, renderer);
-};
-
-/* istanbul ignore next */
-Shape.prototype.renderCanvas = function(renderer) {
-    if (this.invalid) {
-        this.redraw();
-        this.invalid = false;
-    }
-    return PIXI.Graphics.prototype.renderCanvas.call(this, renderer);
-};
-
-// shape drawing
-
 /**
  * apply the color to the shape (called during redraw)
  *
@@ -4164,6 +3916,14 @@ Shape.prototype._drawShape = function() {
     this.drawRect(0, 0, this._width, this._height);
 };
 
+
+Shape.prototype.updateTransform = function() {
+    this.redraw();
+
+    PIXI.Graphics.prototype.updateTransform.call(this);
+};
+
+
 /**
  * update before draw call
  * redraw control for current state from theme
@@ -4171,10 +3931,16 @@ Shape.prototype._drawShape = function() {
  * @method redraw
  */
 Shape.prototype.redraw = function() {
+    if(!this.invalid) {
+        return;
+    }
+
     this.clear();
     this.applyColor();
     this.drawBorder();
     this._drawShape();
+
+    this.invalid = false;
 };
 
 },{}],28:[function(require,module,exports){
@@ -4820,32 +4586,6 @@ ScaleContainer.fromFrame = function(frameId, rect) {
                         'in the texture cache');
     }
     return new ScaleContainer(texture, rect);
-};
-
-/**
- * Renders the object using the WebGL renderer
- *
- * @method renderWebGL
- * @param renderer
- * @private
- */
-/* istanbul ignore next */
-ScaleContainer.prototype.renderWebGL = function(renderer) {
-    this.redraw();
-    return PIXI.Container.prototype.renderWebGL.call(this, renderer);
-};
-
-/**
- * Renders the object using the Canvas renderer
- *
- * @method renderCanvas
- * @param renderer
- * @private
- */
-/* istanbul ignore next */
-ScaleContainer.prototype.renderCanvas = function(renderer) {
-    this.redraw();
-    return PIXI.Container.prototype.renderCanvas.call(this, renderer);
 };
 
 },{}],32:[function(require,module,exports){

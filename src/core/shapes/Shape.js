@@ -86,27 +86,6 @@ Object.defineProperty(Shape.prototype, 'alpha', {
     }
 });
 
-// renderer
-/* istanbul ignore next */
-Shape.prototype.renderWebGL = function(renderer) {
-    if (this.invalid) {
-        this.redraw();
-        this.invalid = false;
-    }
-    return PIXI.Graphics.prototype.renderWebGL.call(this, renderer);
-};
-
-/* istanbul ignore next */
-Shape.prototype.renderCanvas = function(renderer) {
-    if (this.invalid) {
-        this.redraw();
-        this.invalid = false;
-    }
-    return PIXI.Graphics.prototype.renderCanvas.call(this, renderer);
-};
-
-// shape drawing
-
 /**
  * apply the color to the shape (called during redraw)
  *
@@ -141,6 +120,14 @@ Shape.prototype._drawShape = function() {
     this.drawRect(0, 0, this._width, this._height);
 };
 
+
+Shape.prototype.updateTransform = function() {
+    this.redraw();
+
+    PIXI.Graphics.prototype.updateTransform.call(this);
+};
+
+
 /**
  * update before draw call
  * redraw control for current state from theme
@@ -148,8 +135,14 @@ Shape.prototype._drawShape = function() {
  * @method redraw
  */
 Shape.prototype.redraw = function() {
+    if(!this.invalid) {
+        return;
+    }
+
     this.clear();
     this.applyColor();
     this.drawBorder();
     this._drawShape();
+
+    this.invalid = false;
 };

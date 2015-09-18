@@ -73,9 +73,15 @@ In short, the skins-object looks like this:
 
 Rendering
 =========
-PIXI does the rendering. So we are independent from WebGL or the Canvas fallback.
-We inherit the render functions for WebGL (_renderWebGL) and Canvas (_renderCanvas) and call a redraw-function just before the rendering.
-So you can change the properties of the component. The setter/getter for this property sets an "invalid" flag of the component that will force the redraw-function to update the component just before the next draw circle (this can be the recalculation of the position and dimensions or a skin change on user interaction).
+When changing a component the corresponding setter updates an `invalid` flag.  This will force a redraw on the next frame. (this can be the recalculation of the position and dimensions or a skin change on user interaction).
+
+The loop looks like this:
+
+1. redraw (gown)
+1. updateTransform (PIXI)
+1. render (PIXI)
+
+The `redraw` function is hooked into PIXI's render loop in the `updateTranform` methond but called before the actual calcluation of `updateTransform`.
 
 
 Known Bugs
