@@ -89,7 +89,7 @@ Object.defineProperty(Control.prototype, 'enabled', {
 
 /**
  * The width of the shape, setting this will redraw the component.
- * (set invalidDimensions)
+ * (set redraw)
  *
  * @property width
  * @type Number
@@ -102,7 +102,6 @@ Object.defineProperty(Control.prototype, 'width', {
     set: function(width) {
         this._width = width;
         //originalWidth.set.call(this, width);
-        this.invalidDimensions = true;
     }
 });
 
@@ -110,7 +109,7 @@ Object.defineProperty(Control.prototype, 'width', {
 
 /**
  * The height of the shape, setting this will redraw the component.
- * (set invalidDimensions)
+ * (set redraw)
  *
  * @property height
  * @type Number
@@ -123,6 +122,5 @@ Object.defineProperty(Control.prototype, 'height', {
     set: function(height) {
         //originalHeight.set.call(this, height);
         this._height = height;
-        this.invalidDimensions = true;
     }
 });

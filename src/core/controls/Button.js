@@ -123,19 +123,28 @@ Button.prototype.mouseout = function() {
  * @method updateDimensions
  */
 Button.prototype.updateDimensions = function() {
+    var width = this.worldWidth;
+    var height = this.worldHeight;
     if (this.hitArea) {
-        this.hitArea.width = this.width;
-        this.hitArea.height = this.height;
+        this.hitArea.width = width;
+        this.hitArea.height = height;
     } else {
-        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.Rectangle(0, 0, width, height);
     }
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
         var skin = this.skinCache[name];
         if (skin) {
-            skin.width = this.width;
-            skin.height = this.height;
+            skin.width = width;
+            skin.height = height;
         }
+    }
+
+    if(this.labelText) {
+        var scaleY = height / this._height;
+        this.labelText.style.fontSize = this.theme.textStyle.fontSize * scaleY;
+        this.labelText.style = this.labelText.style; // trigger setter
+        this.updateLabelDimensions();
     }
 };
 
@@ -197,9 +206,9 @@ Button.prototype.redraw = function() {
 Button.prototype.createLabel = function() {
     if(this.labelText) {
         this.labelText.text = this._label;
-        this.labelText.style = this.theme.textStyle;
+        this.labelText.style = this.theme.textStyle.clone();
     } else {
-        this.labelText = new PIXI.Text(this._label, this.theme.textStyle);
+        this.labelText = new PIXI.Text(this._label, this.theme.textStyle.clone());
         this.addChild(this.labelText);
     }
     this.updateLabelDimensions();
@@ -213,8 +222,8 @@ Button.prototype.createLabel = function() {
  */
 Button.prototype.updateLabelDimensions = function () {
     if (this.labelText && this.labelText.text) {
-        this.labelText.x = Math.floor((this.width - this.labelText.width) / 2);
-        this.labelText.y = Math.floor((this.height - this.labelText.height) / 2);
+        this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
+        this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
     }
 };
 

@@ -1,5 +1,5 @@
 var ScaleContainer = require('../../utils/ScaleContainer');
-
+var ThemeFont = require('./ThemeFont');
 /**
  * basic theming/skinning.
  *
@@ -11,11 +11,9 @@ function Theme(global) {
     // at its core a theme is just a dict that holds a collection of skins
     this._skins = {};
 
-    this.textStyle = this.textStyle || {};
-    // default color for label (e.g. buttons)
-    this.textStyle.fill = this.textStyle.fill || '#000';
-    // default font for label (e.g. buttons)
-    this.textStyle.font = this.textStyle.font || '12px Arial';
+    // default font for labels (e.g. buttons)
+    this.textStyle = this.textStyle || new ThemeFont();
+    this.textStyle.clone();
 
     if (global === true || global === undefined) {
         GOWN.theme = this;
