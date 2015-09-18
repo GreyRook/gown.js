@@ -19,7 +19,11 @@ function Skinable(theme) {
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
-    this.invalidDimensions = true;
+    this.resizeScaling = true; // resize instead of scale
+
+    // update dimension flag
+    this._lastWidth = NaN;
+    this._lastHeight = NaN;
 }
 
 Skinable.prototype = Object.create( Control.prototype );
@@ -108,18 +112,60 @@ Skinable.prototype.redraw = function() {
     if (this.invalidState) {
         this.fromSkin(this._currentState, this.changeSkin);
     }
+    var width = this.worldWidth;
+    var height = this.worldHeight;
     if (this._currentSkin &&
-        this.invalidDimensions &&
-        this._width > 0 && this._height > 0) {
+        (this._lastWidth !== width || this._lastHeight !== height) &&
+        width > 0 && height > 0) {
 
-        this._currentSkin.width = this._width;
-        this._currentSkin.height = this._height;
-        this.invalidDimensions = false;
+        this._currentSkin.width = this._lastWidth = width;
+        this._currentSkin.height = this._lastHeight = height;
         this.updateDimensions();
     }
 };
 
 Skinable.prototype.updateDimensions = function() {
+};
+
+
+Control.prototype.updateTransform = function() {
+    var wt = this.worldTransform;
+    var scaleX = 1;
+    var scaleY = 1;
+
+    if(this.redraw) {
+
+        if(this.resizeScaling) {
+            var pt = this.parent.worldTransform;
+
+            scaleX = Math.sqrt(Math.pow(pt.a, 2) + Math.pow(pt.b, 2));
+            scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
+        }
+
+        this.worldWidth = this._width * scaleX;
+        this.worldHeight = this._height * scaleY;
+        this.redraw();
+    }
+
+    // obmit Control.updateTransform as it calls redraw as well
+    if(!this.resizeScaling) {
+        PIXI.Container.prototype.updateTransform.call(this);
+    } else {
+        PIXI.DisplayObject.prototype.updateTransform.call(this);
+
+        // revert scaling
+        var tx = wt.tx;
+        var ty = wt.ty;
+        scaleX = scaleX !== 0 ? 1/scaleX : 0;
+        scaleY = scaleY !== 0 ? 1/scaleY : 0;
+        wt.scale(scaleX, scaleY);
+        wt.tx = tx;
+        wt.ty = ty;
+
+        for (var i = 0, j = this.children.length; i < j; ++i) {
+            this.children[i].updateTransform();
+        }
+    }
 };
 
 
