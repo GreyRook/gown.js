@@ -83,3 +83,44 @@ Object.defineProperty(Control.prototype, 'enabled', {
         this._enabled = value;
     }
 });
+
+
+//var originalWidth = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'width');
+
+/**
+ * The width of the shape, setting this will redraw the component.
+ * (set redraw)
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(Control.prototype, 'width', {
+    get: function() {
+        return this._width;
+        //return originalWidth.get.call(this);
+    },
+    set: function(width) {
+        this._width = width;
+        //originalWidth.set.call(this, width);
+    }
+});
+
+//var originalHeight = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'height');
+
+/**
+ * The height of the shape, setting this will redraw the component.
+ * (set redraw)
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(Control.prototype, 'height', {
+    get: function() {
+        //return originalHeight.get.call(this);
+        return this._height;
+    },
+    set: function(height) {
+        //originalHeight.set.call(this, height);
+        this._height = height;
+    }
+});
