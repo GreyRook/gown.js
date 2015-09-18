@@ -85,49 +85,6 @@ Object.defineProperty(Control.prototype, 'enabled', {
     }
 });
 
-
-//var originalWidth = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'width');
-
-/**
- * The width of the shape, setting this will redraw the component.
- * (set invalidDimensions)
- *
- * @property width
- * @type Number
- */
-Object.defineProperty(Control.prototype, 'width', {
-    get: function() {
-        return this._width;
-        //return originalWidth.get.call(this);
-    },
-    set: function(width) {
-        this._width = width;
-        //originalWidth.set.call(this, width);
-        this.invalidDimensions = true;
-    }
-});
-
-//var originalHeight = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'height');
-
-/**
- * The height of the shape, setting this will redraw the component.
- * (set invalidDimensions)
- *
- * @property height
- * @type Number
- */
-Object.defineProperty(Control.prototype, 'height', {
-    get: function() {
-        //return originalHeight.get.call(this);
-        return this._height;
-    },
-    set: function(height) {
-        //originalHeight.set.call(this, height);
-        this._height = height;
-        this.invalidDimensions = true;
-    }
-});
-
 },{}],2:[function(require,module,exports){
 var Control = require('./Control');
 
@@ -150,8 +107,11 @@ function Skinable(theme) {
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
-    this.invalidDimensions = true;
     this.resizeScaling = true; // resize instead of scale
+
+    // update dimension flag
+    this._lastWidth = NaN;
+    this._lastHeight = NaN;
 }
 
 Skinable.prototype = Object.create( Control.prototype );
@@ -240,13 +200,14 @@ Skinable.prototype.redraw = function() {
     if (this.invalidState) {
         this.fromSkin(this._currentState, this.changeSkin);
     }
+    var width = this.worldWidth;
+    var height = this.worldHeight;
     if (this._currentSkin &&
-        this.invalidDimensions &&
-        this._width > 0 && this._height > 0) {
+        (this._lastWidth !== width || this._lastHeight !== height) &&
+        width > 0 && height > 0) {
 
-        this._currentSkin.width = this._width;
-        this._currentSkin.height = this._height;
-        this.invalidDimensions = false;
+        this._currentSkin.width = this._lastWidth = width;
+        this._currentSkin.height = this._lastHeight = height;
         this.updateDimensions();
     }
 };
@@ -269,7 +230,9 @@ Control.prototype.updateTransform = function() {
             scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
         }
 
-        this.redraw(this._width * scaleX, this._height * scaleY);
+        this.worldWidth = this._width * scaleX;
+        this.worldHeight = this._height * scaleY;
+        this.redraw();
     }
 
     // obmit Control.updateTransform as it calls redraw as well
@@ -629,19 +592,28 @@ Button.prototype.mouseout = function() {
  * @method updateDimensions
  */
 Button.prototype.updateDimensions = function() {
+    var width = this.worldWidth;
+    var height = this.worldHeight;
     if (this.hitArea) {
-        this.hitArea.width = this.width;
-        this.hitArea.height = this.height;
+        this.hitArea.width = width;
+        this.hitArea.height = height;
     } else {
-        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
+        this.hitArea = new PIXI.Rectangle(0, 0, width, height);
     }
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
         var skin = this.skinCache[name];
         if (skin) {
-            skin.width = this.width;
-            skin.height = this.height;
+            skin.width = width;
+            skin.height = height;
         }
+    }
+
+    if(this.labelText) {
+        var scaleY = height / this._height;
+        this.labelText.style.fontSize = this.theme.textStyle.fontSize * scaleY;
+        this.labelText.style = this.labelText.style; // trigger setter
+        this.updateLabelDimensions();
     }
 };
 
@@ -703,9 +675,9 @@ Button.prototype.redraw = function() {
 Button.prototype.createLabel = function() {
     if(this.labelText) {
         this.labelText.text = this._label;
-        this.labelText.style = this.theme.textStyle;
+        this.labelText.style = this.theme.textStyle.clone();
     } else {
-        this.labelText = new PIXI.Text(this._label, this.theme.textStyle);
+        this.labelText = new PIXI.Text(this._label, this.theme.textStyle.clone());
         this.addChild(this.labelText);
     }
     this.updateLabelDimensions();
@@ -719,8 +691,8 @@ Button.prototype.createLabel = function() {
  */
 Button.prototype.updateLabelDimensions = function () {
     if (this.labelText && this.labelText.text) {
-        this.labelText.x = Math.floor((this.width - this.labelText.width) / 2);
-        this.labelText.y = Math.floor((this.height - this.labelText.height) / 2);
+        this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
+        this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
     }
 };
 
@@ -784,6 +756,7 @@ Object.defineProperty(Button.prototype, 'label', {
         this.updateLabel = true;
     }
 });
+
 },{"../Skinable":2}],5:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -1018,7 +991,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":30,"../Skinable":2}],6:[function(require,module,exports){
+},{"../../utils/InputWrapper":31,"../Skinable":2}],6:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -2004,7 +1977,7 @@ Scrollable.prototype.redraw = function() {
 
 /**
  * The width of the Scrollable, setting this will redraw the track and thumb.
- * (set invalidDimensions)
+
  *
  * @property width
  * @type Number
@@ -2052,7 +2025,6 @@ Object.defineProperty(Scrollable.prototype, 'inverse', {
 
 /**
  * The height of the Scrollable, setting this will redraw the track and thumb.
- * (set invalidDimensions)
  *
  * @property height
  * @type Number
@@ -2241,7 +2213,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":32,"./Scrollable":10}],12:[function(require,module,exports){
+},{"../../utils/SliderData":33,"./Scrollable":10}],12:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2611,7 +2583,7 @@ TextInput.prototype.updateTextState = function () {
     }
     this.setCursorPos();
 };
-},{"../../utils/InputWrapper":30,"../Control":1,"./InputControl":5}],13:[function(require,module,exports){
+},{"../../utils/InputWrapper":31,"../Control":1,"./InputControl":5}],13:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -3986,7 +3958,7 @@ Shape.prototype.redraw = function() {
 
 },{}],28:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
-
+var ThemeFont = require('./ThemeFont');
 /**
  * basic theming/skinning.
  *
@@ -3998,11 +3970,9 @@ function Theme(global) {
     // at its core a theme is just a dict that holds a collection of skins
     this._skins = {};
 
-    this.textStyle = this.textStyle || {};
-    // default color for label (e.g. buttons)
-    this.textStyle.fill = this.textStyle.fill || '#000';
-    // default font for label (e.g. buttons)
-    this.textStyle.font = this.textStyle.font || '12px Arial';
+    // default font for labels (e.g. buttons)
+    this.textStyle = this.textStyle || new ThemeFont();
+    this.textStyle.clone();
 
     if (global === true || global === undefined) {
         GOWN.theme = this;
@@ -4111,7 +4081,107 @@ Theme.prototype.getSkin = function(comp, state) {
 Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
-},{"../../utils/ScaleContainer":31}],29:[function(require,module,exports){
+
+},{"../../utils/ScaleContainer":32,"./ThemeFont":29}],29:[function(require,module,exports){
+var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
+               'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
+               'dropShadow', 'dropShadowColor', 'dropShadowAngle',
+               'dropShadowDistance', 'padding', 'textBaseline',
+               'lineJoin', 'miterLimit'];
+
+/**
+ * @class ThemeFont
+ * @memberof GOWN
+ * @constructor
+ */
+function ThemeFont(data) {
+    for(var key in data) {
+        if(OPTIONS.indexOf(key) !== -1) {
+            this[key] = data[key];
+        }
+    }
+
+    this.fill = this.fill || '#000';
+    // default font for label (e.g. buttons)
+    this._fontFamily = this._fontFamily || 'Arial';
+    this._fontSize = this._fontSize || 12;
+}
+
+module.exports = ThemeFont;
+
+
+/**
+ * clone ThemeFont instance
+ *
+ * @method clone
+ */
+ThemeFont.prototype.clone = function() {
+    var re = new ThemeFont();
+    for(var key in this) {
+        if(OPTIONS.indexOf(key) !== -1) {
+            re[key] = this[key];
+        }
+    }
+    return re;
+};
+
+/**
+ * update font string
+ *
+ * @method _updateFont
+ * @private
+ */
+ThemeFont.prototype._updateFont = function() {
+    this._font = this._fontSize + 'px ' + this._fontFamily;
+};
+
+/**
+ * instead of setting font using fontFamily and fontSize is encouraged
+ *
+ * @property font
+ * @type String
+ */
+Object.defineProperty(ThemeFont.prototype, 'font', {
+    get: function() {
+        return this._font;
+    }
+});
+
+
+/**
+ * Font Size
+ *
+ * @property fontSize
+ * @type Number
+ */
+Object.defineProperty(ThemeFont.prototype, 'fontSize', {
+    get: function() {
+        return this._fontSize;
+    },
+    set: function(value) {
+        this._fontSize = value;
+        this._updateFont();
+    }
+});
+
+
+/**
+ * Font Familiy
+ *
+ * @property fontFamily
+ * @type String
+ */
+Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
+    get: function() {
+        return this._fontFamily;
+    },
+    set: function(value) {
+        this._fontFamily = value;
+        this._updateFont();
+    }
+});
+
+},{}],30:[function(require,module,exports){
 (function (global){
 if (typeof PIXI === 'undefined') {
     if (window.console) {
@@ -4136,7 +4206,7 @@ global.GOWN = core;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./core":14,"./utils":33}],30:[function(require,module,exports){
+},{"./core":14,"./utils":34}],31:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4340,7 +4410,7 @@ InputWrapper.getType = function() {
         return InputWrapper._type;
     }
 };
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4629,7 +4699,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     return new ScaleContainer(texture, rect);
 };
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4651,7 +4721,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4669,7 +4739,7 @@ module.exports = {
     ScaleContainer:         require('./ScaleContainer'),
     SliderData:             require('./SliderData')
 };
-},{"./InputWrapper":30,"./ScaleContainer":31,"./SliderData":32,"./mouseWheelSupport":34,"./position":35}],34:[function(require,module,exports){
+},{"./InputWrapper":31,"./ScaleContainer":32,"./SliderData":33,"./mouseWheelSupport":35,"./position":36}],35:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -4736,7 +4806,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
@@ -4788,7 +4858,7 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}]},{},[29])(29)
+},{}]},{},[30])(30)
 });
 
 

@@ -282,7 +282,7 @@ Scrollable.prototype.redraw = function() {
 
 /**
  * The width of the Scrollable, setting this will redraw the track and thumb.
- * (set invalidDimensions)
+
  *
  * @property width
  * @type Number
@@ -330,7 +330,6 @@ Object.defineProperty(Scrollable.prototype, 'inverse', {
 
 /**
  * The height of the Scrollable, setting this will redraw the track and thumb.
- * (set invalidDimensions)
  *
  * @property height
  * @type Number

@@ -19,8 +19,11 @@ function Skinable(theme) {
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
-    this.invalidDimensions = true;
     this.resizeScaling = true; // resize instead of scale
+
+    // update dimension flag
+    this._lastWidth = NaN;
+    this._lastHeight = NaN;
 }
 
 Skinable.prototype = Object.create( Control.prototype );
@@ -109,13 +112,14 @@ Skinable.prototype.redraw = function() {
     if (this.invalidState) {
         this.fromSkin(this._currentState, this.changeSkin);
     }
+    var width = this.worldWidth;
+    var height = this.worldHeight;
     if (this._currentSkin &&
-        this.invalidDimensions &&
-        this._width > 0 && this._height > 0) {
+        (this._lastWidth !== width || this._lastHeight !== height) &&
+        width > 0 && height > 0) {
 
-        this._currentSkin.width = this._width;
-        this._currentSkin.height = this._height;
-        this.invalidDimensions = false;
+        this._currentSkin.width = this._lastWidth = width;
+        this._currentSkin.height = this._lastHeight = height;
         this.updateDimensions();
     }
 };
@@ -138,7 +142,9 @@ Control.prototype.updateTransform = function() {
             scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
         }
 
-        this.redraw(this._width * scaleX, this._height * scaleY);
+        this.worldWidth = this._width * scaleX;
+        this.worldHeight = this._height * scaleY;
+        this.redraw();
     }
 
     // obmit Control.updateTransform as it calls redraw as well
