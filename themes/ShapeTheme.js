@@ -1,7 +1,8 @@
 function ShapeTheme(onComplete, global) {
     GOWN.Theme.call(this, global);
     this.textStyle.fill = '#fff';
-    this.textStyle.font = '20px Arial';
+    //TODO: this does not really work - load font somehow?!
+    this.textStyle.fontFamily = 'Droid Sans';
     this.onComplete = onComplete;
     this.setSkins();
 }

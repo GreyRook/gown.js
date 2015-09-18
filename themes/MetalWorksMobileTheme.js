@@ -10,7 +10,8 @@ function MetalWorksMobileTheme(jsonPath, onComplete, global) {
     // default color for label (e.g. buttons)
     this.textStyle.fill = '#4a4137';
     // default font for label (e.g. buttons)
-    this.textStyle.font = '20px Arial';
+    this.textStyle.font = 'Arial';
+    this.textStyle.fontSize = 20;
 
     this.thumbSize = 32;
 
