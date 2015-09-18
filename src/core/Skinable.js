@@ -20,6 +20,7 @@ function Skinable(theme) {
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
     this.invalidDimensions = true;
+    this.resizeScaling = true; // resize instead of scale
 }
 
 Skinable.prototype = Object.create( Control.prototype );
@@ -120,6 +121,45 @@ Skinable.prototype.redraw = function() {
 };
 
 Skinable.prototype.updateDimensions = function() {
+};
+
+
+Control.prototype.updateTransform = function() {
+    var wt = this.worldTransform;
+    var scaleX = 1;
+    var scaleY = 1;
+
+    if(this.redraw) {
+
+        if(this.resizeScaling) {
+            var pt = this.parent.worldTransform;
+
+            scaleX = Math.sqrt(Math.pow(pt.a, 2) + Math.pow(pt.b, 2));
+            scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
+        }
+
+        this.redraw(this._width * scaleX, this._height * scaleY);
+    }
+
+    // obmit Control.updateTransform as it calls redraw as well
+    if(!this.resizeScaling) {
+        PIXI.Container.prototype.updateTransform.call(this);
+    } else {
+        PIXI.DisplayObject.prototype.updateTransform.call(this);
+
+        // revert scaling
+        var tx = wt.tx;
+        var ty = wt.ty;
+        scaleX = scaleX !== 0 ? 1/scaleX : 0;
+        scaleY = scaleY !== 0 ? 1/scaleY : 0;
+        wt.scale(scaleX, scaleY);
+        wt.tx = tx;
+        wt.ty = ty;
+
+        for (var i = 0, j = this.children.length; i < j; ++i) {
+            this.children[i].updateTransform();
+        }
+    }
 };
 
 
