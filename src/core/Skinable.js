@@ -131,7 +131,7 @@ Skinable.prototype.updateDimensions = function() {
 };
 
 
-Control.prototype.updateTransform = function() {
+Skinable.prototype.updateTransform = function() {
     var wt = this.worldTransform;
     var scaleX = 1;
     var scaleY = 1;
