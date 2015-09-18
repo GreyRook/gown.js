@@ -21,6 +21,9 @@ function Skinable(theme) {
     this.invalidState = true; // draw for the first time
     this.resizeScaling = true; // resize instead of scale
 
+    this.minWidth = 1;
+    this.minHeight = 1;
+
     // update dimension flag
     this._lastWidth = NaN;
     this._lastHeight = NaN;
@@ -142,8 +145,8 @@ Control.prototype.updateTransform = function() {
             scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
         }
 
-        this.worldWidth = this._width * scaleX;
-        this.worldHeight = this._height * scaleY;
+        this.worldWidth = Math.max(this._width * scaleX, this.minWidth);
+        this.worldHeight = Math.max(this._height * scaleY, this.minHeight);
         this.redraw();
     }
 
