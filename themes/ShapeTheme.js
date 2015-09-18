@@ -1,9 +1,7 @@
 function ShapeTheme(onComplete, global) {
     GOWN.Theme.call(this, global);
-    this.textStyle = {
-        "fill": "#fff",
-        "font": "20px Arial"
-    };
+    this.textStyle.fill = '#fff';
+    this.textStyle.font = '20px Arial';
     this.onComplete = onComplete;
     this.setSkins();
 }
