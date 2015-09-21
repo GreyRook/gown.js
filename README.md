@@ -4,6 +4,7 @@
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
 
 [![Inline docs](http://inch-ci.org/github/brean/gown.js.svg?branch=master)](http://inch-ci.org/github/brean/gown.js)
+[![Code Climate](https://codeclimate.com/github/brean/gown.js/badges/gpa.svg)](https://codeclimate.com/github/brean/gown.js)
 [![Build Status](https://travis-ci.org/brean/gown.js.svg?branch=master)](https://travis-ci.org/brean/gown.js)
 
 
