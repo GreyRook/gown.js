@@ -1,4 +1,29 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.GOWN = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function (global){
+if (typeof PIXI === 'undefined') {
+    if (window.console) {
+        window.console.warn('pixi.js has to be loaded before loading gown.js');
+    }
+    return;
+}
+
+var core = module.exports = require('./core');
+
+// add core plugins.
+core.utils          = require('./utils');
+
+// use default pixi loader
+core.loader = PIXI.loader;
+
+// mixin the deprecation features.
+//Object.assign(core, require('./deprecation'));
+
+// export GOWN globally.
+global.GOWN = core;
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+
+},{"./core":16,"./utils":35}],2:[function(require,module,exports){
 /**
  * base for all UI controls (see controls/)
  * based on pixi-DisplayContainer that supports adding children, so all
@@ -126,7 +151,7 @@ Object.defineProperty(Control.prototype, 'height', {
     }
 });
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var Control = require('./Control');
 
 /**
@@ -323,7 +348,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
     }
 });
 
-},{"./Control":1}],3:[function(require,module,exports){
+},{"./Control":2}],4:[function(require,module,exports){
 var Control = require('../Control');
 
 /**
@@ -510,7 +535,7 @@ Object.defineProperty(Application.prototype, 'background', {
     }
 });
 
-},{"../Control":1}],4:[function(require,module,exports){
+},{"../Control":2}],5:[function(require,module,exports){
 var Skinable = require('../Skinable');
 
 /**
@@ -801,7 +826,212 @@ Object.defineProperty(Button.prototype, 'label', {
     }
 });
 
-},{"../Skinable":2}],5:[function(require,module,exports){
+},{"../Skinable":3}],6:[function(require,module,exports){
+var Skinable = require('../Skinable');
+
+/**
+ * The basic CheckBox with 3 states (up, down and hover) and a label that is
+ * centered on it
+ *
+ * @class CheckBox
+ * @extends GOWN.Skinable
+ * @memberof GOWN
+ * @constructor
+ */
+function CheckBox(preselected, theme) {
+    this.skinName = this.skinName || CheckBox.SKIN_NAME;
+    this._validStates = this._validStates || CheckBox.stateNames.concat(CheckBox.selectedStateNames);
+    Skinable.call(this, theme);
+
+    this._currentState = 'up';
+    this.selected = preselected || false;
+    this._mousedown = false;
+
+    this.touchstart = this.mousedown;
+    this.touchend = this.mouseupoutside = this.mouseup;
+    this.touchendoutside = this.mouseout;
+}
+
+CheckBox.prototype = Object.create( Skinable.prototype );
+CheckBox.prototype.constructor = CheckBox;
+module.exports = CheckBox;
+
+// name of skin that will be applied
+CheckBox.SKIN_NAME = 'checkbox';
+
+// the states of the checkbox as constants
+CheckBox.UP = 'up';
+CheckBox.DOWN = 'down';
+CheckBox.HOVER = 'hover';
+
+// the states of the checkbox in the 'selected' state as constants
+CheckBox.SELECTED_UP = 'selected_up';
+CheckBox.SELECTED_DOWN = 'selected_down';
+CheckBox.SELECTED_HOVER = 'selected_hover';
+
+// the list of non-selected states
+CheckBox.stateNames = [
+    CheckBox.UP,
+    CheckBox.DOWN,
+    CheckBox.HOVER
+];
+
+// the list of selected states
+CheckBox.selectedStateNames = [
+    CheckBox.SELECTED_UP,
+    CheckBox.SELECTED_DOWN,
+    CheckBox.SELECTED_HOVER
+];
+
+CheckBox.prototype.mousedown = function() {
+    this.handleEvent(CheckBox.DOWN);
+};
+
+CheckBox.prototype.mouseup = function() {
+    this.handleEvent(CheckBox.UP);
+};
+
+CheckBox.prototype.mousemove = function() {
+};
+
+CheckBox.prototype.mouseover = function() {
+    this.handleEvent(CheckBox.HOVER);
+};
+
+CheckBox.prototype.mouseout = function() {
+    this.handleEvent('out');
+};
+
+/**
+ * initiate all skins first
+ * (to prevent flickering)
+ *
+ * @method preloadSkins
+ */
+CheckBox.prototype.preloadSkins = function() {
+    for (var i = 0; i < this._validStates.length; i++) {
+        var name = this._validStates[i];
+        var skin = this.theme.getSkin(this.skinName, name);
+        this.skinCache[name] = skin;
+        if (skin) {
+            this.addChildAt(skin, 0);
+            skin.alpha = 0.0;
+            if (this.width) {
+                skin.width = this.width;
+            }
+            if (this.height) {
+                skin.height = this.height;
+            }
+        }
+    }
+};
+
+// performance increase to avoid using call.. (10x faster)
+CheckBox.prototype.redrawSkinable = Skinable.prototype.redraw;
+
+/**
+ * update before draw call (position label)
+ *
+ * @method redraw
+ */
+CheckBox.prototype.redraw = function() {
+    this.redrawSkinable();
+};
+
+CheckBox.prototype.skinableSetTheme = Skinable.prototype.setTheme;
+
+/**
+ * change the theme
+ *
+ * @method setTheme
+ * @param theme the new theme {Theme}
+ */
+CheckBox.prototype.setTheme = function(theme) {
+    this.skinableSetTheme(theme);
+};
+
+/**
+ * The current state (one of _validStates)
+ *
+ * @property currentState
+ * @type String
+ */
+Object.defineProperty(CheckBox.prototype, 'currentState',{
+    get: function() {
+        return this._currentState;
+    },
+    set: function(value) {
+        if (this._currentState === value) {
+            return;
+        }
+        if (this._validStates.indexOf(value) < 0) {
+            throw new Error('Invalid state: ' + value + '.');
+        }
+        this._currentState = value;
+        this.invalidState = true;
+    }
+});
+
+/**
+ * Indicate if the checkbox is selected (checked)
+ *
+ * @property selected
+ * @type Boolean
+ */
+Object.defineProperty(CheckBox.prototype, 'selected', {
+    set: function(selected) {
+        var state = this._currentState;
+        var index;
+        if (!(CheckBox.selectedStateNames.indexOf(state) < 0) && !selected) {
+            index = CheckBox.selectedStateNames.indexOf(state);
+            state = CheckBox.stateNames[index];
+        } else if (!(CheckBox.stateNames.indexOf(state) < 0) && selected) {
+            index = CheckBox.stateNames.indexOf(state);
+            state = CheckBox.selectedStateNames[index];
+        }
+
+        this._selected = selected;
+        this._pressed = false; //to prevent toggling on touch/mouse up
+        this.currentState = state;
+    },
+    get: function() {
+        return this._selected;
+    }
+});
+
+CheckBox.prototype.toggleSelected = function () {
+    this.selected = !this.selected;
+};
+
+CheckBox.prototype.handleEvent = function (type) {
+    switch (type) {
+        case CheckBox.UP:
+            if (this._mousedown) {
+                this._mousedown = false;
+                this.toggleSelected();
+                this.currentState = this.selected ? CheckBox.SELECTED_UP : CheckBox.UP;
+            }
+            break;
+        case CheckBox.DOWN:
+            if (!this._mousedown) {
+                this._mousedown = true;
+                this.currentState = this.selected ? CheckBox.SELECTED_DOWN : CheckBox.DOWN;
+            }
+            break;
+        case CheckBox.HOVER:
+            if (!this._mousedown) {
+                this.currentState = this.selected ? CheckBox.SELECTED_HOVER : CheckBox.HOVER;
+            }
+            break;
+        case 'out':
+            this.currentState = this.selected ? CheckBox.SELECTED_UP : CheckBox.UP;
+            break;
+        default:
+            break;
+    }
+};
+
+},{"../Skinable":3}],7:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     InputWrapper = require('../../utils/InputWrapper');
 
@@ -1035,7 +1265,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":31,"../Skinable":2}],6:[function(require,module,exports){
+},{"../../utils/InputWrapper":32,"../Skinable":3}],8:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1195,7 +1425,7 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
     }
 });
 
-},{"../Control":1,"../layout/ViewPortBounds":22}],7:[function(require,module,exports){
+},{"../Control":2,"../layout/ViewPortBounds":24}],9:[function(require,module,exports){
 var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1502,7 +1732,7 @@ Object.defineProperty(ScrollArea.prototype, 'height', {
     }
 });
 
-},{"../Control":1,"../layout/LayoutAlignment":17}],8:[function(require,module,exports){
+},{"../Control":2,"../layout/LayoutAlignment":19}],10:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1585,7 +1815,7 @@ ScrollBar.prototype.thumbMoved = function(x, y) {
     }
 };
 
-},{"../layout/LayoutAlignment":17,"./Scrollable":10}],9:[function(require,module,exports){
+},{"../layout/LayoutAlignment":19,"./Scrollable":12}],11:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -1736,7 +1966,7 @@ ScrollThumb.prototype.move = function(x, y) {
     }
     return false;
 };
-},{"./Button":4}],10:[function(require,module,exports){
+},{"./Button":5}],12:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
 /**
@@ -2086,7 +2316,7 @@ Object.defineProperty(Scrollable.prototype, 'height', {
     }
 });
 
-},{"../Skinable":2,"./ScrollThumb":9}],11:[function(require,module,exports){
+},{"../Skinable":3,"./ScrollThumb":11}],13:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     SliderData = require('../../utils/SliderData');
 
@@ -2257,7 +2487,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":33,"./Scrollable":10}],12:[function(require,module,exports){
+},{"../../utils/SliderData":34,"./Scrollable":12}],14:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2627,7 +2857,7 @@ TextInput.prototype.updateTextState = function () {
     }
     this.setCursorPos();
 };
-},{"../../utils/InputWrapper":31,"../Control":1,"./InputControl":5}],13:[function(require,module,exports){
+},{"../../utils/InputWrapper":32,"../Control":2,"./InputControl":7}],15:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2682,6 +2912,7 @@ Object.defineProperty(ToggleButton.prototype, 'currentState',{
         }
         originalCurrentState.set.call(this, value);
     }
+
 });
 
 /**
@@ -2733,7 +2964,7 @@ ToggleButton.prototype.handleEvent = function(type) {
     this.buttonHandleEvent(type);
 };
 
-},{"./Button":4}],14:[function(require,module,exports){
+},{"./Button":5}],16:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2751,6 +2982,7 @@ module.exports = {
     // controls
     Application:            require('./controls/Application'),
     Button:                 require('./controls/Button'),
+    CheckBox:               require('./controls/CheckBox'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
     Scrollable:             require('./controls/Scrollable'),
@@ -2782,7 +3014,7 @@ module.exports = {
     Theme:           require('./skin/Theme')
 };
 
-},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/InputControl":5,"./controls/LayoutGroup":6,"./controls/ScrollArea":7,"./controls/ScrollBar":8,"./controls/ScrollThumb":9,"./controls/Scrollable":10,"./controls/Slider":11,"./controls/TextInput":12,"./controls/ToggleButton":13,"./layout/HorizontalLayout":15,"./layout/Layout":16,"./layout/LayoutAlignment":17,"./layout/TiledColumnsLayout":18,"./layout/TiledLayout":19,"./layout/TiledRowsLayout":20,"./layout/VerticalLayout":21,"./layout/ViewPortBounds":22,"./shapes/Diamond":23,"./shapes/Ellipse":24,"./shapes/Line":25,"./shapes/Rect":26,"./shapes/Shape":27,"./skin/Theme":28}],15:[function(require,module,exports){
+},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/CheckBox":6,"./controls/InputControl":7,"./controls/LayoutGroup":8,"./controls/ScrollArea":9,"./controls/ScrollBar":10,"./controls/ScrollThumb":11,"./controls/Scrollable":12,"./controls/Slider":13,"./controls/TextInput":14,"./controls/ToggleButton":15,"./layout/HorizontalLayout":17,"./layout/Layout":18,"./layout/LayoutAlignment":19,"./layout/TiledColumnsLayout":20,"./layout/TiledLayout":21,"./layout/TiledRowsLayout":22,"./layout/VerticalLayout":23,"./layout/ViewPortBounds":24,"./shapes/Diamond":25,"./shapes/Ellipse":26,"./shapes/Line":27,"./shapes/Rect":28,"./shapes/Shape":29,"./skin/Theme":30}],17:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2803,7 +3035,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":17}],16:[function(require,module,exports){
+},{"./LayoutAlignment":19}],18:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -3026,7 +3258,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3213,7 +3445,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":16}],18:[function(require,module,exports){
+},{"./Layout":18}],20:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3259,7 +3491,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":19}],19:[function(require,module,exports){
+},{"./TiledLayout":21}],21:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3565,7 +3797,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":16}],20:[function(require,module,exports){
+},{"./Layout":18}],22:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3611,7 +3843,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":19}],21:[function(require,module,exports){
+},{"./TiledLayout":21}],23:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3632,7 +3864,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":17}],22:[function(require,module,exports){
+},{"./LayoutAlignment":19}],24:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3673,7 +3905,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3708,7 +3940,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":27}],24:[function(require,module,exports){
+},{"./Shape":29}],26:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3739,7 +3971,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":27}],25:[function(require,module,exports){
+},{"./Shape":29}],27:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3795,7 +4027,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":27}],26:[function(require,module,exports){
+},{"./Shape":29}],28:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3850,7 +4082,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":27}],27:[function(require,module,exports){
+},{"./Shape":29}],29:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -4000,7 +4232,7 @@ Shape.prototype.redraw = function() {
     this.invalid = false;
 };
 
-},{}],28:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
 var ThemeFont = require('./ThemeFont');
 /**
@@ -4126,7 +4358,7 @@ Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
 
-},{"../../utils/ScaleContainer":32,"./ThemeFont":29}],29:[function(require,module,exports){
+},{"../../utils/ScaleContainer":33,"./ThemeFont":31}],31:[function(require,module,exports){
 var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
                'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
@@ -4225,32 +4457,7 @@ Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
     }
 });
 
-},{}],30:[function(require,module,exports){
-(function (global){
-if (typeof PIXI === 'undefined') {
-    if (window.console) {
-        window.console.warn('pixi.js has to be loaded before loading gown.js');
-    }
-    return;
-}
-
-var core = module.exports = require('./core');
-
-// add core plugins.
-core.utils          = require('./utils');
-
-// use default pixi loader
-core.loader = PIXI.loader;
-
-// mixin the deprecation features.
-//Object.assign(core, require('./deprecation'));
-
-// export GOWN globally.
-global.GOWN = core;
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-
-},{"./core":14,"./utils":34}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4454,7 +4661,7 @@ InputWrapper.getType = function() {
         return InputWrapper._type;
     }
 };
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4743,7 +4950,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     return new ScaleContainer(texture, rect);
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4765,7 +4972,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4783,7 +4990,7 @@ module.exports = {
     ScaleContainer:         require('./ScaleContainer'),
     SliderData:             require('./SliderData')
 };
-},{"./InputWrapper":31,"./ScaleContainer":32,"./SliderData":33,"./mouseWheelSupport":35,"./position":36}],35:[function(require,module,exports){
+},{"./InputWrapper":32,"./ScaleContainer":33,"./SliderData":34,"./mouseWheelSupport":36,"./position":37}],36:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -4850,7 +5057,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
@@ -4902,7 +5109,7 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}]},{},[30])(30)
+},{}]},{},[1])(1)
 });
 
 
