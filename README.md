@@ -12,7 +12,8 @@ Features
 ========
  1. Basic UI components
      - **Button**: simple Button, with label and background, easy to extend using themes
-     - **ToggleButton**: a button with on/off state
+     - **CheckBox** a simple checkbox
+     - **ToggleButton**: a button with pressed state
      - **Slider** a simple slider with modifyable start and end value
 
  1. Layouting
