@@ -952,6 +952,9 @@ Object.defineProperty(CheckBox.prototype, 'selected', {
 
 CheckBox.prototype.toggleSelected = function () {
     this.selected = !this.selected;
+    if (this.change) {
+        this.change(this.selected);
+    }
 };
 
 CheckBox.prototype.handleEvent = function (type) {
