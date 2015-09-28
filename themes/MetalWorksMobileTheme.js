@@ -63,6 +63,20 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
                 MetalWorksMobileTheme.DEFAULT_SCALE9_GRID));
     }
 
+    if (GOWN.CheckBox) {
+        var chk = GOWN.CheckBox;
+
+        this.setSkin(chk.SKIN_NAME, chk.UP,
+            this.getImage("background-skin"));
+        this.setSkin(chk.SKIN_NAME, chk.DOWN,
+            this.getImage("background-down-skin"));
+
+        this.setSkin(chk.SKIN_NAME, chk.SELECTED_UP,
+            this.getImage("check-selected-up-icon"));
+        this.setSkin(chk.SKIN_NAME, chk.SELECTED_DOWN,
+            this.getImage("check-selected-down-icon"));
+    }
+
     /*
     if (GOWN.TextInput) {
         var ti = GOWN.TextInput;

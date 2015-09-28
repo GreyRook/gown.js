@@ -13,6 +13,7 @@
     <script src="../../lib/pixi.js"></script>
     <script src="../../bin/gown.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
+    <script src="../../themes/MetalWorksMobileTheme.js"></script>
 </head>
 <body>
 <script>
@@ -22,6 +23,7 @@
     document.body.appendChild(renderer.view);
 
     var aeontheme;
+    var metaltheme;
 
     function onCompleteAeon() {
         // initialize theme
@@ -39,8 +41,28 @@
         requestAnimationFrame(animate);
     }
 
+    function onCompleteMetal() {
+        // initialize theme
+        var chk;
+        chk = new GOWN.CheckBox(false, metaltheme);
+        chk.x = 20;
+        chk.y = 60;
+
+        var chk2;
+        chk2 = new GOWN.CheckBox(true, metaltheme);
+        chk2.x = 60;
+        chk2.y = 60;
+        stage.addChild(chk);
+        stage.addChild(chk2);
+
+        requestAnimationFrame(animate);
+    }
+
     aeontheme = new GOWN.AeonTheme(
         ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
+
+    metaltheme = new GOWN.MetalWorksMobileTheme(
+        ["../../themes/assets/metalworks/metalworks.json"], onCompleteMetal, false);
 
     function animate() {
         // render the stage
