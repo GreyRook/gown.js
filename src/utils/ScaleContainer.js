@@ -75,23 +75,6 @@ function ScaleContainer(texture, rect) {
         this.br = this._getTexture(lw + mw, th + ch, rw, bh);
         this.addChild(this.br);
     }
-
-
-    // apply scaling when the window gets resized using worldTansformation
-    var scope = this;
-    window.addEventListener('resize', function() {
-        scope._applyScales('tl', scope.tl);
-        scope._applyScales('tm', scope.tm);
-        scope._applyScales('tr', scope.tr);
-
-        scope._applyScales('cl', scope.cl);
-        scope._applyScales('cm', scope.cm);
-        scope._applyScales('cr', scope.cr);
-
-        scope._applyScales('bl', scope.bl);
-        scope._applyScales('bm', scope.bm);
-        scope._applyScales('br', scope.br);
-    });
 }
 
 // constructor
@@ -100,26 +83,9 @@ ScaleContainer.prototype.constructor = ScaleContainer;
 module.exports = ScaleContainer;
 
 /**
- * apply scaling when the window gets resized using worldTansformation
- *
- * @method _applyScales
- * @private
- */
-ScaleContainer.prototype._applyScales = function(name, elem) {
-    if (this.scaleOriginals[name]) {
-        elem.width = (Math.ceil(this.scaleOriginals[name].width *
-            this.worldTransform.a) /
-            this.worldTransform.a);
-        elem.height = (Math.ceil(this.scaleOriginals[name].height *
-            this.worldTransform.d) /
-            this.worldTransform.d);
-    }
-};
-
-/**
  * set scaling width and height
  *
- * @method _applyScales
+ * @method _updateScales
  * @private
  */
 ScaleContainer.prototype._updateScales = function() {
