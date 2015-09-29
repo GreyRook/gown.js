@@ -274,8 +274,8 @@ Skinable.prototype.updateTransform = function() {
             scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
         }
 
-        this.worldWidth = Math.max(this._width * scaleX, this.minWidth);
-        this.worldHeight = Math.max(this._height * scaleY, this.minHeight);
+        this.worldWidth = Math.round(Math.max(this._width * scaleX, this.minWidth));
+        this.worldHeight = Math.round(Math.max(this._height * scaleY, this.minHeight));
         this.redraw();
     }
 
