@@ -4866,7 +4866,13 @@ module.exports = {
 module.exports = function(destination, source) {
     for (var key in source) {
         if (source.hasOwnProperty(key)) {
-            destination[key] = source[key];
+            if(key === 'defineProperty') {
+                for(var name in source[key]) {
+                    Object.defineProperty(destination, name, source[key][name]);
+                }
+            } else {
+                destination[key] = source[key];
+            }
         }
     }
     return destination;
@@ -5081,6 +5087,28 @@ module.exports = {
                 this.children[i].updateTransform();
             }
         }
+    },
+
+    defineProperty: {
+
+            'height': {
+                get: function() {
+                    return this._height;
+                },
+                set: function(value) {
+                    this._height = value;
+                    this.minHeight = Math.min(value, this.minHeight);
+                }
+            },
+            'width': {
+                get: function() {
+                    return this._width;
+                },
+                set: function(value) {
+                    this._width = value;
+                    this.minWidth = Math.min(value, this.minWidth);
+                }
+            }
     }
 };
 

@@ -87,5 +87,27 @@ module.exports = {
                 this.children[i].updateTransform();
             }
         }
+    },
+
+    defineProperty: {
+
+            'height': {
+                get: function() {
+                    return this._height;
+                },
+                set: function(value) {
+                    this._height = value;
+                    this.minHeight = Math.min(value, this.minHeight);
+                }
+            },
+            'width': {
+                get: function() {
+                    return this._width;
+                },
+                set: function(value) {
+                    this._width = value;
+                    this.minWidth = Math.min(value, this.minWidth);
+                }
+            }
     }
 };
