@@ -10,7 +10,7 @@ var Control = require('../Control'),
  * @memberof GOWN
  * @param text editable text shown in input
  * @param displayAsPassword Display TextInput as Password (default false)
- * @theme default theme
+ * @param theme default theme
  * @constructor
  */
 
