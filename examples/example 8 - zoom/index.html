@@ -20,7 +20,8 @@
 <script>
     var stage = new PIXI.Container();
     var sizes = {w: 800, h: 600};
-    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
+    var options = {backgroundColor : 0xffffff, roundPixels: true};
+    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, options);
     document.body.appendChild(renderer.view);
 
     var zoomContainer = new PIXI.Container();
@@ -96,6 +97,17 @@
         button = new GOWN.Button(progress_theme);
         button.x = 100;
         button.y = 60;
+        button.width = 100;
+        button.height = 25;
+        button.minWidth = 80;
+        button.minHeight = 20;
+        button.label = 'min width';
+        button.resizeScaling = true;
+        zoomContainer.addChild(button);
+
+        button = new GOWN.Button(progress_theme);
+        button.x = 100;
+        button.y = 90;
         button.rotation = 0.5;
         button.width = 100;
         button.height = 25;
