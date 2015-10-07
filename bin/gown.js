@@ -248,7 +248,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
     }
 });
 
-},{"../utils/mixin":36,"../utils/resizeScaling":39,"./Control":1}],3:[function(require,module,exports){
+},{"../utils/mixin":41,"../utils/resizeScaling":44,"./Control":1}],3:[function(require,module,exports){
 var Control = require('../Control');
 
 /**
@@ -340,10 +340,10 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method cleanup
+ * @method dispose
  * @param removeCanvas destroys the canvas and remove it from the dom tree
  */
-Application.prototype.cleanup = function(removeCanvas) {
+Application.prototype.dispose = function(removeCanvas) {
     removeCanvas = removeCanvas || true;
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
@@ -1144,7 +1144,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":32,"../Skinable":2}],7:[function(require,module,exports){
+},{"../../utils/InputWrapper":37,"../Skinable":2}],7:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1304,7 +1304,125 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
     }
 });
 
-},{"../Control":1,"../layout/ViewPortBounds":23}],8:[function(require,module,exports){
+},{"../Control":1,"../layout/ViewPortBounds":28}],8:[function(require,module,exports){
+var Scroller = require('./Scroller');
+
+/**
+ * The basic list
+ *
+ * @class List
+ * @extends PIXI_UI.List
+ * @memberof PIXI_UI
+ * @constructor
+ */
+function List(dataProvider, theme) {
+    Scroller.call(theme); // TODO: extend scroller?
+    this.skinName = this.skinName || List.SKIN_NAME;
+
+    this._selectable = true;
+    this._selectedIndex = -1;
+    this._allowMultipleSelection = false;
+    this._selectedIndices = [];
+
+    this.dataProvider = dataProvider;
+    this.itemRendererProperties = {};
+
+    // TODO: set layout (defaults to VerticalLayout)
+}
+
+List.prototype = Object.create( Scroller.prototype );
+List.prototype.constructor = List;
+module.exports = List;
+
+// name of skin that will be applied
+List.SKIN_NAME = 'list';
+
+/**
+ * dataProvider for list
+ * the dataProvider is a simple array containing the data
+ *
+ * @property dataProvider
+ * @type Array
+ */
+Object.defineProperty(List.prototype, 'dataProvider', {
+    set: function(dataProvider) {
+        if (this._dataProvider === dataProvider) {
+            return;
+        }
+        this.selectedIndex = -1;
+        this._dataProvider = dataProvider;
+        // TODO: invalidate
+    },
+    get: function() {
+        return this._dataProvider;
+    }
+});
+
+},{"./Scroller":16}],9:[function(require,module,exports){
+var ToggleButton = require('./ToggleButton');
+
+/**
+ * PickerList allows the user to select an option from a list
+ *
+ * @class PickerList
+ * @extends PIXI_UI.Control
+ * @memberof PIXI_UI
+ * @constructor
+ */
+function PickerList(theme) {
+    this.skinName = this.skinName || PickerList.SKIN_NAME;
+    ToggleButton.call(this, theme);
+    this._dataProvider = [];
+
+    this.invalidIcon = true;
+}
+
+PickerList.prototype = Object.create( ToggleButton.prototype );
+PickerList.prototype.constructor = PickerList;
+module.exports = PickerList;
+
+// name of skin that will be applied
+PickerList.SKIN_NAME = 'pickerlist';
+
+/**
+ * show icon for selection
+ *
+ * @method showIcon
+ * @param skin
+ */
+PickerList.prototype.showIcon = function(skin) {
+    if (this.iconSkin !== skin) {
+        if(this.iconSkin) {
+            this.removeChild(this.iconSkin);
+        }
+
+        this.addChild(skin);
+        this.iconSkin = skin;
+    }
+    skin.x = this.width - skin.getBounds().width - 10;
+    skin.y = Math.floor((this.height - skin.getBounds().height )/ 2);
+    this.invalidIcon = false;
+};
+
+/**
+ * redraw the skin
+ *
+ * @method redraw
+ */
+PickerList.prototype.redraw = function() {
+    this.redrawSkinable();
+    if (this.invalidIcon) {
+        this.fromSkin('picker_list_'+this._currentState, this.showIcon);
+    }
+};
+
+// TODO: setter/gettter for List to get selectedItem or set dataProvider
+// TODO: prompt
+// TODO: PopupManager (?)
+// TODO: createButton/ListItem
+// TODO: createList
+
+},{"./ToggleButton":19}],10:[function(require,module,exports){
 var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1611,9 +1729,13 @@ Object.defineProperty(ScrollArea.prototype, 'height', {
     }
 });
 
-},{"../Control":1,"../layout/LayoutAlignment":18}],9:[function(require,module,exports){
+},{"../Control":1,"../layout/LayoutAlignment":23}],11:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
+
+// TODO: decreement/increment Button
+// TODO: thumbFactory?
+// TODO: this.showButtons
 
 /**
  * scoll bar with thumb
@@ -1628,12 +1750,12 @@ function ScrollBar(scrollArea, thumb, theme) {
     this.scrollArea = scrollArea;
     this.skinName = this.skinName || ScrollBar.SKIN_NAME;
 
-    if (this.orientation === undefined) {
-        this.orientation = Scrollable.HORIZONTAL;
+    if (this.direction === undefined) {
+        this.direction = Scrollable.HORIZONTAL;
         if (scrollArea && scrollArea.content &&
             scrollArea.content.layout.alignment ===
                 LayoutAlignment.VERTICAL_ALIGNMENT) {
-            this.orientation = Scrollable.VERTICAL;
+            this.direction = Scrollable.VERTICAL;
         }
     }
     if (scrollArea) {
@@ -1659,7 +1781,7 @@ ScrollBar.prototype.scrollableredraw = Scrollable.prototype.redraw;
 ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
         if (this.scrollArea && this.thumb) {
-            if (this.orientation === Scrollable.HORIZONTAL) {
+            if (this.direction === Scrollable.HORIZONTAL) {
                 this.thumb.width = Math.max(20, this.scrollArea.width /
                     (this.scrollArea.content.width / this.scrollArea.width));
             } else {
@@ -1680,7 +1802,7 @@ ScrollBar.prototype.redraw = function() {
 ScrollBar.prototype.thumbMoved = function(x, y) {
     if (this.scrollArea && this.scrollArea.content) {
 
-        if (this.orientation === Scrollable.HORIZONTAL) {
+        if (this._direction === Scrollable.HORIZONTAL) {
             this.scrollArea._scrollContent(
                 -(this.scrollArea.content.width - this.scrollArea.width) *
                     (x / (this.scrollArea.width - this.thumb.width)),
@@ -1694,7 +1816,44 @@ ScrollBar.prototype.thumbMoved = function(x, y) {
     }
 };
 
-},{"../layout/LayoutAlignment":18,"./Scrollable":11}],10:[function(require,module,exports){
+/**
+ * Determines if the scroll bar's thumb can be dragged horizontally or
+ * vertically.
+ *
+ * @property direction
+ * @type String
+ */
+Object.defineProperty(ScrollBar.prototype, 'direction', {
+    get: function() {
+        return this._direction;
+    },
+    set: function(direction) {
+        this._direction = direction;
+        this.invalid = true;
+    }
+});
+
+/**
+ * value of the scrollbar
+ * TODO: put in Scrollable
+ *
+ * @property value
+ * @type Number
+ */
+Object.defineProperty(ScrollBar.prototype, 'value', {
+    get: function() {
+        return this._value;
+    },
+    set: function(value) {
+        this._value = value;
+    }
+});
+
+},{"../layout/LayoutAlignment":23,"./Scrollable":15}],12:[function(require,module,exports){
+
+},{}],13:[function(require,module,exports){
+arguments[4][12][0].apply(exports,arguments)
+},{"dup":12}],14:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -1751,8 +1910,8 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'cu
 Object.defineProperty(ScrollThumb.prototype, 'currentState',{
     set: function(value) {
         if (this.theme.thumbSkin) {
-            // use skin including orientation instead of default skin
-            value = this.scrollable.orientation + '_' + value;
+            // use skin including direction instead of default skin
+            value = this.scrollable.direction + '_' + value;
         }
         originalCurrentState.set.call(this, value);
     }
@@ -1807,7 +1966,7 @@ ScrollThumb.prototype.showTrack = function(skin) {
 ScrollThumb.prototype.redraw = function() {
     this.redrawSkinable();
     if (this.invalidTrack && this.theme.thumbSkin) {
-        this.fromSkin(this.scrollable.orientation+'_thumb', this.showTrack);
+        this.fromSkin(this.scrollable.direction+'_thumb', this.showTrack);
     }
 };
 
@@ -1822,7 +1981,7 @@ ScrollThumb.prototype.redraw = function() {
  * @method move
  */
 ScrollThumb.prototype.move = function(x, y) {
-    if (this.scrollable.orientation === GOWN.Scrollable.HORIZONTAL) {
+    if (this.scrollable.direction === GOWN.Scrollable.HORIZONTAL) {
         if (isNaN(x)) {
             return false;
         }
@@ -1845,23 +2004,26 @@ ScrollThumb.prototype.move = function(x, y) {
     }
     return false;
 };
-},{"./Button":4}],11:[function(require,module,exports){
+
+},{"./Button":4}],15:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
+
 /**
- * scroll bar or slider
+ * a scrollabe control provides a thumb that can be be moved along a fixed track.
+ * This is the common ground for ScrollBar and Slider
+ *
  * @class Scrollable
  * @extends GOWN.Scrollable
  * @memberof GOWN
  * @constructor
  */
-
 function Scrollable(thumb, theme) {
     this.mode = this.mode || Scrollable.DESKTOP_MODE;
 
     Skinable.call(this, theme);
 
-    this.orientation = this.orientation || Scrollable.HORIZONTAL;
+    this.direction = this.direction || Scrollable.HORIZONTAL;
 
     this.thumb = thumb || new ScrollThumb(this, this.theme);
     this.addChild(this.thumb);
@@ -1937,6 +2099,20 @@ Scrollable.prototype.handleDown = function(mouseData) {
 };
 
 /**
+ * @private
+ */
+Scrollable.prototype.decrement = function() {
+  this.value -= this._step;
+};
+
+/**
+ * @private
+ */
+Scrollable.prototype.increment = function() {
+  this.value += this._step;
+};
+
+/**
  * handle mouse up/touch end
  *
  * @method handleUp
@@ -2002,7 +2178,7 @@ Scrollable.prototype._updateProgressSkin = function() {
     if (!this.progressSkin) {
         return;
     }
-    if(this.orientation === Scrollable.HORIZONTAL) {
+    if(this.direction === Scrollable.HORIZONTAL) {
         var progressPosX = this.thumb.x + this.thumb.width / 2;
         if (this.inverse) {
             this.progressSkin.x = progressPosX;
@@ -2114,10 +2290,10 @@ Scrollable.prototype.showProgress = function(skin) {
  */
 Scrollable.prototype.redraw = function() {
     if (this.invalidTrack && this.thumb) {
-        this.fromSkin(this.orientation+'_progress', this.showProgress);
-        this.fromSkin(this.orientation+'_track', this.showTrack);
+        this.fromSkin(this.direction+'_progress', this.showProgress);
+        this.fromSkin(this.direction+'_track', this.showTrack);
         if (this.skin) {
-            if (this.orientation === Scrollable.HORIZONTAL) {
+            if (this.direction === Scrollable.HORIZONTAL) {
                 this.skin.width = this.width;
             } else {
                 this.skin.height = this.height;
@@ -2162,7 +2338,7 @@ Object.defineProperty(Scrollable.prototype, 'inverse', {
         if (inverse !== this._inverse) {
             this._inverse = inverse;
 
-            if (this.orientation === Scrollable.HORIZONTAL) {
+            if (this.direction === Scrollable.HORIZONTAL) {
                 this.moveThumb(0, this.width - this.thumb.x);
             } else {
                 this.moveThumb(0, this.height - this.thumb.y);
@@ -2195,7 +2371,51 @@ Object.defineProperty(Scrollable.prototype, 'height', {
     }
 });
 
-},{"../Skinable":2,"./ScrollThumb":10}],12:[function(require,module,exports){
+},{"../Skinable":2,"./ScrollThumb":14}],16:[function(require,module,exports){
+var Skinable = require('../Skinable');
+
+/**
+ * Allows horizontal and vertical scrolling of a view port.
+ * Not meant to be used as a standalone container or component.
+ * Generally meant to be the super class of another component that needs to
+ * support scrolling.
+ * To put components in a generic scrollable container (with optional layout),
+ * see ScrollContainer. To scroll long passages of text, see ScrollText.
+ *
+ * @class Scroller
+ * @extends GOWN.Control
+ * @memberof GOWN
+ * @constructor
+ */
+function Scroller(theme) {
+    Skinable.call(this, theme);
+}
+
+Scroller.prototype = Object.create( Skinable.prototype );
+Scroller.prototype.constructor = Scroller;
+module.exports = Scroller;
+
+/**
+ * Creates and adds the <code>horizontalScrollBar</code> and
+ * <code>verticalScrollBar</code> sub-components and removes the old
+ * instances, if they exist.
+ *
+ * <p>Meant for internal use, and subclasses may override this function
+ * with a custom implementation.</p>
+ *
+ * @see #horizontalScrollBar
+ * @see #verticalScrollBar
+ * @see #horizontalScrollBarFactory
+ * @see #verticalScrollBarFactory
+ */
+Scroller.prototype.createScrollBars = function() {
+    this.horizontalScrollBar = null;
+    this.verticalScrollBar = null;
+};
+
+// TODO: scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
+
+},{"../Skinable":2}],17:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     SliderData = require('../../utils/SliderData');
 
@@ -2213,7 +2433,7 @@ function Slider(thumb, theme) {
 
     this._minimum = this._minimum || 0;
     this._maximum = this._maximum || 100;
-    this.step = this.step || 0; //TODO: implement me!
+    this.step = this.step || 1; //TODO: implement me!
     this.page = this.page || 10; //TODO: implement me!
     this._value = this.minimum;
     this.change = null;
@@ -2236,24 +2456,24 @@ Slider.SKIN_NAME = 'scroll_bar';
  */
 Slider.prototype.thumbMoved = function(x, y) {
     var pos = 0;
-    if (this.orientation === Scrollable.HORIZONTAL) {
+    if (this.direction === Scrollable.HORIZONTAL) {
         pos = x;
     } else {
         pos = y;
     }
-    this.value = this.pixelToValue(pos);
+    this.value = this.locationToValue(pos);
 };
 
 /**
  * calculate value of slider based on current pixel position of thumb
  *
  * @param position
- * @method pixelToValue
+ * @method locationToValue
  * @returns Number value between minimum and maximum
  */
-Slider.prototype.pixelToValue = function(position) {
+Slider.prototype.locationToValue = function(position) {
     var max = 0;
-    if (this.orientation === Scrollable.HORIZONTAL) {
+    if (this.direction === Scrollable.HORIZONTAL) {
         max = this.maxWidth();
     } else {
         max = this.maxHeight();
@@ -2268,12 +2488,12 @@ Slider.prototype.pixelToValue = function(position) {
  * calculate current pixel position of thumb based on given value
  *
  * @param value
- * @method valueToPixel
+ * @method valueToLocation
  * @returns Number position of the scroll thumb in pixel
  */
-Slider.prototype.valueToPixel = function(value) {
+Slider.prototype.valueToLocation = function(value) {
     var max = 0;
-    if (this.orientation === Scrollable.HORIZONTAL) {
+    if (this.direction === Scrollable.HORIZONTAL) {
         max = this.maxWidth();
     } else {
         max = this.maxHeight();
@@ -2307,8 +2527,8 @@ Object.defineProperty(Slider.prototype, 'value', {
         }
 
         // move thumb
-        var pos = this.valueToPixel(value);
-        if (this.orientation === Scrollable.HORIZONTAL) {
+        var pos = this.valueToLocation(value);
+        if (this.direction === Scrollable.HORIZONTAL) {
             this.moveThumb(pos, 0);
         } else {
             this.moveThumb(0, pos);
@@ -2366,7 +2586,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":34,"./Scrollable":11}],13:[function(require,module,exports){
+},{"../../utils/SliderData":39,"./Scrollable":15}],18:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2737,7 +2957,7 @@ TextInput.prototype.updateTextState = function () {
     this.setCursorPos();
 };
 
-},{"../../utils/InputWrapper":32,"../Control":1,"./InputControl":6}],14:[function(require,module,exports){
+},{"../../utils/InputWrapper":37,"../Control":1,"./InputControl":6}],19:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2843,7 +3063,7 @@ ToggleButton.prototype.handleEvent = function(type) {
     this.buttonHandleEvent(type);
 };
 
-},{"./Button":4}],15:[function(require,module,exports){
+},{"./Button":4}],20:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2864,6 +3084,8 @@ module.exports = {
     CheckBox:               require('./controls/CheckBox'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
+    List:                   require('./controls/List'),
+    PickerList:             require('./controls/PickerList'),
     Scrollable:             require('./controls/Scrollable'),
     ScrollArea:             require('./controls/ScrollArea'),
     ScrollBar:              require('./controls/ScrollBar'),
@@ -2871,6 +3093,9 @@ module.exports = {
     Slider:                 require('./controls/Slider'),
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
+    Scroller:               require('./controls/Scroller'),
+    ScrollContainer:        require('./controls/ScrollContainer'),
+    ScrollText:             require('./controls/ScrollText'),
 
     // layout
     HorizontalLayout:     require('./layout/HorizontalLayout'),
@@ -2893,7 +3118,7 @@ module.exports = {
     Theme:           require('./skin/Theme')
 };
 
-},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/CheckBox":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/ScrollArea":8,"./controls/ScrollBar":9,"./controls/ScrollThumb":10,"./controls/Scrollable":11,"./controls/Slider":12,"./controls/TextInput":13,"./controls/ToggleButton":14,"./layout/HorizontalLayout":16,"./layout/Layout":17,"./layout/LayoutAlignment":18,"./layout/TiledColumnsLayout":19,"./layout/TiledLayout":20,"./layout/TiledRowsLayout":21,"./layout/VerticalLayout":22,"./layout/ViewPortBounds":23,"./shapes/Diamond":24,"./shapes/Ellipse":25,"./shapes/Line":26,"./shapes/Rect":27,"./shapes/Shape":28,"./skin/Theme":29}],16:[function(require,module,exports){
+},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/CheckBox":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/List":8,"./controls/PickerList":9,"./controls/ScrollArea":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./layout/HorizontalLayout":21,"./layout/Layout":22,"./layout/LayoutAlignment":23,"./layout/TiledColumnsLayout":24,"./layout/TiledLayout":25,"./layout/TiledRowsLayout":26,"./layout/VerticalLayout":27,"./layout/ViewPortBounds":28,"./shapes/Diamond":29,"./shapes/Ellipse":30,"./shapes/Line":31,"./shapes/Rect":32,"./shapes/Shape":33,"./skin/Theme":34}],21:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2914,7 +3139,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":18}],17:[function(require,module,exports){
+},{"./LayoutAlignment":23}],22:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -3137,7 +3362,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],18:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3324,7 +3549,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":17}],19:[function(require,module,exports){
+},{"./Layout":22}],24:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3370,7 +3595,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":20}],20:[function(require,module,exports){
+},{"./TiledLayout":25}],25:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3676,7 +3901,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":17}],21:[function(require,module,exports){
+},{"./Layout":22}],26:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3722,7 +3947,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":20}],22:[function(require,module,exports){
+},{"./TiledLayout":25}],27:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3743,7 +3968,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":18}],23:[function(require,module,exports){
+},{"./LayoutAlignment":23}],28:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3784,7 +4009,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],24:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3819,7 +4044,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":28}],25:[function(require,module,exports){
+},{"./Shape":33}],30:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3850,7 +4075,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":28}],26:[function(require,module,exports){
+},{"./Shape":33}],31:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3906,7 +4131,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":28}],27:[function(require,module,exports){
+},{"./Shape":33}],32:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3961,7 +4186,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":28}],28:[function(require,module,exports){
+},{"./Shape":33}],33:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -4111,7 +4336,7 @@ Shape.prototype.redraw = function() {
     this.invalid = false;
 };
 
-},{}],29:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
 var ThemeFont = require('./ThemeFont');
 /**
@@ -4237,7 +4462,7 @@ Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
 
-},{"../../utils/ScaleContainer":33,"./ThemeFont":30}],30:[function(require,module,exports){
+},{"../../utils/ScaleContainer":38,"./ThemeFont":35}],35:[function(require,module,exports){
 var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
                'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
@@ -4336,7 +4561,7 @@ Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
     }
 });
 
-},{}],31:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (global){
 if (typeof PIXI === 'undefined') {
     if (window.console) {
@@ -4362,7 +4587,7 @@ if (typeof PIXI === 'undefined') {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./core":15,"./utils":35}],32:[function(require,module,exports){
+},{"./core":20,"./utils":40}],37:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4566,7 +4791,7 @@ InputWrapper.getType = function() {
         return InputWrapper._type;
     }
 };
-},{}],33:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4821,7 +5046,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     return new ScaleContainer(texture, rect);
 };
 
-},{}],34:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4843,7 +5068,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],35:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4864,7 +5089,7 @@ module.exports = {
     mixin:                  require('./mixin')
 };
 
-},{"./InputWrapper":32,"./ScaleContainer":33,"./SliderData":34,"./mixin":36,"./mouseWheelSupport":37,"./position":38,"./resizeScaling":39}],36:[function(require,module,exports){
+},{"./InputWrapper":37,"./ScaleContainer":38,"./SliderData":39,"./mixin":41,"./mouseWheelSupport":42,"./position":43,"./resizeScaling":44}],41:[function(require,module,exports){
 module.exports = function(destination, source) {
     for (var key in source) {
         if (source.hasOwnProperty(key)) {
@@ -4880,7 +5105,7 @@ module.exports = function(destination, source) {
     return destination;
 };
 
-},{}],37:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -4947,7 +5172,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],38:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
@@ -4999,7 +5224,7 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}],39:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 
 module.exports = {
     /**
@@ -5114,7 +5339,7 @@ module.exports = {
     }
 };
 
-},{}]},{},[31])(31)
+},{}]},{},[36])(36)
 });
 
 
