@@ -4,6 +4,7 @@
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
 
 [![Inline docs](http://inch-ci.org/github/brean/gown.js.svg?branch=master)](http://inch-ci.org/github/brean/gown.js)
+[![Code Climate](https://codeclimate.com/github/brean/gown.js/badges/gpa.svg)](https://codeclimate.com/github/brean/gown.js)
 [![Build Status](https://travis-ci.org/brean/gown.js.svg?branch=master)](https://travis-ci.org/brean/gown.js)
 
 
@@ -11,7 +12,8 @@ Features
 ========
  1. Basic UI components
      - **Button**: simple Button, with label and background, easy to extend using themes
-     - **ToggleButton**: a button with on/off state
+     - **CheckBox** a simple checkbox
+     - **ToggleButton**: a button with pressed state
      - **Slider** a simple slider with modifyable start and end value
 
  1. Layouting

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>gown.js example: Checkboxes</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi.js"></script>
+    <script src="../../bin/gown.js"></script>
+    <script src="../../themes/AeonTheme.js"></script>
+    <script src="../../themes/MetalWorksMobileTheme.js"></script>
+</head>
+<body>
+<script>
+    var stage = new PIXI.Container();
+
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+
+    var aeontheme;
+    var metaltheme;
+
+    function onCompleteAeon() {
+        // initialize theme
+        var aeonchk;
+        aeonchk = new GOWN.CheckBox();
+        aeonchk.x = aeonchk.y = 20;
+
+        var aeonchk2;
+        aeonchk2 = new GOWN.CheckBox(true);
+        aeonchk2.x = 60;
+        aeonchk2.y = 20;
+        stage.addChild(aeonchk);
+        stage.addChild(aeonchk2);
+
+        requestAnimationFrame(animate);
+    }
+
+    function onCompleteMetal() {
+        // initialize theme
+        var chk;
+        chk = new GOWN.CheckBox(false, metaltheme);
+        chk.x = 20;
+        chk.y = 60;
+
+        var chk2;
+        chk2 = new GOWN.CheckBox(true, metaltheme);
+        chk2.x = 60;
+        chk2.y = 60;
+        stage.addChild(chk);
+        stage.addChild(chk2);
+
+        requestAnimationFrame(animate);
+    }
+
+    aeontheme = new GOWN.AeonTheme(
+        ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
+
+    metaltheme = new GOWN.MetalWorksMobileTheme(
+        ["../../themes/assets/metalworks/metalworks.json"], onCompleteMetal, false);
+
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+</script>
+
+</body>
+</html>

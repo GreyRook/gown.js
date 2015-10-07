@@ -15,6 +15,7 @@ module.exports = {
     // controls
     Application:            require('./controls/Application'),
     Button:                 require('./controls/Button'),
+    CheckBox:               require('./controls/CheckBox'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
     List:                   require('./controls/List'),

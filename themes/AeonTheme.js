@@ -117,6 +117,24 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
                 AeonTheme.TEXT_INPUT_SCALE_9_GRID));
     }
 
+    if (GOWN.CheckBox) {
+        var chk = GOWN.CheckBox;
+
+        this.setSkin(chk.SKIN_NAME, chk.UP,
+            this.getImage("check-up-icon"));
+        this.setSkin(chk.SKIN_NAME, chk.DOWN,
+            this.getImage("check-down-icon"));
+        this.setSkin(chk.SKIN_NAME, chk.HOVER,
+            this.getImage("check-hover-icon"));
+
+        this.setSkin(chk.SKIN_NAME, chk.SELECTED_UP,
+            this.getImage("check-selected-up-icon"));
+        this.setSkin(chk.SKIN_NAME, chk.SELECTED_DOWN,
+            this.getImage("check-selected-down-icon"));
+        this.setSkin(chk.SKIN_NAME, chk.SELECTED_HOVER,
+            this.getImage("check-selected-hover-icon"));
+    }
+
 
     // TODO: emit
     if (this._onComplete) {

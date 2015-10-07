@@ -13,5 +13,7 @@ module.exports = {
     mouseWheelSupport:      require('./mouseWheelSupport'),
     position:               require('./position'),
     ScaleContainer:         require('./ScaleContainer'),
-    SliderData:             require('./SliderData')
+    SliderData:             require('./SliderData'),
+    resizeScaling:          require('./resizeScaling'),
+    mixin:                  require('./mixin')
 };

@@ -128,6 +128,8 @@ Object.defineProperty(Control.prototype, 'height', {
 
 },{}],2:[function(require,module,exports){
 var Control = require('./Control');
+var resizeScaling = require('../utils/resizeScaling');
+var mixin = require('../utils/mixin');
 
 /**
  * Control that requires a theme (e.g. a button)
@@ -148,14 +150,8 @@ function Skinable(theme) {
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
-    this.resizeScaling = true; // resize instead of scale
 
-    this.minWidth = 1;
-    this.minHeight = 1;
-
-    // update dimension flag
-    this._lastWidth = NaN;
-    this._lastHeight = NaN;
+    this.initResizeScaling();
 }
 
 Skinable.prototype = Object.create( Control.prototype );
@@ -227,79 +223,8 @@ Skinable.prototype.fromSkin = function(name, callback) {
     // TODO: what, if the skin is not loaded jet? --> execute callback after load
 };
 
-/**
- * update before draw call
- * redraw control for current state from theme
- *
- * @method redraw
- */
-Skinable.prototype.redraw = function() {
-    // remove last skin after new one has been added
-    // (just before rendering, otherwise we would see nothing for a frame)
-    if (this._lastSkin) {
-        //this.removeChild(this._lastSkin);
-        this._lastSkin.alpha = 0;
-        this._lastSkin = null;
-    }
-    if (this.invalidState) {
-        this.fromSkin(this._currentState, this.changeSkin);
-    }
-    var width = this.worldWidth;
-    var height = this.worldHeight;
-    if (this._currentSkin &&
-        (this._lastWidth !== width || this._lastHeight !== height) &&
-        width > 0 && height > 0) {
 
-        this._currentSkin.width = this._lastWidth = width;
-        this._currentSkin.height = this._lastHeight = height;
-        this.updateDimensions();
-    }
-};
-
-Skinable.prototype.updateDimensions = function() {
-};
-
-
-Skinable.prototype.updateTransform = function() {
-    var wt = this.worldTransform;
-    var scaleX = 1;
-    var scaleY = 1;
-
-    if(this.redraw) {
-
-        if(this.resizeScaling) {
-            var pt = this.parent.worldTransform;
-
-            scaleX = Math.sqrt(Math.pow(pt.a, 2) + Math.pow(pt.b, 2));
-            scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
-        }
-
-        this.worldWidth = Math.max(this._width * scaleX, this.minWidth);
-        this.worldHeight = Math.max(this._height * scaleY, this.minHeight);
-        this.redraw();
-    }
-
-    // obmit Control.updateTransform as it calls redraw as well
-    if(!this.resizeScaling) {
-        PIXI.Container.prototype.updateTransform.call(this);
-    } else {
-        PIXI.DisplayObject.prototype.updateTransform.call(this);
-
-        // revert scaling
-        var tx = wt.tx;
-        var ty = wt.ty;
-        scaleX = scaleX !== 0 ? 1/scaleX : 0;
-        scaleY = scaleY !== 0 ? 1/scaleY : 0;
-        wt.scale(scaleX, scaleY);
-        wt.tx = tx;
-        wt.ty = ty;
-
-        for (var i = 0, j = this.children.length; i < j; ++i) {
-            this.children[i].updateTransform();
-        }
-    }
-};
-
+mixin(Skinable.prototype, resizeScaling);
 
 /**
  * change the skin name
@@ -323,7 +248,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
     }
 });
 
-},{"./Control":1}],3:[function(require,module,exports){
+},{"../utils/mixin":36,"../utils/resizeScaling":39,"./Control":1}],3:[function(require,module,exports){
 var Control = require('../Control');
 
 /**
@@ -802,6 +727,190 @@ Object.defineProperty(Button.prototype, 'label', {
 });
 
 },{"../Skinable":2}],5:[function(require,module,exports){
+var Skinable = require('../Skinable');
+
+/**
+ * The basic CheckBox with 3 normal states (up, down and hover)
+ * and 3 selected states (selected_up, selected_down and selected_hover)
+ *
+ * @class CheckBox
+ * @extends GOWN.Skinable
+ * @memberof GOWN
+ * @constructor
+ */
+function CheckBox(preselected, theme) {
+    this.skinName = this.skinName || CheckBox.SKIN_NAME;
+    this._validStates = this._validStates || CheckBox.stateNames.concat(CheckBox.selectedStateNames);
+    Skinable.call(this, theme);
+
+    this._currentState = 'up';
+    this.selected = preselected || false;
+    this._mousedown = false;
+
+    this.touchstart = this.mousedown;
+    this.touchend = this.mouseupoutside = this.mouseup;
+    this.touchendoutside = this.mouseout;
+}
+
+CheckBox.prototype = Object.create( Skinable.prototype );
+CheckBox.prototype.constructor = CheckBox;
+module.exports = CheckBox;
+
+// name of skin that will be applied
+CheckBox.SKIN_NAME = 'checkbox';
+
+// the states of the checkbox as constants
+CheckBox.UP = 'up';
+CheckBox.DOWN = 'down';
+CheckBox.HOVER = 'hover';
+
+// the states of the checkbox in the 'selected' state as constants
+CheckBox.SELECTED_UP = 'selected_up';
+CheckBox.SELECTED_DOWN = 'selected_down';
+CheckBox.SELECTED_HOVER = 'selected_hover';
+
+// the list of non-selected states
+CheckBox.stateNames = [
+    CheckBox.UP,
+    CheckBox.DOWN,
+    CheckBox.HOVER
+];
+
+// the list of selected states
+CheckBox.selectedStateNames = [
+    CheckBox.SELECTED_UP,
+    CheckBox.SELECTED_DOWN,
+    CheckBox.SELECTED_HOVER
+];
+
+CheckBox.prototype.mousedown = function() {
+    this.handleEvent(CheckBox.DOWN);
+};
+
+CheckBox.prototype.mouseup = function() {
+    this.handleEvent(CheckBox.UP);
+};
+
+CheckBox.prototype.mousemove = function() {
+};
+
+CheckBox.prototype.mouseover = function() {
+    this.handleEvent(CheckBox.HOVER);
+};
+
+CheckBox.prototype.mouseout = function() {
+    this.handleEvent('out');
+};
+
+/**
+ * initiate all skins first
+ * (to prevent flickering)
+ *
+ * @method preloadSkins
+ */
+CheckBox.prototype.preloadSkins = function() {
+    for (var i = 0; i < this._validStates.length; i++) {
+        var name = this._validStates[i];
+        var skin = this.theme.getSkin(this.skinName, name);
+        this.skinCache[name] = skin;
+        if (skin) {
+            this.addChildAt(skin, 0);
+            skin.alpha = 0.0;
+            if (this.width) {
+                skin.width = this.width;
+            }
+            if (this.height) {
+                skin.height = this.height;
+            }
+        }
+    }
+};
+
+/**
+ * The current state (one of _validStates)
+ *
+ * @property currentState
+ * @type String
+ */
+Object.defineProperty(CheckBox.prototype, 'currentState',{
+    get: function() {
+        return this._currentState;
+    },
+    set: function(value) {
+        if (this._currentState === value) {
+            return;
+        }
+        if (this._validStates.indexOf(value) < 0) {
+            throw new Error('Invalid state: ' + value + '.');
+        }
+        this._currentState = value;
+        this.invalidState = true;
+    }
+});
+
+/**
+ * Indicate if the checkbox is selected (checked)
+ *
+ * @property selected
+ * @type Boolean
+ */
+Object.defineProperty(CheckBox.prototype, 'selected', {
+    set: function(selected) {
+        var state = this._currentState;
+        var index;
+        if ((CheckBox.selectedStateNames.indexOf(state) >= 0) && !selected) {
+            index = CheckBox.selectedStateNames.indexOf(state);
+            state = CheckBox.stateNames[index];
+        } else if ((CheckBox.stateNames.indexOf(state) >= 0) && selected) {
+            index = CheckBox.stateNames.indexOf(state);
+            state = CheckBox.selectedStateNames[index];
+        }
+
+        this._selected = selected;
+        this._pressed = false; //to prevent toggling on touch/mouse up
+        this.currentState = state;
+    },
+    get: function() {
+        return this._selected;
+    }
+});
+
+CheckBox.prototype.toggleSelected = function () {
+    this.selected = !this.selected;
+    if (this.change) {
+        this.change(this.selected);
+    }
+};
+
+CheckBox.prototype.handleEvent = function (type) {
+    switch (type) {
+        case CheckBox.UP:
+            if (this._mousedown) {
+                this._mousedown = false;
+                this.toggleSelected();
+                this.currentState = this.selected ? CheckBox.SELECTED_UP : CheckBox.UP;
+            }
+            break;
+        case CheckBox.DOWN:
+            if (!this._mousedown) {
+                this._mousedown = true;
+                this.currentState = this.selected ? CheckBox.SELECTED_DOWN : CheckBox.DOWN;
+            }
+            break;
+        case CheckBox.HOVER:
+            if (!this._mousedown) {
+                this.currentState = this.selected ? CheckBox.SELECTED_HOVER : CheckBox.HOVER;
+            }
+            break;
+        case 'out':
+            this.currentState = this.selected ? CheckBox.SELECTED_UP : CheckBox.UP;
+            break;
+        default:
+            break;
+    }
+};
+
+},{"../Skinable":2}],6:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     InputWrapper = require('../../utils/InputWrapper');
 
@@ -1035,7 +1144,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":31,"../Skinable":2}],6:[function(require,module,exports){
+},{"../../utils/InputWrapper":32,"../Skinable":2}],7:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1195,7 +1304,7 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
     }
 });
 
-},{"../Control":1,"../layout/ViewPortBounds":22}],7:[function(require,module,exports){
+},{"../Control":1,"../layout/ViewPortBounds":23}],8:[function(require,module,exports){
 var Control = require('../Control'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1502,7 +1611,7 @@ Object.defineProperty(ScrollArea.prototype, 'height', {
     }
 });
 
-},{"../Control":1,"../layout/LayoutAlignment":17}],8:[function(require,module,exports){
+},{"../Control":1,"../layout/LayoutAlignment":18}],9:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     LayoutAlignment = require('../layout/LayoutAlignment');
 
@@ -1585,7 +1694,7 @@ ScrollBar.prototype.thumbMoved = function(x, y) {
     }
 };
 
-},{"../layout/LayoutAlignment":17,"./Scrollable":10}],9:[function(require,module,exports){
+},{"../layout/LayoutAlignment":18,"./Scrollable":11}],10:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -1736,7 +1845,7 @@ ScrollThumb.prototype.move = function(x, y) {
     }
     return false;
 };
-},{"./Button":4}],10:[function(require,module,exports){
+},{"./Button":4}],11:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
 /**
@@ -2086,7 +2195,7 @@ Object.defineProperty(Scrollable.prototype, 'height', {
     }
 });
 
-},{"../Skinable":2,"./ScrollThumb":9}],11:[function(require,module,exports){
+},{"../Skinable":2,"./ScrollThumb":10}],12:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     SliderData = require('../../utils/SliderData');
 
@@ -2257,7 +2366,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":33,"./Scrollable":10}],12:[function(require,module,exports){
+},{"../../utils/SliderData":34,"./Scrollable":11}],13:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2270,7 +2379,7 @@ var Control = require('../Control'),
  * @memberof GOWN
  * @param text editable text shown in input
  * @param displayAsPassword Display TextInput as Password (default false)
- * @theme default theme
+ * @param theme default theme
  * @constructor
  */
 
@@ -2627,7 +2736,8 @@ TextInput.prototype.updateTextState = function () {
     }
     this.setCursorPos();
 };
-},{"../../utils/InputWrapper":31,"../Control":1,"./InputControl":5}],13:[function(require,module,exports){
+
+},{"../../utils/InputWrapper":32,"../Control":1,"./InputControl":6}],14:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2733,7 +2843,7 @@ ToggleButton.prototype.handleEvent = function(type) {
     this.buttonHandleEvent(type);
 };
 
-},{"./Button":4}],14:[function(require,module,exports){
+},{"./Button":4}],15:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2751,6 +2861,7 @@ module.exports = {
     // controls
     Application:            require('./controls/Application'),
     Button:                 require('./controls/Button'),
+    CheckBox:               require('./controls/CheckBox'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
     Scrollable:             require('./controls/Scrollable'),
@@ -2782,7 +2893,7 @@ module.exports = {
     Theme:           require('./skin/Theme')
 };
 
-},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/InputControl":5,"./controls/LayoutGroup":6,"./controls/ScrollArea":7,"./controls/ScrollBar":8,"./controls/ScrollThumb":9,"./controls/Scrollable":10,"./controls/Slider":11,"./controls/TextInput":12,"./controls/ToggleButton":13,"./layout/HorizontalLayout":15,"./layout/Layout":16,"./layout/LayoutAlignment":17,"./layout/TiledColumnsLayout":18,"./layout/TiledLayout":19,"./layout/TiledRowsLayout":20,"./layout/VerticalLayout":21,"./layout/ViewPortBounds":22,"./shapes/Diamond":23,"./shapes/Ellipse":24,"./shapes/Line":25,"./shapes/Rect":26,"./shapes/Shape":27,"./skin/Theme":28}],15:[function(require,module,exports){
+},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/CheckBox":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/ScrollArea":8,"./controls/ScrollBar":9,"./controls/ScrollThumb":10,"./controls/Scrollable":11,"./controls/Slider":12,"./controls/TextInput":13,"./controls/ToggleButton":14,"./layout/HorizontalLayout":16,"./layout/Layout":17,"./layout/LayoutAlignment":18,"./layout/TiledColumnsLayout":19,"./layout/TiledLayout":20,"./layout/TiledRowsLayout":21,"./layout/VerticalLayout":22,"./layout/ViewPortBounds":23,"./shapes/Diamond":24,"./shapes/Ellipse":25,"./shapes/Line":26,"./shapes/Rect":27,"./shapes/Shape":28,"./skin/Theme":29}],16:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2803,7 +2914,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":17}],16:[function(require,module,exports){
+},{"./LayoutAlignment":18}],17:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -3026,7 +3137,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3213,7 +3324,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":16}],18:[function(require,module,exports){
+},{"./Layout":17}],19:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3259,7 +3370,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":19}],19:[function(require,module,exports){
+},{"./TiledLayout":20}],20:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3565,7 +3676,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":16}],20:[function(require,module,exports){
+},{"./Layout":17}],21:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3611,7 +3722,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":19}],21:[function(require,module,exports){
+},{"./TiledLayout":20}],22:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3632,7 +3743,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":17}],22:[function(require,module,exports){
+},{"./LayoutAlignment":18}],23:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3673,7 +3784,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3708,7 +3819,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":27}],24:[function(require,module,exports){
+},{"./Shape":28}],25:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3739,7 +3850,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":27}],25:[function(require,module,exports){
+},{"./Shape":28}],26:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3795,7 +3906,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":27}],26:[function(require,module,exports){
+},{"./Shape":28}],27:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3850,7 +3961,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":27}],27:[function(require,module,exports){
+},{"./Shape":28}],28:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -4000,7 +4111,7 @@ Shape.prototype.redraw = function() {
     this.invalid = false;
 };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
 var ThemeFont = require('./ThemeFont');
 /**
@@ -4126,7 +4237,7 @@ Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
 
-},{"../../utils/ScaleContainer":32,"./ThemeFont":29}],29:[function(require,module,exports){
+},{"../../utils/ScaleContainer":33,"./ThemeFont":30}],30:[function(require,module,exports){
 var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
                'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
@@ -4225,32 +4336,33 @@ Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
     }
 });
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (global){
 if (typeof PIXI === 'undefined') {
     if (window.console) {
         window.console.warn('pixi.js has to be loaded before loading gown.js');
     }
-    return;
+} else {
+
+    var core = module.exports = require('./core');
+
+    // add core plugins.
+    core.utils          = require('./utils');
+
+    // use default pixi loader
+    core.loader = PIXI.loader;
+
+    // mixin the deprecation features.
+    //Object.assign(core, require('./deprecation'));
+
+    // export GOWN globally.
+    global.GOWN = core;
+
 }
-
-var core = module.exports = require('./core');
-
-// add core plugins.
-core.utils          = require('./utils');
-
-// use default pixi loader
-core.loader = PIXI.loader;
-
-// mixin the deprecation features.
-//Object.assign(core, require('./deprecation'));
-
-// export GOWN globally.
-global.GOWN = core;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./core":14,"./utils":34}],31:[function(require,module,exports){
+},{"./core":15,"./utils":35}],32:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4454,7 +4566,7 @@ InputWrapper.getType = function() {
         return InputWrapper._type;
     }
 };
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4532,23 +4644,6 @@ function ScaleContainer(texture, rect) {
         this.br = this._getTexture(lw + mw, th + ch, rw, bh);
         this.addChild(this.br);
     }
-
-
-    // apply scaling when the window gets resized using worldTansformation
-    var scope = this;
-    window.addEventListener('resize', function() {
-        scope._applyScales('tl', scope.tl);
-        scope._applyScales('tm', scope.tm);
-        scope._applyScales('tr', scope.tr);
-
-        scope._applyScales('cl', scope.cl);
-        scope._applyScales('cm', scope.cm);
-        scope._applyScales('cr', scope.cr);
-
-        scope._applyScales('bl', scope.bl);
-        scope._applyScales('bm', scope.bm);
-        scope._applyScales('br', scope.br);
-    });
 }
 
 // constructor
@@ -4557,26 +4652,9 @@ ScaleContainer.prototype.constructor = ScaleContainer;
 module.exports = ScaleContainer;
 
 /**
- * apply scaling when the window gets resized using worldTansformation
- *
- * @method _applyScales
- * @private
- */
-ScaleContainer.prototype._applyScales = function(name, elem) {
-    if (this.scaleOriginals[name]) {
-        elem.width = (Math.ceil(this.scaleOriginals[name].width *
-            this.worldTransform.a) /
-            this.worldTransform.a);
-        elem.height = (Math.ceil(this.scaleOriginals[name].height *
-            this.worldTransform.d) /
-            this.worldTransform.d);
-    }
-};
-
-/**
  * set scaling width and height
  *
- * @method _applyScales
+ * @method _updateScales
  * @private
  */
 ScaleContainer.prototype._updateScales = function() {
@@ -4743,7 +4821,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     return new ScaleContainer(texture, rect);
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4765,7 +4843,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4781,9 +4859,28 @@ module.exports = {
     mouseWheelSupport:      require('./mouseWheelSupport'),
     position:               require('./position'),
     ScaleContainer:         require('./ScaleContainer'),
-    SliderData:             require('./SliderData')
+    SliderData:             require('./SliderData'),
+    resizeScaling:          require('./resizeScaling'),
+    mixin:                  require('./mixin')
 };
-},{"./InputWrapper":31,"./ScaleContainer":32,"./SliderData":33,"./mouseWheelSupport":35,"./position":36}],35:[function(require,module,exports){
+
+},{"./InputWrapper":32,"./ScaleContainer":33,"./SliderData":34,"./mixin":36,"./mouseWheelSupport":37,"./position":38,"./resizeScaling":39}],36:[function(require,module,exports){
+module.exports = function(destination, source) {
+    for (var key in source) {
+        if (source.hasOwnProperty(key)) {
+            if(key === 'defineProperty') {
+                for(var name in source[key]) {
+                    Object.defineProperty(destination, name, source[key][name]);
+                }
+            } else {
+                destination[key] = source[key];
+            }
+        }
+    }
+    return destination;
+};
+
+},{}],37:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -4850,7 +4947,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],36:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
@@ -4902,7 +4999,122 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}]},{},[30])(30)
+},{}],39:[function(require,module,exports){
+
+module.exports = {
+    /**
+     * this should be called from inside the constructor
+     *
+     * @method initResizeScaling
+     */
+    initResizeScaling: function() {
+        this.resizeScaling = true; // resize instead of scale
+
+        this.minWidth = 1;
+        this.minHeight = 1;
+
+        // update dimension flag
+        this._lastWidth = NaN;
+        this._lastHeight = NaN;
+    },
+
+    /**
+     * update before draw call
+     * redraw control for current state from theme
+     *
+     * @method redraw
+     */
+    redraw: function() {
+        // remove last skin after new one has been added
+        // (just before rendering, otherwise we would see nothing for a frame)
+        if (this._lastSkin) {
+            //this.removeChild(this._lastSkin);
+            this._lastSkin.alpha = 0;
+            this._lastSkin = null;
+        }
+        if (this.invalidState) {
+            this.fromSkin(this._currentState, this.changeSkin);
+        }
+        var width = this.worldWidth;
+        var height = this.worldHeight;
+        if (this._currentSkin &&
+            (this._lastWidth !== width || this._lastHeight !== height) &&
+            width > 0 && height > 0) {
+
+            this._currentSkin.width = this._lastWidth = width;
+            this._currentSkin.height = this._lastHeight = height;
+            this.updateDimensions();
+        }
+    },
+
+    updateDimensions: function() {
+    },
+
+
+    updateTransform: function() {
+        var wt = this.worldTransform;
+        var scaleX = 1;
+        var scaleY = 1;
+
+        if(this.redraw) {
+
+            if(this.resizeScaling) {
+                var pt = this.parent.worldTransform;
+
+                scaleX = Math.sqrt(Math.pow(pt.a, 2) + Math.pow(pt.b, 2));
+                scaleY = Math.sqrt(Math.pow(pt.c, 2) + Math.pow(pt.d, 2));
+            }
+
+            this.worldWidth = Math.round(Math.max(this._width * scaleX, this.minWidth));
+            this.worldHeight = Math.round(Math.max(this._height * scaleY, this.minHeight));
+            this.redraw();
+        }
+
+        // obmit Control.updateTransform as it calls redraw as well
+        if(!this.resizeScaling) {
+            PIXI.Container.prototype.updateTransform.call(this);
+        } else {
+            PIXI.DisplayObject.prototype.updateTransform.call(this);
+
+            // revert scaling
+            var tx = wt.tx;
+            var ty = wt.ty;
+            scaleX = scaleX !== 0 ? 1/scaleX : 0;
+            scaleY = scaleY !== 0 ? 1/scaleY : 0;
+            wt.scale(scaleX, scaleY);
+            wt.tx = tx;
+            wt.ty = ty;
+
+            for (var i = 0, j = this.children.length; i < j; ++i) {
+                this.children[i].updateTransform();
+            }
+        }
+    },
+
+    defineProperty: {
+
+            'height': {
+                get: function() {
+                    return this._height;
+                },
+                set: function(value) {
+                    this._height = value;
+                    this.minHeight = Math.min(value, this.minHeight);
+                }
+            },
+            'width': {
+                get: function() {
+                    return this._width;
+                },
+                set: function(value) {
+                    this._width = value;
+                    this.minWidth = Math.min(value, this.minWidth);
+                }
+            }
+    }
+};
+
+},{}]},{},[31])(31)
 });
 
 
