@@ -7,7 +7,6 @@ UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feat
 [![Code Climate](https://codeclimate.com/github/brean/gown.js/badges/gpa.svg)](https://codeclimate.com/github/brean/gown.js)
 [![Build Status](https://travis-ci.org/brean/gown.js.svg?branch=master)](https://travis-ci.org/brean/gown.js)
 
-
 Features
 ========
  1. Basic UI components
@@ -27,6 +26,10 @@ Features
 
  1. Basic shapes that provide width and height that can be changed easily (for use in themes for example)
 
+Examples
+========
+see the examples-folder in this repo or play with some example online at:
+http://brean.github.io/gown-examples/
 
 Folder structure
 ================
