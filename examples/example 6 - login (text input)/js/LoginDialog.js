@@ -46,7 +46,7 @@ var LoginDialog = function() {
 
     var user_icon = new PIXI.Text('\uf007', {
         fill: '#ffffff',
-        font: '12px fontawesome'
+        font: '12px FontAwesome'
     });
     this.mail = new IconTextInput(user_icon, '');
     grp.addChild(this.mail);
@@ -61,7 +61,7 @@ var LoginDialog = function() {
 
     var lock_icon = new PIXI.Text('\uf023', {
         fill: '#ffffff',
-        font: '12px fontawesome'
+        font: '12px FontAwesome'
     });
     this.pass = new IconTextInput(lock_icon, '', true);
     grp.addChild(this.pass);

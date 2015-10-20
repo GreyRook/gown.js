@@ -1,0 +1,3 @@
+[submodule "examples/example 6 - login (text input)/lib/FontDetect"]
+	path = examples/example 6 - login (text input)/lib/FontDetect
+	url = git@github.com:JenniferSimonds/FontDetect.git

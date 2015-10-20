@@ -3115,10 +3115,11 @@ module.exports = {
     Shape:             require('./shapes/Shape'),
 
     // skin
-    Theme:           require('./skin/Theme')
+    Theme:           require('./skin/Theme'),
+    ThemeFont:       require('./skin/ThemeFont')
 };
 
-},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/CheckBox":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/List":8,"./controls/PickerList":9,"./controls/ScrollArea":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./layout/HorizontalLayout":21,"./layout/Layout":22,"./layout/LayoutAlignment":23,"./layout/TiledColumnsLayout":24,"./layout/TiledLayout":25,"./layout/TiledRowsLayout":26,"./layout/VerticalLayout":27,"./layout/ViewPortBounds":28,"./shapes/Diamond":29,"./shapes/Ellipse":30,"./shapes/Line":31,"./shapes/Rect":32,"./shapes/Shape":33,"./skin/Theme":34}],21:[function(require,module,exports){
+},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/CheckBox":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/List":8,"./controls/PickerList":9,"./controls/ScrollArea":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./layout/HorizontalLayout":21,"./layout/Layout":22,"./layout/LayoutAlignment":23,"./layout/TiledColumnsLayout":24,"./layout/TiledLayout":25,"./layout/TiledRowsLayout":26,"./layout/VerticalLayout":27,"./layout/ViewPortBounds":28,"./shapes/Diamond":29,"./shapes/Ellipse":30,"./shapes/Line":31,"./shapes/Rect":32,"./shapes/Shape":33,"./skin/Theme":34,"./skin/ThemeFont":35}],21:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**

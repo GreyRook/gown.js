@@ -1,9 +1,10 @@
 var LoginTheme = function(jsonPath, onComplete, global) {
     GOWN.AeonTheme.call(this, jsonPath, onComplete, global);
-    this.textStyle = {
+    this.textStyle = new GOWN.ThemeFont({
         "fill": "#ffffff",
-        "font": "12px Arial"
-    };
+        "fontSize": 12,
+        "fontFamily": "Arial"
+    });
 };
 
 

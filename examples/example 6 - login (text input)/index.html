@@ -3,14 +3,21 @@
 <head>
     <meta charset="utf-8" />
     <title>pixi UI example: text input</title>
-    <style>
+    <style type="text/css">
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-
+        }
+        
+        @font-face {
+            font-family: 'FontAwesome';
+            font-weight: normal;
+            font-style: normal;
+            src: url('http://fortawesome.github.io/Font-Awesome/assets/font-awesome/fonts/fontawesome-webfont.ttf?v=4.0.3') format('truetype');
         }
     </style>
+    <link rel="stylesheet" href="css/font-awesome.css">
     <!-- see http://www.html5gamedevs.com/topic/13098-pixi-and-fontawesome/ -->
     <!--link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"-->
     <script src="../../lib/pixi.js"></script>
@@ -21,20 +28,23 @@
     <script src="js/LoginDialog.js"></script>
     <script src="js/LoginTheme.js"></script>
     <script src="js/IconTextInput.js"></script>
-    <script src="lib/Font.js"></script>
 </head>
 <body>
+<script src="lib/FontLoader.js"></script>
 <script>
-    // load fontawesome first
-    // workaround - see http://www.html5gamedevs.com/topic/13098-pixi-and-fontawesome/
-    var font = new Font();
-    font.src = "http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.ttf";
-    font.onload = function () {
-        awesomeComplete()
-    };
 
-    function awesomeComplete() {
-        new LoginTheme(["../../themes/assets/aeon/aeon_desktop.json"],
+    // load fontawesome first, see https://github.com/smnh/FontLoader/issues/2
+    FontLoader.referenceText += "\uf007\uf023";
+    var fontLoader = new FontLoader(["FontAwesome"], {
+        "fontsLoaded": function(error) {
+            console.log("error:", error);
+        },
+        "fontLoaded": awesomeComplete
+    }, 3000);
+    fontLoader.loadFonts();
+
+    function awesomeComplete(fontname) {
+        new LoginTheme(['../../themes/assets/aeon/aeon_desktop.json'],
             themeComplete);
     }
 
@@ -42,7 +52,7 @@
 
     function themeComplete() {
         // background
-        app = new GOWN.Application(["#688080", "#9ba992"], true);
+        app = new GOWN.Application(['#688080', '#9ba992'], true);
 
         var login = new LoginDialog();
         app.addChild(login);

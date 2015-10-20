@@ -49,5 +49,6 @@ module.exports = {
     Shape:             require('./shapes/Shape'),
 
     // skin
-    Theme:           require('./skin/Theme')
+    Theme:           require('./skin/Theme'),
+    ThemeFont:       require('./skin/ThemeFont')
 };
