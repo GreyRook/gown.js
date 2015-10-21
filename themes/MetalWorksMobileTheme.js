@@ -105,7 +105,7 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
 };
 
 MetalWorksMobileTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(5, 5, 50, 50);
-MetalWorksMobileTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(8, 8, 44, 44);
+MetalWorksMobileTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(5, 5, 50, 50);
 MetalWorksMobileTheme.DEFAULT_SCALE9_GRID = new PIXI.Rectangle(5, 5, 22, 22);
 /*
 MetalWorksMobileTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(5, 2, 42, 6);
