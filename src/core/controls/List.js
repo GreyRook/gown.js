@@ -12,14 +12,21 @@ function List(dataProvider, theme) {
     Scroller.call(theme); // TODO: extend scroller?
     this.skinName = this.skinName || List.SKIN_NAME;
 
+    // Determines if items in the list may be selected.
     this._selectable = true;
+
+    // The index of the currently selected item.
     this._selectedIndex = -1;
+
+    // If true multiple items may be selected at a time.
     this._allowMultipleSelection = false;
+
+    // The indices of the currently selected items.
     this._selectedIndices = [];
 
-    this.dataProvider = dataProvider;
+    // The collection of data displayed by the list.
+    this._dataProvider = dataProvider;
     this.itemRendererProperties = {};
-
     // TODO: set layout (defaults to VerticalLayout)
 }
 
@@ -31,8 +38,16 @@ module.exports = List;
 List.SKIN_NAME = 'list';
 
 /**
+ * A function called that is expected to return a new item renderer
+ */
+List.prototype.itemRendererFactory = function() {
+
+}
+
+/**
  * dataProvider for list
- * the dataProvider is a simple array containing the data
+ * the dataProvider is a sturcture thats provides the data.
+ * in its simplest form it is a array containing the data
  *
  * @property dataProvider
  * @type Array

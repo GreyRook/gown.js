@@ -39,4 +39,4 @@ Scroller.prototype.createScrollBars = function() {
     this.verticalScrollBar = null;
 };
 
-// TODO: scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
+// TODO: elastic scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
