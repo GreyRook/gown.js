@@ -42,18 +42,20 @@
             btn.label = (i+1)+". button";
             inner_horizontal.addChild(btn);
         }
-        inner_scroll_horizontal = new GOWN.ScrollArea();
+        /* inner_scroll_horizontal = new GOWN.ScrollArea();
         inner_scroll_horizontal.width = 500;
 
         inner_scroll_horizontal.content = inner_horizontal;
         inner_scroll_horizontal.x = 200;
-        stage.addChild(inner_scroll_horizontal);
+        stage.addChild(inner_scroll_horizontal); */
 
+        /*
         sb_horizontal = new GOWN.ScrollBar(inner_scroll_horizontal);
         stage.addChild(sb_horizontal);
         sb_horizontal.y = inner_scroll_horizontal.height;
         sb_horizontal.x = inner_scroll_horizontal.x;
         sb_horizontal.width = inner_scroll_horizontal.width;
+        */
 
         // VERTICAL
         var grp = new GOWN.LayoutGroup();
@@ -69,6 +71,7 @@
             btn.label = (i+1)+". button";
             inner.addChild(btn);
         }
+        /*
         var inner_scroll = new GOWN.ScrollArea(inner);
         inner_scroll.width = 100;
         inner_scroll.height = 150;
@@ -82,7 +85,7 @@
 
         stage.addChild(grp);
         grp.y = 100;
-
+*/
         requestAnimationFrame(animate);
     }
 

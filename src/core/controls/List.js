@@ -41,8 +41,8 @@ List.SKIN_NAME = 'list';
  * A function called that is expected to return a new item renderer
  */
 List.prototype.itemRendererFactory = function() {
-
-}
+    return null;
+};
 
 /**
  * dataProvider for list

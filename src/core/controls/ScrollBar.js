@@ -1,5 +1,4 @@
-var Scrollable = require('./Scrollable'),
-    LayoutAlignment = require('../layout/LayoutAlignment');
+var Scrollable = require('./Scrollable');
 
 // TODO: decreement/increment Button
 // TODO: thumbFactory?
@@ -7,31 +6,21 @@ var Scrollable = require('./Scrollable'),
 
 /**
  * scoll bar with thumb
- * hosting some Viewport (e.g. a ScrollArea or a Texture)
+ * hosting some Viewport (e.g. a ScrollContainer or a Texture)
  *
- * @class ScrollArea
+ * @class ScrollBar
  * @extends GOWN.Scrollable
  * @memberof GOWN
  * @constructor
  */
-function ScrollBar(scrollArea, thumb, theme) {
-    this.scrollArea = scrollArea;
+function ScrollBar(direction, theme) {
     this.skinName = this.skinName || ScrollBar.SKIN_NAME;
 
+    this.direction = direction;
     if (this.direction === undefined) {
         this.direction = Scrollable.HORIZONTAL;
-        if (scrollArea && scrollArea.content &&
-            scrollArea.content.layout.alignment ===
-                LayoutAlignment.VERTICAL_ALIGNMENT) {
-            this.direction = Scrollable.VERTICAL;
-        }
     }
-    if (scrollArea) {
-        //scrollArea
-        // move thumb when scrollarea moves
-        scrollArea.bar = this;
-    }
-    Scrollable.call(this, thumb, theme);
+    Scrollable.call(this, theme);
 }
 
 ScrollBar.prototype = Object.create( Scrollable.prototype );

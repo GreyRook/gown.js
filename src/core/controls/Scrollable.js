@@ -10,15 +10,12 @@ var Skinable = require('../Skinable'),
  * @memberof GOWN
  * @constructor
  */
-function Scrollable(thumb, theme) {
+function Scrollable(theme) {
     this.mode = this.mode || Scrollable.DESKTOP_MODE;
 
     Skinable.call(this, theme);
 
     this.direction = this.direction || Scrollable.HORIZONTAL;
-
-    this.thumb = thumb || new ScrollThumb(this, this.theme);
-    this.addChild(this.thumb);
 
     this.invalidTrack = true;
     this._inverse = false;
@@ -29,6 +26,8 @@ function Scrollable(thumb, theme) {
 
     this.touchStart = this.mousedown = this.handleDown;
     this.touchEnd = this.mouseup = this.mouseupoutside = this.handleUp;
+
+    this.thumbFactoryInvalid = true;
 }
 
 Scrollable.prototype = Object.create( Skinable.prototype );
@@ -67,6 +66,16 @@ Scrollable.HORIZONTAL = 'horizontal';
  * @static
  */
 Scrollable.VERTICAL = 'vertical';
+
+Scrollable.prototype.createThumb = function() {
+    this._thumbFactory = this._thumbFactory || this.defaultThumbFactory;
+    this.thumb = this._thumbFactory();
+    this.addChild(this.thumb);
+};
+
+Scrollable.prototype.defaultThumbFactory = function() {
+    return new ScrollThumb(this, this.theme);
+};
 
 /**
  * handle mouse down/touch start
@@ -281,7 +290,11 @@ Scrollable.prototype.showProgress = function(skin) {
  * @method redraw
  */
 Scrollable.prototype.redraw = function() {
-    if (this.invalidTrack && this.thumb) {
+    if (this.thumbFactoryInvalid) {
+        this.createThumb();
+        this.thumbFactoryInvalid = false;
+    }
+    if (this.invalidTrack) {
         this.fromSkin(this.direction+'_progress', this.showProgress);
         this.fromSkin(this.direction+'_track', this.showTrack);
         if (this.skin) {

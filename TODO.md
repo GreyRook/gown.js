@@ -1,3 +1,13 @@
+TODO next
+=========
+ - PIXI.V3-Events
+
+ - fix Slider/ScrollBar thumb width/height
+
+ - mouse wheel support
+
+ - theme for TextInput
+
 TODO
 ======
 This list is not ordered by priority nor does it contain any promise that those items will be implemented.
@@ -12,7 +22,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
    - test Scrollable, Slider and SliderData
 
-   - test ScrollBar, ScrollThumb and ScrollArea
+   - test ScrollBar, ScrollThumb, List and ScrollContainer
 
    - test InputControl and InputWrapper
 
@@ -23,8 +33,6 @@ This list is not ordered by priority nor does it contain any promise that those 
  - How-To tutorial and beginners documentation!
 
  - examples-side (like [the one from pixi.js](http://pixijs.github.io/examples/) )
-
- - real viewport(s) for ScrollArea ?
 
  - build/compress themes
 
@@ -37,8 +45,6 @@ This list is not ordered by priority nor does it contain any promise that those 
  - more controls (and examples) for:
 
    - Label (not needed - just use PIXI.Text?)
-
-   - Checkbox
 
    - RadioBox
 

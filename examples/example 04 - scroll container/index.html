@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>pixi UI example: tiled layout</title>
+    <title>pixi UI example: scroll container</title>
     <style>
         body {
             margin: 0;
@@ -27,7 +27,8 @@
     function onComplete() {
         //stage.addChild(toggleButton);
         var sprite = PIXI.Sprite.fromImage("img/rainbow.png");
-        var sa_sprite = new GOWN.ScrollArea(sprite);
+        var sa_sprite = new GOWN.ScrollContainer();
+        sa_sprite.addChild(sprite);
         sa_sprite.x = 240;
         sa_sprite.y = 240;
         sa_sprite.width = sa_sprite.height = 180;
@@ -45,7 +46,8 @@
             grp.addChild(btn);
         }
 
-        sa_grp = new GOWN.ScrollArea(grp);
+        sa_grp = new GOWN.ScrollContainer();
+        sa_grp.addChild(grp);
         sa_grp.x = 100;
         sa_grp.y = 100;
         sa_grp._useMask = false;

@@ -21,15 +21,14 @@ module.exports = {
     List:                   require('./controls/List'),
     PickerList:             require('./controls/PickerList'),
     Scrollable:             require('./controls/Scrollable'),
-    ScrollArea:             require('./controls/ScrollArea'),
     ScrollBar:              require('./controls/ScrollBar'),
+    ScrollContainer:        require('./controls/ScrollContainer'),
+    Scroller:               require('./controls/Scroller'),
+    ScrollText:             require('./controls/ScrollText'),
     ScrollThumb:            require('./controls/ScrollThumb'),
     Slider:                 require('./controls/Slider'),
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
-    Scroller:               require('./controls/Scroller'),
-    ScrollContainer:        require('./controls/ScrollContainer'),
-    ScrollText:             require('./controls/ScrollText'),
 
     // layout
     HorizontalLayout:     require('./layout/HorizontalLayout'),

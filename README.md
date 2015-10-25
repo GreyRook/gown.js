@@ -19,8 +19,8 @@ Features
      - **LayoutGroup**: a component to create horizontal, vertical or tile-based layouts
 
  1. Scrollable container
-     - **ScrollArea**: a viewport that can be scrolled using mouse (including mouse wheel) or touch gestures.  When its content is a LayoutGroup the scroll behaviour will be dependent on its layout: a horizontal layoutgroup will default to horizontal scrolling, vertical layout to vertical scrolling.  But you are in control and can manually overwrite the scroll behaviour.
-     - **ScrollBar**: providing a scroll thumb that can be moved. gets automatically oriented on the given ScrollArea
+     - **ScrollContainer**: provides a viewport that can be scrolled using mouse or touch gestures.  When its content is a LayoutGroup the scroll behavior will be dependent on its layout: a horizontal layoutgroup will default to horizontal scrolling, vertical layout to vertical scrolling.  But you are in control and can manually overwrite the scroll behavior.
+     - **ScrollBar**: providing a scroll thumb that can be moved. Part of ScrollContainer and List, but can be used separately.
 
  1. A Text input providing text and password input (based on [PIXI Input](https://github.com/SebastianNette/PIXI.Input) )
 

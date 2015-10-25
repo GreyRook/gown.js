@@ -109,11 +109,13 @@ Object.defineProperty(Slider.prototype, 'value', {
         }
 
         // move thumb
-        var pos = this.valueToLocation(value);
-        if (this.direction === Scrollable.HORIZONTAL) {
-            this.moveThumb(pos, 0);
-        } else {
-            this.moveThumb(0, pos);
+        if (this.thumb) {
+            var pos = this.valueToLocation(value);
+            if (this.direction === Scrollable.HORIZONTAL) {
+                this.moveThumb(pos, 0);
+            } else {
+                this.moveThumb(0, pos);
+            }
         }
 
         this._value = value;
