@@ -24,15 +24,17 @@
 
     var aeontheme;
     var metaltheme;
+    var chk;
 
     function onCompleteAeon() {
         // initialize theme
         var aeonchk;
-        aeonchk = new GOWN.CheckBox();
+        aeonchk = new GOWN.Check();
         aeonchk.x = aeonchk.y = 20;
 
         var aeonchk2;
-        aeonchk2 = new GOWN.CheckBox(true);
+        aeonchk2 = new GOWN.Check();
+        aeonchk2.selected = true;
         aeonchk2.x = 60;
         aeonchk2.y = 20;
         stage.addChild(aeonchk);
@@ -43,13 +45,13 @@
 
     function onCompleteMetal() {
         // initialize theme
-        var chk;
-        chk = new GOWN.CheckBox(false, metaltheme);
+        chk = new GOWN.Check(metaltheme);
         chk.x = 20;
         chk.y = 60;
 
         var chk2;
-        chk2 = new GOWN.CheckBox(true, metaltheme);
+        chk2 = new GOWN.Check(metaltheme);
+        chk2.selected = true;
         chk2.x = 60;
         chk2.y = 60;
         stage.addChild(chk);

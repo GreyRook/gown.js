@@ -37,9 +37,8 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
     this.setSkin(b.SKIN_NAME, b.DOWN,
         this.getScaleContainer("button-down-skin", bg));
 
-
-    if (GOWN.ToggleButton) {
-        var tb = GOWN.ToggleButton;
+    var tb = GOWN.ToggleButton;
+    if (tb) {
         var sbg = MetalWorksMobileTheme.SELECTED_BUTTON_SCALE_9_GRID;
 
         this.setSkin(tb.SKIN_NAME, b.UP,
@@ -75,17 +74,17 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
         this.setSkin(pl.SKIN_NAME, "picker_list_" + b.UP,
             this.getImage("picker-list-icon"));
     }
-    if (GOWN.CheckBox) {
-        var chk = GOWN.CheckBox;
+    if (GOWN.Check) {
+        var chk = GOWN.Check;
 
-        this.setSkin(chk.SKIN_NAME, chk.UP,
+        this.setSkin(chk.SKIN_NAME, b.UP,
             this.getImage("background-skin"));
-        this.setSkin(chk.SKIN_NAME, chk.DOWN,
+        this.setSkin(chk.SKIN_NAME, b.DOWN,
             this.getImage("background-down-skin"));
 
-        this.setSkin(chk.SKIN_NAME, chk.SELECTED_UP,
+        this.setSkin(chk.SKIN_NAME, tb.SELECTED_UP,
             this.getImage("check-selected-up-icon"));
-        this.setSkin(chk.SKIN_NAME, chk.SELECTED_DOWN,
+        this.setSkin(chk.SKIN_NAME, tb.SELECTED_DOWN,
             this.getImage("check-selected-down-icon"));
     }
 

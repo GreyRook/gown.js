@@ -24,9 +24,8 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
     this.setSkin(b.SKIN_NAME, b.HOVER,
         this.getScaleContainer("button-hover-skin0000", bg));
 
-
-    if (GOWN.ToggleButton) {
-        var tb = GOWN.ToggleButton;
+    var tb = GOWN.ToggleButton;
+    if (tb) {
         var sbg = AeonTheme.SELECTED_BUTTON_SCALE_9_GRID;
 
         this.setSkin(tb.SKIN_NAME, b.UP,
@@ -117,21 +116,21 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
                 AeonTheme.TEXT_INPUT_SCALE_9_GRID));
     }
 
-    if (GOWN.CheckBox) {
-        var chk = GOWN.CheckBox;
+    if (GOWN.Check) {
+        var chk = GOWN.Check;
 
-        this.setSkin(chk.SKIN_NAME, chk.UP,
+        this.setSkin(chk.SKIN_NAME, b.UP,
             this.getImage("check-up-icon0000"));
-        this.setSkin(chk.SKIN_NAME, chk.DOWN,
+        this.setSkin(chk.SKIN_NAME, b.DOWN,
             this.getImage("check-down-icon0000"));
-        this.setSkin(chk.SKIN_NAME, chk.HOVER,
+        this.setSkin(chk.SKIN_NAME, b.HOVER,
             this.getImage("check-hover-icon0000"));
 
-        this.setSkin(chk.SKIN_NAME, chk.SELECTED_UP,
+        this.setSkin(chk.SKIN_NAME, tb.SELECTED_UP,
             this.getImage("check-selected-up-icon0000"));
-        this.setSkin(chk.SKIN_NAME, chk.SELECTED_DOWN,
+        this.setSkin(chk.SKIN_NAME, tb.SELECTED_DOWN,
             this.getImage("check-selected-down-icon0000"));
-        this.setSkin(chk.SKIN_NAME, chk.SELECTED_HOVER,
+        this.setSkin(chk.SKIN_NAME, tb.SELECTED_HOVER,
             this.getImage("check-selected-hover-icon0000"));
     }
 
