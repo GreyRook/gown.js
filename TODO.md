@@ -1,6 +1,6 @@
 TODO next
 =========
- - PIXI.V3-Events
+ - PIXI.V3-Events (use https://github.com/primus/eventemitter3 )
 
  - fix Slider/ScrollBar thumb width/height
 
