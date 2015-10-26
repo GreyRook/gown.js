@@ -89,10 +89,12 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method dispose
- * @param removeCanvas destroys the canvas and remove it from the dom tree
+ * @method destroy
+ * @param [destroyChildren=false] {boolean} if set to true, all the children will have their destroy method called as well
+ * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
-Application.prototype.dispose = function(removeCanvas) {
+Application.prototype.destroy = function(destroyChildren, removeCanvas) {
+    PIXI.Container.prototype.destroy.call(this, destroyChildren);
     removeCanvas = removeCanvas || true;
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
@@ -100,7 +102,7 @@ Application.prototype.dispose = function(removeCanvas) {
     this._stage = null;
     this._renderer = null;
     this._removeBackground();
-    this.fullscreen = false; // remove event listener
+    this.fullscreen = false; // remove event listener using setter
 };
 
 /**
