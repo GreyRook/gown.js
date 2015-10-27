@@ -340,10 +340,12 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method dispose
- * @param removeCanvas destroys the canvas and remove it from the dom tree
+ * @method destroy
+ * @param [destroyChildren=false] {boolean} if set to true, all the children will have their destroy method called as well
+ * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
-Application.prototype.dispose = function(removeCanvas) {
+Application.prototype.destroy = function(destroyChildren, removeCanvas) {
+    PIXI.Container.prototype.destroy.call(this, destroyChildren);
     removeCanvas = removeCanvas || true;
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
@@ -351,7 +353,7 @@ Application.prototype.dispose = function(removeCanvas) {
     this._stage = null;
     this._renderer = null;
     this._removeBackground();
-    this.fullscreen = false; // remove event listener
+    this.fullscreen = false; // remove event listener on resize using setter
 };
 
 /**
@@ -367,12 +369,7 @@ Application.prototype.onresize = function() {
         this.bg.width = this._width;
         this.bg.height = this._height;
     }
-    for (var i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
-        if (child.onresize) {
-            child.onresize(this._width, this._height);
-        }
-    }
+    this.emit('resize', this._width, this._height);
 };
 
 /**
@@ -511,6 +508,8 @@ Button.stateNames = [
     Button.DOWN, Button.HOVER, Button.UP
 ];
 
+Button.TRIGGERED = 'triggered';
+
 /**
  * initiate all skins first
  * (to prevent flickering)
@@ -604,6 +603,10 @@ Button.prototype.handleEvent = function(type) {
         if (this._over && this.theme.hoverSkin) {
             this.currentState = Button.HOVER;
         } else {
+            if (this._over) {
+                // the user taps or clicks the button
+                this.emit(Button.TRIGGERED, this);
+            }
             this.currentState = Button.UP;
         }
     } else if (type === Button.HOVER) {
@@ -727,190 +730,30 @@ Object.defineProperty(Button.prototype, 'label', {
 });
 
 },{"../Skinable":2}],5:[function(require,module,exports){
-var Skinable = require('../Skinable');
+var ToggleButton = require('./ToggleButton');
 
 /**
- * The basic CheckBox with 3 normal states (up, down and hover)
- * and 3 selected states (selected_up, selected_down and selected_hover)
- *
- * @class CheckBox
- * @extends GOWN.Skinable
- * @memberof GOWN
- * @constructor
- */
-function CheckBox(preselected, theme) {
-    this.skinName = this.skinName || CheckBox.SKIN_NAME;
-    this._validStates = this._validStates || CheckBox.stateNames.concat(CheckBox.selectedStateNames);
-    Skinable.call(this, theme);
-
-    this._currentState = 'up';
-    this.selected = preselected || false;
-    this._mousedown = false;
-
-    this.touchstart = this.mousedown;
-    this.touchend = this.mouseupoutside = this.mouseup;
-    this.touchendoutside = this.mouseout;
+	* A toggle control that contains a label and a box that may be checked
+	* or not to indicate selection.
+  *
+  * @class Check
+  * @extends GOWN.ToggleButton
+  * @memberof GOWN
+  * @constructor
+  */
+function Check(theme) {
+    this._skinName = Check.SKIN_NAME;
+    ToggleButton.call(this, theme);
 }
 
-CheckBox.prototype = Object.create( Skinable.prototype );
-CheckBox.prototype.constructor = CheckBox;
-module.exports = CheckBox;
+Check.prototype = Object.create( ToggleButton.prototype );
+Check.prototype.constructor = Check;
+module.exports = Check;
 
 // name of skin that will be applied
-CheckBox.SKIN_NAME = 'checkbox';
+Check.SKIN_NAME = 'check';
 
-// the states of the checkbox as constants
-CheckBox.UP = 'up';
-CheckBox.DOWN = 'down';
-CheckBox.HOVER = 'hover';
-
-// the states of the checkbox in the 'selected' state as constants
-CheckBox.SELECTED_UP = 'selected_up';
-CheckBox.SELECTED_DOWN = 'selected_down';
-CheckBox.SELECTED_HOVER = 'selected_hover';
-
-// the list of non-selected states
-CheckBox.stateNames = [
-    CheckBox.UP,
-    CheckBox.DOWN,
-    CheckBox.HOVER
-];
-
-// the list of selected states
-CheckBox.selectedStateNames = [
-    CheckBox.SELECTED_UP,
-    CheckBox.SELECTED_DOWN,
-    CheckBox.SELECTED_HOVER
-];
-
-CheckBox.prototype.mousedown = function() {
-    this.handleEvent(CheckBox.DOWN);
-};
-
-CheckBox.prototype.mouseup = function() {
-    this.handleEvent(CheckBox.UP);
-};
-
-CheckBox.prototype.mousemove = function() {
-};
-
-CheckBox.prototype.mouseover = function() {
-    this.handleEvent(CheckBox.HOVER);
-};
-
-CheckBox.prototype.mouseout = function() {
-    this.handleEvent('out');
-};
-
-/**
- * initiate all skins first
- * (to prevent flickering)
- *
- * @method preloadSkins
- */
-CheckBox.prototype.preloadSkins = function() {
-    for (var i = 0; i < this._validStates.length; i++) {
-        var name = this._validStates[i];
-        var skin = this.theme.getSkin(this.skinName, name);
-        this.skinCache[name] = skin;
-        if (skin) {
-            this.addChildAt(skin, 0);
-            skin.alpha = 0.0;
-            if (this.width) {
-                skin.width = this.width;
-            }
-            if (this.height) {
-                skin.height = this.height;
-            }
-        }
-    }
-};
-
-/**
- * The current state (one of _validStates)
- *
- * @property currentState
- * @type String
- */
-Object.defineProperty(CheckBox.prototype, 'currentState',{
-    get: function() {
-        return this._currentState;
-    },
-    set: function(value) {
-        if (this._currentState === value) {
-            return;
-        }
-        if (this._validStates.indexOf(value) < 0) {
-            throw new Error('Invalid state: ' + value + '.');
-        }
-        this._currentState = value;
-        this.invalidState = true;
-    }
-});
-
-/**
- * Indicate if the checkbox is selected (checked)
- *
- * @property selected
- * @type Boolean
- */
-Object.defineProperty(CheckBox.prototype, 'selected', {
-    set: function(selected) {
-        var state = this._currentState;
-        var index;
-        if ((CheckBox.selectedStateNames.indexOf(state) >= 0) && !selected) {
-            index = CheckBox.selectedStateNames.indexOf(state);
-            state = CheckBox.stateNames[index];
-        } else if ((CheckBox.stateNames.indexOf(state) >= 0) && selected) {
-            index = CheckBox.stateNames.indexOf(state);
-            state = CheckBox.selectedStateNames[index];
-        }
-
-        this._selected = selected;
-        this._pressed = false; //to prevent toggling on touch/mouse up
-        this.currentState = state;
-    },
-    get: function() {
-        return this._selected;
-    }
-});
-
-CheckBox.prototype.toggleSelected = function () {
-    this.selected = !this.selected;
-    if (this.change) {
-        this.change(this.selected);
-    }
-};
-
-CheckBox.prototype.handleEvent = function (type) {
-    switch (type) {
-        case CheckBox.UP:
-            if (this._mousedown) {
-                this._mousedown = false;
-                this.toggleSelected();
-                this.currentState = this.selected ? CheckBox.SELECTED_UP : CheckBox.UP;
-            }
-            break;
-        case CheckBox.DOWN:
-            if (!this._mousedown) {
-                this._mousedown = true;
-                this.currentState = this.selected ? CheckBox.SELECTED_DOWN : CheckBox.DOWN;
-            }
-            break;
-        case CheckBox.HOVER:
-            if (!this._mousedown) {
-                this.currentState = this.selected ? CheckBox.SELECTED_HOVER : CheckBox.HOVER;
-            }
-            break;
-        case 'out':
-            this.currentState = this.selected ? CheckBox.SELECTED_UP : CheckBox.UP;
-            break;
-        default:
-            break;
-    }
-};
-
-},{"../Skinable":2}],6:[function(require,module,exports){
+},{"./ToggleButton":19}],6:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     InputWrapper = require('../../utils/InputWrapper');
 
@@ -964,6 +807,11 @@ module.exports = InputControl;
 InputControl.currentInput = null;
 
 InputControl.prototype.onKeyUp = function() {
+    this.emit('change', this);
+};
+
+InputControl.prototype.onEnter = function() {
+    this.emit('enter', this);
 };
 
 InputControl.prototype.onKeyDown = function() {
@@ -1068,6 +916,7 @@ InputControl.prototype.focus = function () {
     // check custom focus event
     this.onfocus();
 
+    this.emit('focusIn', this);
     /*
      //TODO
      // is read only
@@ -1132,6 +981,7 @@ InputControl.prototype.blur = function() {
  * @method onblur
  */
 InputControl.prototype.onblur = function() {
+    this.emit('focusOut', this);
 };
 
 // blur current input
@@ -1319,14 +1169,21 @@ function List(dataProvider, theme) {
     Scroller.call(theme); // TODO: extend scroller?
     this.skinName = this.skinName || List.SKIN_NAME;
 
+    // Determines if items in the list may be selected.
     this._selectable = true;
+
+    // The index of the currently selected item.
     this._selectedIndex = -1;
+
+    // If true multiple items may be selected at a time.
     this._allowMultipleSelection = false;
+
+    // The indices of the currently selected items.
     this._selectedIndices = [];
 
-    this.dataProvider = dataProvider;
+    // The collection of data displayed by the list.
+    this._dataProvider = dataProvider;
     this.itemRendererProperties = {};
-
     // TODO: set layout (defaults to VerticalLayout)
 }
 
@@ -1338,8 +1195,16 @@ module.exports = List;
 List.SKIN_NAME = 'list';
 
 /**
+ * A function called that is expected to return a new item renderer
+ */
+List.prototype.itemRendererFactory = function() {
+
+};
+
+/**
  * dataProvider for list
- * the dataProvider is a simple array containing the data
+ * the dataProvider is a sturcture thats provides the data.
+ * in its simplest form it is a array containing the data
  *
  * @property dataProvider
  * @type Array
@@ -2413,7 +2278,7 @@ Scroller.prototype.createScrollBars = function() {
     this.verticalScrollBar = null;
 };
 
-// TODO: scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
+// TODO: elastic scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
 
 },{"../Skinable":2}],17:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
@@ -2526,6 +2391,7 @@ Object.defineProperty(Slider.prototype, 'value', {
             return;
         }
 
+        this.emit('change', value, this);
         // move thumb
         var pos = this.valueToLocation(value);
         if (this.direction === Scrollable.HORIZONTAL) {
@@ -2713,9 +2579,6 @@ Object.defineProperty(TextInput.prototype, 'text', {
 
         // reposition cursor
         this._cursorNeedsUpdate = true;
-        if (this.change) {
-            this.change(text);
-        }
     }
 });
 
@@ -2796,46 +2659,24 @@ TextInput.prototype.updateSelectionBg = function() {
     }
 };
 
+
+TextInput.prototype.inputControlOnBlur = InputControl.prototype.onblur;
 TextInput.prototype.onblur = function() {
+    this.inputControlOnBlur();
     this.updateSelection(0, 0);
 };
 
-TextInput.prototype.onSubmit = function () {
-};
-
-TextInput.prototype.onKeyDown = function (e) {
-    var keyCode = e.which;
-
-    // ESC
-    if (e.which === 27) {
-        this.blur();
-        return;
-    }
-
-    // add support for Ctrl/Cmd+A selection - select whole input text
-    if (keyCode === 65 && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        this.updateSelection(0, this.text.length);
-        return;
-    }
-
-    // block keys that shouldn't be processed
-    if (keyCode === 17 || e.metaKey || e.ctrlKey) {
-        return;
-    }
-
-    // enter key
-    if (keyCode === 13) {
-        e.preventDefault();
-        this.onSubmit(e);
-    }
-
+TextInput.prototype.inputControlKeyDown = InputControl.prototype.onKeyDown;
+TextInput.prototype.onKeyDown = function () {
+    this.inputControlKeyDown();
     // update the canvas input state information from the hidden input
     this.updateTextState();
 };
 
+TextInput.prototype.inputControlKeyUp = InputControl.prototype.onKeyUp;
 TextInput.prototype.onKeyUp = function () {
     this.updateTextState();
+    this.inputControlKeyUp();
 };
 
 /**
@@ -3081,7 +2922,7 @@ module.exports = {
     // controls
     Application:            require('./controls/Application'),
     Button:                 require('./controls/Button'),
-    CheckBox:               require('./controls/CheckBox'),
+    Check:                  require('./controls/Check'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
     List:                   require('./controls/List'),
@@ -3119,7 +2960,7 @@ module.exports = {
     ThemeFont:       require('./skin/ThemeFont')
 };
 
-},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/CheckBox":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/List":8,"./controls/PickerList":9,"./controls/ScrollArea":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./layout/HorizontalLayout":21,"./layout/Layout":22,"./layout/LayoutAlignment":23,"./layout/TiledColumnsLayout":24,"./layout/TiledLayout":25,"./layout/TiledRowsLayout":26,"./layout/VerticalLayout":27,"./layout/ViewPortBounds":28,"./shapes/Diamond":29,"./shapes/Ellipse":30,"./shapes/Line":31,"./shapes/Rect":32,"./shapes/Shape":33,"./skin/Theme":34,"./skin/ThemeFont":35}],21:[function(require,module,exports){
+},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/Check":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/List":8,"./controls/PickerList":9,"./controls/ScrollArea":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./layout/HorizontalLayout":21,"./layout/Layout":22,"./layout/LayoutAlignment":23,"./layout/TiledColumnsLayout":24,"./layout/TiledLayout":25,"./layout/TiledRowsLayout":26,"./layout/VerticalLayout":27,"./layout/ViewPortBounds":28,"./shapes/Diamond":29,"./shapes/Ellipse":30,"./shapes/Line":31,"./shapes/Rect":32,"./shapes/Shape":33,"./skin/Theme":34,"./skin/ThemeFont":35}],21:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -4599,9 +4440,9 @@ if (typeof PIXI === 'undefined') {
  * @memberof GOWN
  * @static
  */
-function InputWrapper()
-{
+function InputWrapper() {
 }
+
 module.exports = InputWrapper;
 
 /**
@@ -4618,8 +4459,7 @@ InputWrapper.hiddenInput = null;
  * create/return unique input field.
  * @returns {DOMObject}
  */
-InputWrapper.createInput = function()
-{
+InputWrapper.createInput = function() {
     if (!InputWrapper.hiddenInput) {
         var input = document.createElement('input');
         input.type = 'text';
@@ -4650,7 +4490,33 @@ InputWrapper.createInput = function()
                 e = e || window.event;
                 if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    GOWN.InputControl.currentInput.onKeyDown(e);
+                    GOWN.InputControl.currentInput.onKeyDown();
+                    var keyCode = e.which;
+
+                    // ESC
+                    if (keyCode === 27) {
+                        GOWN.InputControl.currentInput.blur();
+                        return;
+                    }
+
+                    // add support for Ctrl/Cmd+A selection - select whole input text
+                    if (keyCode === 65 && (e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        GOWN.InputControl.currentInput.updateSelection(
+                            0, GOWN.InputControl.currentInput.text.length);
+                        return;
+                    }
+
+                    // block keys that shouldn't be processed
+                    if (keyCode === 17 || e.metaKey || e.ctrlKey) {
+                        return;
+                    }
+
+                    // enter key
+                    if (keyCode === 13) {
+                        e.preventDefault();
+                        GOWN.InputControl.currentInput.onEnter();
+                    }
                 }
             }
         });
@@ -4663,7 +4529,7 @@ InputWrapper.createInput = function()
                 e = e || window.event;
                 if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    GOWN.InputControl.currentInput.onKeyUp(e);
+                    GOWN.InputControl.currentInput.onKeyUp();
                 }
             }
         });
@@ -4792,6 +4658,7 @@ InputWrapper.getType = function() {
         return InputWrapper._type;
     }
 };
+
 },{}],38:[function(require,module,exports){
 /**
  * Scale 9 Container.

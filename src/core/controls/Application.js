@@ -102,7 +102,7 @@ Application.prototype.destroy = function(destroyChildren, removeCanvas) {
     this._stage = null;
     this._renderer = null;
     this._removeBackground();
-    this.fullscreen = false; // remove event listener using setter
+    this.fullscreen = false; // remove event listener on resize using setter
 };
 
 /**
@@ -118,12 +118,7 @@ Application.prototype.onresize = function() {
         this.bg.width = this._width;
         this.bg.height = this._height;
     }
-    for (var i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
-        if (child.onresize) {
-            child.onresize(this._width, this._height);
-        }
-    }
+    this.emit('resize', this._width, this._height);
 };
 
 /**

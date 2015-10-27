@@ -42,7 +42,7 @@ List.SKIN_NAME = 'list';
  */
 List.prototype.itemRendererFactory = function() {
 
-}
+};
 
 /**
  * dataProvider for list
