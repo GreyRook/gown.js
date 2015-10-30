@@ -36,6 +36,7 @@ Control.prototype.setTheme = function(theme) {
     this.invalidSkin = true;
 };
 
+Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
@@ -43,11 +44,13 @@ Control.prototype.setTheme = function(theme) {
  * @method updateTransform
  */
 Control.prototype.updateTransform = function() {
-    if(this.redraw) {
+    if (!this.parent) {
+        return;
+    }
+    if (this.redraw) {
         this.redraw();
     }
-
-    PIXI.Container.prototype.updateTransform.call(this);
+    this.updateTransformContainer();
 };
 
 /**
@@ -267,16 +270,26 @@ var Control = require('../Control');
  * @param stage {Stage}
  */
 function Application(background, fullscreen, renderer, stage) {
+    var width = 800;
+    var height = 600;
+    if (fullscreen) {
+        width = window.innerWidth;
+        height = window.innerHeight;
+    }
+
+    if (!background) {
+        background = 0xffffff;
+    }
+
     if (!stage || !renderer) {
         stage = new PIXI.Container();
-        var width = 800;
-        var height = 600;
-        if (fullscreen) {
-            width = window.innerWidth;
-            height = window.innerHeight;
+        var config = {};
+        if (background  instanceof Array) {
+            config.backgroundColor = 0xffffff;
+        } else {
+            config.backgroundColor = background;
         }
-        renderer = PIXI.autoDetectRenderer(
-            width, height, {backgroundColor : 0xffffff});
+        renderer = PIXI.autoDetectRenderer(width, height, config);
         document.body.appendChild(renderer.view);
     }
     /* jshint ignore:start */
@@ -291,7 +304,7 @@ function Application(background, fullscreen, renderer, stage) {
     this.animate();
 
     this.background = background;
-    this.fullscreen = fullscreen || false;
+    this.fullscreen = fullscreen || true;
 }
 
 Application.prototype = Object.create( Control.prototype );
@@ -305,11 +318,12 @@ module.exports = Application;
  */
 /* jshint ignore:start */
 Application.prototype.animate = function() {
-    var renderer = this._renderer;
-    var stage = this._stage;
+    var scope = this;
     var animate = function() {
-        renderer.render(stage);
-        requestAnimationFrame(animate);
+        if (scope._stage) {
+            scope._renderer.render(scope._stage);
+            requestAnimationFrame(animate);
+        }
     };
     requestAnimationFrame(animate);
 };
@@ -345,15 +359,15 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
 Application.prototype.destroy = function(destroyChildren, removeCanvas) {
-    PIXI.Container.prototype.destroy.call(this, destroyChildren);
     removeCanvas = removeCanvas || true;
+    this._removeBackground();
+    this.fullscreen = false; // remove event listener on resize using setter
+    PIXI.Container.prototype.destroy.call(this, destroyChildren);
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
     }
     this._stage = null;
     this._renderer = null;
-    this._removeBackground();
-    this.fullscreen = false; // remove event listener on resize using setter
 };
 
 /**
@@ -600,13 +614,14 @@ Button.prototype.handleEvent = function(type) {
         this._pressed = true;
     } else if (type === Button.UP) {
         this._pressed = false;
-        if (this._over && this.theme.hoverSkin) {
-            this.currentState = Button.HOVER;
-        } else {
-            if (this._over) {
-                // the user taps or clicks the button
-                this.emit(Button.TRIGGERED, this);
+
+        if (this._over) {
+            // the user taps or clicks the button
+            this.emit(Button.TRIGGERED, this);
+            if (this.theme.hoverSkin) {
+                this.currentState = Button.HOVER;
             }
+        } else {
             this.currentState = Button.UP;
         }
     } else if (type === Button.HOVER) {

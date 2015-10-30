@@ -165,13 +165,14 @@ Button.prototype.handleEvent = function(type) {
         this._pressed = true;
     } else if (type === Button.UP) {
         this._pressed = false;
-        if (this._over && this.theme.hoverSkin) {
-            this.currentState = Button.HOVER;
-        } else {
-            if (this._over) {
-                // the user taps or clicks the button
-                this.emit(Button.TRIGGERED, this);
+
+        if (this._over) {
+            // the user taps or clicks the button
+            this.emit(Button.TRIGGERED, this);
+            if (this.theme.hoverSkin) {
+                this.currentState = Button.HOVER;
             }
+        } else {
             this.currentState = Button.UP;
         }
     } else if (type === Button.HOVER) {

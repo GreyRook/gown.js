@@ -1,1 +1,1 @@
-karma start karma.conf.js --browsers Firefox
+karma start karma.conf.js --singleRun false --browsers Chrome

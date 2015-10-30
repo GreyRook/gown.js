@@ -35,6 +35,7 @@ Control.prototype.setTheme = function(theme) {
     this.invalidSkin = true;
 };
 
+Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
@@ -42,11 +43,13 @@ Control.prototype.setTheme = function(theme) {
  * @method updateTransform
  */
 Control.prototype.updateTransform = function() {
-    if(this.redraw) {
+    if (!this.parent) {
+        return;
+    }
+    if (this.redraw) {
         this.redraw();
     }
-
-    PIXI.Container.prototype.updateTransform.call(this);
+    this.updateTransformContainer();
 };
 
 /**
