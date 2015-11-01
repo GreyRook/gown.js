@@ -2,6 +2,8 @@ TODO
 ======
 This list is not ordered by priority nor does it contain any promise that those items will be implemented.
 
+ - test nested LayoutGroups
+
  - better and more detailed documentation!
 
  - mouse wheel support
