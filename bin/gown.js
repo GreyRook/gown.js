@@ -1,4 +1,268 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.GOWN = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+//
+// We store our EE objects in a plain object whose properties are event names.
+// If `Object.create(null)` is not supported we prefix the event names with a
+// `~` to make sure that the built-in object properties are not overridden or
+// used as an attack vector.
+// We also assume that `Object.create(null)` is available when the event name
+// is an ES6 Symbol.
+//
+var prefix = typeof Object.create !== 'function' ? '~' : false;
+
+/**
+ * Representation of a single EventEmitter function.
+ *
+ * @param {Function} fn Event handler to be called.
+ * @param {Mixed} context Context for function execution.
+ * @param {Boolean} once Only emit once
+ * @api private
+ */
+function EE(fn, context, once) {
+  this.fn = fn;
+  this.context = context;
+  this.once = once || false;
+}
+
+/**
+ * Minimal EventEmitter interface that is molded against the Node.js
+ * EventEmitter interface.
+ *
+ * @constructor
+ * @api public
+ */
+function EventEmitter() { /* Nothing to set */ }
+
+/**
+ * Holds the assigned EventEmitters by name.
+ *
+ * @type {Object}
+ * @private
+ */
+EventEmitter.prototype._events = undefined;
+
+/**
+ * Return a list of assigned event listeners.
+ *
+ * @param {String} event The events that should be listed.
+ * @param {Boolean} exists We only need to know if there are listeners.
+ * @returns {Array|Boolean}
+ * @api public
+ */
+EventEmitter.prototype.listeners = function listeners(event, exists) {
+  var evt = prefix ? prefix + event : event
+    , available = this._events && this._events[evt];
+
+  if (exists) return !!available;
+  if (!available) return [];
+  if (available.fn) return [available.fn];
+
+  for (var i = 0, l = available.length, ee = new Array(l); i < l; i++) {
+    ee[i] = available[i].fn;
+  }
+
+  return ee;
+};
+
+/**
+ * Emit an event to all registered event listeners.
+ *
+ * @param {String} event The name of the event.
+ * @returns {Boolean} Indication if we've emitted an event.
+ * @api public
+ */
+EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events || !this._events[evt]) return false;
+
+  var listeners = this._events[evt]
+    , len = arguments.length
+    , args
+    , i;
+
+  if ('function' === typeof listeners.fn) {
+    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
+
+    switch (len) {
+      case 1: return listeners.fn.call(listeners.context), true;
+      case 2: return listeners.fn.call(listeners.context, a1), true;
+      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
+      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
+      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+    }
+
+    for (i = 1, args = new Array(len -1); i < len; i++) {
+      args[i - 1] = arguments[i];
+    }
+
+    listeners.fn.apply(listeners.context, args);
+  } else {
+    var length = listeners.length
+      , j;
+
+    for (i = 0; i < length; i++) {
+      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
+
+      switch (len) {
+        case 1: listeners[i].fn.call(listeners[i].context); break;
+        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
+        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
+        default:
+          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
+            args[j - 1] = arguments[j];
+          }
+
+          listeners[i].fn.apply(listeners[i].context, args);
+      }
+    }
+  }
+
+  return true;
+};
+
+/**
+ * Register a new EventListener for the given event.
+ *
+ * @param {String} event Name of the event.
+ * @param {Functon} fn Callback function.
+ * @param {Mixed} context The context of the function.
+ * @api public
+ */
+EventEmitter.prototype.on = function on(event, fn, context) {
+  var listener = new EE(fn, context || this)
+    , evt = prefix ? prefix + event : event;
+
+  if (!this._events) this._events = prefix ? {} : Object.create(null);
+  if (!this._events[evt]) this._events[evt] = listener;
+  else {
+    if (!this._events[evt].fn) this._events[evt].push(listener);
+    else this._events[evt] = [
+      this._events[evt], listener
+    ];
+  }
+
+  return this;
+};
+
+/**
+ * Add an EventListener that's only called once.
+ *
+ * @param {String} event Name of the event.
+ * @param {Function} fn Callback function.
+ * @param {Mixed} context The context of the function.
+ * @api public
+ */
+EventEmitter.prototype.once = function once(event, fn, context) {
+  var listener = new EE(fn, context || this, true)
+    , evt = prefix ? prefix + event : event;
+
+  if (!this._events) this._events = prefix ? {} : Object.create(null);
+  if (!this._events[evt]) this._events[evt] = listener;
+  else {
+    if (!this._events[evt].fn) this._events[evt].push(listener);
+    else this._events[evt] = [
+      this._events[evt], listener
+    ];
+  }
+
+  return this;
+};
+
+/**
+ * Remove event listeners.
+ *
+ * @param {String} event The event we want to remove.
+ * @param {Function} fn The listener that we need to find.
+ * @param {Mixed} context Only remove listeners matching this context.
+ * @param {Boolean} once Only remove once listeners.
+ * @api public
+ */
+EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events || !this._events[evt]) return this;
+
+  var listeners = this._events[evt]
+    , events = [];
+
+  if (fn) {
+    if (listeners.fn) {
+      if (
+           listeners.fn !== fn
+        || (once && !listeners.once)
+        || (context && listeners.context !== context)
+      ) {
+        events.push(listeners);
+      }
+    } else {
+      for (var i = 0, length = listeners.length; i < length; i++) {
+        if (
+             listeners[i].fn !== fn
+          || (once && !listeners[i].once)
+          || (context && listeners[i].context !== context)
+        ) {
+          events.push(listeners[i]);
+        }
+      }
+    }
+  }
+
+  //
+  // Reset the array, or remove it completely if we have no more listeners.
+  //
+  if (events.length) {
+    this._events[evt] = events.length === 1 ? events[0] : events;
+  } else {
+    delete this._events[evt];
+  }
+
+  return this;
+};
+
+/**
+ * Remove all listeners or only the listeners for the specified event.
+ *
+ * @param {String} event The event want to remove all listeners for.
+ * @api public
+ */
+EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
+  if (!this._events) return this;
+
+  if (event) delete this._events[prefix ? prefix + event : event];
+  else this._events = prefix ? {} : Object.create(null);
+
+  return this;
+};
+
+//
+// Alias methods names because people roll like that.
+//
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+//
+// This function doesn't apply anymore.
+//
+EventEmitter.prototype.setMaxListeners = function setMaxListeners() {
+  return this;
+};
+
+//
+// Expose the prefix.
+//
+EventEmitter.prefixed = prefix;
+
+//
+// Expose the module.
+//
+if ('undefined' !== typeof module) {
+  module.exports = EventEmitter;
+}
+
+},{}],2:[function(require,module,exports){
 /**
  * base for all UI controls (see controls/)
  * based on pixi-DisplayContainer that supports adding children, so all
@@ -22,7 +286,7 @@ module.exports = Control;
 /**
  * change the theme (every control can have a theme, even if it does not
  * inherit Skinable, e.g. if there is only some color in the skin that will
- * be taken)
+ * be taken or if it has some skinable components as children)
  *
  * @method setTheme
  * @param theme the new theme {Theme}
@@ -36,6 +300,7 @@ Control.prototype.setTheme = function(theme) {
     this.invalidSkin = true;
 };
 
+Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform;
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
@@ -43,11 +308,13 @@ Control.prototype.setTheme = function(theme) {
  * @method updateTransform
  */
 Control.prototype.updateTransform = function() {
-    if(this.redraw) {
+    if (!this.parent) {
+        return;
+    }
+    if (this.redraw) {
         this.redraw();
     }
-
-    PIXI.Container.prototype.updateTransform.call(this);
+    this.updateTransformContainer();
 };
 
 /**
@@ -126,7 +393,7 @@ Object.defineProperty(Control.prototype, 'height', {
     }
 });
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var Control = require('./Control');
 var resizeScaling = require('../utils/resizeScaling');
 var mixin = require('../utils/mixin');
@@ -248,7 +515,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
     }
 });
 
-},{"../utils/mixin":40,"../utils/resizeScaling":43,"./Control":1}],3:[function(require,module,exports){
+},{"../utils/mixin":41,"../utils/resizeScaling":44,"./Control":2}],4:[function(require,module,exports){
 var Control = require('../Control');
 
 /**
@@ -262,21 +529,35 @@ var Control = require('../Control');
  * @constructor
  * @param background {Number | Array} a background color or a list of colors
  *  that will be used as vertical gradient
+ *  (default: 0xffffff)
  * @param fullscreen {Boolean}
+ *  (default: true)
  * @param renderer {WebGLRenderer|CanvasRenderer}
+ *  (default: null - will create a new renderer)
  * @param stage {Stage}
+ *  (default null - will use a new PIXI.Container)
  */
 function Application(background, fullscreen, renderer, stage) {
+    var width = 800;
+    var height = 600;
+    if (fullscreen) {
+        width = window.innerWidth;
+        height = window.innerHeight;
+    }
+
+    if (!background) {
+        background = 0xffffff;
+    }
+
     if (!stage || !renderer) {
         stage = new PIXI.Container();
-        var width = 800;
-        var height = 600;
-        if (fullscreen) {
-            width = window.innerWidth;
-            height = window.innerHeight;
+        var config = {};
+        if (background  instanceof Array) {
+            config.backgroundColor = 0xffffff;
+        } else {
+            config.backgroundColor = background;
         }
-        renderer = PIXI.autoDetectRenderer(
-            width, height, {backgroundColor : 0xffffff});
+        renderer = PIXI.autoDetectRenderer(width, height, config);
         document.body.appendChild(renderer.view);
     }
     /* jshint ignore:start */
@@ -291,7 +572,7 @@ function Application(background, fullscreen, renderer, stage) {
     this.animate();
 
     this.background = background;
-    this.fullscreen = fullscreen || false;
+    this.fullscreen = fullscreen || true;
 }
 
 Application.prototype = Object.create( Control.prototype );
@@ -305,11 +586,12 @@ module.exports = Application;
  */
 /* jshint ignore:start */
 Application.prototype.animate = function() {
-    var renderer = this._renderer;
-    var stage = this._stage;
+    var scope = this;
     var animate = function() {
-        renderer.render(stage);
-        requestAnimationFrame(animate);
+        if (scope._stage) {
+            scope._renderer.render(scope._stage);
+            requestAnimationFrame(animate);
+        }
     };
     requestAnimationFrame(animate);
 };
@@ -340,18 +622,20 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method dispose
- * @param removeCanvas destroys the canvas and remove it from the dom tree
+ * @method destroy
+ * @param [destroyChildren=false] {boolean} if set to true, all the children will have their destroy method called as well
+ * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
-Application.prototype.dispose = function(removeCanvas) {
+Application.prototype.destroy = function(destroyChildren, removeCanvas) {
     removeCanvas = removeCanvas || true;
+    this._removeBackground();
+    this.fullscreen = false; // remove event listener on resize using setter
+    PIXI.Container.prototype.destroy.call(this, destroyChildren);
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
     }
     this._stage = null;
     this._renderer = null;
-    this._removeBackground();
-    this.fullscreen = false; // remove event listener
 };
 
 /**
@@ -367,12 +651,7 @@ Application.prototype.onresize = function() {
         this.bg.width = this._width;
         this.bg.height = this._height;
     }
-    for (var i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
-        if (child.onresize) {
-            child.onresize(this._width, this._height);
-        }
-    }
+    this.emit('resize', this._width, this._height);
 };
 
 /**
@@ -435,7 +714,7 @@ Object.defineProperty(Application.prototype, 'background', {
     }
 });
 
-},{"../Control":1}],4:[function(require,module,exports){
+},{"../Control":2}],5:[function(require,module,exports){
 var Skinable = require('../Skinable');
 
 /**
@@ -510,6 +789,8 @@ Button.HOVER = 'hover';
 Button.stateNames = [
     Button.DOWN, Button.HOVER, Button.UP
 ];
+
+Button.TRIGGERED = 'triggered';
 
 /**
  * initiate all skins first
@@ -601,8 +882,13 @@ Button.prototype.handleEvent = function(type) {
         this._pressed = true;
     } else if (type === Button.UP) {
         this._pressed = false;
-        if (this._over && this.theme.hoverSkin) {
-            this.currentState = Button.HOVER;
+
+        if (this._over) {
+            // the user taps or clicks the button
+            this.emit(Button.TRIGGERED, this);
+            if (this.theme.hoverSkin) {
+                this.currentState = Button.HOVER;
+            }
         } else {
             this.currentState = Button.UP;
         }
@@ -726,7 +1012,7 @@ Object.defineProperty(Button.prototype, 'label', {
     }
 });
 
-},{"../Skinable":2}],5:[function(require,module,exports){
+},{"../Skinable":3}],6:[function(require,module,exports){
 var ToggleButton = require('./ToggleButton');
 
 /**
@@ -750,7 +1036,7 @@ module.exports = Check;
 // name of skin that will be applied
 Check.SKIN_NAME = 'check';
 
-},{"./ToggleButton":18}],6:[function(require,module,exports){
+},{"./ToggleButton":19}],7:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     InputWrapper = require('../../utils/InputWrapper');
 
@@ -804,6 +1090,11 @@ module.exports = InputControl;
 InputControl.currentInput = null;
 
 InputControl.prototype.onKeyUp = function() {
+    this.emit('change', this);
+};
+
+InputControl.prototype.onEnter = function() {
+    this.emit('enter', this);
 };
 
 InputControl.prototype.onKeyDown = function() {
@@ -908,6 +1199,7 @@ InputControl.prototype.focus = function () {
     // check custom focus event
     this.onfocus();
 
+    this.emit('focusIn', this);
     /*
      //TODO
      // is read only
@@ -972,6 +1264,7 @@ InputControl.prototype.blur = function() {
  * @method onblur
  */
 InputControl.prototype.onblur = function() {
+    this.emit('focusOut', this);
 };
 
 // blur current input
@@ -984,7 +1277,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":36,"../Skinable":2}],7:[function(require,module,exports){
+},{"../../utils/InputWrapper":37,"../Skinable":3}],8:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1144,7 +1437,7 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
     }
 });
 
-},{"../Control":1,"../layout/ViewPortBounds":27}],8:[function(require,module,exports){
+},{"../Control":2,"../layout/ViewPortBounds":28}],9:[function(require,module,exports){
 var Scroller = require('./Scroller');
 
 /**
@@ -1156,7 +1449,7 @@ var Scroller = require('./Scroller');
  * @constructor
  */
 function List(dataProvider, theme) {
-    Scroller.call(theme); // TODO: extend scroller?
+    Scroller.call(this, theme);
     this.skinName = this.skinName || List.SKIN_NAME;
 
     // Determines if items in the list may be selected.
@@ -1213,7 +1506,7 @@ Object.defineProperty(List.prototype, 'dataProvider', {
     }
 });
 
-},{"./Scroller":15}],9:[function(require,module,exports){
+},{"./Scroller":16}],10:[function(require,module,exports){
 var ToggleButton = require('./ToggleButton');
 
 /**
@@ -1277,7 +1570,7 @@ PickerList.prototype.redraw = function() {
 // TODO: createButton/ListItem
 // TODO: createList
 
-},{"./ToggleButton":18}],10:[function(require,module,exports){
+},{"./ToggleButton":19}],11:[function(require,module,exports){
 var Scrollable = require('./Scrollable');
 
 // TODO: decreement/increment Button
@@ -1386,11 +1679,27 @@ Object.defineProperty(ScrollBar.prototype, 'value', {
     }
 });
 
-},{"./Scrollable":14}],11:[function(require,module,exports){
+},{"./Scrollable":15}],12:[function(require,module,exports){
+var Scroller = require('./Scroller');
+var ScrollBar = require('./ScrollBar');
 
-},{}],12:[function(require,module,exports){
-arguments[4][11][0].apply(exports,arguments)
-},{"dup":11}],13:[function(require,module,exports){
+/**
+ * @class ScrollContainer
+ * @extends GOWN.Scroller
+ * @memberof GOWN
+ * @constructor
+ */
+function ScrollContainer(theme) {
+    Scroller.call(this, theme);
+}
+
+ScrollContainer.prototype = Object.create( Scroller.prototype );
+ScrollContainer.prototype.constructor = ScrollContainer;
+module.exports = ScrollContainer;
+
+},{"./ScrollBar":11,"./Scroller":16}],13:[function(require,module,exports){
+
+},{}],14:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -1542,7 +1851,7 @@ ScrollThumb.prototype.move = function(x, y) {
     return false;
 };
 
-},{"./Button":4}],14:[function(require,module,exports){
+},{"./Button":5}],15:[function(require,module,exports){
 var Skinable = require('../Skinable'),
     ScrollThumb = require('./ScrollThumb');
 
@@ -1921,9 +2230,9 @@ Object.defineProperty(Scrollable.prototype, 'height', {
     }
 });
 
-},{"../Skinable":2,"./ScrollThumb":13}],15:[function(require,module,exports){
-var Skinable = require('../Skinable');
+},{"../Skinable":3,"./ScrollThumb":14}],16:[function(require,module,exports){
 var ScrollBar = require('./ScrollBar');
+var Control = require('../Control');
 
 /**
  * Allows horizontal and vertical scrolling of a view port.
@@ -1939,13 +2248,13 @@ var ScrollBar = require('./ScrollBar');
  * @constructor
  */
 function Scroller(theme) {
-    Skinable.call(this, theme);
+    Control.call(this, theme);
     this.createScrollBars();
     this._horizontalScrollBarFactory = this.defaultScrollBarFactory;
     this._verticalScrollBarFactory = this.defaultScrollBarFactory;
 }
 
-Scroller.prototype = Object.create( Skinable.prototype );
+Scroller.prototype = Object.create( Control.prototype );
 Scroller.prototype.constructor = Scroller;
 module.exports = Scroller;
 
@@ -1973,7 +2282,7 @@ Scroller.prototype.defaultScrollBarFactory = function() {
 
 // TODO: elastic scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
 
-},{"../Skinable":2,"./ScrollBar":10}],16:[function(require,module,exports){
+},{"../Control":2,"./ScrollBar":11}],17:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     SliderData = require('../../utils/SliderData');
 
@@ -2084,6 +2393,7 @@ Object.defineProperty(Slider.prototype, 'value', {
             return;
         }
 
+        this.emit('change', value, this);
         // move thumb
         if (this.thumb) {
             var pos = this.valueToLocation(value);
@@ -2146,7 +2456,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":38,"./Scrollable":14}],17:[function(require,module,exports){
+},{"../../utils/SliderData":39,"./Scrollable":15}],18:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2273,9 +2583,6 @@ Object.defineProperty(TextInput.prototype, 'text', {
 
         // reposition cursor
         this._cursorNeedsUpdate = true;
-        if (this.change) {
-            this.change(text);
-        }
     }
 });
 
@@ -2356,46 +2663,24 @@ TextInput.prototype.updateSelectionBg = function() {
     }
 };
 
+
+TextInput.prototype.inputControlOnBlur = InputControl.prototype.onblur;
 TextInput.prototype.onblur = function() {
+    this.inputControlOnBlur();
     this.updateSelection(0, 0);
 };
 
-TextInput.prototype.onSubmit = function () {
-};
-
-TextInput.prototype.onKeyDown = function (e) {
-    var keyCode = e.which;
-
-    // ESC
-    if (e.which === 27) {
-        this.blur();
-        return;
-    }
-
-    // add support for Ctrl/Cmd+A selection - select whole input text
-    if (keyCode === 65 && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        this.updateSelection(0, this.text.length);
-        return;
-    }
-
-    // block keys that shouldn't be processed
-    if (keyCode === 17 || e.metaKey || e.ctrlKey) {
-        return;
-    }
-
-    // enter key
-    if (keyCode === 13) {
-        e.preventDefault();
-        this.onSubmit(e);
-    }
-
+TextInput.prototype.inputControlKeyDown = InputControl.prototype.onKeyDown;
+TextInput.prototype.onKeyDown = function () {
+    this.inputControlKeyDown();
     // update the canvas input state information from the hidden input
     this.updateTextState();
 };
 
+TextInput.prototype.inputControlKeyUp = InputControl.prototype.onKeyUp;
 TextInput.prototype.onKeyUp = function () {
     this.updateTextState();
+    this.inputControlKeyUp();
 };
 
 /**
@@ -2517,7 +2802,7 @@ TextInput.prototype.updateTextState = function () {
     this.setCursorPos();
 };
 
-},{"../../utils/InputWrapper":36,"../Control":1,"./InputControl":6}],18:[function(require,module,exports){
+},{"../../utils/InputWrapper":37,"../Control":2,"./InputControl":7}],19:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2623,7 +2908,7 @@ ToggleButton.prototype.handleEvent = function(type) {
     this.buttonHandleEvent(type);
 };
 
-},{"./Button":4}],19:[function(require,module,exports){
+},{"./Button":5}],20:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2678,7 +2963,7 @@ module.exports = {
     ThemeFont:       require('./skin/ThemeFont')
 };
 
-},{"./Control":1,"./Skinable":2,"./controls/Application":3,"./controls/Button":4,"./controls/Check":5,"./controls/InputControl":6,"./controls/LayoutGroup":7,"./controls/List":8,"./controls/PickerList":9,"./controls/ScrollBar":10,"./controls/ScrollContainer":11,"./controls/ScrollText":12,"./controls/ScrollThumb":13,"./controls/Scrollable":14,"./controls/Scroller":15,"./controls/Slider":16,"./controls/TextInput":17,"./controls/ToggleButton":18,"./layout/HorizontalLayout":20,"./layout/Layout":21,"./layout/LayoutAlignment":22,"./layout/TiledColumnsLayout":23,"./layout/TiledLayout":24,"./layout/TiledRowsLayout":25,"./layout/VerticalLayout":26,"./layout/ViewPortBounds":27,"./shapes/Diamond":28,"./shapes/Ellipse":29,"./shapes/Line":30,"./shapes/Rect":31,"./shapes/Shape":32,"./skin/Theme":33,"./skin/ThemeFont":34}],20:[function(require,module,exports){
+},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/Check":6,"./controls/InputControl":7,"./controls/LayoutGroup":8,"./controls/List":9,"./controls/PickerList":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./layout/HorizontalLayout":21,"./layout/Layout":22,"./layout/LayoutAlignment":23,"./layout/TiledColumnsLayout":24,"./layout/TiledLayout":25,"./layout/TiledRowsLayout":26,"./layout/VerticalLayout":27,"./layout/ViewPortBounds":28,"./shapes/Diamond":29,"./shapes/Ellipse":30,"./shapes/Line":31,"./shapes/Rect":32,"./shapes/Shape":33,"./skin/Theme":34,"./skin/ThemeFont":35}],21:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2699,7 +2984,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":22}],21:[function(require,module,exports){
+},{"./LayoutAlignment":23}],22:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -2922,7 +3207,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3109,7 +3394,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":21}],23:[function(require,module,exports){
+},{"./Layout":22}],24:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3155,7 +3440,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":24}],24:[function(require,module,exports){
+},{"./TiledLayout":25}],25:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3461,7 +3746,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":21}],25:[function(require,module,exports){
+},{"./Layout":22}],26:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3507,7 +3792,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":24}],26:[function(require,module,exports){
+},{"./TiledLayout":25}],27:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3528,7 +3813,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":22}],27:[function(require,module,exports){
+},{"./LayoutAlignment":23}],28:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3569,7 +3854,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3604,7 +3889,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":32}],29:[function(require,module,exports){
+},{"./Shape":33}],30:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3635,7 +3920,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":32}],30:[function(require,module,exports){
+},{"./Shape":33}],31:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3691,7 +3976,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":32}],31:[function(require,module,exports){
+},{"./Shape":33}],32:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3746,7 +4031,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":32}],32:[function(require,module,exports){
+},{"./Shape":33}],33:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -3896,9 +4181,11 @@ Shape.prototype.redraw = function() {
     this.invalid = false;
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
 var ThemeFont = require('./ThemeFont');
+var EventEmitter = require('eventemitter3');
+
 /**
  * basic theming/skinning.
  *
@@ -3906,7 +4193,10 @@ var ThemeFont = require('./ThemeFont');
  * @memberof GOWN
  * @constructor
  */
-function Theme(global) {
+function Theme(onComplete, global) {
+    if (onComplete) {
+        this.on(Theme.COMPLETE, onComplete);
+    }
     // at its core a theme is just a dict that holds a collection of skins
     this._skins = {};
 
@@ -3925,7 +4215,19 @@ function Theme(global) {
     // desktop themes have a hover skin if the mouse moves over the button
     this.hoverSkin = true;
 }
+
+Theme.prototype = Object.create( EventEmitter.prototype );
+Theme.prototype.constructor = Theme;
 module.exports = Theme;
+
+// skin has changed
+Theme.SKIN_CHANGED = 'skin_changed';
+
+// theme texture loaded
+Theme.LOADED = 'loaded';
+
+// theme texture has been loaded and all controls have an assigned skin
+Theme.COMPLETE = 'complete';
 
 /**
  * Set skin for ui component
@@ -3938,7 +4240,7 @@ module.exports = Theme;
 Theme.prototype.setSkin = function(comp, id, skin) {
     this._skins[comp] = this._skins[comp] || {};
     this._skins[comp][id] = skin;
-    // TODO: dispatch event - the skin of "comp"
+    this.emit(Theme.SKIN_CHANGED, comp, this);
 };
 
 /**
@@ -3960,7 +4262,19 @@ Theme.prototype.loadImage = function(jsonPath) {
  * @method loadComplete
  */
 Theme.prototype.loadComplete = function(loader, resources) {
-    this.textureCache = resources.resources[this._jsonPath].textures;
+    this.textureCache = resources[this._jsonPath].textures;
+    this.emit(Theme.LOADED, this);
+    this.applyTheme();
+};
+
+/**
+ * apply theme to controls
+ * (normally executed only once after the texture has been loaded)
+ *
+ * @method applyTheme
+ */
+Theme.prototype.applyTheme = function() {
+    this.emit(Theme.COMPLETE, this);
 };
 
 /**
@@ -4022,7 +4336,7 @@ Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
 
-},{"../../utils/ScaleContainer":37,"./ThemeFont":34}],34:[function(require,module,exports){
+},{"../../utils/ScaleContainer":38,"./ThemeFont":35,"eventemitter3":1}],35:[function(require,module,exports){
 var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
                'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
@@ -4121,7 +4435,7 @@ Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
     }
 });
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (global){
 if (typeof PIXI === 'undefined') {
     if (window.console) {
@@ -4147,7 +4461,7 @@ if (typeof PIXI === 'undefined') {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./core":19,"./utils":39}],36:[function(require,module,exports){
+},{"./core":20,"./utils":40}],37:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4158,9 +4472,9 @@ if (typeof PIXI === 'undefined') {
  * @memberof GOWN
  * @static
  */
-function InputWrapper()
-{
+function InputWrapper() {
 }
+
 module.exports = InputWrapper;
 
 /**
@@ -4177,8 +4491,7 @@ InputWrapper.hiddenInput = null;
  * create/return unique input field.
  * @returns {DOMObject}
  */
-InputWrapper.createInput = function()
-{
+InputWrapper.createInput = function() {
     if (!InputWrapper.hiddenInput) {
         var input = document.createElement('input');
         input.type = 'text';
@@ -4209,7 +4522,33 @@ InputWrapper.createInput = function()
                 e = e || window.event;
                 if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    GOWN.InputControl.currentInput.onKeyDown(e);
+                    GOWN.InputControl.currentInput.onKeyDown();
+                    var keyCode = e.which;
+
+                    // ESC
+                    if (keyCode === 27) {
+                        GOWN.InputControl.currentInput.blur();
+                        return;
+                    }
+
+                    // add support for Ctrl/Cmd+A selection - select whole input text
+                    if (keyCode === 65 && (e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        GOWN.InputControl.currentInput.updateSelection(
+                            0, GOWN.InputControl.currentInput.text.length);
+                        return;
+                    }
+
+                    // block keys that shouldn't be processed
+                    if (keyCode === 17 || e.metaKey || e.ctrlKey) {
+                        return;
+                    }
+
+                    // enter key
+                    if (keyCode === 13) {
+                        e.preventDefault();
+                        GOWN.InputControl.currentInput.onEnter();
+                    }
                 }
             }
         });
@@ -4222,7 +4561,7 @@ InputWrapper.createInput = function()
                 e = e || window.event;
                 if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    GOWN.InputControl.currentInput.onKeyUp(e);
+                    GOWN.InputControl.currentInput.onKeyUp();
                 }
             }
         });
@@ -4351,7 +4690,8 @@ InputWrapper.getType = function() {
         return InputWrapper._type;
     }
 };
-},{}],37:[function(require,module,exports){
+
+},{}],38:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4606,7 +4946,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     return new ScaleContainer(texture, rect);
 };
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4628,7 +4968,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4649,7 +4989,7 @@ module.exports = {
     mixin:                  require('./mixin')
 };
 
-},{"./InputWrapper":36,"./ScaleContainer":37,"./SliderData":38,"./mixin":40,"./mouseWheelSupport":41,"./position":42,"./resizeScaling":43}],40:[function(require,module,exports){
+},{"./InputWrapper":37,"./ScaleContainer":38,"./SliderData":39,"./mixin":41,"./mouseWheelSupport":42,"./position":43,"./resizeScaling":44}],41:[function(require,module,exports){
 module.exports = function(destination, source) {
     for (var key in source) {
         if (source.hasOwnProperty(key)) {
@@ -4665,7 +5005,7 @@ module.exports = function(destination, source) {
     return destination;
 };
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -4732,7 +5072,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
@@ -4784,7 +5124,7 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 
 module.exports = {
     /**
@@ -4899,7 +5239,7 @@ module.exports = {
     }
 };
 
-},{}]},{},[35])(35)
+},{}]},{},[36])(36)
 });
 
 

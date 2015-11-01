@@ -1,5 +1,5 @@
 function MetalWorksMobileTheme(jsonPath, onComplete, global) {
-    GOWN.Theme.call(this, global);
+    GOWN.Theme.call(this, onComplete, global);
 
     // drag-thumb for slider does not have a skin
     this.thumbSkin = false;
@@ -15,20 +15,16 @@ function MetalWorksMobileTheme(jsonPath, onComplete, global) {
 
     this.thumbSize = 32;
 
-    this._onComplete = onComplete;
     if (jsonPath) {
         this.loadImage(jsonPath);
-    } else {
-        this.loadComplete();
     }
 }
 
 MetalWorksMobileTheme.prototype = Object.create( GOWN.Theme.prototype );
 MetalWorksMobileTheme.prototype.constructor = MetalWorksMobileTheme;
 
-MetalWorksMobileTheme.prototype.themeLoadComplete = GOWN.Theme.prototype.loadComplete;
-MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
-    this.themeLoadComplete(this, loader, resources);
+MetalWorksMobileTheme.prototype.themeApplyTheme = GOWN.Theme.prototype.applyTheme;
+MetalWorksMobileTheme.prototype.applyTheme = function() {
     var b = GOWN.Button;
     var bg = MetalWorksMobileTheme.BUTTON_SCALE_9_GRID;
 
@@ -97,10 +93,8 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
     }
     */
 
-    // TODO: emit
-    if (this._onComplete) {
-        this._onComplete();
-    }
+    this.themeApplyTheme();
+
 };
 
 MetalWorksMobileTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(5, 5, 50, 50);

@@ -22,6 +22,18 @@ describe("Button", function() {
         expect(btn.updateLabel).equal(false);
     });
 
+    it("test button event", function(done) {
+        var btn = new GOWN.Button();
+        btn.on(GOWN.Button.TRIGGERED, function(event) {
+            done();
+        });
+        // btn.emit(GOWN.Button.DOWN);
+        btn.mousedown();
+        btn.mouseover();
+        btn.mouseup();
+
+    });
+
     it("a clicked button states are correct (first 'down' then 'up')",
         function() {
             var btn = new GOWN.Button();

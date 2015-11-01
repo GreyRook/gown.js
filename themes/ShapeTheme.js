@@ -1,10 +1,10 @@
 function ShapeTheme(onComplete, global) {
-    GOWN.Theme.call(this, global);
+    GOWN.Theme.call(this, onComplete, global);
     this.textStyle.fill = '#fff';
     //TODO: this does not really work - load font somehow?!
     this.textStyle.fontFamily = 'Droid Sans';
-    this.onComplete = onComplete;
-    this.setSkins();
+    // nothing to load, call applyTheme directly
+    this.applyTheme();
 }
 
 ShapeTheme.prototype = Object.create( GOWN.Theme.prototype );
@@ -20,7 +20,8 @@ ShapeTheme.prototype.getDummyButton = function(color, borderColor) {
     }
 };
 
-ShapeTheme.prototype.setSkins = function() {
+ShapeTheme.prototype.themeApplyTheme = GOWN.Theme.prototype.applyTheme;
+ShapeTheme.prototype.applyTheme = function() {
     var b = GOWN.Button;
     //var tb = GOWN.ToggleButton;
     this.setSkin(b.SKIN_NAME, b.UP,
@@ -29,11 +30,7 @@ ShapeTheme.prototype.setSkins = function() {
         this.getDummyButton(0xEA8686, 0xff0000));
     this.setSkin(b.SKIN_NAME, b.HOVER,
         this.getDummyButton(0x60c865, 0x00ff00));
-
-    // TODO: emit
-    if (this._onComplete) {
-        this._onComplete();
-    }
+    this.themeApplyTheme();
 };
 
 ShapeTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(6, 6, 70, 10);

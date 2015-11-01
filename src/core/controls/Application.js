@@ -11,21 +11,35 @@ var Control = require('../Control');
  * @constructor
  * @param background {Number | Array} a background color or a list of colors
  *  that will be used as vertical gradient
+ *  (default: 0xffffff)
  * @param fullscreen {Boolean}
+ *  (default: true)
  * @param renderer {WebGLRenderer|CanvasRenderer}
+ *  (default: null - will create a new renderer)
  * @param stage {Stage}
+ *  (default null - will use a new PIXI.Container)
  */
 function Application(background, fullscreen, renderer, stage) {
+    var width = 800;
+    var height = 600;
+    if (fullscreen) {
+        width = window.innerWidth;
+        height = window.innerHeight;
+    }
+
+    if (!background) {
+        background = 0xffffff;
+    }
+
     if (!stage || !renderer) {
         stage = new PIXI.Container();
-        var width = 800;
-        var height = 600;
-        if (fullscreen) {
-            width = window.innerWidth;
-            height = window.innerHeight;
+        var config = {};
+        if (background  instanceof Array) {
+            config.backgroundColor = 0xffffff;
+        } else {
+            config.backgroundColor = background;
         }
-        renderer = PIXI.autoDetectRenderer(
-            width, height, {backgroundColor : 0xffffff});
+        renderer = PIXI.autoDetectRenderer(width, height, config);
         document.body.appendChild(renderer.view);
     }
     /* jshint ignore:start */
@@ -40,7 +54,7 @@ function Application(background, fullscreen, renderer, stage) {
     this.animate();
 
     this.background = background;
-    this.fullscreen = fullscreen || false;
+    this.fullscreen = fullscreen || true;
 }
 
 Application.prototype = Object.create( Control.prototype );
@@ -54,11 +68,12 @@ module.exports = Application;
  */
 /* jshint ignore:start */
 Application.prototype.animate = function() {
-    var renderer = this._renderer;
-    var stage = this._stage;
+    var scope = this;
     var animate = function() {
-        renderer.render(stage);
-        requestAnimationFrame(animate);
+        if (scope._stage) {
+            scope._renderer.render(scope._stage);
+            requestAnimationFrame(animate);
+        }
     };
     requestAnimationFrame(animate);
 };
@@ -89,18 +104,20 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method dispose
- * @param removeCanvas destroys the canvas and remove it from the dom tree
+ * @method destroy
+ * @param [destroyChildren=false] {boolean} if set to true, all the children will have their destroy method called as well
+ * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
-Application.prototype.dispose = function(removeCanvas) {
+Application.prototype.destroy = function(destroyChildren, removeCanvas) {
     removeCanvas = removeCanvas || true;
+    this._removeBackground();
+    this.fullscreen = false; // remove event listener on resize using setter
+    PIXI.Container.prototype.destroy.call(this, destroyChildren);
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
     }
     this._stage = null;
     this._renderer = null;
-    this._removeBackground();
-    this.fullscreen = false; // remove event listener
 };
 
 /**
@@ -116,12 +133,7 @@ Application.prototype.onresize = function() {
         this.bg.width = this._width;
         this.bg.height = this._height;
     }
-    for (var i = 0; i < this.children.length; i++) {
-        var child = this.children[i];
-        if (child.onresize) {
-            child.onresize(this._width, this._height);
-        }
-    }
+    this.emit('resize', this._width, this._height);
 };
 
 /**

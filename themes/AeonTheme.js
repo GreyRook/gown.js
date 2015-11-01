@@ -1,19 +1,15 @@
 function AeonTheme(jsonPath, onComplete, global) {
-    GOWN.Theme.call(this, global);
-    this._onComplete = onComplete;
+    GOWN.Theme.call(this, onComplete, global);
     if (jsonPath) {
         this.loadImage(jsonPath);
-    } else {
-        this.loadComplete();
     }
 }
 
 AeonTheme.prototype = Object.create( GOWN.Theme.prototype );
 AeonTheme.prototype.constructor = AeonTheme;
 
-AeonTheme.prototype.themeLoadComplete = GOWN.Theme.prototype.loadComplete;
-AeonTheme.prototype.loadComplete = function(loader, resources) {
-    this.themeLoadComplete(this, loader, resources);
+AeonTheme.prototype.themeApplyTheme = GOWN.Theme.prototype.applyTheme;
+AeonTheme.prototype.applyTheme = function() {
     var b = GOWN.Button;
     var bg = AeonTheme.BUTTON_SCALE_9_GRID;
 
@@ -133,12 +129,7 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
         this.setSkin(chk.SKIN_NAME, tb.SELECTED_HOVER,
             this.getImage("check-selected-hover-icon0000"));
     }
-
-
-    // TODO: emit
-    if (this._onComplete) {
-        this._onComplete();
-    }
+    this.themeApplyTheme();
 };
 
 AeonTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(7, 7, 8, 31);

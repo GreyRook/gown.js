@@ -8,9 +8,9 @@
  * @memberof GOWN
  * @static
  */
-function InputWrapper()
-{
+function InputWrapper() {
 }
+
 module.exports = InputWrapper;
 
 /**
@@ -27,8 +27,7 @@ InputWrapper.hiddenInput = null;
  * create/return unique input field.
  * @returns {DOMObject}
  */
-InputWrapper.createInput = function()
-{
+InputWrapper.createInput = function() {
     if (!InputWrapper.hiddenInput) {
         var input = document.createElement('input');
         input.type = 'text';
@@ -59,7 +58,33 @@ InputWrapper.createInput = function()
                 e = e || window.event;
                 if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    GOWN.InputControl.currentInput.onKeyDown(e);
+                    GOWN.InputControl.currentInput.onKeyDown();
+                    var keyCode = e.which;
+
+                    // ESC
+                    if (keyCode === 27) {
+                        GOWN.InputControl.currentInput.blur();
+                        return;
+                    }
+
+                    // add support for Ctrl/Cmd+A selection - select whole input text
+                    if (keyCode === 65 && (e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        GOWN.InputControl.currentInput.updateSelection(
+                            0, GOWN.InputControl.currentInput.text.length);
+                        return;
+                    }
+
+                    // block keys that shouldn't be processed
+                    if (keyCode === 17 || e.metaKey || e.ctrlKey) {
+                        return;
+                    }
+
+                    // enter key
+                    if (keyCode === 13) {
+                        e.preventDefault();
+                        GOWN.InputControl.currentInput.onEnter();
+                    }
                 }
             }
         });
@@ -72,7 +97,7 @@ InputWrapper.createInput = function()
                 e = e || window.event;
                 if (GOWN.InputControl.currentInput.hasFocus)
                 {
-                    GOWN.InputControl.currentInput.onKeyUp(e);
+                    GOWN.InputControl.currentInput.onKeyUp();
                 }
             }
         });

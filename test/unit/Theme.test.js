@@ -11,7 +11,7 @@ describe("theming and skinning", function() {
         expect(GOWN.theme).equal(theme);
 
         // create temporary, local theme - should not overwrite the global theme
-        new GOWN.Theme(false);
+        new GOWN.Theme(null, false);
         expect(GOWN.theme).equal(theme);
     });
 

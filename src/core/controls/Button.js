@@ -73,6 +73,8 @@ Button.stateNames = [
     Button.DOWN, Button.HOVER, Button.UP
 ];
 
+Button.TRIGGERED = 'triggered';
+
 /**
  * initiate all skins first
  * (to prevent flickering)
@@ -163,8 +165,13 @@ Button.prototype.handleEvent = function(type) {
         this._pressed = true;
     } else if (type === Button.UP) {
         this._pressed = false;
-        if (this._over && this.theme.hoverSkin) {
-            this.currentState = Button.HOVER;
+
+        if (this._over) {
+            // the user taps or clicks the button
+            this.emit(Button.TRIGGERED, this);
+            if (this.theme.hoverSkin) {
+                this.currentState = Button.HOVER;
+            }
         } else {
             this.currentState = Button.UP;
         }

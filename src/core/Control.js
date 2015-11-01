@@ -21,7 +21,7 @@ module.exports = Control;
 /**
  * change the theme (every control can have a theme, even if it does not
  * inherit Skinable, e.g. if there is only some color in the skin that will
- * be taken)
+ * be taken or if it has some skinable components as children)
  *
  * @method setTheme
  * @param theme the new theme {Theme}
@@ -35,6 +35,7 @@ Control.prototype.setTheme = function(theme) {
     this.invalidSkin = true;
 };
 
+Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform;
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
@@ -42,11 +43,13 @@ Control.prototype.setTheme = function(theme) {
  * @method updateTransform
  */
 Control.prototype.updateTransform = function() {
-    if(this.redraw) {
+    if (!this.parent) {
+        return;
+    }
+    if (this.redraw) {
         this.redraw();
     }
-
-    PIXI.Container.prototype.updateTransform.call(this);
+    this.updateTransformContainer();
 };
 
 /**

@@ -124,9 +124,6 @@ Object.defineProperty(TextInput.prototype, 'text', {
 
         // reposition cursor
         this._cursorNeedsUpdate = true;
-        if (this.change) {
-            this.change(text);
-        }
     }
 });
 
@@ -207,46 +204,24 @@ TextInput.prototype.updateSelectionBg = function() {
     }
 };
 
+
+TextInput.prototype.inputControlOnBlur = InputControl.prototype.onblur;
 TextInput.prototype.onblur = function() {
+    this.inputControlOnBlur();
     this.updateSelection(0, 0);
 };
 
-TextInput.prototype.onSubmit = function () {
-};
-
-TextInput.prototype.onKeyDown = function (e) {
-    var keyCode = e.which;
-
-    // ESC
-    if (e.which === 27) {
-        this.blur();
-        return;
-    }
-
-    // add support for Ctrl/Cmd+A selection - select whole input text
-    if (keyCode === 65 && (e.ctrlKey || e.metaKey)) {
-        e.preventDefault();
-        this.updateSelection(0, this.text.length);
-        return;
-    }
-
-    // block keys that shouldn't be processed
-    if (keyCode === 17 || e.metaKey || e.ctrlKey) {
-        return;
-    }
-
-    // enter key
-    if (keyCode === 13) {
-        e.preventDefault();
-        this.onSubmit(e);
-    }
-
+TextInput.prototype.inputControlKeyDown = InputControl.prototype.onKeyDown;
+TextInput.prototype.onKeyDown = function () {
+    this.inputControlKeyDown();
     // update the canvas input state information from the hidden input
     this.updateTextState();
 };
 
+TextInput.prototype.inputControlKeyUp = InputControl.prototype.onKeyUp;
 TextInput.prototype.onKeyUp = function () {
     this.updateTextState();
+    this.inputControlKeyUp();
 };
 
 /**

@@ -37,8 +37,7 @@
             ["../../themes/assets/aeon/aeon_desktop.json"], aeonComplete);
 
     function metalComplete() {
-        var list = new GOWN.List(metalTheme);
-        list.dataProvider = groceryList;
+        var list = new GOWN.List(groceryList, metalTheme);
         list.itemRendererProperties.labelField = "text";
         list.x = 400;
         list.width = 200;
@@ -47,7 +46,7 @@
     }
 
     function aeonComplete() {
-        var list = new GOWN.List(aeonTheme);
+        var list = new GOWN.List(null, aeonTheme);
         list.dataProvider = groceryList;
         list.itemRendererProperties.labelField = "text";
         list.width = 100;

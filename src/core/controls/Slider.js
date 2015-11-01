@@ -108,6 +108,7 @@ Object.defineProperty(Slider.prototype, 'value', {
             return;
         }
 
+        this.emit('change', value, this);
         // move thumb
         if (this.thumb) {
             var pos = this.valueToLocation(value);

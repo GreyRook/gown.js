@@ -51,6 +51,11 @@ module.exports = InputControl;
 InputControl.currentInput = null;
 
 InputControl.prototype.onKeyUp = function() {
+    this.emit('change', this);
+};
+
+InputControl.prototype.onEnter = function() {
+    this.emit('enter', this);
 };
 
 InputControl.prototype.onKeyDown = function() {
@@ -155,6 +160,7 @@ InputControl.prototype.focus = function () {
     // check custom focus event
     this.onfocus();
 
+    this.emit('focusIn', this);
     /*
      //TODO
      // is read only
@@ -219,6 +225,7 @@ InputControl.prototype.blur = function() {
  * @method onblur
  */
 InputControl.prototype.onblur = function() {
+    this.emit('focusOut', this);
 };
 
 // blur current input
