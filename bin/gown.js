@@ -286,7 +286,7 @@ module.exports = Control;
 /**
  * change the theme (every control can have a theme, even if it does not
  * inherit Skinable, e.g. if there is only some color in the skin that will
- * be taken)
+ * be taken or if it has some skinable components as children)
  *
  * @method setTheme
  * @param theme the new theme {Theme}
@@ -1449,7 +1449,7 @@ var Scroller = require('./Scroller');
  * @constructor
  */
 function List(dataProvider, theme) {
-    Scroller.call(theme); // TODO: extend scroller?
+    Scroller.call(this, theme);
     this.skinName = this.skinName || List.SKIN_NAME;
 
     // Determines if items in the list may be selected.
@@ -2520,7 +2520,7 @@ Object.defineProperty(Scrollable.prototype, 'height', {
 });
 
 },{"../Skinable":3,"./ScrollThumb":15}],17:[function(require,module,exports){
-var Skinable = require('../Skinable');
+var Control = require('../Control');
 
 /**
  * Allows horizontal and vertical scrolling of a view port.
@@ -2536,10 +2536,10 @@ var Skinable = require('../Skinable');
  * @constructor
  */
 function Scroller(theme) {
-    Skinable.call(this, theme);
+    Control.call(this, theme);
 }
 
-Scroller.prototype = Object.create( Skinable.prototype );
+Scroller.prototype = Object.create( Control.prototype );
 Scroller.prototype.constructor = Scroller;
 module.exports = Scroller;
 
@@ -2563,7 +2563,7 @@ Scroller.prototype.createScrollBars = function() {
 
 // TODO: elastic scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
 
-},{"../Skinable":3}],18:[function(require,module,exports){
+},{"../Control":2}],18:[function(require,module,exports){
 var Scrollable = require('./Scrollable'),
     SliderData = require('../../utils/SliderData');
 

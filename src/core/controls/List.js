@@ -9,7 +9,7 @@ var Scroller = require('./Scroller');
  * @constructor
  */
 function List(dataProvider, theme) {
-    Scroller.call(theme); // TODO: extend scroller?
+    Scroller.call(this, theme);
     this.skinName = this.skinName || List.SKIN_NAME;
 
     // Determines if items in the list may be selected.

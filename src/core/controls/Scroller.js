@@ -1,4 +1,4 @@
-var Skinable = require('../Skinable');
+var Control = require('../Control');
 
 /**
  * Allows horizontal and vertical scrolling of a view port.
@@ -14,10 +14,10 @@ var Skinable = require('../Skinable');
  * @constructor
  */
 function Scroller(theme) {
-    Skinable.call(this, theme);
+    Control.call(this, theme);
 }
 
-Scroller.prototype = Object.create( Skinable.prototype );
+Scroller.prototype = Object.create( Control.prototype );
 Scroller.prototype.constructor = Scroller;
 module.exports = Scroller;
 
