@@ -36,11 +36,11 @@
         aeonbtn.label = "first";
         stage.addChild(aeonbtn);
 
-        aeonbtn.tap = aeonbtn.click = function (evt) {
+        aeonbtn.on(GOWN.Button.TRIGGERED, function () {
             if (window.console) {
                 console.log("you clicked the first button!");
             }
-        };
+        });
 
         requestAnimationFrame(animate);
     }
@@ -57,11 +57,11 @@
     btn.label = "second";
     stage.addChild(btn);
 
-    btn.tap = btn.click = function (evt) {
+    btn.on(GOWN.Button.TRIGGERED, function () {
         if (window.console) {
             console.log("you clicked the second button!");
         }
-    };
+    });
 
     function onCompleteMetal() {
         // initialize theme
@@ -74,11 +74,11 @@
         metalbtn.label = "third";
         stage.addChild(metalbtn);
 
-        metalbtn.tap = metalbtn.click = function (evt) {
+        metalbtn.on(GOWN.Button.TRIGGERED, function () {
             if (window.console) {
                 console.log("you clicked the third button!");
             }
-        };
+        });
 
         requestAnimationFrame(animate);
     }

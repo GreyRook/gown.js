@@ -50,14 +50,14 @@
         toggleButton.height = 25;
 
         toggleButton.x = toggleButton.y = 20;
-        toggleButton.click = toggleButton.tap = function () {
+        toggleButton.on(GOWN.Button.TRIGGERED, function () {
             if (grp.layout._orientation == GOWN.TiledLayout.ORIENTATION_ROWS) {
                 grp.layout._orientation = GOWN.TiledLayout.ORIENTATION_COLUMNS;
             } else {
                 grp.layout._orientation = GOWN.TiledLayout.ORIENTATION_ROWS;
             }
             grp.layout._needUpdate = true;
-        };
+        });
 
         stage.addChild(toggleButton);
 
