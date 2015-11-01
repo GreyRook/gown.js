@@ -1,5 +1,7 @@
 var ScaleContainer = require('../../utils/ScaleContainer');
 var ThemeFont = require('./ThemeFont');
+var EventEmitter = require('eventemitter3');
+
 /**
  * basic theming/skinning.
  *
@@ -7,7 +9,10 @@ var ThemeFont = require('./ThemeFont');
  * @memberof GOWN
  * @constructor
  */
-function Theme(global) {
+function Theme(onComplete, global) {
+    if (onComplete) {
+        this.on(Theme.COMPLETE, onComplete);
+    }
     // at its core a theme is just a dict that holds a collection of skins
     this._skins = {};
 
@@ -26,7 +31,19 @@ function Theme(global) {
     // desktop themes have a hover skin if the mouse moves over the button
     this.hoverSkin = true;
 }
+
+Theme.prototype = Object.create( EventEmitter.prototype );
+Theme.prototype.constructor = Theme;
 module.exports = Theme;
+
+// skin has changed
+Theme.SKIN_CHANGED = 'skin_changed';
+
+// theme texture loaded
+Theme.LOADED = 'loaded';
+
+// theme texture has been loaded and all controls have an assigned skin
+Theme.COMPLETE = 'complete';
 
 /**
  * Set skin for ui component
@@ -39,7 +56,7 @@ module.exports = Theme;
 Theme.prototype.setSkin = function(comp, id, skin) {
     this._skins[comp] = this._skins[comp] || {};
     this._skins[comp][id] = skin;
-    // TODO: dispatch event - the skin of "comp"
+    this.emit(Theme.SKIN_CHANGED, comp, this);
 };
 
 /**
@@ -61,7 +78,19 @@ Theme.prototype.loadImage = function(jsonPath) {
  * @method loadComplete
  */
 Theme.prototype.loadComplete = function(loader, resources) {
-    this.textureCache = resources.resources[this._jsonPath].textures;
+    this.textureCache = resources[this._jsonPath].textures;
+    this.emit(Theme.LOADED, this);
+    this.applyTheme();
+};
+
+/**
+ * apply theme to controls
+ * (normally executed only once after the texture has been loaded)
+ *
+ * @method applyTheme
+ */
+Theme.prototype.applyTheme = function() {
+    this.emit(Theme.COMPLETE, this);
 };
 
 /**
