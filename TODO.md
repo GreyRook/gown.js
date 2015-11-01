@@ -1,7 +1,5 @@
 TODO next
 =========
- - PIXI.V3-Events (use https://github.com/primus/eventemitter3 )
-
  - fix Slider/ScrollBar thumb width/height
 
  - mouse wheel support
@@ -64,9 +62,9 @@ This list is not ordered by priority nor does it contain any promise that those 
 
    - Table
 
-   - Gauge
+   - Gauge (extension?)
 
-   - charts
+   - charts (extension??)
 
      - line chart
 
@@ -78,11 +76,13 @@ This list is not ordered by priority nor does it contain any promise that those 
 
    - ProgressBar
 
-   - ScaleTool (to change width/height of a control)
+   - ScaleTool (to change width/height of a control - extension?)
 
    - ScrollContainer (sth. with the same API as feathers)
 
- - cleanup-functions to free memory/remove event listener etc. (take a look at/extend pixi destroy funtion)
+ - button icon
+
+ - cleanup-functions to free memory/remove event listener etc. (extend pixi destroy funtion)
 
  - more examples:
 

@@ -30,6 +30,9 @@ module.exports = {
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
 
+    // control renderer
+    DefaultListItemRenderer:  require('./controls/renderer/DefaultListItemRenderer'),
+
     // layout
     HorizontalLayout:     require('./layout/HorizontalLayout'),
     Layout:               require('./layout/Layout'),

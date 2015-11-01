@@ -16,9 +16,9 @@ var Control = require('../Control');
  */
 function Scroller(theme) {
     Control.call(this, theme);
-    this.createScrollBars();
     this._horizontalScrollBarFactory = this.defaultScrollBarFactory;
     this._verticalScrollBarFactory = this.defaultScrollBarFactory;
+    this.createScrollBars();
 }
 
 Scroller.prototype = Object.create( Control.prototype );
@@ -40,7 +40,7 @@ module.exports = Scroller;
  */
 Scroller.prototype.createScrollBars = function() {
     this.horizontalScrollBar = this._horizontalScrollBarFactory();
-    this.verticalScrollBar = this._varticalScrollBarFactory();
+    this.verticalScrollBar = this._verticalScrollBarFactory();
 };
 
 Scroller.prototype.defaultScrollBarFactory = function() {

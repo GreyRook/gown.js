@@ -515,7 +515,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
     }
 });
 
-},{"../utils/mixin":41,"../utils/resizeScaling":44,"./Control":2}],4:[function(require,module,exports){
+},{"../utils/mixin":42,"../utils/resizeScaling":45,"./Control":2}],4:[function(require,module,exports){
 var Control = require('../Control');
 
 /**
@@ -1277,7 +1277,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":37,"../Skinable":3}],8:[function(require,module,exports){
+},{"../../utils/InputWrapper":38,"../Skinable":3}],8:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1437,7 +1437,7 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
     }
 });
 
-},{"../Control":2,"../layout/ViewPortBounds":28}],9:[function(require,module,exports){
+},{"../Control":2,"../layout/ViewPortBounds":29}],9:[function(require,module,exports){
 var Scroller = require('./Scroller');
 
 /**
@@ -2249,9 +2249,9 @@ var Control = require('../Control');
  */
 function Scroller(theme) {
     Control.call(this, theme);
-    this.createScrollBars();
     this._horizontalScrollBarFactory = this.defaultScrollBarFactory;
     this._verticalScrollBarFactory = this.defaultScrollBarFactory;
+    this.createScrollBars();
 }
 
 Scroller.prototype = Object.create( Control.prototype );
@@ -2273,7 +2273,7 @@ module.exports = Scroller;
  */
 Scroller.prototype.createScrollBars = function() {
     this.horizontalScrollBar = this._horizontalScrollBarFactory();
-    this.verticalScrollBar = this._varticalScrollBarFactory();
+    this.verticalScrollBar = this._verticalScrollBarFactory();
 };
 
 Scroller.prototype.defaultScrollBarFactory = function() {
@@ -2456,7 +2456,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":39,"./Scrollable":15}],18:[function(require,module,exports){
+},{"../../utils/SliderData":40,"./Scrollable":15}],18:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2802,7 +2802,7 @@ TextInput.prototype.updateTextState = function () {
     this.setCursorPos();
 };
 
-},{"../../utils/InputWrapper":37,"../Control":2,"./InputControl":7}],19:[function(require,module,exports){
+},{"../../utils/InputWrapper":38,"../Control":2,"./InputControl":7}],19:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -2909,6 +2909,100 @@ ToggleButton.prototype.handleEvent = function(type) {
 };
 
 },{"./Button":5}],20:[function(require,module,exports){
+var ToggleButton = require('../ToggleButton');
+var Button = require('../Button');
+
+function DefaultListItemRenderer(theme) {
+    //this._skinName = DefaultListItemRenderer.SKIN_NAME;
+    ToggleButton.call(this, theme);
+
+    this.labelField = 'text';
+
+    /**
+	 * A function used to generate label text for a specific item. If this
+	 * function is not null, then the <code>labelField</code> will be
+	 * ignored.
+	 *
+	 * <p>The function is expected to have the following signature:</p>
+	 * <pre>function( item )</pre> and return a string
+	 *
+	 * <p>In the following example, the label function is customized:</p>
+	 * renderer.labelFunction = function( item ) {
+	 *    return item.firstName + " " + item.lastName;
+	 * };</listing>
+	 *
+	 * @default null
+	 *
+	 * @see #labelField
+	 */
+    this.labelFunction = null;
+
+    this._data = null;
+    this.dataInvalid = false;
+}
+
+DefaultListItemRenderer.prototype = Object.create( ToggleButton.prototype );
+DefaultListItemRenderer.prototype.constructor = DefaultListItemRenderer;
+module.exports = DefaultListItemRenderer;
+
+//DefaultListItemRenderer.STYLE_NAME = "default_item_renderer";
+
+// performance increase to avoid using call.. (10x faster)
+DefaultListItemRenderer.prototype.redrawButton = Button.prototype.redraw;
+
+/**
+ * update before draw call update button text
+ *
+ * @method redraw
+ */
+DefaultListItemRenderer.prototype.redraw = function() {
+    if (this.dataInvalid) {
+        this.commitData();
+    }
+    this.redrawButton();
+};
+
+/**
+ * Updates the renderer to display the item's data. Override this
+ * function to pass data to sub-components and react to data changes.
+ *
+ * <p>Don't forget to handle the case where the data is <code>null</code>.</p>
+ *
+ * @method commitData
+ */
+DefaultListItemRenderer.prototype.commitData = function() {
+    if(this._data) {
+        this.label = this.itemToLabel(this._data);
+    }
+    this.dataInvalid = false;
+};
+
+/**
+ * Using <code>labelField</code> and <code>labelFunction</code>,
+ * generates a label from the item.
+ *
+ * <p>All of the label fields and functions, ordered by priority:</p>
+ * <ol>
+ *     <li><code>labelFunction</code></li>
+ *     <li><code>labelField</code></li>
+ * </ol>
+ *
+ * @method itemToLabel
+ */
+DefaultListItemRenderer.prototype.itemToLabel = function(item) {
+	if (this.labelFunction) {
+		return this.labelFunction(item).toString();
+	}
+	else if (this.labelField && item && item.hasOwnProperty(this.labelField)) {
+		return item[this.labelField].toString();
+	}
+	else if(item) {
+		return item.toString();
+	}
+	return '';
+};
+
+},{"../Button":5,"../ToggleButton":19}],21:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js core library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -2941,6 +3035,9 @@ module.exports = {
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
 
+    // control renderer
+    DefaultListItemRenderer:  require('./controls/renderer/DefaultListItemRenderer'),
+
     // layout
     HorizontalLayout:     require('./layout/HorizontalLayout'),
     Layout:               require('./layout/Layout'),
@@ -2963,7 +3060,7 @@ module.exports = {
     ThemeFont:       require('./skin/ThemeFont')
 };
 
-},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/Check":6,"./controls/InputControl":7,"./controls/LayoutGroup":8,"./controls/List":9,"./controls/PickerList":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./layout/HorizontalLayout":21,"./layout/Layout":22,"./layout/LayoutAlignment":23,"./layout/TiledColumnsLayout":24,"./layout/TiledLayout":25,"./layout/TiledRowsLayout":26,"./layout/VerticalLayout":27,"./layout/ViewPortBounds":28,"./shapes/Diamond":29,"./shapes/Ellipse":30,"./shapes/Line":31,"./shapes/Rect":32,"./shapes/Shape":33,"./skin/Theme":34,"./skin/ThemeFont":35}],21:[function(require,module,exports){
+},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/Check":6,"./controls/InputControl":7,"./controls/LayoutGroup":8,"./controls/List":9,"./controls/PickerList":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./controls/renderer/DefaultListItemRenderer":20,"./layout/HorizontalLayout":22,"./layout/Layout":23,"./layout/LayoutAlignment":24,"./layout/TiledColumnsLayout":25,"./layout/TiledLayout":26,"./layout/TiledRowsLayout":27,"./layout/VerticalLayout":28,"./layout/ViewPortBounds":29,"./shapes/Diamond":30,"./shapes/Ellipse":31,"./shapes/Line":32,"./shapes/Rect":33,"./shapes/Shape":34,"./skin/Theme":35,"./skin/ThemeFont":36}],22:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -2984,7 +3081,7 @@ HorizontalLayout.prototype = Object.create( LayoutAlignment.prototype );
 HorizontalLayout.prototype.constructor = HorizontalLayout;
 module.exports = HorizontalLayout;
 
-},{"./LayoutAlignment":23}],22:[function(require,module,exports){
+},{"./LayoutAlignment":24}],23:[function(require,module,exports){
 /**
  * basic layout stub - see LayoutAlignment
  *
@@ -3207,7 +3304,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 Layout.prototype.layout = function (items, viewPortBounds) {
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3394,7 +3491,7 @@ Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
         return this._lastGap;
     }
 });
-},{"./Layout":22}],24:[function(require,module,exports){
+},{"./Layout":23}],25:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3440,7 +3537,7 @@ Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
         return this._verticalGap;
     }
 });
-},{"./TiledLayout":25}],25:[function(require,module,exports){
+},{"./TiledLayout":26}],26:[function(require,module,exports){
 var Layout = require('./Layout');
 
 /**
@@ -3746,7 +3843,7 @@ Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
         return this._useSquareTiles;
     }
 });
-},{"./Layout":22}],26:[function(require,module,exports){
+},{"./Layout":23}],27:[function(require,module,exports){
 var TiledLayout = require('./TiledLayout');
 
 /**
@@ -3792,7 +3889,7 @@ Object.defineProperty(TiledRowsLayout.prototype, 'gap', {
         this._needUpdate = true;
     }
 });
-},{"./TiledLayout":25}],27:[function(require,module,exports){
+},{"./TiledLayout":26}],28:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -3813,7 +3910,7 @@ VerticalLayout.prototype = Object.create( LayoutAlignment.prototype );
 VerticalLayout.prototype.constructor = VerticalLayout;
 module.exports = VerticalLayout;
 
-},{"./LayoutAlignment":23}],28:[function(require,module,exports){
+},{"./LayoutAlignment":24}],29:[function(require,module,exports){
 /**
  * define viewport dimensions
  *
@@ -3854,7 +3951,7 @@ function ViewPortBounds() {
 }
 
 module.exports = ViewPortBounds;
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3889,7 +3986,7 @@ Diamond.prototype._drawShape = function() {
         .lineTo(0, this._height/2)
         .lineTo(this._width/2, 0);
 };
-},{"./Shape":33}],30:[function(require,module,exports){
+},{"./Shape":34}],31:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3920,7 +4017,7 @@ Ellipse.prototype._drawShape = function() {
     }
     this.drawEllipse(0, 0, this.width, this.height);
 };
-},{"./Shape":33}],31:[function(require,module,exports){
+},{"./Shape":34}],32:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -3976,7 +4073,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
     }
 });
 
-},{"./Shape":33}],32:[function(require,module,exports){
+},{"./Shape":34}],33:[function(require,module,exports){
 var Shape = require('./Shape');
 
 /**
@@ -4031,7 +4128,7 @@ Object.defineProperty(Rect.prototype, 'radius', {
         this.invalid = true;
     }
 });
-},{"./Shape":33}],33:[function(require,module,exports){
+},{"./Shape":34}],34:[function(require,module,exports){
 /**
  * shape base class
  *
@@ -4181,7 +4278,7 @@ Shape.prototype.redraw = function() {
     this.invalid = false;
 };
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 var ScaleContainer = require('../../utils/ScaleContainer');
 var ThemeFont = require('./ThemeFont');
 var EventEmitter = require('eventemitter3');
@@ -4336,7 +4433,7 @@ Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
 
-},{"../../utils/ScaleContainer":38,"./ThemeFont":35,"eventemitter3":1}],35:[function(require,module,exports){
+},{"../../utils/ScaleContainer":39,"./ThemeFont":36,"eventemitter3":1}],36:[function(require,module,exports){
 var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
                'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
@@ -4435,7 +4532,7 @@ Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
     }
 });
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 (function (global){
 if (typeof PIXI === 'undefined') {
     if (window.console) {
@@ -4461,7 +4558,7 @@ if (typeof PIXI === 'undefined') {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./core":20,"./utils":40}],37:[function(require,module,exports){
+},{"./core":21,"./utils":41}],38:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4691,7 +4788,7 @@ InputWrapper.getType = function() {
     }
 };
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -4946,7 +5043,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     return new ScaleContainer(texture, rect);
 };
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -4968,7 +5065,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -4989,7 +5086,7 @@ module.exports = {
     mixin:                  require('./mixin')
 };
 
-},{"./InputWrapper":37,"./ScaleContainer":38,"./SliderData":39,"./mixin":41,"./mouseWheelSupport":42,"./position":43,"./resizeScaling":44}],41:[function(require,module,exports){
+},{"./InputWrapper":38,"./ScaleContainer":39,"./SliderData":40,"./mixin":42,"./mouseWheelSupport":43,"./position":44,"./resizeScaling":45}],42:[function(require,module,exports){
 module.exports = function(destination, source) {
     for (var key in source) {
         if (source.hasOwnProperty(key)) {
@@ -5005,7 +5102,7 @@ module.exports = function(destination, source) {
     return destination;
 };
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -5072,7 +5169,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
@@ -5124,7 +5221,7 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 
 module.exports = {
     /**
@@ -5239,7 +5336,7 @@ module.exports = {
     }
 };
 
-},{}]},{},[36])(36)
+},{}]},{},[37])(37)
 });
 
 
