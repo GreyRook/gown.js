@@ -36,7 +36,7 @@ Control.prototype.setTheme = function(theme) {
     this.invalidSkin = true;
 };
 
-Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform
+Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform;
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
@@ -265,9 +265,13 @@ var Control = require('../Control');
  * @constructor
  * @param background {Number | Array} a background color or a list of colors
  *  that will be used as vertical gradient
+ *  (default: 0xffffff)
  * @param fullscreen {Boolean}
+ *  (default: true)
  * @param renderer {WebGLRenderer|CanvasRenderer}
+ *  (default: null - will create a new renderer)
  * @param stage {Stage}
+ *  (default null - will use a new PIXI.Container)
  */
 function Application(background, fullscreen, renderer, stage) {
     var width = 800;

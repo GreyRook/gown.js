@@ -35,7 +35,7 @@ Control.prototype.setTheme = function(theme) {
     this.invalidSkin = true;
 };
 
-Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform
+Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform;
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
