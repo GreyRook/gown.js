@@ -149,9 +149,15 @@ Object.defineProperty(Application.prototype, 'fullscreen', {
     set: function(value) {
         if (this._fullscreen && !value) {
             window.removeEventListener('resize', this._onresize);
+            if (window.document.body.style.overflow) {
+              window.document.body.style.overflow = 'auto';
+            }
         } else if (!this._fullscreen && value) {
             this._onresize = this.onresize.bind(this);
             window.addEventListener('resize', this._onresize);
+            if (window.document.body.style.overflow) {
+              window.document.body.style.overflow = 'hidden';
+            }
         }
         this._fullscreen = value;
     }
