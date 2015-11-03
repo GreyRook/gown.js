@@ -27,8 +27,8 @@ function Scrollable(thumb, theme) {
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
     this.scrolldelta = 10;
 
-    this.touchStart = this.mousedown = this.handleDown;
-    this.touchEnd = this.mouseup = this.mouseupoutside = this.handleUp;
+    this.touchstart = this.mousedown = this.handleDown;
+    this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
 }
 
 Scrollable.prototype = Object.create( Skinable.prototype );
