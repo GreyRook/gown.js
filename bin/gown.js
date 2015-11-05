@@ -680,6 +680,11 @@ Object.defineProperty(Application.prototype, 'fullscreen', {
         if (this._fullscreen && !value) {
             window.removeEventListener('resize', this._onresize);
         } else if (!this._fullscreen && value) {
+            this._renderer.view.style.top = 0;
+            this._renderer.view.style.left = 0;
+            this._renderer.view.style.right = 0;
+            this._renderer.view.style.bottom = 0;
+            this._renderer.view.style.position = 'absolute';
             this._onresize = this.onresize.bind(this);
             window.addEventListener('resize', this._onresize);
         }
