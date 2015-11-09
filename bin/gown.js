@@ -527,9 +527,10 @@ var Control = require('../Control');
  * @extends GOWN.Control
  * @memberof GOWN
  * @constructor
- * @param background {Number | Array} a background color or a list of colors
- *  that will be used as vertical gradient
- *  (default: 0xffffff)
+ * @param config {Object} - equals the renderer config for pixi with an
+ *  exception: the backgroundColor is an Array a of colors it will drawn as
+ *  vertical gradient
+ *  (default: {backgroundColor: 0xffffff})
  * @param fullscreen {Boolean}
  *  (default: true)
  * @param renderer {WebGLRenderer|CanvasRenderer}
@@ -537,7 +538,7 @@ var Control = require('../Control');
  * @param stage {Stage}
  *  (default null - will use a new PIXI.Container)
  */
-function Application(background, fullscreen, renderer, stage) {
+function Application(config, fullscreen, renderer, stage) {
     var width = 800;
     var height = 600;
     if (fullscreen) {
@@ -545,18 +546,21 @@ function Application(background, fullscreen, renderer, stage) {
         height = window.innerHeight;
     }
 
-    if (!background) {
-        background = 0xffffff;
+    if (!config) {
+        config = {
+            backgroundColor: 0xffffff
+        };
     }
 
+    var _background; // to store background if it is an array because we want
+                     // to set the backgroundColor in config to a hex value
     if (!stage || !renderer) {
         stage = new PIXI.Container();
-        var config = {};
-        if (background  instanceof Array) {
+        if (config.backgroundColor && config.backgroundColor instanceof Array) {
+            _background = config.backgroundColor;
             config.backgroundColor = 0xffffff;
-        } else {
-            config.backgroundColor = background;
         }
+        this._background = config.backgroundColor;
         renderer = PIXI.autoDetectRenderer(width, height, config);
         document.body.appendChild(renderer.view);
     }
@@ -569,10 +573,13 @@ function Application(background, fullscreen, renderer, stage) {
 
     Control.call(this);
     stage.addChild(this);
-    this.animate();
 
-    this.background = background;
-    this.fullscreen = fullscreen || true;
+    if (_background) {
+        this.background = _background;
+    }
+    this.fullscreen = fullscreen === undefined || fullscreen;
+
+    this.animate();
 }
 
 Application.prototype = Object.create( Control.prototype );
@@ -611,7 +618,11 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
     var ctx = bgCanvas.getContext('2d');
     var linearGradient = ctx.createLinearGradient(0, 0, 0, bgCanvas.height);
     for (var i = 0; i < gradient.length; i++) {
-        linearGradient.addColorStop(i, gradient[i]);
+        var color = gradient[i];
+        if (typeof(color) === 'number') {
+            color = '#' +  gradient[i].toString(16);
+        }
+        linearGradient.addColorStop(i, color);
     }
     ctx.fillStyle = linearGradient;
     ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
