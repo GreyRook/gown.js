@@ -15,7 +15,7 @@ describe("test Application", function() {
         app = null;
     });
     it("test application fullscreen works", function() {
-        var app = new GOWN.Application(0xffffff, true);
+        var app = new GOWN.Application({backgroundColor: 0xffffff}, true);
 
         // TODO: resize!
         expect(app.width).equals(window.innerWidth);
