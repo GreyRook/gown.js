@@ -638,7 +638,7 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
 Application.prototype.destroy = function(destroyChildren, removeCanvas) {
-    removeCanvas = removeCanvas || true;
+    removeCanvas = removeCanvas === undefined || removeCanvas;
     this._removeBackground();
     this.fullscreen = false; // remove event listener on resize using setter
     PIXI.Container.prototype.destroy.call(this, destroyChildren);
