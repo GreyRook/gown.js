@@ -1499,6 +1499,11 @@ Object.defineProperty(List.prototype, 'dataProvider', {
         }
         this.selectedIndex = -1;
         this._dataProvider = dataProvider;
+
+        //reset the scroll position because this is a drastic change and
+        //the data is probably completely different
+        this.horizontalScrollPosition = 0;
+        this.verticalScrollPosition = 0;
         // TODO: invalidate
     },
     get: function() {
