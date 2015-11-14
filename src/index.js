@@ -17,5 +17,4 @@ if (typeof PIXI === 'undefined') {
 
     // export GOWN globally.
     global.GOWN = core;
-
 }

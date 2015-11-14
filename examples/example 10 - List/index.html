@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>pixi UI example: slider</title>
+    <title>gown.js example: List</title>
     <style>
         body {
             margin: 0;
@@ -23,7 +23,7 @@
     var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
-    var groceryList = [
+    var groceryList = new GOWN.ListCollection([
         { text: "Milk" },
         { text: "Eggs" },
         { text: "Bread" },
@@ -32,7 +32,7 @@
         { text: "Banana" },
         { text: "Orange" },
         { text: "Potato" }
-    ];
+    ]);
 
     var metalTheme = new GOWN.MetalWorksMobileTheme(
             ["../../themes/assets/metalworks/metalworks.json"], metalComplete);
