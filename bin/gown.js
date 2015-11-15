@@ -515,7 +515,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
     }
 });
 
-},{"../utils/mixin":42,"../utils/resizeScaling":45,"./Control":2}],4:[function(require,module,exports){
+},{"../utils/mixin":43,"../utils/resizeScaling":46,"./Control":2}],4:[function(require,module,exports){
 var Control = require('../Control');
 
 /**
@@ -1277,7 +1277,7 @@ InputControl.blur = function() {
 };
 window.addEventListener('blur', InputControl.blur, false);
 
-},{"../../utils/InputWrapper":38,"../Skinable":3}],8:[function(require,module,exports){
+},{"../../utils/InputWrapper":39,"../Skinable":3}],8:[function(require,module,exports){
 var Control = require('../Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
@@ -1439,13 +1439,16 @@ Object.defineProperty(LayoutGroup.prototype, 'height', {
 
 },{"../Control":2,"../layout/ViewPortBounds":29}],9:[function(require,module,exports){
 var Scroller = require('./Scroller');
+var ListCollection = require('../../data/ListCollection');
+var LayoutGroup = require('./LayoutGroup');
+var VerticalLayout = require('../layout/VerticalLayout');
 
 /**
  * The basic list
  *
  * @class List
- * @extends PIXI_UI.List
- * @memberof PIXI_UI
+ * @extends GOWN.List
+ * @memberof GOWN
  * @constructor
  */
 function List(dataProvider, theme) {
@@ -1464,10 +1467,40 @@ function List(dataProvider, theme) {
     // The indices of the currently selected items.
     this._selectedIndices = [];
 
+    this._itemChangeHandler = this.itemChangeHandler.bind(this);
+
+    this.itemRendererFactory = this._itemRendererFactory;
+
     // The collection of data displayed by the list.
-    this._dataProvider = dataProvider;
+    this.dataProvider = dataProvider;
+
+    this.dataInvalid = true;
+    /**
+     * properties that will be passed down to every item
+     * renderer when the list validates.
+     */
     this.itemRendererProperties = {};
-    // TODO: set layout (defaults to VerticalLayout)
+
+    // TODO: itemRendererStyleName (?)
+
+    // initialize
+    if (!this.viewPort) {
+
+        // We do not implement ListDataViewPort from feathers
+        // (most of what that it does is implemented in List directly to
+        //  manage the viewport)
+        // and instead use the normal LayoutGroup (less abstraction, less code)
+        this.viewPort = new LayoutGroup();
+
+        if (!this._layout) {
+            var layout = new VerticalLayout();
+    		layout.padding = 0;
+    		layout.gap = 0;
+    		layout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
+    		layout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_TOP;
+    		this.layout = layout;
+        }
+    }
 }
 
 List.prototype = Object.create( Scroller.prototype );
@@ -1480,9 +1513,73 @@ List.SKIN_NAME = 'list';
 /**
  * A function called that is expected to return a new item renderer
  */
-List.prototype.itemRendererFactory = function() {
+List.prototype._itemRendererFactory = function() {
     return null;
 };
+
+List.prototype.itemChangeHandler = function() {
+    // deselect removed items
+    var index = this._dataProvider.data.length;
+    if (this._selectedIndex >= index) {
+        this._selectedIndex = -1;
+    }
+    var indexCount = this._selectedIndices.length;
+    for (var i = 0; i < indexCount; i++) {
+        var currentIndex = this._selectedIndices[i];
+        if (currentIndex >= index) {
+            this._selectedIndices.splice(i, 1);
+        }
+    }
+    // force redraw
+    this.dataInvalid = true;
+};
+
+
+// performance increase to avoid using call.. (10x faster)
+List.prototype.scrollerRedraw = Scroller.prototype.redraw;
+/**
+ * update before draw call
+ *
+ * @method redraw
+ */
+List.prototype.redraw = function() {
+    var basicsInvalid = this.dataInvalid;
+    if (basicsInvalid) {
+        this.refreshRenderers();
+    }
+    this.scrollerRedraw();
+};
+
+List.prototype.refreshRenderers = function () {
+    //TODO: create item renderer from itemRendererFactory for this.data
+    //TODO: see ListDataViewPort --> refreshInactieRenderers
+    this.dataInvalid = false;
+};
+
+/**
+ * set layout and ass eventlistener to it
+ *
+ * @property layout
+ * @type LayoutAlignment
+ */
+Object.defineProperty(List.prototype, 'layout', {
+    set: function(layout) {
+        if (this._layout === layout) {
+            return;
+        }
+        if (this.viewPort) {
+            // this is different from feathers - there the viewport does not
+            // know the layout (feathers uses ListDataViewPort, not LayoutGroup
+            // as viewPort for List)
+            this.viewPort.layout = layout;
+        }
+        // TODO: this.invalidate(INVALIDATION_FLAG_LAYOUT);
+    },
+    get: function() {
+        return this._layout;
+    }
+});
+
 
 /**
  * dataProvider for list
@@ -1497,13 +1594,27 @@ Object.defineProperty(List.prototype, 'dataProvider', {
         if (this._dataProvider === dataProvider) {
             return;
         }
-        this.selectedIndex = -1;
+        if (!(dataProvider instanceof ListCollection || dataProvider === null)) {
+            throw new Error('the dataProvider has to be a GOWN.ListCollection');
+        }
+
+        if (this._dataProvider) {
+            this._dataProvider.off(ListCollection.CHANGED, this._itemChangeHandler);
+            //TODO: other data handler (?)
+        }
         this._dataProvider = dataProvider;
 
         //reset the scroll position because this is a drastic change and
         //the data is probably completely different
         this.horizontalScrollPosition = 0;
         this.verticalScrollPosition = 0;
+
+        if (this._dataProvider) {
+            this._dataProvider.on(ListCollection.CHANGED, this._itemChangeHandler);
+            //TODO: other data handler (?)
+        }
+
+        this.selectedIndex = -1;
         // TODO: invalidate
     },
     get: function() {
@@ -1511,7 +1622,7 @@ Object.defineProperty(List.prototype, 'dataProvider', {
     }
 });
 
-},{"./Scroller":16}],10:[function(require,module,exports){
+},{"../../data/ListCollection":37,"../layout/VerticalLayout":28,"./LayoutGroup":8,"./Scroller":16}],10:[function(require,module,exports){
 var ToggleButton = require('./ToggleButton');
 
 /**
@@ -1686,7 +1797,7 @@ Object.defineProperty(ScrollBar.prototype, 'value', {
 
 },{"./Scrollable":15}],12:[function(require,module,exports){
 var Scroller = require('./Scroller');
-var ScrollBar = require('./ScrollBar');
+//var ScrollBar = require('./ScrollBar');
 
 /**
  * @class ScrollContainer
@@ -1702,7 +1813,7 @@ ScrollContainer.prototype = Object.create( Scroller.prototype );
 ScrollContainer.prototype.constructor = ScrollContainer;
 module.exports = ScrollContainer;
 
-},{"./ScrollBar":11,"./Scroller":16}],13:[function(require,module,exports){
+},{"./Scroller":16}],13:[function(require,module,exports){
 
 },{}],14:[function(require,module,exports){
 var Button = require('./Button');
@@ -1883,8 +1994,8 @@ function Scrollable(theme) {
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
     this.scrolldelta = 10;
 
-    this.touchStart = this.mousedown = this.handleDown;
-    this.touchEnd = this.mouseup = this.mouseupoutside = this.handleUp;
+    this.touchstart = this.mousedown = this.handleDown;
+    this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
 
     this.thumbFactoryInvalid = true;
 }
@@ -2254,6 +2365,9 @@ var Control = require('../Control');
  */
 function Scroller(theme) {
     Control.call(this, theme);
+    this.interactive = true;
+    this.sizeValid = true;
+    this._clipContent = true;
     this._horizontalScrollBarFactory = this.defaultScrollBarFactory;
     this._verticalScrollBarFactory = this.defaultScrollBarFactory;
     this.createScrollBars();
@@ -2262,6 +2376,115 @@ function Scroller(theme) {
 Scroller.prototype = Object.create( Control.prototype );
 Scroller.prototype.constructor = Scroller;
 module.exports = Scroller;
+
+/**
+ * us a mask to clip content
+ */
+Object.defineProperty(Scroller.prototype, 'clipContent', {
+    get: function() {
+        return this._clipContent;
+    },
+    set: function(value) {
+        if (this._clipContent === value) {
+			return;
+		}
+		this._clipContent = value;
+    }
+});
+
+Object.defineProperty(Scroller.prototype, 'viewPort', {
+    get: function() {
+        return this._viewPort;
+    },
+    set: function(value) {
+        if (this._viewPort === value) {
+			return;
+		}
+		if(this._viewPort) {
+			//TODO: this._viewPort.off(FeathersEventType.RESIZE, viewPort_resizeHandler);
+            this.removeChild(this._viewPort);
+		}
+		this._viewPort = value;
+		if(this._viewPort) {
+			//TODO: this._viewPort.addEventListener(FeathersEventType.RESIZE, viewPort_resizeHandler);
+            this.addChildAt(this._viewPort, 0);
+		}
+		//this.invalidate(Control.INVALIDATION_FLAG_SIZE);
+        this.sizeValid = false;
+    }
+});
+
+// performance increase to avoid using call.. (10x faster)
+Scroller.prototype.controlRedraw = Control.prototype.redraw;
+/**
+ * update before draw call
+ *
+ * @method redraw
+ */
+Scroller.prototype.redraw = function() {
+    this.controlRedraw();
+
+    if(this.clippingInvalid) {
+		this.refreshClipRect();
+	}
+
+    if (this._viewPort.updateRenderable) {
+        this._viewPort.updateRenderable(
+            -this._viewPort.x, -this._viewPort.y,
+            this.width, this.height);
+    }
+};
+
+Scroller.prototype.refreshClipRect = function() {
+
+    if (this.height && this.width && this._clipContent) {
+        if (this.clipRect === undefined) {
+            this.clipRect = new PIXI.Graphics();
+        }
+        //TODO: for scaling save scrollPosition!
+        //TODO this.clipRect.x = this._horizontalScrollPosition;
+        //TODO this.clipRect.y = this._verticalScrollPosition;
+
+        // update clipRectDimensions in own draw-function
+        this.drawClipRect();
+    } else {
+        if (this.clipRect) {
+            this.clipRect.clear();
+        }
+        this.clipRect = undefined;
+    }
+
+    this.clippingInvalid = false;
+};
+
+
+/**
+ * draw mask (can be overwritten, e.g. to show something above the
+ * scroll area when using a vertical layout)
+ * @private
+ * @method drawMask
+ */
+Scroller.prototype.drawClipRect = function() {
+    var pos = new PIXI.Point(0, 0);
+    var global = this.toGlobal(pos);
+
+    // TODO: viewportOffsets for width/height
+    // (see Scroller.as refreshClipRect)
+    //var clipWidth:Number = this.actualWidth - this._leftViewPortOffset - this._rightViewPortOffset;
+
+    this.clipRect.clear()
+        .beginFill('#fff', 1)
+        .drawRect(global.x, global.y, this.width, this.height)
+        .endFill();
+    this.mask = this.clipRect;
+    if (this.hitArea) {
+        this.hitArea.width = this.width;
+        this.hitArea.height = this.height;
+    } else {
+        this.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
+    }
+};
+
 
 /**
  * Creates and adds the <code>horizontalScrollBar</code> and
@@ -2284,6 +2507,45 @@ Scroller.prototype.createScrollBars = function() {
 Scroller.prototype.defaultScrollBarFactory = function() {
     return new ScrollBar();
 };
+
+
+/**
+ * The width of the Scroller (defines the viewport)
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(Scroller.prototype, 'width', {
+    get: function() {
+        if (!this._width) {
+            return this._viewPort.width;
+        }
+        return this._width;
+    },
+    set: function(width) {
+        this._width = width;
+        this.clippingInvalid = true;
+    }
+});
+
+/**
+ * The height of the Scroller (defines the viewport)
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(Scroller.prototype, 'height', {
+    get: function() {
+        if (!this._height) {
+            return this._viewPort.height;
+        }
+        return this._height;
+    },
+    set: function(height) {
+        this._height = height;
+        this.clippingInvalid = true;
+    }
+});
 
 // TODO: elastic scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
 
@@ -2461,7 +2723,7 @@ Object.defineProperty(Slider.prototype, 'maximum', {
     }
 });
 
-},{"../../utils/SliderData":40,"./Scrollable":15}],18:[function(require,module,exports){
+},{"../../utils/SliderData":41,"./Scrollable":15}],18:[function(require,module,exports){
 var Control = require('../Control'),
     InputControl = require('./InputControl'),
     InputWrapper = require('../../utils/InputWrapper');
@@ -2807,7 +3069,7 @@ TextInput.prototype.updateTextState = function () {
     this.setCursorPos();
 };
 
-},{"../../utils/InputWrapper":38,"../Control":2,"./InputControl":7}],19:[function(require,module,exports){
+},{"../../utils/InputWrapper":39,"../Control":2,"./InputControl":7}],19:[function(require,module,exports){
 var Button = require('./Button');
 
 /**
@@ -3040,6 +3302,9 @@ module.exports = {
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
 
+    // data
+    ListCollection:         require('../data/ListCollection'),
+
     // control renderer
     DefaultListItemRenderer:  require('./controls/renderer/DefaultListItemRenderer'),
 
@@ -3065,7 +3330,7 @@ module.exports = {
     ThemeFont:       require('./skin/ThemeFont')
 };
 
-},{"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/Check":6,"./controls/InputControl":7,"./controls/LayoutGroup":8,"./controls/List":9,"./controls/PickerList":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./controls/renderer/DefaultListItemRenderer":20,"./layout/HorizontalLayout":22,"./layout/Layout":23,"./layout/LayoutAlignment":24,"./layout/TiledColumnsLayout":25,"./layout/TiledLayout":26,"./layout/TiledRowsLayout":27,"./layout/VerticalLayout":28,"./layout/ViewPortBounds":29,"./shapes/Diamond":30,"./shapes/Ellipse":31,"./shapes/Line":32,"./shapes/Rect":33,"./shapes/Shape":34,"./skin/Theme":35,"./skin/ThemeFont":36}],22:[function(require,module,exports){
+},{"../data/ListCollection":37,"./Control":2,"./Skinable":3,"./controls/Application":4,"./controls/Button":5,"./controls/Check":6,"./controls/InputControl":7,"./controls/LayoutGroup":8,"./controls/List":9,"./controls/PickerList":10,"./controls/ScrollBar":11,"./controls/ScrollContainer":12,"./controls/ScrollText":13,"./controls/ScrollThumb":14,"./controls/Scrollable":15,"./controls/Scroller":16,"./controls/Slider":17,"./controls/TextInput":18,"./controls/ToggleButton":19,"./controls/renderer/DefaultListItemRenderer":20,"./layout/HorizontalLayout":22,"./layout/Layout":23,"./layout/LayoutAlignment":24,"./layout/TiledColumnsLayout":25,"./layout/TiledLayout":26,"./layout/TiledRowsLayout":27,"./layout/VerticalLayout":28,"./layout/ViewPortBounds":29,"./shapes/Diamond":30,"./shapes/Ellipse":31,"./shapes/Line":32,"./shapes/Rect":33,"./shapes/Shape":34,"./skin/Theme":35,"./skin/ThemeFont":36}],22:[function(require,module,exports){
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
@@ -4438,7 +4703,7 @@ Theme.removeTheme = function() {
     GOWN.theme = undefined;
 };
 
-},{"../../utils/ScaleContainer":39,"./ThemeFont":36,"eventemitter3":1}],36:[function(require,module,exports){
+},{"../../utils/ScaleContainer":40,"./ThemeFont":36,"eventemitter3":1}],36:[function(require,module,exports){
 var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
                'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
@@ -4538,6 +4803,139 @@ Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
 });
 
 },{}],37:[function(require,module,exports){
+var EventEmitter = require('eventemitter3');
+
+/**
+ * used to handle data manipulation (emit events when data changes so for
+ *  example a List showing it can be updated and the user does not need to
+ *  call a special update function every time he adds/removes data from the
+ *  ListCollection.
+ * use the ListCollection functions to manipulate the data-array OR modify it
+ * using the default array-functions and dispatch the CHANGED-Event yourself.
+ *
+ * @class ListCollection
+ * @extends GOWN.ListCollection
+ * @memberof GOWN
+ * @constructor
+ */
+function ListCollection(data) {
+    if (!data) {
+        data = [];
+    }
+    this.data = data;
+}
+ListCollection.prototype = Object.create( EventEmitter.prototype );
+ListCollection.prototype.constructor = ListCollection;
+module.exports = ListCollection;
+
+ListCollection.CHANGED = 'changed';
+
+ListCollection.RESET = 'reset';
+ListCollection.REMOVE_ITEM = 'removeItem';
+ListCollection.REPLACE_ITEM = 'replaceItem';
+ListCollection.ADD_ITEM = 'addItem';
+
+/**
+ * The data source for this collection. Has to be an array.
+ *
+ * @property data
+ * @type Object
+ */
+Object.defineProperty(ListCollection.prototype, 'data', {
+    set: function(data) {
+        this._data = data;
+        this.emit(ListCollection.CHANGED);
+    },
+    get: function() {
+        return this._data;
+    }
+});
+
+Object.defineProperty(ListCollection.prototype, 'length', {
+    get: function() {
+        if (!this.data) {
+            return 0;
+        }
+        return this._data.length;
+    }
+});
+
+ListCollection.prototype.getItemAt = function(index) {
+    return this._data[index];
+};
+
+ListCollection.prototype.getItemIndex = function(item) {
+    return this._data.indexOf(item);
+};
+
+/**
+ * add new item between index and index+1
+ */
+ListCollection.prototype.addItemAt = function(item, index) {
+    this._data.splice(index, 0, item);
+    this.emit(ListCollection.CHANGE, item);
+    this.emit(ListCollection.ADD_ITEM, item, index);
+};
+
+/**
+ * Removes the item at the specified index from the collection and
+ * returns it.
+ */
+ListCollection.prototype.removeItemAt = function (index) {
+    var item = this._data.splice(index, 1);
+    this.emit(ListCollection.CHANGE, item);
+    this.emit(ListCollection.REMOVE_ITEM, item, index);
+    return item;
+};
+
+ListCollection.prototype.removeItem = function (item) {
+    var index = this.getItemIndex(item);
+    if (index >= 0) {
+		this.removeItemAt(index);
+	}
+};
+
+
+ListCollection.prototype.removeAll = function (item) {
+    if (this._data.length === 0) {
+        return;
+    }
+    this._data.length = 0;
+    this.emit(ListCollection.CHANGE, item);
+    this.emit(ListCollection.RESET);
+};
+
+ListCollection.prototype.setItemAt = function (item, index) {
+    this._data[index] = item;
+    this.emit(ListCollection.CHANGE, item);
+    this.emit(ListCollection.REPLACE_ITEM, index, item);
+};
+
+ListCollection.prototype.push = function (item) {
+    this._data.push(item);
+    this.emit(ListCollection.CHANGE, item);
+    this.emit(ListCollection.ADD_ITEM, item, this._data.length-1);
+};
+
+ListCollection.prototype.pop = function () {
+    var item = this._data.pop();
+    this.emit(ListCollection.CHANGE, item);
+    this.emit(ListCollection.REMOVE_ITEM, item, this._data.length);
+};
+
+ListCollection.prototype.unshift = function (item) {
+    this.addItemAt(item, 0);
+};
+
+ListCollection.prototype.shift = function () {
+    this.removeItemAt(0);
+};
+
+ListCollection.prototype.contains = function (item) {
+    return this.getItemIndex(item) >= 0;
+};
+
+},{"eventemitter3":1}],38:[function(require,module,exports){
 (function (global){
 if (typeof PIXI === 'undefined') {
     if (window.console) {
@@ -4558,12 +4956,11 @@ if (typeof PIXI === 'undefined') {
 
     // export GOWN globally.
     global.GOWN = core;
-
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./core":21,"./utils":41}],38:[function(require,module,exports){
+},{"./core":21,"./utils":42}],39:[function(require,module,exports){
 /**
  * Wrapper for DOM Text Input
  *
@@ -4793,7 +5190,7 @@ InputWrapper.getType = function() {
     }
 };
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 /**
  * Scale 9 Container.
  * e.g. useful for scalable buttons.
@@ -5048,7 +5445,7 @@ ScaleContainer.fromFrame = function(frameId, rect) {
     return new ScaleContainer(texture, rect);
 };
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 /**
  * Holds all information related to a Slider change event
  *
@@ -5070,7 +5467,7 @@ function SliderData()
 
 module.exports = SliderData;
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /**
  * @file        Main export of the gown.js util library
  * @author      Andreas Bresser <andreasbresser@gmail.com>
@@ -5091,7 +5488,7 @@ module.exports = {
     mixin:                  require('./mixin')
 };
 
-},{"./InputWrapper":38,"./ScaleContainer":39,"./SliderData":40,"./mixin":42,"./mouseWheelSupport":43,"./position":44,"./resizeScaling":45}],42:[function(require,module,exports){
+},{"./InputWrapper":39,"./ScaleContainer":40,"./SliderData":41,"./mixin":43,"./mouseWheelSupport":44,"./position":45,"./resizeScaling":46}],43:[function(require,module,exports){
 module.exports = function(destination, source) {
     for (var key in source) {
         if (source.hasOwnProperty(key)) {
@@ -5107,7 +5504,7 @@ module.exports = function(destination, source) {
     return destination;
 };
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /**
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
@@ -5174,7 +5571,7 @@ function mouseWheelSupport(stage, enable) {
 }
 
 module.exports = mouseWheelSupport;
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 /**
  * center element on parent vertically
  * @param elem
@@ -5226,7 +5623,7 @@ module.exports = {
     center: center,
     bottom: bottom
 };
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 
 module.exports = {
     /**
@@ -5341,7 +5738,7 @@ module.exports = {
     }
 };
 
-},{}]},{},[37])(37)
+},{}]},{},[38])(38)
 });
 
 
