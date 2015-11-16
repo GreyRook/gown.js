@@ -15,7 +15,8 @@ var Control = require('../Control');
  * @constructor
  */
 function Scroller(theme) {
-    Control.call(this, theme);
+    Control.call(this);
+    this.setTheme(theme);
     this.interactive = true;
     this.sizeValid = true;
     this._clipContent = true;
@@ -73,8 +74,6 @@ Scroller.prototype.controlRedraw = Control.prototype.redraw;
  * @method redraw
  */
 Scroller.prototype.redraw = function() {
-    this.controlRedraw();
-
     if(this.clippingInvalid) {
 		this.refreshClipRect();
 	}
@@ -84,6 +83,7 @@ Scroller.prototype.redraw = function() {
             -this._viewPort.x, -this._viewPort.y,
             this.width, this.height);
     }
+    this.controlRedraw();
 };
 
 Scroller.prototype.refreshClipRect = function() {

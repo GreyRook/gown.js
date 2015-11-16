@@ -77,8 +77,8 @@ List.SKIN_NAME = 'list';
 /**
  * A function called that is expected to return a new item renderer
  */
-List.prototype._itemRendererFactory = function() {
-    return new DefaultListItemRenderer();
+List.prototype._itemRendererFactory = function(theme) {
+    return new DefaultListItemRenderer(theme);
 };
 
 List.prototype.itemChangeHandler = function() {
@@ -120,8 +120,11 @@ List.prototype.refreshRenderers = function () {
     if (this.dataProvider && this.viewPort) {
         for (var i = 0; i < this.dataProvider.length; i++) {
             var item = this.dataProvider.getItemAt(i);
-            var itemRenderer = this.itemRendererFactory();
+            var itemRenderer = this.itemRendererFactory(this.theme);
+            itemRenderer.width = 100;
+            itemRenderer.percentHeight = 100;
             itemRenderer.data = item;
+
             this.viewPort.addChild(itemRenderer);
         }
     }
@@ -192,5 +195,51 @@ Object.defineProperty(List.prototype, 'dataProvider', {
     },
     get: function() {
         return this._dataProvider;
+    }
+});
+
+
+
+
+
+/**
+ * The width of the shape, setting this will redraw the component.
+ * (set redraw)
+ *
+ * @property width
+ * @type Number
+ */
+Object.defineProperty(List.prototype, 'width', {
+    get: function() {
+        return this._width;
+    },
+    set: function(width) {
+        if (this.viewPort) {
+            this.viewPort.width = width;
+        }
+        this._width = width;
+        //originalWidth.set.call(this, width);
+    }
+});
+
+//var originalHeight = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'height');
+
+/**
+ * The height of the shape, setting this will redraw the component.
+ * (set redraw)
+ *
+ * @property height
+ * @type Number
+ */
+Object.defineProperty(List.prototype, 'height', {
+    get: function() {
+        return this._height;
+    },
+    set: function(height) {
+        if (this.viewPort) {
+            this.viewPort.height = height;
+        }
+        //originalHeight.set.call(this, height);
+        this._height = height;
     }
 });

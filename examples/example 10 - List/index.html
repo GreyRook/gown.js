@@ -50,7 +50,7 @@
         list.itemRendererProperties.labelField = "text";
         list.x = 400;
         list.width = 200;
-        list.height = 40;
+        list.height = 250;
         stage.addChild(list);
 
         complete++;
@@ -62,7 +62,7 @@
         list.dataProvider = groceryList;
         list.itemRendererProperties.labelField = "text";
         list.width = 100;
-        list.height = 25;
+        list.height = 250;
         stage.addChild(list);
 
         complete++;
@@ -74,7 +74,6 @@
         if (complete == 2) {
             renderer.render(stage);
             requestAnimationFrame(animate);
-            console.log("go");
         }
     }
 </script>
