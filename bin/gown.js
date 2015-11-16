@@ -1442,6 +1442,7 @@ var Scroller = require('./Scroller');
 var ListCollection = require('../../data/ListCollection');
 var LayoutGroup = require('./LayoutGroup');
 var VerticalLayout = require('../layout/VerticalLayout');
+var DefaultListItemRenderer = require('./renderer/DefaultListItemRenderer');
 
 /**
  * The basic list
@@ -1469,12 +1470,12 @@ function List(dataProvider, theme) {
 
     this._itemChangeHandler = this.itemChangeHandler.bind(this);
 
+    // create new instance of the item renderer
     this.itemRendererFactory = this._itemRendererFactory;
 
     // The collection of data displayed by the list.
     this.dataProvider = dataProvider;
 
-    this.dataInvalid = true;
     /**
      * properties that will be passed down to every item
      * renderer when the list validates.
@@ -1491,16 +1492,19 @@ function List(dataProvider, theme) {
         //  manage the viewport)
         // and instead use the normal LayoutGroup (less abstraction, less code)
         this.viewPort = new LayoutGroup();
-
-        if (!this._layout) {
-            var layout = new VerticalLayout();
-    		layout.padding = 0;
-    		layout.gap = 0;
-    		layout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
-    		layout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_TOP;
-    		this.layout = layout;
-        }
     }
+
+    var layout = this._layout;
+
+    if (!layout) {
+        layout = new VerticalLayout();
+        layout.padding = 0;
+        layout.gap = 0;
+        layout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
+        layout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_TOP;
+    }
+    // use setter to set layout of the viewport
+    this.layout = layout;
 }
 
 List.prototype = Object.create( Scroller.prototype );
@@ -1514,7 +1518,7 @@ List.SKIN_NAME = 'list';
  * A function called that is expected to return a new item renderer
  */
 List.prototype._itemRendererFactory = function() {
-    return null;
+    return new DefaultListItemRenderer();
 };
 
 List.prototype.itemChangeHandler = function() {
@@ -1551,8 +1555,17 @@ List.prototype.redraw = function() {
 };
 
 List.prototype.refreshRenderers = function () {
-    //TODO: create item renderer from itemRendererFactory for this.data
-    //TODO: see ListDataViewPort --> refreshInactieRenderers
+    //TODO: update only new renderer
+    //      see ListDataViewPort --> refreshInactieRenderers
+    if (this.dataProvider && this.viewPort) {
+        for (var i = 0; i < this.dataProvider.length; i++) {
+            var item = this.dataProvider.getItemAt(i);
+            var itemRenderer = this.itemRendererFactory();
+            itemRenderer.data = item;
+            this.viewPort.addChild(itemRenderer);
+        }
+    }
+
     this.dataInvalid = false;
 };
 
@@ -1615,14 +1628,14 @@ Object.defineProperty(List.prototype, 'dataProvider', {
         }
 
         this.selectedIndex = -1;
-        // TODO: invalidate
+        this.dataInvalid = true;
     },
     get: function() {
         return this._dataProvider;
     }
 });
 
-},{"../../data/ListCollection":37,"../layout/VerticalLayout":28,"./LayoutGroup":8,"./Scroller":16}],10:[function(require,module,exports){
+},{"../../data/ListCollection":37,"../layout/VerticalLayout":28,"./LayoutGroup":8,"./Scroller":16,"./renderer/DefaultListItemRenderer":20}],10:[function(require,module,exports){
 var ToggleButton = require('./ToggleButton');
 
 /**
@@ -3228,6 +3241,16 @@ DefaultListItemRenderer.prototype.redraw = function() {
     }
     this.redrawButton();
 };
+
+Object.defineProperty(DefaultListItemRenderer.prototype, 'data', {
+    set: function(data) {
+        this._data = data;
+        this.dataInvalid = true;
+    },
+    get: function() {
+        return this._data;
+    }
+});
 
 /**
  * Updates the renderer to display the item's data. Override this

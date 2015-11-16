@@ -51,6 +51,16 @@ DefaultListItemRenderer.prototype.redraw = function() {
     this.redrawButton();
 };
 
+Object.defineProperty(DefaultListItemRenderer.prototype, 'data', {
+    set: function(data) {
+        this._data = data;
+        this.dataInvalid = true;
+    },
+    get: function() {
+        return this._data;
+    }
+});
+
 /**
  * Updates the renderer to display the item's data. Override this
  * function to pass data to sub-components and react to data changes.

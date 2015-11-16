@@ -38,32 +38,44 @@
             ["../../themes/assets/metalworks/metalworks.json"], metalComplete);
 
     var aeonTheme = new GOWN.AeonTheme(
-            ["../../themes/assets/aeon/aeon_desktop.json"], aeonComplete);
+        ["../../themes/assets/aeon/aeon_desktop.json"], aeonComplete);
+
+    // global varialbes to use in debugger
+    var metalList;
+    var aeonList;
+    var complete = 0;
 
     function metalComplete() {
-        var list = new GOWN.List(groceryList, metalTheme);
+        var list = metalList = new GOWN.List(groceryList, metalTheme);
         list.itemRendererProperties.labelField = "text";
         list.x = 400;
         list.width = 200;
         list.height = 40;
         stage.addChild(list);
+
+        complete++;
+        requestAnimationFrame(animate);
     }
 
     function aeonComplete() {
-        var list = new GOWN.List(null, aeonTheme);
+        var list = aeonList = new GOWN.List(null, aeonTheme);
         list.dataProvider = groceryList;
         list.itemRendererProperties.labelField = "text";
         list.width = 100;
         list.height = 25;
         stage.addChild(list);
 
+        complete++;
         requestAnimationFrame(animate);
     }
 
     function animate() {
         // render the stage
-        renderer.render(stage);
-        requestAnimationFrame(animate);
+        if (complete == 2) {
+            renderer.render(stage);
+            requestAnimationFrame(animate);
+            console.log("go");
+        }
     }
 </script>
 
