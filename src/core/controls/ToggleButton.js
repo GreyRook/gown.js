@@ -30,6 +30,13 @@ ToggleButton.prototype = Object.create( Button.prototype );
 ToggleButton.prototype.constructor = ToggleButton;
 module.exports = ToggleButton;
 
+/**
+ * Dispatched when the button is selected or deselected either
+ * programmatically or as a result of user interaction.The value of the
+ * <code>selected</code> property indicates whether the button is selected.
+ * or not.
+ */
+ToggleButton.CHANGE = 'change';
 
 ToggleButton.SKIN_NAME = 'toggle_button';
 
@@ -66,6 +73,9 @@ Object.defineProperty(ToggleButton.prototype, 'selected', {
         this.invalidState = this._selected !== selected || this.invalidState;
         if (state.indexOf('selected_') === 0) {
             state = state.substr(9, state.length);
+        }
+        if (this._selected !== selected) {
+            this.emit(ToggleButton.CHANGE, this, selected);
         }
         this._selected = selected;
         this._pressed = false; //to prevent toggling on touch/mouse up
