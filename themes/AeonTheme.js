@@ -132,8 +132,8 @@ AeonTheme.prototype.applyTheme = function() {
     this.themeApplyTheme();
 };
 
-AeonTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(7, 7, 8, 31);
-AeonTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(7, 7, 8, 31);
+AeonTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(8, 8, 6, 29);
+AeonTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(8, 8, 6, 29);
 AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(5, 2, 93, 18);
 AeonTheme.HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(1, 2, 6, 26);
 AeonTheme.HORIZONTAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 10, 11);
