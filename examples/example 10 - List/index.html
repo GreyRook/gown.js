@@ -65,6 +65,14 @@
         list.height = 250;
         stage.addChild(list);
 
+        var logText = new PIXI.Text("Log:");
+        list.on('change', function (e, f, g, h, i) {
+            debugger;
+        });
+        stage.addChild(logText);
+        logText.y = 300;
+        logText.x = 0;
+
         complete++;
         requestAnimationFrame(animate);
     }

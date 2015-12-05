@@ -75,6 +75,12 @@ module.exports = List;
 List.SKIN_NAME = 'list';
 
 /**
+ * Dispatched when the selected item changes.
+ */
+List.CHANGE = 'change';
+
+
+/**
  * A function called that is expected to return a new item renderer
  */
 List.prototype._itemRendererFactory = function(theme) {
@@ -121,6 +127,7 @@ List.prototype.refreshRenderers = function () {
         for (var i = 0; i < this.dataProvider.length; i++) {
             var item = this.dataProvider.getItemAt(i);
             var itemRenderer = this.itemRendererFactory(this.theme);
+            itemRenderer.on('change', this.handle_itemRendererChange)
             itemRenderer.width = 100;
             itemRenderer.percentHeight = 100;
             itemRenderer.data = item;
