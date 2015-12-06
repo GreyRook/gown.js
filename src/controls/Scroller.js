@@ -1,5 +1,5 @@
 var ScrollBar = require('./ScrollBar');
-var Control = require('../Control');
+var Control = require('../core/Control');
 
 /**
  * Allows horizontal and vertical scrolling of a view port.

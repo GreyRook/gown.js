@@ -1,4 +1,4 @@
-var Skinable = require('../Skinable'),
+var Skinable = require('../core/Skinable'),
     ScrollThumb = require('./ScrollThumb');
 
 /**

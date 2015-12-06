@@ -1,5 +1,5 @@
-var Skinable = require('../Skinable'),
-    InputWrapper = require('../../utils/InputWrapper');
+var Skinable = require('../core/Skinable'),
+    InputWrapper = require('../utils/InputWrapper');
 
 /**
  * InputControl used for TextInput, TextArea and everything else that

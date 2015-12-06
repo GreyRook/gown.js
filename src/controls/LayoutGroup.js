@@ -1,4 +1,4 @@
-var Control = require('../Control'),
+var Control = require('../core/Control'),
     ViewPortBounds = require('../layout/ViewPortBounds');
 
 /**
