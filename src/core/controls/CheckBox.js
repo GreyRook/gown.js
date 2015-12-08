@@ -9,8 +9,8 @@ var Skinable = require('../Skinable');
  * @memberof GOWN
  * @constructor
  */
-function CheckBox(preselected, theme) {
-    this.skinName = this.skinName || CheckBox.SKIN_NAME;
+function CheckBox(preselected, theme, skinName) {
+    this.skinName = skinName || CheckBox.SKIN_NAME;
     this._validStates = this._validStates || CheckBox.stateNames.concat(CheckBox.selectedStateNames);
     Skinable.call(this, theme);
 

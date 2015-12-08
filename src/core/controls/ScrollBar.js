@@ -10,9 +10,9 @@ var Scrollable = require('./Scrollable'),
  * @memberof GOWN
  * @constructor
  */
-function ScrollBar(scrollArea, thumb, theme) {
+function ScrollBar(scrollArea, thumb, theme, skinName) {
     this.scrollArea = scrollArea;
-    this.skinName = this.skinName || ScrollBar.SKIN_NAME;
+    this.skinName = skinName || ScrollBar.SKIN_NAME;
 
     if (this.orientation === undefined) {
         this.orientation = Scrollable.HORIZONTAL;
