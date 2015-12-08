@@ -742,8 +742,8 @@ var Skinable = require('../Skinable');
  * @memberof GOWN
  * @constructor
  */
-function Button(theme) {
-    this.skinName = this.skinName || Button.SKIN_NAME;
+function Button(theme, skinName) {
+    this.skinName = skinName || Button.SKIN_NAME;
     this._validStates = this._validStates || Button.stateNames;
     Skinable.call(this, theme);
     this.handleEvent('up');
@@ -1040,8 +1040,8 @@ var ToggleButton = require('./ToggleButton');
   * @memberof GOWN
   * @constructor
   */
-function Check(theme) {
-    this._skinName = Check.SKIN_NAME;
+function Check(theme, skinName) {
+    this._skinName = skinName || Check.SKIN_NAME;
     ToggleButton.call(this, theme);
 }
 
@@ -1910,9 +1910,9 @@ var Scrollable = require('./Scrollable'),
  * @memberof GOWN
  * @constructor
  */
-function ScrollBar(scrollArea, thumb, theme) {
+function ScrollBar(scrollArea, thumb, theme, skinName) {
     this.scrollArea = scrollArea;
-    this.skinName = this.skinName || ScrollBar.SKIN_NAME;
+    this.skinName = skinName || ScrollBar.SKIN_NAME;
 
     if (this.direction === undefined) {
         this.direction = Scrollable.HORIZONTAL;
@@ -2028,19 +2028,19 @@ var Button = require('./Button');
  * @memberof GOWN
  * @constructor
  */
-function ScrollThumb(scrollable, theme) {
+function ScrollThumb(scrollable, theme, skinName) {
     this.scrollable = scrollable;
     var defaultSkin = ScrollThumb.SKIN_NAME;
     if (!theme.thumbSkin) {
         defaultSkin = Button.SKIN_NAME;
     }
-    this.skinName = this.skinName || defaultSkin;
+    this.skinName = skinName || defaultSkin;
     if (theme.thumbSkin) {
         this._validStates = ScrollThumb.THUMB_STATES;
     }
     this.width = theme.thumbSize || 20;
     this.height = theme.thumbSize || 20;
-    Button.call(this, theme);
+    Button.call(this, theme, this.skinName);
     this.invalidTrack = true;
 
     this.touchmove = this.mousemove;
@@ -2592,8 +2592,8 @@ var Scrollable = require('./Scrollable'),
  * @constructor
  */
 
-function Slider(thumb, theme) {
-    this.skinName = this.skinName || Slider.SKIN_NAME;
+function Slider(thumb, theme, skinName) {
+    this.skinName = skinName || Slider.SKIN_NAME;
 
     this._minimum = this._minimum || 0;
     this._maximum = this._maximum || 100;
@@ -2768,9 +2768,9 @@ var Control = require('../Control'),
  * @constructor
  */
 
-function TextInput(text, displayAsPassword, theme) {
+function TextInput(text, displayAsPassword, theme, skinName) {
     // show and load background image as skin (exploiting skin states)
-    this.skinName = this.skinName || TextInput.SKIN_NAME;
+    this.skinName = skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || TextInput.stateNames;
     this._currentState = 'background';
     this.invalidState = true;
@@ -3109,13 +3109,13 @@ var Button = require('./Button');
  * @memberof GOWN
  * @constructor
  */
-function ToggleButton(theme) {
-    this.skinName = this.skinName || ToggleButton.SKIN_NAME;
+function ToggleButton(theme, skinName) {
+    this.skinName = skinName || ToggleButton.SKIN_NAME;
     this._validStates = Button.stateNames.slice(0);
     this._validStates.push(ToggleButton.SELECTED_UP);
     this._validStates.push(ToggleButton.SELECTED_DOWN);
     this._validStates.push(ToggleButton.SELECTED_HOVER);
-    Button.call(this, theme);
+    Button.call(this, theme, this.skinName);
 
     /**
      * The pressed state of the Button

@@ -10,8 +10,8 @@ var Scrollable = require('./Scrollable'),
  * @constructor
  */
 
-function Slider(thumb, theme) {
-    this.skinName = this.skinName || Slider.SKIN_NAME;
+function Slider(thumb, theme, skinName) {
+    this.skinName = skinName || Slider.SKIN_NAME;
 
     this._minimum = this._minimum || 0;
     this._maximum = this._maximum || 100;

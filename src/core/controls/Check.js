@@ -9,8 +9,8 @@ var ToggleButton = require('./ToggleButton');
   * @memberof GOWN
   * @constructor
   */
-function Check(theme) {
-    this._skinName = Check.SKIN_NAME;
+function Check(theme, skinName) {
+    this._skinName = skinName || Check.SKIN_NAME;
     ToggleButton.call(this, theme);
 }
 
