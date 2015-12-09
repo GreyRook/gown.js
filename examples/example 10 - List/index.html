@@ -48,9 +48,10 @@
     function metalComplete() {
         var list = metalList = new GOWN.List(groceryList, metalTheme);
         list.itemRendererProperties.labelField = "text";
+        list.viewPort.width = list.width = 100;
+        list.height = 200;
+        list.viewPort.height = 250;
         list.x = 400;
-        list.width = 200;
-        list.height = 250;
         stage.addChild(list);
 
         complete++;
@@ -61,13 +62,18 @@
         var list = aeonList = new GOWN.List(null, aeonTheme);
         list.dataProvider = groceryList;
         list.itemRendererProperties.labelField = "text";
-        list.width = 100;
-        list.height = 250;
+        list.viewPort.width = list.width = 100;
+        list.height = 200;
+        list.viewPort.height = 250;
         stage.addChild(list);
 
         var logText = new PIXI.Text("Log:");
-        list.on('change', function (e, f, g, h, i) {
-            debugger;
+        list.on('change', function (itemRenderer, value) {
+            var sel_text = "selected:";
+            for (var i = 0; i < list._selectedIndices.length; i++) {
+                sel_text += " " + groceryList.getItemAt(list._selectedIndices[i]).text;
+            }
+            logText.text = sel_text;
         });
         stage.addChild(logText);
         logText.y = 300;

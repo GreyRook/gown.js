@@ -29,6 +29,7 @@ function List(dataProvider, theme) {
     this._selectedIndices = [];
 
     this._itemChangeHandler = this.itemChangeHandler.bind(this);
+    this._itemRendererChangeHandler = this.itemRendererChangeHandler.bind(this);
 
     // create new instance of the item renderer
     this.itemRendererFactory = this._itemRendererFactory;
@@ -88,6 +89,9 @@ List.prototype._itemRendererFactory = function(theme) {
 };
 
 List.prototype.itemChangeHandler = function() {
+    // this code is executed when new data is added or removed
+    // to the dataProvider
+    // TODO: test code so it will handle if item is removed
     // deselect removed items
     var index = this._dataProvider.data.length;
     if (this._selectedIndex >= index) {
@@ -123,20 +127,45 @@ List.prototype.redraw = function() {
 List.prototype.refreshRenderers = function () {
     //TODO: update only new renderer
     //      see ListDataViewPort --> refreshInactieRenderers
-    if (this.dataProvider && this.viewPort) {
-        for (var i = 0; i < this.dataProvider.length; i++) {
-            var item = this.dataProvider.getItemAt(i);
+    this._itemRenderer = []
+    if (this._dataProvider && this.viewPort) {
+        this.viewPort.removeChildren();
+        for (var i = 0; i < this._dataProvider.length; i++) {
+            var item = this._dataProvider.getItemAt(i);
             var itemRenderer = this.itemRendererFactory(this.theme);
-            itemRenderer.on('change', this.handle_itemRendererChange)
+            itemRenderer.on('change', this._itemRendererChangeHandler);
             itemRenderer.width = 100;
             itemRenderer.percentHeight = 100;
             itemRenderer.data = item;
-
+            this._itemRenderer.push(itemRenderer);
             this.viewPort.addChild(itemRenderer);
         }
     }
 
     this.dataInvalid = false;
+};
+
+/**
+ * item catch/forward renderer change event
+ * this is thrown when the state of the itemRenderer Changes
+ * (e.g. from unselected to selected), not when the data changes
+ */
+List.prototype.itemRendererChangeHandler = function(itemRenderer, value) {
+    // TODO: update selected item
+    this._selectedIndices = [];
+
+    for (var i = 0; i < this._itemRenderer.length; i++) {
+        if (this._itemRenderer[i].selected) {
+            if (this.allowMultipleSelection) {
+                this._selectedIndices.push(i);
+            } else {
+                this._selectedIndices = [i];
+                break;
+            }
+        }
+    }
+
+    this.emit('change', itemRenderer, value);
 };
 
 /**
@@ -165,6 +194,32 @@ Object.defineProperty(List.prototype, 'layout', {
 
 
 /**
+ * allow/disallow multiple selection
+ * if selection has been disallowed, deselect all but one.
+ *
+ * @property allowMultipleSelection
+ * @type Boolean
+ */
+ Object.defineProperty(List.prototype, 'allowMultipleSelection', {
+     set: function(allowMultipleSelection) {
+         if (this._allowMultipleSelection === allowMultipleSelection) {
+             return;
+         }
+         this._allowMultipleSelection = allowMultipleSelection;
+
+         if (!this._allowMultipleSelection && this._selectedIndices) {
+             // only last index is selected
+             this._selectedIndices = [this._selectedIndices.pop()];
+         }
+         this.refreshSelection();
+     },
+     get: function() {
+         return this._allowMultipleSelection;
+     }
+ });
+
+
+/**
  * dataProvider for list
  * the dataProvider is a sturcture thats provides the data.
  * in its simplest form it is a array containing the data
@@ -183,7 +238,6 @@ Object.defineProperty(List.prototype, 'dataProvider', {
 
         if (this._dataProvider) {
             this._dataProvider.off(ListCollection.CHANGED, this._itemChangeHandler);
-            //TODO: other data handler (?)
         }
         this._dataProvider = dataProvider;
 
@@ -194,7 +248,6 @@ Object.defineProperty(List.prototype, 'dataProvider', {
 
         if (this._dataProvider) {
             this._dataProvider.on(ListCollection.CHANGED, this._itemChangeHandler);
-            //TODO: other data handler (?)
         }
 
         this.selectedIndex = -1;
@@ -202,51 +255,5 @@ Object.defineProperty(List.prototype, 'dataProvider', {
     },
     get: function() {
         return this._dataProvider;
-    }
-});
-
-
-
-
-
-/**
- * The width of the shape, setting this will redraw the component.
- * (set redraw)
- *
- * @property width
- * @type Number
- */
-Object.defineProperty(List.prototype, 'width', {
-    get: function() {
-        return this._width;
-    },
-    set: function(width) {
-        if (this.viewPort) {
-            this.viewPort.width = width;
-        }
-        this._width = width;
-        //originalWidth.set.call(this, width);
-    }
-});
-
-//var originalHeight = Object.getOwnPropertyDescriptor(PIXI.DisplayObjectContainer.prototype, 'height');
-
-/**
- * The height of the shape, setting this will redraw the component.
- * (set redraw)
- *
- * @property height
- * @type Number
- */
-Object.defineProperty(List.prototype, 'height', {
-    get: function() {
-        return this._height;
-    },
-    set: function(height) {
-        if (this.viewPort) {
-            this.viewPort.height = height;
-        }
-        //originalHeight.set.call(this, height);
-        this._height = height;
     }
 });

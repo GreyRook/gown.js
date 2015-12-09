@@ -75,9 +75,9 @@ Object.defineProperty(ToggleButton.prototype, 'selected', {
             state = state.substr(9, state.length);
         }
         if (this._selected !== selected) {
+            this._selected = selected;
             this.emit(ToggleButton.CHANGE, this, selected);
         }
-        this._selected = selected;
         this._pressed = false; //to prevent toggling on touch/mouse up
         this.currentState = state;
     },
