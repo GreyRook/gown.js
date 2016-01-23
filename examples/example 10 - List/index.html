@@ -49,10 +49,24 @@
         var list = metalList = new GOWN.List(groceryList, metalTheme);
         list.itemRendererProperties.labelField = "text";
         list.viewPort.width = list.width = 100;
+        list.allowMultipleSelection = true;
         list.height = 200;
         list.viewPort.height = 250;
         list.x = 400;
         stage.addChild(list);
+
+
+        var logText = new PIXI.Text("please select sth.");
+        list.on('change', function (itemRenderer, value) {
+            var sel_text = "selected:";
+            for (var i = 0; i < list._selectedIndices.length; i++) {
+                sel_text += " " + groceryList.getItemAt(list._selectedIndices[i]).text;
+            }
+            logText.text = sel_text;
+        });
+        stage.addChild(logText);
+        logText.y = 300;
+        logText.x = 400;
 
         complete++;
         requestAnimationFrame(animate);
@@ -67,7 +81,7 @@
         list.viewPort.height = 250;
         stage.addChild(list);
 
-        var logText = new PIXI.Text("Log:");
+        var logText = new PIXI.Text("please select sth.");
         list.on('change', function (itemRenderer, value) {
             var sel_text = "selected:";
             for (var i = 0; i < list._selectedIndices.length; i++) {

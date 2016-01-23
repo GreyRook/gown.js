@@ -2058,8 +2058,11 @@ function Scrollable(theme) {
 
     this.touchstart = this.mousedown = this.handleDown;
     this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
+<<<<<<< HEAD
 
     this.thumbFactoryInvalid = true;
+=======
+>>>>>>> master
 }
 
 Scrollable.prototype = Object.create( Skinable.prototype );

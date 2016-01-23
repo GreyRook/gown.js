@@ -1,5 +1,6 @@
 var Skinable = require('../core/Skinable'),
-    ScrollThumb = require('./ScrollThumb');
+    ScrollThumb = require('./ScrollThumb'),
+    SliderData = require('../utils/SliderData');
 
 /**
  * a scrollabe control provides a thumb that can be be moved along a fixed track.
@@ -20,6 +21,11 @@ function Scrollable(theme) {
     this.invalidTrack = true;
     this._inverse = false;
     this._start = null;
+    this._minimum = this._minimum || 0;
+    this._maximum = this._maximum || 100;
+    this.step = this.step || 1; //TODO: implement me!
+    this.page = this.page || 10; //TODO: implement me!
+    this._value = this.minimum;
 
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
     this.scrolldelta = 10;
@@ -372,6 +378,90 @@ Object.defineProperty(Scrollable.prototype, 'height', {
         this.invalidTrack = true;
         if (this.thumb) {
             this.thumb.invalidTrack = true;
+        }
+    }
+});
+
+/**
+ * set value (between minimum and maximum)
+ *
+ * @property value
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Scrollable.prototype, 'value', {
+    get: function() {
+        return this._value;
+    },
+    set: function(value) {
+        if (isNaN(value)) {
+            return;
+        }
+        value = Math.min(value, this.maximum);
+        value = Math.max(value, this.minimum);
+        if (this._value === value) {
+            return;
+        }
+
+        this.emit('change', value, this);
+        // move thumb
+        if (this.thumb) {
+            var pos = this.valueToLocation(value);
+            if (this.direction === Scrollable.HORIZONTAL) {
+                this.moveThumb(pos, 0);
+            } else {
+                this.moveThumb(0, pos);
+            }
+        }
+
+        this._value = value;
+        if (this.change) {
+            var sliderData = new SliderData();
+            sliderData.value = this._value;
+            sliderData.target = this;
+            this.change(sliderData);
+        }
+    }
+});
+
+/**
+ * set minimum and update value if necessary
+ *
+ * @property minimum
+ * @type Number
+ * @default 0
+ */
+Object.defineProperty(Scrollable.prototype, 'minimum', {
+    get: function() {
+        return this._minimum;
+    },
+    set: function(minimum) {
+        if(!isNaN(minimum) && this.minimum !== minimum && minimum < this.maximum) {
+            this._minimum = minimum;
+        }
+        if (this._value < this.minimum) {
+            this.value = this._value;
+        }
+    }
+});
+
+/**
+ * set maximum and update value if necessary
+ *
+ * @property maximum
+ * @type Number
+ * @default 100
+ */
+Object.defineProperty(Scrollable.prototype, 'maximum', {
+    get: function() {
+        return this._maximum;
+    },
+    set: function(maximum) {
+        if(!isNaN(maximum) && this.maximum !== maximum && maximum > this.minimum) {
+            this._maximum = maximum;
+        }
+        if (this._value > this.maximum) {
+            this.value = maximum;
         }
     }
 });

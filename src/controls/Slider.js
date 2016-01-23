@@ -1,5 +1,4 @@
-var Scrollable = require('./Scrollable'),
-    SliderData = require('../utils/SliderData');
+var Scrollable = require('./Scrollable');
 
 /**
  * Simple slider with min. and max. value
@@ -13,11 +12,6 @@ var Scrollable = require('./Scrollable'),
 function Slider(thumb, theme) {
     this.skinName = this.skinName || Slider.SKIN_NAME;
 
-    this._minimum = this._minimum || 0;
-    this._maximum = this._maximum || 100;
-    this.step = this.step || 1; //TODO: implement me!
-    this.page = this.page || 10; //TODO: implement me!
-    this._value = this.minimum;
     this.change = null;
 
     Scrollable.call(this, thumb, theme);
@@ -86,87 +80,3 @@ Slider.prototype.valueToLocation = function(value) {
     }
     return position;
 };
-
-/**
- * set value (between minimum and maximum)
- *
- * @property value
- * @type Number
- * @default 0
- */
-Object.defineProperty(Slider.prototype, 'value', {
-    get: function() {
-        return this._value;
-    },
-    set: function(value) {
-        if (isNaN(value)) {
-            return;
-        }
-        value = Math.min(value, this.maximum);
-        value = Math.max(value, this.minimum);
-        if (this._value === value) {
-            return;
-        }
-
-        this.emit('change', value, this);
-        // move thumb
-        if (this.thumb) {
-            var pos = this.valueToLocation(value);
-            if (this.direction === Scrollable.HORIZONTAL) {
-                this.moveThumb(pos, 0);
-            } else {
-                this.moveThumb(0, pos);
-            }
-        }
-
-        this._value = value;
-        if (this.change) {
-            var sliderData = new SliderData();
-            sliderData.value = this._value;
-            sliderData.target = this;
-            this.change(sliderData);
-        }
-    }
-});
-
-/**
- * set minimum and update value if necessary
- *
- * @property minimum
- * @type Number
- * @default 0
- */
-Object.defineProperty(Slider.prototype, 'minimum', {
-    get: function() {
-        return this._minimum;
-    },
-    set: function(minimum) {
-        if(!isNaN(minimum) && this.minimum !== minimum && minimum < this.maximum) {
-            this._minimum = minimum;
-        }
-        if (this._value < this.minimum) {
-            this.value = this._value;
-        }
-    }
-});
-
-/**
- * set maximum and update value if necessary
- *
- * @property maximum
- * @type Number
- * @default 100
- */
-Object.defineProperty(Slider.prototype, 'maximum', {
-    get: function() {
-        return this._maximum;
-    },
-    set: function(maximum) {
-        if(!isNaN(maximum) && this.maximum !== maximum && maximum > this.minimum) {
-            this._maximum = maximum;
-        }
-        if (this._value > this.maximum) {
-            this.value = maximum;
-        }
-    }
-});

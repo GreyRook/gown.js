@@ -1,5 +1,6 @@
 var ScrollBar = require('./ScrollBar');
 var Control = require('../core/Control');
+var Scrollable = require('./Scrollable');
 
 /**
  * Allows horizontal and vertical scrolling of a view port.
@@ -28,6 +29,22 @@ function Scroller(theme) {
 Scroller.prototype = Object.create( Control.prototype );
 Scroller.prototype.constructor = Scroller;
 module.exports = Scroller;
+
+/**
+ * The scroller may scroll if the view port is larger than the
+ * scroller's bounds. Only than the scroll bar will be visible.
+ */
+Scroller.SCROLL_POLICY_AUTO = 'auto';
+
+/**
+ * The scroller will always scroll, the scroll bar will always be visible.
+ */
+Scroller.SCROLL_POLICY_ON = 'on';
+
+/**
+ * The scroller does not scroll at all, the scroll bar will never be visible.
+ */
+Scroller.SCROLL_POLICY_OFF = 'off';
 
 /**
  * us a mask to clip content
@@ -87,7 +104,6 @@ Scroller.prototype.redraw = function() {
 };
 
 Scroller.prototype.refreshClipRect = function() {
-
     if (this.height && this.width && this._clipContent) {
         if (this.clipRect === undefined) {
             this.clipRect = new PIXI.Graphics();
@@ -151,14 +167,22 @@ Scroller.prototype.drawClipRect = function() {
  * @see #verticalScrollBarFactory
  */
 Scroller.prototype.createScrollBars = function() {
-    this.horizontalScrollBar = this._horizontalScrollBarFactory();
-    this.verticalScrollBar = this._verticalScrollBarFactory();
+    this.horizontalScrollBar = this._horizontalScrollBarFactory(Scrollable.HORIZONTAL);
+    this.verticalScrollBar = this._verticalScrollBarFactory(Scrollable.VERTICAL);
 };
 
-Scroller.prototype.defaultScrollBarFactory = function() {
-    return new ScrollBar();
+Scroller.prototype.defaultScrollBarFactory = function(direction) {
+    return new ScrollBar(direction, this.theme);
 };
 
+
+Scroller.prototype.revealHorizontalScrollBar = function() {
+    //TODO: implement me!
+};
+
+Scroller.prototype.revealVerticalScrollBar = function() {
+    //TODO: implement me!
+};
 
 /**
  * The width of the Scroller (defines the viewport)

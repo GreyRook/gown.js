@@ -27,6 +27,8 @@ ScrollBar.prototype = Object.create( Scrollable.prototype );
 ScrollBar.prototype.constructor = ScrollBar;
 module.exports = ScrollBar;
 
+ScrollBar.prototype.minThumbWidth = 20;
+ScrollBar.prototype.minThumbHeight = 20;
 
 ScrollBar.SKIN_NAME = 'scroll_bar';
 
@@ -39,10 +41,12 @@ ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
         if (this.scrollArea && this.thumb) {
             if (this.direction === Scrollable.HORIZONTAL) {
-                this.thumb.width = Math.max(20, this.scrollArea.width /
+                this.thumb.width = Math.max(this.minThumbWidth,
+                    this.scrollArea.width /
                     (this.scrollArea.content.width / this.scrollArea.width));
             } else {
-                this.thumb.height = Math.max(20, this.scrollArea.height /
+                this.thumb.height = Math.max(this.minThumbHeight,
+                    this.scrollArea.height /
                     (this.scrollArea.content.height / this.scrollArea.height));
             }
         }

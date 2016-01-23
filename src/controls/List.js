@@ -28,6 +28,7 @@ function List(dataProvider, theme) {
     // The indices of the currently selected items.
     this._selectedIndices = [];
 
+    this._itemRenderer = [];
     this._itemChangeHandler = this.itemChangeHandler.bind(this);
     this._itemRendererChangeHandler = this.itemRendererChangeHandler.bind(this);
 
@@ -127,7 +128,7 @@ List.prototype.redraw = function() {
 List.prototype.refreshRenderers = function () {
     //TODO: update only new renderer
     //      see ListDataViewPort --> refreshInactieRenderers
-    this._itemRenderer = []
+    this._itemRenderer.length = 0;
     if (this._dataProvider && this.viewPort) {
         this.viewPort.removeChildren();
         for (var i = 0; i < this._dataProvider.length; i++) {
@@ -152,15 +153,22 @@ List.prototype.refreshRenderers = function () {
  */
 List.prototype.itemRendererChangeHandler = function(itemRenderer, value) {
     // TODO: update selected item
-    this._selectedIndices = [];
+    var i;
+    this._selectedIndices.length = 0;
 
-    for (var i = 0; i < this._itemRenderer.length; i++) {
-        if (this._itemRenderer[i].selected) {
-            if (this.allowMultipleSelection) {
+    if (!this.allowMultipleSelection) {
+        for (i = 0; i < this._itemRenderer.length; i++) {
+            if (this._itemRenderer[i] !== itemRenderer && value === true) {
+                this._itemRenderer[i].selected = false;
+            }
+        }
+        if (value === true) {
+            this._selectedIndices = [this._itemRenderer.indexOf(itemRenderer)];
+        }
+    } else {
+        for (i = 0; i < this._itemRenderer.length; i++) {
+            if (this._itemRenderer[i].selected === true) {
                 this._selectedIndices.push(i);
-            } else {
-                this._selectedIndices = [i];
-                break;
             }
         }
     }
@@ -211,7 +219,7 @@ Object.defineProperty(List.prototype, 'layout', {
              // only last index is selected
              this._selectedIndices = [this._selectedIndices.pop()];
          }
-         this.refreshSelection();
+         //TODO: this.refreshSelection();
      },
      get: function() {
          return this._allowMultipleSelection;
