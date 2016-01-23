@@ -4,12 +4,6 @@
     <meta charset="utf-8" />
     <title>gown.js example: Login dialog (text input)</title>
     <style type="text/css">
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
         @font-face {
             font-family: 'FontAwesome';
             font-weight: normal;
@@ -36,9 +30,6 @@
     // load fontawesome first, see https://github.com/smnh/FontLoader/issues/2
     FontLoader.referenceText += "\uf007\uf023";
     var fontLoader = new FontLoader(["FontAwesome"], {
-        "fontsLoaded": function(error) {
-            console.log("error:", error);
-        },
         "fontLoaded": awesomeComplete
     }, 3000);
     fontLoader.loadFonts();
@@ -52,11 +43,13 @@
 
     function themeComplete() {
         // background
-        app = new GOWN.Application(['#688080', '#9ba992'], true);
+        app = new GOWN.Application({
+            backgroundColor: [0x688080, 0x9ba992]});
 
-        var login = new LoginDialog();
+        var login = new LoginDialog(app);
         app.addChild(login);
 
+        // set width/height for layouting
         app.onresize();
     }
 

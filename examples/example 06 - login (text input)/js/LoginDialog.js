@@ -5,7 +5,7 @@
 /**
  * a simple dialog with a email and password text input
  */
-var LoginDialog = function() {
+var LoginDialog = function(app) {
     GOWN.Control.call(this);
     // background
     this.bg = new GOWN.Rect(0x515151, 0.7, 200, 350, 5);
@@ -71,6 +71,7 @@ var LoginDialog = function() {
     this.submitButton.width = 150;
     this.submitButton.height = 40;
     this.addChild(this.submitButton);
+    app.on('resize', this.onresize.bind(this));
 
 };
 
