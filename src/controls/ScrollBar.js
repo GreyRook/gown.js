@@ -13,14 +13,8 @@ var Scrollable = require('./Scrollable');
  * @memberof GOWN
  * @constructor
  */
-<<<<<<< HEAD:src/controls/ScrollBar.js
 function ScrollBar(direction, theme) {
     this.skinName = this.skinName || ScrollBar.SKIN_NAME;
-=======
-function ScrollBar(scrollArea, thumb, theme, skinName) {
-    this.scrollArea = scrollArea;
-    this.skinName = skinName || ScrollBar.SKIN_NAME;
->>>>>>> master:src/core/controls/ScrollBar.js
 
     this.direction = direction;
     if (this.direction === undefined) {
