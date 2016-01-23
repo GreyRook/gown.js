@@ -9,13 +9,13 @@ var Button = require('./Button');
  * @memberof GOWN
  * @constructor
  */
-function ToggleButton(theme) {
-    this.skinName = this.skinName || ToggleButton.SKIN_NAME;
+function ToggleButton(theme, skinName) {
+    this.skinName = skinName || ToggleButton.SKIN_NAME;
     this._validStates = Button.stateNames.slice(0);
     this._validStates.push(ToggleButton.SELECTED_UP);
     this._validStates.push(ToggleButton.SELECTED_DOWN);
     this._validStates.push(ToggleButton.SELECTED_HOVER);
-    Button.call(this, theme);
+    Button.call(this, theme, this.skinName);
 
     /**
      * The pressed state of the Button

@@ -8,19 +8,19 @@ var Button = require('./Button');
  * @memberof GOWN
  * @constructor
  */
-function ScrollThumb(scrollable, theme) {
+function ScrollThumb(scrollable, theme, skinName) {
     this.scrollable = scrollable;
     var defaultSkin = ScrollThumb.SKIN_NAME;
     if (!theme.thumbSkin) {
         defaultSkin = Button.SKIN_NAME;
     }
-    this.skinName = this.skinName || defaultSkin;
+    this.skinName = skinName || defaultSkin;
     if (theme.thumbSkin) {
         this._validStates = ScrollThumb.THUMB_STATES;
     }
     this.width = theme.thumbSize || 20;
     this.height = theme.thumbSize || 20;
-    Button.call(this, theme);
+    Button.call(this, theme, this.skinName);
     this.invalidTrack = true;
 
     this.touchmove = this.mousemove;

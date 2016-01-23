@@ -14,9 +14,9 @@ var Control = require('../core/Control'),
  * @constructor
  */
 
-function TextInput(text, displayAsPassword, theme) {
+function TextInput(text, displayAsPassword, theme, skinName) {
     // show and load background image as skin (exploiting skin states)
-    this.skinName = this.skinName || TextInput.SKIN_NAME;
+    this.skinName = skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || TextInput.stateNames;
     this._currentState = 'background';
     this.invalidState = true;

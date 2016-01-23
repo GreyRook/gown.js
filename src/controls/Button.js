@@ -9,8 +9,8 @@ var Skinable = require('../core/Skinable');
  * @memberof GOWN
  * @constructor
  */
-function Button(theme) {
-    this.skinName = this.skinName || Button.SKIN_NAME;
+function Button(theme, skinName) {
+    this.skinName = skinName || Button.SKIN_NAME;
     this._validStates = this._validStates || Button.stateNames;
     Skinable.call(this, theme);
     this.handleEvent('up');
