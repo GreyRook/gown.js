@@ -26,7 +26,7 @@ function Scrollable(thumb, theme) {
     this.scrolldelta = 10;
 
     this.touchstart = this.mousedown = this.handleDown;
-    this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
+    this.touchendoutside = this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
 }
 
 Scrollable.prototype = Object.create( Skinable.prototype );
