@@ -1,4 +1,4 @@
-![gown.js](http://i.imgur.com/cD9hRVx.png)
+![gown.js](https://raw.githubusercontent.com/brean/gown.js/master/logo.svg)
 ===========
 
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
