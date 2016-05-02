@@ -24,7 +24,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - How-To tutorial and beginners documentation!
 
- - more examples for the examples-side (see [gown-examples](brean.github.io/gown-examples/) )
+ - more examples for the examples-side (see [gown-examples](https://brean.github.io/gown-examples/) )
 
  - real viewport(s) for ScrollArea ?
 
