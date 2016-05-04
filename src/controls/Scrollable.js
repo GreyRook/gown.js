@@ -101,7 +101,7 @@ Scrollable.prototype.handleDown = function(mouseData) {
         this._start = [local.x, local.y];
         // do not override localX/localY in start
         // if we do not move the thumb
-        this.thumbMoved(local.x, local.y);
+        this.thumbMoved(center.x, center.y);
     }
 };
 
