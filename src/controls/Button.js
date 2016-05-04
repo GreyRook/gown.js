@@ -228,7 +228,9 @@ Button.prototype.createLabel = function() {
  * @method updateLabelDimensions
  */
 Button.prototype.updateLabelDimensions = function () {
-    if (this.labelText && this.labelText.text) {
+    if (this.labelText && this.labelText.text && 
+        (this.worldWidth - this.labelText.width) >= 0 &&
+        (this.worldHeight - this.labelText.height) >= 0) {
         this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
         this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
     }

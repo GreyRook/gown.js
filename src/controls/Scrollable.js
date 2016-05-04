@@ -31,7 +31,7 @@ function Scrollable(theme) {
     this.scrolldelta = 10;
 
     this.touchstart = this.mousedown = this.handleDown;
-    this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
+    this.touchendoutside = this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
 
     this.thumbFactoryInvalid = true;
 }

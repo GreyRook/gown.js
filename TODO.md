@@ -32,7 +32,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - How-To tutorial and beginners documentation!
 
- - examples-side (like [the one from pixi.js](http://pixijs.github.io/examples/) )
+ - more examples for the examples-side (see [gown-examples](https://brean.github.io/gown-examples/) )
 
  - build/compress themes
 
