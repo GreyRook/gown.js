@@ -106,9 +106,8 @@ ToggleButton.prototype.handleEvent = function(type) {
     if (!this._enabled) {
         return;
     }
-    var over_this = this._pressed;
     this.buttonHandleEvent(type);
-    if (type === Button.UP && this._over && over_this) {
+    if (type === Button.UP && this._over && this._pressed) {
         this.toggle();
     }
 };
