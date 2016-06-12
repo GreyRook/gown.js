@@ -54,8 +54,10 @@ def convert(path):
     root, frames = parse_xml(path)
     meta = image_meta(os.path.join(base_path, root.attrib['imagePath']))
     data = {"frames": frames, "meta": meta}
-    json_file = file(os.path.splitext(path)[0] + '.json', 'w')
+    theme_path = os.path.splitext(path)[0]
+    json_file = file(theme_path + '.json', 'w')
     json.dump(data, json_file, indent=2)
+    return theme_path
 
 
 def main():

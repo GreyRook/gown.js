@@ -1,5 +1,8 @@
 function AeonTheme(jsonPath, onComplete, global) {
     GOWN.Theme.call(this, onComplete, global);
+
+    this.thumbSize = 28;
+
     if (jsonPath) {
         this.loadImage(jsonPath);
     }
@@ -9,9 +12,10 @@ AeonTheme.prototype = Object.create( GOWN.Theme.prototype );
 AeonTheme.prototype.constructor = AeonTheme;
 
 AeonTheme.prototype.themeApplyTheme = GOWN.Theme.prototype.applyTheme;
+
 AeonTheme.prototype.applyTheme = function() {
     var b = GOWN.Button;
-    var bg = AeonTheme.BUTTON_SCALE_9_GRID;
+    var bg = this.scale_9_grids["BUTTON_SCALE_9_GRID"];
 
     this.setSkin(b.SKIN_NAME, b.UP,
         this.getScaleContainer("button-up-skin0000", bg));
@@ -22,7 +26,7 @@ AeonTheme.prototype.applyTheme = function() {
 
     var tb = GOWN.ToggleButton;
     if (tb) {
-        var sbg = AeonTheme.SELECTED_BUTTON_SCALE_9_GRID;
+        var sbg = this.scale_9_grids["SELECTED_BUTTON_SCALE_9_GRID"];
 
         this.setSkin(tb.SKIN_NAME, b.UP,
             this.getScaleContainer("button-up-skin0000", bg));
@@ -45,22 +49,22 @@ AeonTheme.prototype.applyTheme = function() {
 
         this.setSkin(sb.SKIN_NAME, "horizontal_track",
             this.getScaleContainer("horizontal-scroll-bar-track-skin0000",
-                AeonTheme.HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID));
+                this.scale_9_grids["HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID"]));
         this.setSkin(sb.SKIN_NAME, "vertical_track",
             this.getScaleContainer("vertical-scroll-bar-track-skin0000",
-                AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID));
+                this.scale_9_grids["VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID"]));
     }
     if (GOWN.ScrollThumb) {
         var st = GOWN.ScrollThumb;
         this.setSkin(st.SKIN_NAME, "horizontal_" + b.UP,
             this.getScaleContainer("horizontal-scroll-bar-thumb-up-skin0000",
-                AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID));
+                this.scale_9_grids["HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID"]));
         this.setSkin(st.SKIN_NAME, "horizontal_" + b.DOWN,
             this.getScaleContainer("horizontal-scroll-bar-thumb-down-skin0000",
-                AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID));
+                this.scale_9_grids["HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID"]));
         this.setSkin(st.SKIN_NAME, "horizontal_" + b.HOVER,
             this.getScaleContainer("horizontal-scroll-bar-thumb-hover-skin0000",
-                AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID));
+                this.scale_9_grids["HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID"]));
         this.setSkin(st.SKIN_NAME, "horizontal_thumb",
             this.getImage("horizontal-scroll-bar-thumb-icon0000"));
 
@@ -81,7 +85,7 @@ AeonTheme.prototype.applyTheme = function() {
     if (GOWN.PickerList) {
         var pl = GOWN.PickerList;
         tb = GOWN.ToggleButton;
-        sbg = AeonTheme.SELECTED_BUTTON_SCALE_9_GRID;
+        sbg = this.scale_9_grids["SELECTED_BUTTON_SCALE_9_GRID"];
 
         this.setSkin(pl.SKIN_NAME, b.UP,
             this.getScaleContainer("button-up-skin0000", bg));
@@ -109,7 +113,7 @@ AeonTheme.prototype.applyTheme = function() {
         var ti = GOWN.TextInput;
         this.setSkin(ti.SKIN_NAME, "background",
             this.getScaleContainer("text-input-background-enabled-skin0000",
-                AeonTheme.TEXT_INPUT_SCALE_9_GRID));
+                this.scale_9_grids["TEXT_INPUT_SCALE_9_GRID"]));
     }
 
     if (GOWN.Check) {
@@ -131,15 +135,5 @@ AeonTheme.prototype.applyTheme = function() {
     }
     this.themeApplyTheme();
 };
-
-AeonTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(8, 8, 6, 29);
-AeonTheme.SELECTED_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(8, 8, 6, 29);
-AeonTheme.HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(5, 2, 93, 18);
-AeonTheme.HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(1, 2, 6, 26);
-AeonTheme.HORIZONTAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 10, 11);
-AeonTheme.TEXT_INPUT_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 6, 6);
-AeonTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(2, 5, 18, 93);
-AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(2, 1, 26, 6);
-AeonTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 11, 10);
 
 GOWN.AeonTheme = AeonTheme;
