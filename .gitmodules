@@ -1,3 +1,9 @@
 [submodule "examples/example 6 - login (text input)/lib/FontDetect"]
 	path = examples/example 6 - login (text input)/lib/FontDetect
 	url = git@github.com:JenniferSimonds/FontDetect.git
+[submodule "external/pixi-layout"]
+	path = external/pixi-layout
+	url = git@github.com:brean/pixi-layout.git
+[submodule "external/pixi-shapes"]
+	path = external/pixi-shapes
+	url = git@github.com:brean/pixi-shapes.git

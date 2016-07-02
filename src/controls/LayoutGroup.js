@@ -1,5 +1,4 @@
-var Control = require('../core/Control'),
-    ViewPortBounds = require('../layout/ViewPortBounds');
+var Control = require('../core/Control');
 
 /**
  * The LayoutGroup allows you to add PIXI.js children that will be positioned
@@ -9,11 +8,12 @@ var Control = require('../core/Control'),
  * @memberof GOWN
  * @constructor
  */
-function LayoutGroup() {
-    this.percentWidth = this.percentWidth || null;
-    this.percentHeight = this.percentHeight || null;
+function LayoutGroup(maxWidth, maxHeight) {
+    this.percentWidth = this.percentWidth;
+    this.percentHeight = this.percentHeight;
+    this.maxWidth = maxWidth;
+    this.maxHeight = maxHeight;
     Control.call(this);
-    this._viewPortBounds = new ViewPortBounds();
     this._needUpdate = true;
 }
 
@@ -28,21 +28,18 @@ module.exports = LayoutGroup;
  */
 LayoutGroup.prototype.redraw = function() {
     var dimensionChanged = false;
-    if (this._width && this._viewPortBounds.explicitWidth !== this._width) {
-        // width set - change viewport boundaries
-        this._viewPortBounds.explicitWidth = this._width;
+    if (this._width && this.maxWidth !== this._width) {
+        this._width = Math.max(this._width, this.maxWidth);
         dimensionChanged = true;
     }
-    if (this._height && this._viewPortBounds.explicitHeight !== this._height) {
-        // height set - change viewport boundaries
-        this._viewPortBounds.explicitHeight = this._height;
+    if (this._height && this.maxHeight !== this._height) {
+        this._height = Math.max(this._height, this.maxHeight);
         dimensionChanged = true;
     }
     if (this.layout &&
         (this._needUpdate || dimensionChanged || this.layout.needUpdate)) {
-        this.layout.layout(this.children, this._viewPortBounds);
+        this.layout.layoutContainer(this);
         this._needUpdate = false;
-        this.layout._needUpdate = false;
     }
 };
 

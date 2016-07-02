@@ -13,7 +13,7 @@
     <script src="../../lib/pixi.js"></script>
     <script src="../../bin/gown.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
-    <script src="../../themes/MetalWorksMobileTheme.js"></script>
+    <script src="../../themes/MetalWorksDesktopTheme.js"></script>
 </head>
 <body>
 <script>
@@ -63,8 +63,8 @@
     aeontheme = new GOWN.AeonTheme(
         ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
 
-    metaltheme = new GOWN.MetalWorksMobileTheme(
-        ["../../themes/assets/metalworks/metalworks.json"], onCompleteMetal, false);
+    metaltheme = new GOWN.MetalWorksDesktopTheme(
+        ["../../themes/assets/metalworks/metalworks_desktop.json"], onCompleteMetal, false);
 
     function animate() {
         // render the stage

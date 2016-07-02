@@ -1,8 +1,13 @@
+// full version of gown 
+// (includes pixi-layout and pixi-shape, so you only need to add pixi.js 
+//  and gown.js into your html file)
 if (typeof PIXI === 'undefined') {
     if (window.console) {
         window.console.warn('pixi.js has to be loaded before loading gown.js');
     }
 } else {
+    PIXI.shapes = require('../external/pixi-shapes/src');
+    PIXI.layout = require('../external/pixi-layout/src');
 
     var core = module.exports = require('./core');
 
@@ -30,26 +35,10 @@ if (typeof PIXI === 'undefined') {
     // control renderer
     core.DefaultListItemRenderer =  require('./controls/renderer/DefaultListItemRenderer');
 
-    // layout
-    core.HorizontalLayout =     require('./layout/HorizontalLayout');
-    core.Layout =               require('./layout/Layout');
-    core.LayoutAlignment =      require('./layout/LayoutAlignment');
-    core.TiledColumnsLayout =   require('./layout/TiledColumnsLayout');
-    core.TiledLayout =          require('./layout/TiledLayout');
-    core.TiledRowsLayout =      require('./layout/TiledRowsLayout');
-    core.VerticalLayout =       require('./layout/VerticalLayout');
-    core.ViewPortBounds =       require('./layout/ViewPortBounds');
-
-    // shapes
-    core.Diamond =           require('./shapes/Diamond');
-    core.Ellipse =           require('./shapes/Ellipse');
-    core.Line =              require('./shapes/Line');
-    core.Rect =              require('./shapes/Rect');
-    core.Shape =             require('./shapes/Shape');
-
     // skin
     core.Theme =           require('./skin/Theme');
     core.ThemeFont =       require('./skin/ThemeFont');
+    core.ThemeParser =     require('./skin/ThemeParser');
 
     // add core plugins.
     core.utils          = require('./utils');

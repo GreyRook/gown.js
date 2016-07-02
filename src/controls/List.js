@@ -1,7 +1,6 @@
 var Scroller = require('./Scroller');
 var ListCollection = require('../data/ListCollection');
 var LayoutGroup = require('./LayoutGroup');
-var VerticalLayout = require('../layout/VerticalLayout');
 var DefaultListItemRenderer = require('./renderer/DefaultListItemRenderer');
 
 /**
@@ -59,11 +58,11 @@ function List(dataProvider, theme) {
     var layout = this._layout;
 
     if (!layout) {
-        layout = new VerticalLayout();
+        layout = new PIXI.layout.VerticalLayout();
         layout.padding = 0;
         layout.gap = 0;
-        layout.horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
-        layout.verticalAlign = VerticalLayout.VERTICAL_ALIGN_TOP;
+        layout.horizontalAlign = PIXI.layout.VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
+        layout.verticalAlign = PIXI.layout.VerticalLayout.VERTICAL_ALIGN_TOP;
     }
     // use setter to set layout of the viewport
     this.layout = layout;

@@ -9,16 +9,18 @@ var EventEmitter = require('eventemitter3');
  * @memberof GOWN
  * @constructor
  */
-function Theme(onComplete, global) {
-    if (onComplete) {
-        this.on(Theme.COMPLETE, onComplete);
-    }
+function Theme(global) {
+    EventEmitter.call(this);
+
     // at its core a theme is just a dict that holds a collection of skins
     this._skins = {};
 
     // default font for labels (e.g. buttons)
-    this.textStyle = this.textStyle || new ThemeFont();
-    this.textStyle.clone();
+    if (this.textStyle) {
+        this.textStyle.clone();
+    } else {
+        this.textStyle = new ThemeFont();
+    }
 
     if (global === true || global === undefined) {
         GOWN.theme = this;
@@ -78,10 +80,21 @@ Theme.prototype.loadImage = function(jsonPath) {
  * @method loadComplete
  */
 Theme.prototype.loadComplete = function(loader, resources) {
-    this.textureCache = resources[this._jsonPath].textures;
+    this.setCache(resources);
     this.emit(Theme.LOADED, this);
     this.applyTheme();
 };
+
+
+/**
+ * set texture cache (normally called when loading is complete)
+ *
+ * @method loadComplete
+ */
+Theme.prototype.setCache = function(resources) {
+    this.textureCache = resources[this._jsonPath].textures;
+};
+
 
 /**
  * apply theme to controls

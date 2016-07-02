@@ -12,7 +12,7 @@ ShapeTheme.prototype.constructor = ShapeTheme;
 
 ShapeTheme.prototype.getDummyButton = function(color, borderColor) {
     return function() {
-        var rect = new GOWN.Rect(color, 0.8);
+        var rect = new PIXI.shapes.Rect(color, 0.8);
         rect.radius = 5;
         rect.border = 2;
         rect.borderColor = borderColor;
@@ -32,7 +32,5 @@ ShapeTheme.prototype.applyTheme = function() {
         this.getDummyButton(0x60c865, 0x00ff00));
     this.themeApplyTheme();
 };
-
-ShapeTheme.BUTTON_SCALE_9_GRID = new PIXI.Rectangle(6, 6, 70, 10);
 
 GOWN.ShapeTheme = ShapeTheme;

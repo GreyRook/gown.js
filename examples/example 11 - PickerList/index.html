@@ -14,7 +14,7 @@
     <script src="../../bin/gown.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
     <script src="../../themes/ShapeTheme.js"></script>
-    <script src="../../themes/MetalWorksMobileTheme.js"></script>
+    <script src="../../themes/MetalWorksDesktopTheme.js"></script>
 </head>
 <body>
 <script>
@@ -23,8 +23,8 @@
     var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
-    var metal_theme = new GOWN.MetalWorksMobileTheme(
-            ["../../themes/assets/metalworks/metalworks.json"], metalComplete);
+    var metal_theme = new GOWN.MetalWorksDesktopTheme(
+            ["../../themes/assets/metalworks/metalworks_desktop.json"], metalComplete);
 
     var aeon_theme = new GOWN.AeonTheme(
             ["../../themes/assets/aeon/aeon_desktop.json"], aeonComplete);

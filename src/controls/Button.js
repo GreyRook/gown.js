@@ -73,6 +73,7 @@ Button.stateNames = [
     Button.DOWN, Button.HOVER, Button.UP
 ];
 
+// triggered event name for button
 Button.TRIGGERED = 'triggered';
 
 /**

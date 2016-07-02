@@ -6,3 +6,5 @@ node_modules/
 .grunt
 test/gen/
 *.log
+**/*.*~
+themes/from_feathers/feathers

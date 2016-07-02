@@ -32,7 +32,7 @@ function rebundle(devBundle) {
     var stream = this.bundle()
         .on('error', handleErrors.handler)
         .pipe(handleErrors())
-        .pipe(source('gown.js'))
+        .pipe(source('gown-full.js'))
         .pipe(buffer());
 
     if (devBundle) {

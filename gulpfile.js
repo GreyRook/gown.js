@@ -22,7 +22,7 @@ global.paths = {
     out: './bin',
 
     get scripts() { return this.src + '/**/*.js'; },
-    get jsEntry() { return this.src + '/index'; }
+    get jsEntry() { return this.src + '/index-full'; }
 };
 
 // Require all tasks in gulp/tasks, including subfolders

@@ -1,0 +1,30 @@
+{
+  "textStyle": {
+    "fill": "#fff",
+    "fontFamily": "Droid Sans"
+  },
+  "thumbSkin": true,
+  "hoverSkin": true,
+  "skins": {
+    "default": {
+      "all": {
+        "type": "rect",
+        "radius": 5,
+        "borders": 2,
+        "alpha": 0.8,
+        "color": "0x6073c8",
+        "borderColor": "0x0000ff"
+      }
+    },
+    "button": {
+      "down": {
+        "color": "0xEA8686",
+        "borderColor": "0xff0000"
+      },
+      "hover": {
+        "color": "0x60c865",
+        "borderColor": "0x00ff00"
+      }
+    }
+  }
+}
