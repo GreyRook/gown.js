@@ -10,7 +10,7 @@
       "all": {
         "type": "rect",
         "radius": 5,
-        "borders": 2,
+        "border": 2,
         "alpha": 0.8,
         "color": "0x6073c8",
         "borderColor": "0x0000ff"
