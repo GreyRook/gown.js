@@ -1,6 +1,6 @@
 TODO next
 =========
- - fix Slider/ScrollBar thumb width/height
+ - update themes and test all components with current theming (add scalemode for theming)
 
  - mouse wheel support
 
@@ -9,8 +9,6 @@ TODO next
 TODO
 ======
 This list is not ordered by priority nor does it contain any promise that those items will be implemented.
-
- - test nested LayoutGroups
 
  - better and more detailed documentation!
 
@@ -26,15 +24,11 @@ This list is not ordered by priority nor does it contain any promise that those 
 
    - test InputControl and InputWrapper
 
-   - more tests for Shapes
-
    - ignore renderAreaWebGL and renderWebGL in blanket tests
 
  - How-To tutorial and beginners documentation!
 
  - more examples for the examples-side (see [gown-examples](https://brean.github.io/gown-examples/) )
-
- - build/compress themes
 
  - benchmarking capabilities and performance optimisation
 
@@ -64,7 +58,7 @@ This list is not ordered by priority nor does it contain any promise that those 
 
    - Gauge (extension?)
 
-   - charts (extension??)
+   - charts (extension?)
 
      - line chart
 
@@ -80,6 +74,24 @@ This list is not ordered by priority nor does it contain any promise that those 
 
    - ScrollContainer (sth. with the same API as feathers)
 
+   - Separator/Movable Divider
+
+   - View navigation (extension?)
+
+     - Tabs
+
+     - Pills
+
+     - Breadcrumbs
+
+     - Pagination
+
+   - Responsive Components
+
+     - Burger Menu & Menu Bar
+
+     - Grid System ( Like [Bootstrap Grid CSS](http://getbootstrap.com/css/#grid) )
+
  - button icon
 
  - cleanup-functions to free memory/remove event listener etc. (extend pixi destroy funtion)
@@ -91,16 +103,6 @@ This list is not ordered by priority nor does it contain any promise that those 
    - component explorer ([like Feathers UI](http://feathersui.com/examples/components-explorer/))
 
    - scrolling
-
- - more shapes:
-
-   - Line
-
-   - Arc (e.g. for gauge)
-
-   - PolyStar/Hex/Pentagon
-
-   - Polyggon
 
  - Screen & Window management
 
@@ -123,7 +125,5 @@ This list is not ordered by priority nor does it contain any promise that those 
  - Gestue helper (pitch-zoom)
 
  - evaluate cocoonjs support
-
- - generate UI from JSON or XML file
 
  - UI Designer
