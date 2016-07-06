@@ -1,0 +1,61 @@
+{
+  "textStyle": {
+    "fill": "#fff",
+    "fontFamily": "Droid Sans"
+  },
+  "thumbSkin": true,
+  "hoverSkin": true,
+  "themeScale": 2.0,
+  "skins": {
+    "button": {
+      "up": {
+        "type": "texture",
+        "texture": "button-up-skin0000",
+        "scale9": "BUTTON_SCALE_9_GRID"
+      },
+      "down": {
+        "type": "texture",
+        "texture": "button-down-skin0000",
+        "scale9": "BUTTON_SCALE_9_GRID"
+      },
+      "hover": {
+        "type": "texture",
+        "texture": "button-hover-skin0000",
+        "scale9": "BUTTON_SCALE_9_GRID"
+      }
+    },
+    "toggle_button": {
+      "up": {
+        "type": "texture",
+        "texture": "button-up-skin0000",
+        "scale9": "BUTTON_SCALE_9_GRID"
+      },
+      "down": {
+        "type": "texture",
+        "texture": "button-down-skin0000",
+        "scale9": "BUTTON_SCALE_9_GRID"
+      },
+      "hover": {
+        "type": "texture",
+        "texture": "button-hover-skin0000",
+        "scale9": "BUTTON_SCALE_9_GRID"
+      },
+      
+      "selected_up": {
+        "type": "texture",
+        "texture": "toggle-button-selected-up-skin0000",
+        "scale9": "SELECTED_BUTTON_SCALE_9_GRID"
+      },
+      "selected_down": {
+        "type": "texture",
+        "texture": "toggle-button-selected-down-skin0000",
+        "scale9": "SELECTED_BUTTON_SCALE_9_GRID"
+      },
+      "selected_hover": {
+        "type": "texture",
+        "texture": "toggle-button-selected-hover-skin0000",
+        "scale9": "SELECTED_BUTTON_SCALE_9_GRID"
+      }
+    }
+  }
+}

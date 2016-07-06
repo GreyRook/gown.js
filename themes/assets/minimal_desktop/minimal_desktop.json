@@ -1528,5 +1528,55 @@
       "h": 1024, 
       "w": 1024
     }
+  }, 
+  "grids": {
+    "SEEK_SLIDER_PROGRESS_SKIN_SCALE9_GRID": [
+      "0", 
+      "2", 
+      "2", 
+      "10"
+    ], 
+    "SCROLLBAR_THUMB_SCALE_9_GRID": [
+      "1", 
+      "1", 
+      "2", 
+      "2"
+    ], 
+    "BACK_BUTTON_SCALE_9_GRID": [
+      "11", 
+      "0", 
+      "1", 
+      "20"
+    ], 
+    "VOLUME_SLIDER_TRACK_SCALE9_GRID": [
+      "18", 
+      "13", 
+      "1", 
+      "1"
+    ], 
+    "HEADER_SCALE_9_GRID": [
+      "0", 
+      "2", 
+      "3", 
+      "1"
+    ], 
+    "TAB_SCALE_9_GRID": [
+      "4", 
+      "4", 
+      "1", 
+      "1"
+    ], 
+    "FORWARD_BUTTON_SCALE_9_GRID": [
+      "1", 
+      "0", 
+      "1", 
+      "20"
+    ], 
+    "DEFAULT_SCALE_9_GRID": [
+      "3", 
+      "3", 
+      "1", 
+      "1"
+    ]
   }
 }
