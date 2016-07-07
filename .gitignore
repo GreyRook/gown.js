@@ -7,4 +7,5 @@ node_modules/
 test/gen/
 *.log
 **/*.*~
+**/*.pyc
 themes/from_feathers/feathers
