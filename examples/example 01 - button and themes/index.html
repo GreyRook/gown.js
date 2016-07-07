@@ -16,6 +16,8 @@
 <body>
 <script>
     var stage = new PIXI.Container();
+    var NUM_THEMES = 3;
+    var themes_loaded = 0;
 
     var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
@@ -23,8 +25,6 @@
     var aeontheme;
 
     function onCompleteAeon() {
-        return;
-        // initialize theme
         var aeonbtn;
         aeonbtn = new GOWN.Button(aeontheme);
         aeonbtn.width = 150;
@@ -40,11 +40,14 @@
             }
         });
 
-        requestAnimationFrame(animate);
+        themes_loaded++;
+        if (themes_loaded === NUM_THEMES) {
+            requestAnimationFrame(animate);
+        }
     }
 
-    //aeontheme = new GOWN.AeonTheme(
-    //    ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
+    aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+    aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this)
     var shapeTheme;
     function onCompleteShape() {
         var btn = new GOWN.Button(shapeTheme);
@@ -60,15 +63,17 @@
                 console.log("you clicked the second button!");
             }
         });
-        requestAnimationFrame(animate);
+
+        themes_loaded++;
+        if (themes_loaded === NUM_THEMES) {
+            requestAnimationFrame(animate);
+        }
     }
 
     shapeTheme = new GOWN.ThemeParser('../../themes/assets/shapes_desktop/shapes_desktop.json');
     shapeTheme.once(GOWN.Theme.COMPLETE, onCompleteShape, this);
 
     function onCompleteMetal() {
-        // initialize theme
-        return;
         var metalbtn = new GOWN.Button(metaltheme);
         metalbtn.width = 150;
         metalbtn.height = 100;
@@ -83,11 +88,14 @@
             }
         });
 
-        requestAnimationFrame(animate);
+        themes_loaded++;
+        if (themes_loaded === NUM_THEMES) {
+            requestAnimationFrame(animate);
+        }
     }
 
-    //var metaltheme = new GOWN.MetalWorksDesktopTheme(
-    //        ["../../themes/assets/metalworks/metalworks_desktop.json"], onCompleteMetal);
+    var metaltheme = new GOWN.ThemeParser("../../themes/assets/metalworks_desktop/metalworks_desktop.json");
+    metaltheme.once(GOWN.Theme.COMPLETE, onCompleteMetal, this);
 
     function animate() {
         // render the stage

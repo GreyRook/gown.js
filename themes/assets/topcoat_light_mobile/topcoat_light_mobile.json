@@ -1628,5 +1628,127 @@
       "h": 512, 
       "w": 512
     }
+  }, 
+  "grids": {
+    "HEADER_BACKGROUND_SCALE9_GRID": [
+      "3", 
+      "3", 
+      "10", 
+      "56"
+    ], 
+    "SPINNER_LIST_OVERLAY_SCALE9_GRID": [
+      "2", 
+      "5", 
+      "1", 
+      "1"
+    ], 
+    "POP_UP_DRAWER_BACKGROUND_SCALE9_GRID": [
+      "1", 
+      "3", 
+      "3", 
+      "4"
+    ], 
+    "VERTICAL_SIMPLE_SCROLL_BAR_SCALE9_GRID": [
+      "0", 
+      "5", 
+      "6", 
+      "3"
+    ], 
+    "FORWARD_BUTTON_SCALE9_GRID": [
+      "5", 
+      "5", 
+      "10", 
+      "10"
+    ], 
+    "BACKGROUND_POPUP_SCALE9_GRID": [
+      "5", 
+      "5", 
+      "10", 
+      "10"
+    ], 
+    "HORIZONTAL_MINIMUM_TRACK_SCALE9_GRID": [
+      "5", 
+      "0", 
+      "1", 
+      "13"
+    ], 
+    "BAR_VERTICAL_SCALE9_GRID": [
+      "8", 
+      "8", 
+      "1", 
+      "1"
+    ], 
+    "BACK_BUTTON_SCALE9_GRID": [
+      "26", 
+      "5", 
+      "10", 
+      "40"
+    ], 
+    "BUTTON_SCALE9_GRID": [
+      "7", 
+      "7", 
+      "1", 
+      "1"
+    ], 
+    "VERTICAL_MINIMUM_TRACK_SCALE9_GRID": [
+      "0", 
+      "0", 
+      "13", 
+      "1"
+    ], 
+    "HORIZONTAL_MAXIMUM_TRACK_SCALE9_GRID": [
+      "0", 
+      "0", 
+      "1", 
+      "13"
+    ], 
+    "TEXT_INPUT_SCALE9_GRID": [
+      "7", 
+      "7", 
+      "1", 
+      "1"
+    ], 
+    "VERTICAL_MAXIMUM_TRACK_SCALE9_GRID": [
+      "0", 
+      "5", 
+      "13", 
+      "1"
+    ], 
+    "SEARCH_INPUT_SCALE9_GRID": [
+      "25", 
+      "25", 
+      "10", 
+      "1"
+    ], 
+    "LIST_ITEM_SCALE9_GRID": [
+      "2", 
+      "2", 
+      "1", 
+      "6"
+    ], 
+    "TAB_SCALE9_GRID": [
+      "3", 
+      "3", 
+      "5", 
+      "5"
+    ], 
+    "BAR_HORIZONTAL_SCALE9_GRID": [
+      "8", 
+      "8", 
+      "1", 
+      "1"
+    ], 
+    "HORIZONTAL_SIMPLE_SCROLL_BAR_SCALE9_GRID": [
+      "5", 
+      "0", 
+      "3", 
+      "6"
+    ], 
+    "GROUPED_LIST_HEADER_OR_FOOTER_SCALE9_GRID": [
+      "2", 
+      "2", 
+      "1", 
+      "6"
+    ]
   }
 }

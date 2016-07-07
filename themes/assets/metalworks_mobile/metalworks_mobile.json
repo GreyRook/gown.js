@@ -2008,5 +2008,103 @@
       "h": 1024, 
       "w": 512
     }
+  }, 
+  "grids": {
+    "DEFAULT_BACKGROUND_SCALE9_GRID": [
+      "4", 
+      "4", 
+      "1", 
+      "1"
+    ], 
+    "INSET_ITEM_RENDERER_MIDDLE_SCALE9_GRID": [
+      "2", 
+      "2", 
+      "1", 
+      "40"
+    ], 
+    "SPINNER_LIST_SELECTION_OVERLAY_SCALE9_GRID": [
+      "2", 
+      "6", 
+      "1", 
+      "32"
+    ], 
+    "FORWARD_BUTTON_SCALE9_GRID": [
+      "3", 
+      "0", 
+      "1", 
+      "28"
+    ], 
+    "TAB_SKIN_TEXTURE_REGION": [
+      "1", 
+      "0", 
+      "22", 
+      "44"
+    ], 
+    "INSET_ITEM_RENDERER_FIRST_SCALE9_GRID": [
+      "7", 
+      "7", 
+      "1", 
+      "35"
+    ], 
+    "SMALL_BACKGROUND_SCALE9_GRID": [
+      "2", 
+      "2", 
+      "1", 
+      "1"
+    ], 
+    "BACK_BUTTON_SCALE9_GRID": [
+      "13", 
+      "0", 
+      "1", 
+      "28"
+    ], 
+    "BUTTON_SCALE9_GRID": [
+      "4", 
+      "4", 
+      "1", 
+      "20"
+    ], 
+    "INSET_ITEM_RENDERER_SINGLE_SCALE9_GRID": [
+      "7", 
+      "7", 
+      "1", 
+      "30"
+    ], 
+    "HORIZONTAL_SCROLL_BAR_THUMB_SCALE9_GRID": [
+      "4", 
+      "0", 
+      "4", 
+      "5"
+    ], 
+    "VERTICAL_SCROLL_BAR_THUMB_SCALE9_GRID": [
+      "0", 
+      "4", 
+      "5", 
+      "4"
+    ], 
+    "ITEM_RENDERER_SCALE9_GRID": [
+      "1", 
+      "1", 
+      "1", 
+      "42"
+    ], 
+    "TAB_SCALE9_GRID": [
+      "11", 
+      "11", 
+      "1", 
+      "22"
+    ], 
+    "INSET_ITEM_RENDERER_LAST_SCALE9_GRID": [
+      "7", 
+      "2", 
+      "1", 
+      "35"
+    ], 
+    "HEADER_SKIN_TEXTURE_REGION": [
+      "1", 
+      "1", 
+      "128", 
+      "64"
+    ]
   }
 }

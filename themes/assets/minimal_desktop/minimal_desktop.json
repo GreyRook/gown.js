@@ -1548,6 +1548,12 @@
       "1", 
       "20"
     ], 
+    "SOLID_COLOR_TEXTURE_REGION": [
+      "1", 
+      "1", 
+      "1", 
+      "1"
+    ], 
     "VOLUME_SLIDER_TRACK_SCALE9_GRID": [
       "18", 
       "13", 

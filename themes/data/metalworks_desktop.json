@@ -20,7 +20,7 @@
       },
       "hover": {
         "type": "texture",
-        "texture": "button-hover-skin0000",
+        "texture": "quiet-button-hover-skin0000",
         "scale9": "BUTTON_SCALE_9_GRID"
       }
     },
@@ -37,7 +37,7 @@
       },
       "hover": {
         "type": "texture",
-        "texture": "button-hover-skin0000",
+        "texture": "quiet-button-hover-skin0000",
         "scale9": "BUTTON_SCALE_9_GRID"
       },
       

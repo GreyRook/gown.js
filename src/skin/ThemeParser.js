@@ -24,6 +24,10 @@ module.exports = ThemeParser;
 // load theme data
 ThemeParser.DATA_LOADED = 'data_loaded';
 
+/**
+ * get component classes that can create skins (in general all PIXI.shapes)
+ * note that image textures are not components
+ */
 ThemeParser.prototype.getSkinComponents = function () {
     var cmps = {};
     if (PIXI.shapes) {
@@ -62,21 +66,45 @@ ThemeParser.prototype.applyTheme = function() {
 };
 
 /**
+ * get scale9 grid data from theme data
+ */
+ThemeParser.prototype.getScale9 = function(scale) {
+    return new PIXI.Rectangle(
+        parseInt(scale[0])*this.themeScale, parseInt(scale[1])*this.themeScale,
+        parseInt(scale[2])*this.themeScale, parseInt(scale[3])*this.themeScale);
+};
+
+/**
  * create new skin from theme data
  * @param data {String}
  * @returns {function}
  */
-ThemeParser.prototype.skinFromData = function(data) {
-    if (data.type in this.skinComponents) {
+ThemeParser.prototype.skinFromData = function(skinData, data) {
+    if (skinData.type === 'texture') {
+        var scale9;
+        if (skinData.scale9 in data.grids) {
+            scale9 = this.getScale9(data.grids[skinData.scale9]);
+        } else if (window.console) {
+            window.console.warn('can not find scale9grid for ' + 
+                skinData.texture + ' (' + skinData.scale9 + ')');
+        }
+        if (!(skinData.texture in data.frames) && window.console) {
+            window.console.error('texture not found in texture atlas: ' + 
+                skinData.texture);
+            return null;
+        }
+        
+        return this.getScaleContainer(skinData.texture, scale9);
+    } else if (skinData.type in this.skinComponents) {
         // keep component in scope
-        var CmpClass = this.skinComponents[data.type];
+        var CmpClass = this.skinComponents[skinData.type];
         return function() {
             var cmp = new CmpClass();
-            for (var key in data) {
+            for (var key in skinData) {
                 if (key === 'type') {
                     continue;
                 }
-                cmp[key] = data[key];
+                cmp[key] = skinData[key];
             }
             return cmp;
         };
@@ -113,6 +141,7 @@ ThemeParser.prototype.getSkinData = function(stateName, skinData, data) {
 ThemeParser.prototype.parseData = function(data) {
     this.hoverSkin = data.hoverSkin;
     this.thumbSkin = data.thumbSkin;
+    this.themeScale = data.themeScale || 1.0;
     
     if (data.textStyle) {
         this.textStyle.fill = data.textStyle.fill;
@@ -139,7 +168,10 @@ ThemeParser.prototype.parseData = function(data) {
             }
             
             // create skin from skinData for current skin
-            this.setSkin(componentName, stateName, this.skinFromData(skinData));
+            var skin = this.skinFromData(skinData, data);
+            if (skin) {
+                this.setSkin(componentName, stateName, skin);
+            }
         }
     }
 };

@@ -1,4 +1,155 @@
 {
+  "textStyle": {
+    "fontFamily": "Droid Sans", 
+    "fill": "#000"
+  }, 
+  "grids": {
+    "FORWARD_BUTTON_SCALE9_GRID": [
+      "3", 
+      "0", 
+      "1", 
+      "22"
+    ], 
+    "SCROLL_BAR_STEP_BUTTON_SCALE9_GRID": [
+      "3", 
+      "3", 
+      "6", 
+      "6"
+    ], 
+    "FOCUS_INDICATOR_SCALE_9_GRID": [
+      "5", 
+      "5", 
+      "1", 
+      "1"
+    ], 
+    "ITEM_RENDERER_SELECTED_SKIN_TEXTURE_REGION": [
+      "1", 
+      "1", 
+      "1", 
+      "22"
+    ], 
+    "SIMPLE_SCALE9_GRID": [
+      "2", 
+      "2", 
+      "1", 
+      "1"
+    ], 
+    "BACK_BUTTON_SCALE9_GRID": [
+      "13", 
+      "0", 
+      "1", 
+      "22"
+    ], 
+    "BUTTON_SCALE9_GRID": [
+      "3", 
+      "3", 
+      "1", 
+      "16"
+    ], 
+    "VOLUME_SLIDER_TRACK_SCALE9_GRID": [
+      "12", 
+      "12", 
+      "1", 
+      "1"
+    ], 
+    "TOGGLE_BUTTON_SCALE9_GRID": [
+      "4", 
+      "4", 
+      "1", 
+      "14"
+    ], 
+    "HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID": [
+      "5", 
+      "0", 
+      "14", 
+      "10"
+    ], 
+    "TAB_SCALE9_GRID": [
+      "7", 
+      "7", 
+      "1", 
+      "11"
+    ], 
+    "DEFAULT_SCALE9_GRID": [
+      "3", 
+      "3", 
+      "1", 
+      "1"
+    ], 
+    "ITEM_RENDERER_SKIN_TEXTURE_REGION": [
+      "1", 
+      "1", 
+      "1", 
+      "1"
+    ], 
+    "VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID": [
+      "0", 
+      "5", 
+      "10", 
+      "14"
+    ]
+  }, 
+  "skins": {
+    "button": {
+      "down": {
+        "type": "texture", 
+        "scale9": "BUTTON_SCALE9_GRID", 
+        "texture": "button-down-skin0000"
+      }, 
+      "hover": {
+        "type": "texture", 
+        "scale9": "BUTTON_SCALE9_GRID", 
+        "texture": "quiet-button-hover-skin0000"
+      }, 
+      "up": {
+        "type": "texture", 
+        "scale9": "BUTTON_SCALE9_GRID", 
+        "texture": "button-up-skin0000"
+      }
+    }, 
+    "toggle_button": {
+      "selected_hover": {
+        "type": "texture", 
+        "scale9": "SELECTED_BUTTON_SCALE9_GRID", 
+        "texture": "toggle-button-selected-hover-skin0000"
+      }, 
+      "selected_down": {
+        "type": "texture", 
+        "scale9": "SELECTED_BUTTON_SCALE9_GRID", 
+        "texture": "toggle-button-selected-down-skin0000"
+      }, 
+      "up": {
+        "type": "texture", 
+        "scale9": "BUTTON_SCALE9_GRID", 
+        "texture": "button-up-skin0000"
+      }, 
+      "down": {
+        "type": "texture", 
+        "scale9": "BUTTON_SCALE9_GRID", 
+        "texture": "button-down-skin0000"
+      }, 
+      "hover": {
+        "type": "texture", 
+        "scale9": "BUTTON_SCALE9_GRID", 
+        "texture": "quiet-button-hover-skin0000"
+      }, 
+      "selected_up": {
+        "type": "texture", 
+        "scale9": "SELECTED_BUTTON_SCALE9_GRID", 
+        "texture": "toggle-button-selected-up-skin0000"
+      }
+    }
+  }, 
+  "themeScale": 2.0, 
+  "meta": {
+    "image": "metalworks_desktop.png", 
+    "version": "1.0", 
+    "size": {
+      "h": 512, 
+      "w": 512
+    }
+  }, 
+  "hoverSkin": true, 
   "frames": {
     "check-disabled-icon0000": {
       "trimmed": false, 
@@ -2041,20 +2192,5 @@
       }
     }
   }, 
-  "meta": {
-    "image": "metalworks_desktop.png", 
-    "version": "1.0", 
-    "size": {
-      "h": 512, 
-      "w": 512
-    }
-  }, 
-  "grids": {
-    "VOLUME_SLIDER_TRACK_SCALE9_GRID": [
-      "12", 
-      "12", 
-      "1", 
-      "1"
-    ]
-  }
+  "thumbSkin": true
 }
