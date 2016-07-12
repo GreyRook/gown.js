@@ -47,7 +47,7 @@
     }
 
     aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
-    aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this)
+    aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
     var shapeTheme;
     function onCompleteShape() {
         var btn = new GOWN.Button(shapeTheme);

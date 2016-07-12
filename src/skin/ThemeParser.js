@@ -1,5 +1,6 @@
 var Theme = require('./Theme'),
-    Button = require('../controls/Button');
+    Button = require('../controls/Button'),
+    ToggleButton = require('../controls/ToggleButton');
 
 /**
  * load theme from .json file.
@@ -41,6 +42,7 @@ ThemeParser.prototype.getSkinComponents = function () {
 
 ThemeParser.components = {};
 ThemeParser.components[Button.SKIN_NAME] = Button.stateNames;
+ThemeParser.components[ToggleButton.SKIN_NAME] = ToggleButton.stateNames;
 
 ThemeParser.prototype.loadComplete = function(loader, resources) {
     this.setCache(resources);

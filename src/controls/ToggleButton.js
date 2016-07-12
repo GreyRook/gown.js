@@ -11,10 +11,7 @@ var Button = require('./Button');
  */
 function ToggleButton(theme, skinName) {
     this.skinName = skinName || ToggleButton.SKIN_NAME;
-    this._validStates = Button.stateNames.slice(0);
-    this._validStates.push(ToggleButton.SELECTED_UP);
-    this._validStates.push(ToggleButton.SELECTED_DOWN);
-    this._validStates.push(ToggleButton.SELECTED_HOVER);
+    this._validStates = ToggleButton.stateNames;
     Button.call(this, theme, this.skinName);
 
     /**
@@ -43,6 +40,12 @@ ToggleButton.SKIN_NAME = 'toggle_button';
 ToggleButton.SELECTED_UP = 'selected_up';
 ToggleButton.SELECTED_DOWN = 'selected_down';
 ToggleButton.SELECTED_HOVER = 'selected_hover';
+
+ToggleButton.stateNames = Button.stateNames.concat([
+    ToggleButton.SELECTED_UP,
+    ToggleButton.SELECTED_DOWN,
+    ToggleButton.SELECTED_HOVER]);
+
 
 var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'currentState');
 
@@ -106,8 +109,9 @@ ToggleButton.prototype.handleEvent = function(type) {
     if (!this._enabled) {
         return;
     }
+    var pressedBefore = this._pressed;
     this.buttonHandleEvent(type);
-    if (type === Button.UP && this._over && this._pressed) {
+    if (type === Button.UP && this._over && pressedBefore) {
         this.toggle();
     }
 };

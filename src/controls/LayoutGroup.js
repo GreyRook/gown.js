@@ -9,10 +9,10 @@ var Control = require('../core/Control');
  * @constructor
  */
 function LayoutGroup(maxWidth, maxHeight) {
-    this.percentWidth = this.percentWidth;
+    this.percentWidth = this.percentWidth ;
     this.percentHeight = this.percentHeight;
-    this.maxWidth = maxWidth;
-    this.maxHeight = maxHeight;
+    this.maxWidth = maxWidth || Infinity;
+    this.maxHeight = maxHeight || Infinity;
     Control.call(this);
     this._needUpdate = true;
 }
@@ -29,11 +29,11 @@ module.exports = LayoutGroup;
 LayoutGroup.prototype.redraw = function() {
     var dimensionChanged = false;
     if (this._width && this.maxWidth !== this._width) {
-        this._width = Math.max(this._width, this.maxWidth);
+        this._width = Math.min(this._width, this.maxWidth);
         dimensionChanged = true;
     }
     if (this._height && this.maxHeight !== this._height) {
-        this._height = Math.max(this._height, this.maxHeight);
+        this._height = Math.min(this._height, this.maxHeight);
         dimensionChanged = true;
     }
     if (this.layout &&

@@ -5,6 +5,8 @@ TODO next
  - mouse wheel support
 
  - theme for TextInput
+ 
+ - other themes from feathers (metalworks-mobile, topcoat-light, minimal, ...)
 
 TODO
 ======

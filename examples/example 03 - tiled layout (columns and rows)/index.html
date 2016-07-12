@@ -11,9 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/gown.js"></script>
-    <script src="../../themes/AeonTheme.js"></script>
-    <script src="../../themes/ShapeTheme.js"></script>
+    <script src="../../bin/gown-full.js"></script>
 
 </head>
 <body>
@@ -24,37 +22,37 @@
     var btn, grp;
     document.body.appendChild(renderer.view);
 
-    function onComplete() {
+    function onCompleteAeon() {
         grp = new GOWN.LayoutGroup();
         grp.x = 20;
-        grp.y = 60;
+        grp.y = 80;
         grp.width = sizes.w - (grp.x*2);
         grp.height = sizes.h - (grp.y*2);
 
-        grp.layout = new GOWN.TiledColumnsLayout();
+        grp.layout = new PIXI.layout.TiledColumnsLayout();
         grp.layout.gap = 10;
         stage.addChild(grp);
 
         // create layout container and add some buttons
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < 50; i++) {
             btn = new GOWN.Button();
-            btn.width = 80;
-            btn.height = 25;
+            btn.width = 100;
+            btn.height = 40;
             btn.label = (i+1)+". button";
             grp.addChild(btn);
         }
 
         var toggleButton = new GOWN.ToggleButton();
         toggleButton.label = "switch row/column layout";
-        toggleButton.width = 300;
-        toggleButton.height = 25;
+        toggleButton.width = 720;
+        toggleButton.height = 40;
 
         toggleButton.x = toggleButton.y = 20;
         toggleButton.on(GOWN.Button.TRIGGERED, function () {
-            if (grp.layout._orientation == GOWN.TiledLayout.ORIENTATION_ROWS) {
-                grp.layout._orientation = GOWN.TiledLayout.ORIENTATION_COLUMNS;
+            if (grp.layout._orientation == PIXI.layout.TiledLayout.ORIENTATION_ROWS) {
+                grp.layout._orientation = PIXI.layout.TiledLayout.ORIENTATION_COLUMNS;
             } else {
-                grp.layout._orientation = GOWN.TiledLayout.ORIENTATION_ROWS;
+                grp.layout._orientation = PIXI.layout.TiledLayout.ORIENTATION_ROWS;
             }
             grp.layout._needUpdate = true;
         });
@@ -64,8 +62,8 @@
         requestAnimationFrame(animate);
     }
 
-    var theme = new GOWN.AeonTheme(
-            ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
+    var aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+    aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this)
 
     function animate() {
         // render the stage

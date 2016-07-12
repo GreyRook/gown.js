@@ -164,12 +164,12 @@
     "toggle_button": {
       "selected_hover": {
         "type": "texture", 
-        "scale9": "SELECTED_BUTTON_SCALE_9_GRID", 
+        "scale9": "BUTTON_SCALE_9_GRID", 
         "texture": "toggle-button-selected-hover-skin0000"
       }, 
       "selected_down": {
         "type": "texture", 
-        "scale9": "SELECTED_BUTTON_SCALE_9_GRID", 
+        "scale9": "BUTTON_SCALE_9_GRID", 
         "texture": "toggle-button-selected-down-skin0000"
       }, 
       "up": {
@@ -189,7 +189,7 @@
       }, 
       "selected_up": {
         "type": "texture", 
-        "scale9": "SELECTED_BUTTON_SCALE_9_GRID", 
+        "scale9": "BUTTON_SCALE_9_GRID", 
         "texture": "toggle-button-selected-up-skin0000"
       }
     }
