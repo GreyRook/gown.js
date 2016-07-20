@@ -88,11 +88,13 @@ ThemeParser.prototype.skinFromData = function(skinData, data) {
             scale9 = this.getScale9(data.grids[skinData.scale9]);
         } else if (window.console) {
             window.console.warn('can not find scale9grid for ' + 
-                skinData.texture + ' (' + skinData.scale9 + ')');
+                skinData.texture + ' (' + skinData.scale9 + ') ' +
+                'please check ' + this._jsonPath);
         }
         if (!(skinData.texture in data.frames) && window.console) {
             window.console.error('texture not found in texture atlas: ' + 
-                skinData.texture);
+                skinData.texture + ' ' +
+                'please check ' + this._jsonPath);
             return null;
         }
         
