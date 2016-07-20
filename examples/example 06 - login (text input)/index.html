@@ -15,12 +15,9 @@
     <!-- see http://www.html5gamedevs.com/topic/13098-pixi-and-fontawesome/ -->
     <!--link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"-->
     <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/gown.js"></script>
-    <script src="../../themes/AeonTheme.js"></script>
-    <script src="../../themes/ShapeTheme.js"></script>
+    <script src="../../bin/gown-full.js"></script>
 
     <script src="js/LoginDialog.js"></script>
-    <script src="js/LoginTheme.js"></script>
     <script src="js/IconTextInput.js"></script>
 </head>
 <body>
@@ -35,13 +32,14 @@
     fontLoader.loadFonts();
 
     function awesomeComplete(fontname) {
-        new LoginTheme(['../../themes/assets/aeon/aeon_desktop.json'],
-            themeComplete);
+        // fontawesome loaded correctly
+        var theme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+        theme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
     }
 
     var app;
 
-    function themeComplete() {
+    function onCompleteAeon() {
         // background
         app = new GOWN.Application({
             backgroundColor: [0x688080, 0x9ba992]});
