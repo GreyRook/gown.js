@@ -44,17 +44,17 @@
       "selected_up": {
         "type": "texture",
         "texture": "toggle-button-selected-up-skin0000",
-        "scale9": "SELECTED_BUTTON_SCALE9_GRID"
+        "scale9": "TOGGLE_BUTTON_SCALE9_GRID"
       },
       "selected_down": {
         "type": "texture",
-        "texture": "toggle-button-selected-down-skin0000",
-        "scale9": "SELECTED_BUTTON_SCALE9_GRID"
+        "texture": "button-down-skin0000",
+        "scale9": "BUTTON_SCALE9_GRID"
       },
       "selected_hover": {
         "type": "texture",
-        "texture": "toggle-button-selected-hover-skin0000",
-        "scale9": "SELECTED_BUTTON_SCALE9_GRID"
+        "texture": "quiet-button-hover-skin0000",
+        "scale9": "BUTTON_SCALE9_GRID"
       }
     }
   }
