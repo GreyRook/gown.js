@@ -19,7 +19,7 @@
     var stage = new PIXI.Container();
     var sizes = {w: 800, h: 600};
     var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
-    var btn, grp;
+    var btn, grp, toggleButton
     document.body.appendChild(renderer.view);
 
     function onCompleteAeon() {
@@ -42,7 +42,7 @@
             grp.addChild(btn);
         }
 
-        var toggleButton = new GOWN.ToggleButton();
+        toggleButton = new GOWN.ToggleButton();
         toggleButton.label = "switch row/column layout";
         toggleButton.width = 720;
         toggleButton.height = 40;
@@ -63,7 +63,7 @@
     }
 
     var aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
-    aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this)
+    aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
 
     function animate() {
         // render the stage
