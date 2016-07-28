@@ -30,7 +30,7 @@ if (typeof PIXI === 'undefined') {
     core.ListCollection =         require('./data/ListCollection');
 
     // control renderer
-    core.DefaultListItemRenderer =  require('./controls/renderer/DefaultListItemRenderer');
+    core.DefaultListItemRenderer =  require('./controls/renderers/DefaultListItemRenderer');
 
     // skin
     core.Theme =           require('./skin/Theme');

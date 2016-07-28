@@ -1,7 +1,7 @@
 var Scroller = require('./Scroller');
 var ListCollection = require('../data/ListCollection');
 var LayoutGroup = require('./LayoutGroup');
-var DefaultListItemRenderer = require('./renderer/DefaultListItemRenderer');
+var DefaultListItemRenderer = require('./renderers/DefaultListItemRenderer');
 
 /**
  * The basic list
@@ -32,7 +32,7 @@ function List(dataProvider, theme) {
     this._itemRendererChangeHandler = this.itemRendererChangeHandler.bind(this);
 
     // create new instance of the item renderer
-    this.itemRendererFactory = this._itemRendererFactory;
+    this._itemRendererFactory = this._itemRendererFactory || this._defaultItemRendererFactory;
 
     // The collection of data displayed by the list.
     this.dataProvider = dataProvider;
@@ -41,7 +41,7 @@ function List(dataProvider, theme) {
      * properties that will be passed down to every item
      * renderer when the list validates.
      */
-    this.itemRendererProperties = {};
+    this._itemRendererProperties = {};
 
     // TODO: itemRendererStyleName (?)
 
@@ -84,7 +84,7 @@ List.CHANGE = 'change';
 /**
  * A function called that is expected to return a new item renderer
  */
-List.prototype._itemRendererFactory = function(theme) {
+List.prototype._defaultItemRendererFactory = function(theme) {
     return new DefaultListItemRenderer(theme);
 };
 
@@ -106,6 +106,13 @@ List.prototype.itemChangeHandler = function() {
     }
     // force redraw
     this.dataInvalid = true;
+};
+
+/**
+ * select one of the item
+ */
+List.prototype.selectItem = function(item) {
+    this.selectedIndex = this._dataProvider.data.indexOf(item);
 };
 
 
@@ -132,7 +139,12 @@ List.prototype.refreshRenderers = function () {
         this.viewPort.removeChildren();
         for (var i = 0; i < this._dataProvider.length; i++) {
             var item = this._dataProvider.getItemAt(i);
-            var itemRenderer = this.itemRendererFactory(this.theme);
+            var itemRenderer = this._itemRendererFactory(this.theme);
+
+            if (this._itemRendererProperties) {
+                itemRenderer.labelField = this._itemRendererProperties.labelField;
+            }
+
             itemRenderer.on('change', this._itemRendererChangeHandler);
             itemRenderer.width = 100;
             itemRenderer.percentHeight = 100;
@@ -176,7 +188,7 @@ List.prototype.itemRendererChangeHandler = function(itemRenderer, value) {
 };
 
 /**
- * set layout and ass eventlistener to it
+ * set layout and pass eventlistener to it
  *
  * @property layout
  * @type LayoutAlignment
@@ -199,6 +211,38 @@ Object.defineProperty(List.prototype, 'layout', {
     }
 });
 
+/**
+ * set item renderer properties (e.g. labelField) and update all itemRenderer
+ *
+ * @property itemRendererProperties
+ * @type LayoutAlignment
+ */
+Object.defineProperty(List.prototype, 'itemRendererProperties', {
+    set: function(itemRendererProperties) {
+        this._itemRendererProperties = itemRendererProperties;
+        this.dataInvalid = true;
+    },
+    get: function() {
+        return this._itemRendererProperties;
+    }
+});
+
+
+/**
+ * set item renderer factory (for custom item Renderer)
+ *
+ * @property itemRendererFactory
+ * @type LayoutAlignment
+ */
+Object.defineProperty(List.prototype, 'itemRendererFactory', {
+    set: function(itemRendererFactory) {
+        this._itemRendererFactory = itemRendererFactory;
+        this.dataInvalid = true;
+    },
+    get: function() {
+        return this._itemRendererFactory;
+    }
+});
 
 /**
  * allow/disallow multiple selection
@@ -225,6 +269,17 @@ Object.defineProperty(List.prototype, 'layout', {
      }
  });
 
+
+Object.defineProperty(List.prototype, 'selectedIndex', {
+    set: function(selectedIndex) {
+        this._selectedIndex = selectedIndex;
+        // force redraw
+        this.dataInvalid = true;
+    },
+    get: function() {
+        return this._selectedIndex;
+    }
+});
 
 /**
  * dataProvider for list

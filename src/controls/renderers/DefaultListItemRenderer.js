@@ -5,6 +5,16 @@ function DefaultListItemRenderer(theme) {
     //this._skinName = DefaultListItemRenderer.SKIN_NAME;
     ToggleButton.call(this, theme);
 
+    /**
+     * A key in the item data that will be shown as label for the item.
+     * e.g. 'text' for item.text.
+     * will be ignored if labelFunction is set.
+     *
+     * the item will be shown directly (using toString) if
+     * labelField and labelFunction are not set.
+     *
+     * @default 'text'
+     */
     this.labelField = 'text';
 
     /**
