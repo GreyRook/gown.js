@@ -11,9 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/gown.js"></script>
-    <script src="../../themes/AeonTheme.js"></script>
-    <script src="../../themes/ShapeTheme.js"></script>
+    <script src="../../bin/gown-full.js"></script>
 </head>
 <body>
 <script>
@@ -31,7 +29,7 @@
         // HORIZONTAL
 
         inner_horizontal = new GOWN.LayoutGroup();
-        inner_horizontal.layout = new GOWN.HorizontalLayout();
+        inner_horizontal.layout = new PIXI.layout.HorizontalLayout();
         inner_horizontal.layout.gap = 10;
 
         // add some buttons
@@ -60,7 +58,7 @@
         // VERTICAL
         var grp = new GOWN.LayoutGroup();
         var inner = new GOWN.LayoutGroup();
-        inner.layout = new GOWN.VerticalLayout();
+        inner.layout = new PIXI.layout.VerticalLayout();
         inner.layout.gap = 10;
 
         // add some buttons
@@ -89,8 +87,9 @@
         requestAnimationFrame(animate);
     }
 
-    var theme = new GOWN.AeonTheme(
-            ["../../themes/assets/aeon/aeon_desktop.json"], onComplete);
+    var theme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+    theme.once(GOWN.Theme.COMPLETE, onComplete, this);
+    var shapeTheme;
 
     function animate() {
         // render the stage

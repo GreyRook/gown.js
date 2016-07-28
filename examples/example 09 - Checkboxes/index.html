@@ -11,9 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/gown.js"></script>
-    <script src="../../themes/AeonTheme.js"></script>
-    <script src="../../themes/MetalWorksDesktopTheme.js"></script>
+    <script src="../../bin/gown-full.js"></script>
 </head>
 <body>
 <script>
@@ -22,18 +20,18 @@
     var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
-    var aeontheme;
-    var metaltheme;
+	var metalTheme = new GOWN.ThemeParser("../../themes/assets/metalworks_desktop/metalworks_desktop.json");
+	var aeonTheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
     var chk;
 
     function onCompleteAeon() {
         // initialize theme
         var aeonchk;
-        aeonchk = new GOWN.Check();
+        aeonchk = new GOWN.Check(aeonTheme);
         aeonchk.x = aeonchk.y = 20;
 
         var aeonchk2;
-        aeonchk2 = new GOWN.Check();
+        aeonchk2 = new GOWN.Check(aeonTheme);
         aeonchk2.selected = true;
         aeonchk2.x = 60;
         aeonchk2.y = 20;
@@ -45,12 +43,12 @@
 
     function onCompleteMetal() {
         // initialize theme
-        chk = new GOWN.Check(metaltheme);
+        chk = new GOWN.Check(metalTheme);
         chk.x = 20;
         chk.y = 60;
 
         var chk2;
-        chk2 = new GOWN.Check(metaltheme);
+        chk2 = new GOWN.Check(metalTheme);
         chk2.selected = true;
         chk2.x = 60;
         chk2.y = 60;
@@ -60,12 +58,9 @@
         requestAnimationFrame(animate);
     }
 
-    aeontheme = new GOWN.AeonTheme(
-        ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
-
-    metaltheme = new GOWN.MetalWorksDesktopTheme(
-        ["../../themes/assets/metalworks/metalworks_desktop.json"], onCompleteMetal, false);
-
+	metalTheme.once(GOWN.Theme.COMPLETE, onCompleteMetal, this);
+    aeonTheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
+		
     function animate() {
         // render the stage
         renderer.render(stage);

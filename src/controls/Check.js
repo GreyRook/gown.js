@@ -10,8 +10,8 @@ var ToggleButton = require('./ToggleButton');
   * @constructor
   */
 function Check(theme, skinName) {
-    this._skinName = skinName || Check.SKIN_NAME;
-    ToggleButton.call(this, theme);
+    skinName = skinName || Check.SKIN_NAME;
+    ToggleButton.call(this, theme, skinName);
 }
 
 Check.prototype = Object.create( ToggleButton.prototype );

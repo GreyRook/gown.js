@@ -138,7 +138,34 @@
         "scale9": "TOGGLE_BUTTON_SCALE9_GRID", 
         "texture": "toggle-button-selected-up-skin0000"
       }
-    }
+    },
+    "check": {
+      "up": {
+        "type": "texture",
+        "texture": "check-up-icon0000"
+      },
+      "down": {
+        "type": "texture",
+        "texture": "check-down-icon0000"
+      },
+      "hover": {
+        "type": "texture",
+        "texture": "check-up-icon0000"
+      },
+      
+      "selected_up": {
+        "type": "texture",
+        "texture": "check-selected-up-icon0000"
+      },
+      "selected_down": {
+        "type": "texture",
+        "texture": "check-selected-down-icon0000"
+      },
+      "selected_hover": {
+        "type": "texture",
+        "texture": "check-selected-up-icon0000"
+      }
+	}
   }, 
   "themeScale": 2.0, 
   "meta": {

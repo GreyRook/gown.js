@@ -56,6 +56,33 @@
         "texture": "toggle-button-selected-hover-skin0000",
         "scale9": "BUTTON_SCALE_9_GRID"
       }
-    }
+    },
+    "check": {
+      "up": {
+        "type": "texture",
+        "texture": "check-up-icon0000"
+      },
+      "down": {
+        "type": "texture",
+        "texture": "check-down-icon0000"
+      },
+      "hover": {
+        "type": "texture",
+        "texture": "check-hover-icon0000"
+      },
+      
+      "selected_up": {
+        "type": "texture",
+        "texture": "check-selected-up-icon0000"
+      },
+      "selected_down": {
+        "type": "texture",
+        "texture": "check-selected-down-icon0000"
+      },
+      "selected_hover": {
+        "type": "texture",
+        "texture": "check-selected-hover-icon0000"
+      }
+	}
   }
 }

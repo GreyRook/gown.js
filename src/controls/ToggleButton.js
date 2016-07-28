@@ -10,9 +10,9 @@ var Button = require('./Button');
  * @constructor
  */
 function ToggleButton(theme, skinName) {
-    this.skinName = skinName || ToggleButton.SKIN_NAME;
+    skinName = skinName || ToggleButton.SKIN_NAME;
     this._validStates = ToggleButton.stateNames;
-    Button.call(this, theme, this.skinName);
+    Button.call(this, theme, skinName);
 
     /**
      * The pressed state of the Button
