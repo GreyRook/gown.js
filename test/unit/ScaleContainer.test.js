@@ -1,4 +1,4 @@
-describe("test scalable/tialbe container", function() {
+describe("test scalable/tilable container", function() {
     it("no image loaded - should throw", function() {
 
         var rect = new PIXI.Rectangle(10,10,1,1);

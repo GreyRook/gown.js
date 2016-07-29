@@ -15,7 +15,7 @@ describe("theming and skinning", function() {
         expect(GOWN.theme).equal(theme);
     });
 
-    it("set theme of control", function(done) {
+    it("set theme of control", function() {
         var btn;
         expect(function () {
            btn = new GOWN.Button();
@@ -26,16 +26,10 @@ describe("theming and skinning", function() {
         btn.setTheme(GOWN.theme);
         expect(btn.invalidState).equal(false);
 
-        var alttheme = new GOWN.ShapeTheme(false);
+        var alttheme = new GOWN.TestTheme(false);
         btn.setTheme(alttheme);
         expect(btn.invalidState).equal(true);
-
-        var theme = new GOWN.AeonTheme(["/themes/assets/aeon/aeon_desktop.json"], function() {
-            var btn = new GOWN.Button();
-            //TODO: check if button has the right skin
-            expect(btn._currentSkin).not.equal(null);
-            expect(btn.theme).equal(theme);
-            done();
-        });
+		
+		// TODO: test ThemeParser
     });
 });
