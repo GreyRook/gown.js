@@ -2,6 +2,8 @@ TODO next
 =========
  - update themes and test all components with current theming (add scalemode for theming)
 
+ - POM integration: provide registerPOMElements-function (see https://github.com/GreyRook/POM/issues/10 )
+
  - mouse wheel support
 
  - theme for TextInput
