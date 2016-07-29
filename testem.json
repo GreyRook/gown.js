@@ -4,7 +4,7 @@
     "launch_in_ci" : ["Firefox"],
     "src_files" : [
         "lib/pixi.js",
-        "bin/gown.js",
+        "bin/gown-full.js",
         "test/setup.js",
         "test/src/*.js",
         "themes/*.js",
