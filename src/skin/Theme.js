@@ -114,7 +114,7 @@ Theme.prototype.applyTheme = function() {
  * @param grid grid defining the inner square of the scalable container {Rectangle}
  * @returns {Function}
  */
-Theme.prototype.getScaleContainer = function(name, grid) {
+Theme.prototype.getScaleContainer = function(name, grid, middleWidth, centerHeight) {
     var scope = this;
     return function() {
         var texture = scope.textureCache[name];
@@ -122,7 +122,7 @@ Theme.prototype.getScaleContainer = function(name, grid) {
             throw new Error('The frameId "' + name + '" does not exist ' +
             'in the texture cache');
         }
-        return new ScaleContainer(texture, grid);
+        return new ScaleContainer(texture, grid, middleWidth, centerHeight);
 
     };
 };

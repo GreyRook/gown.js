@@ -14,6 +14,11 @@ module.exports = {
     position:               require('./position'),
     ScaleContainer:         require('./ScaleContainer'),
     SliderData:             require('./SliderData'),
+    Tween:                  require('./Tween'),
     resizeScaling:          require('./resizeScaling'),
+    roundToPrecision:       require('./roundToPrecision'),
+    roundToNearest:         require('./roundToNearest'),
+    roundDownToNearest:     require('./roundDownToNearest'),
+    roundUpToNearest:       require('./roundUpToNearest'),
     mixin:                  require('./mixin')
 };

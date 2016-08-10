@@ -39,7 +39,9 @@
 
         // PIXI globals
         "GOWN": false,
-        "PIXI": false
+        "PIXI": false,
+        // createjs globals
+        "createjs": false
     },
 
     // == Relaxing Options ================================================

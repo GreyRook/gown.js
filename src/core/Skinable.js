@@ -91,7 +91,6 @@ Skinable.prototype.fromSkin = function(name, callback) {
     if (skin) {
         callback.call(this, skin);
     }
-    // TODO: what, if the skin is not loaded jet? --> execute callback after load
 };
 
 

@@ -18,8 +18,12 @@ function ScrollThumb(scrollable, theme, skinName) {
     if (theme.thumbSkin) {
         this._validStates = ScrollThumb.THUMB_STATES;
     }
-    this.width = theme.thumbSize || 20;
-    this.height = theme.thumbSize || 20;
+    if (theme.thumbWidth) {
+        this.width = theme.thumbWidth;
+    }
+    if (theme.thumbHeight) {
+        this.height = theme.thumbHeight;
+    }
     Button.call(this, theme, this.skinName);
     this.invalidTrack = true;
 

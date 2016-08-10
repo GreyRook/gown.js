@@ -1,6 +1,7 @@
 var ScrollBar = require('./ScrollBar');
 var Control = require('../core/Control');
 var Scrollable = require('./Scrollable');
+var Tween = require('../utils/Tween');
 
 /**
  * Allows horizontal and vertical scrolling of a view port.
@@ -61,6 +62,9 @@ Object.defineProperty(Scroller.prototype, 'clipContent', {
     }
 });
 
+/**
+ * set the viewport. This is the content you'd like to scroll.
+ */
 Object.defineProperty(Scroller.prototype, 'viewPort', {
     get: function() {
         return this._viewPort;
@@ -103,6 +107,9 @@ Scroller.prototype.redraw = function() {
     this.controlRedraw();
 };
 
+/**
+ * update the rectangle that defines the cliping area
+ */
 Scroller.prototype.refreshClipRect = function() {
     if (this.height && this.width && this._clipContent) {
         if (this.clipRect === undefined) {
@@ -185,6 +192,19 @@ Scroller.prototype.revealVerticalScrollBar = function() {
 };
 
 /**
+ *
+ */
+Scroller.prototype.throwTo = function(targetPosition, duration) {
+    duration = duration || 500;
+    /*
+    if position == endposition
+        stop tween
+    */
+
+    //HIER WEITER MACHEN!
+};
+
+/**
  * The width of the Scroller (defines the viewport)
  *
  * @property width
@@ -222,4 +242,6 @@ Object.defineProperty(Scroller.prototype, 'height', {
     }
 });
 
-// TODO: elastic scrollSteps pageIndex updateVerticalScrollFromTouchPosition throwTo hideHorizontalScrollBar revealHorizontalScrollBar
+// TODO: elastic scrollSteps pageIndex updateVerticalScrollFromTouchPosition
+// TODO: throwTo hideHorizontalScrollBar revealHorizontalScrollBar
+// TODO: completeScroll

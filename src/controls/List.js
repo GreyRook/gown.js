@@ -146,8 +146,6 @@ List.prototype.refreshRenderers = function () {
             }
 
             itemRenderer.on('change', this._itemRendererChangeHandler);
-            itemRenderer.width = 100;
-            itemRenderer.percentHeight = 100;
             itemRenderer.data = item;
             this._itemRenderer.push(itemRenderer);
             this.viewPort.addChild(itemRenderer);

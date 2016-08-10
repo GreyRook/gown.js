@@ -1,6 +1,8 @@
 var Theme = require('./Theme'),
     Button = require('../controls/Button'),
     ToggleButton = require('../controls/ToggleButton'),
+	ScrollBar = require('../controls/ScrollBar'),
+	ScrollThumb = require('../controls/ScrollThumb'),
 	Check = require('../controls/Check');
 
 /**
@@ -45,6 +47,10 @@ ThemeParser.components = {};
 ThemeParser.components[Button.SKIN_NAME] = Button.stateNames;
 ThemeParser.components[ToggleButton.SKIN_NAME] = ToggleButton.stateNames;
 ThemeParser.components[Check.SKIN_NAME] = ToggleButton.stateNames;
+ThemeParser.components[ScrollBar.SKIN_NAME] = [
+	'horizontal_track', 'vertical_track'
+];
+ThemeParser.components[ScrollThumb.SKIN_NAME] = ScrollThumb.THUMB_STATES;
 
 ThemeParser.prototype.loadComplete = function(loader, resources) {
     this.setCache(resources);
@@ -98,7 +104,7 @@ ThemeParser.prototype.skinFromData = function(skinData, data) {
             return null;
         }
 
-        return this.getScaleContainer(skinData.texture, scale9);
+        return this.getScaleContainer(skinData.texture, scale9, skinData.middleWidth, skinData.centerHeight);
     } else if (skinData.type in this.skinComponents) {
         // keep component in scope
         var CmpClass = this.skinComponents[skinData.type];

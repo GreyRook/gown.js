@@ -1,4 +1,5 @@
 var Skinable = require('../core/Skinable');
+var ScaleContainer = require('../utils/ScaleContainer');
 
 /**
  * The basic Button with 3 states (up, down and hover) and a label that is
@@ -85,20 +86,30 @@ Button.TRIGGERED = 'triggered';
 Button.prototype.preloadSkins = function() {
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
-        var skin = this.theme.getSkin(this.skinName, name);
-        this.skinCache[name] = skin;
-        if (skin) {
-            this.addChildAt(skin, 0);
-            skin.alpha = 0.0;
-            if (this.width) {
-                skin.width = this.width;
-            }
-            if (this.height) {
-                skin.height = this.height;
-            }
-        }
+        this.fromSkin(name, this.skinLoaded);
     }
 };
+
+/**
+ * skin has been loaded (see preloadSkins) and stored into the skinCache.
+ * add to container, hide and resize
+ *
+ * @method skinLoaded
+ */
+Button.prototype.skinLoaded = function(skin) {
+    this.addChildAt(skin, 0);
+    skin.alpha = 0.0;
+    if (this.width) {
+        skin.width = this.width;
+    } else if (skin.minWidth) {
+        this.width = skin.width = skin.minWidth;
+    }
+    if (this.height) {
+        skin.height = this.height;
+    } else if (skin.minHeight) {
+        this.height = skin.height = skin.minHeight;
+    }
+}
 
 Button.prototype.mousedown = function() {
     this.handleEvent(Button.DOWN);
@@ -229,7 +240,7 @@ Button.prototype.createLabel = function() {
  * @method updateLabelDimensions
  */
 Button.prototype.updateLabelDimensions = function () {
-    if (this.labelText && this.labelText.text && 
+    if (this.labelText && this.labelText.text &&
         (this.worldWidth - this.labelText.width) >= 0 &&
         (this.worldHeight - this.labelText.height) >= 0) {
         this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);

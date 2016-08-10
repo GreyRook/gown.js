@@ -6,6 +6,20 @@
   "thumbSkin": true,
   "hoverSkin": true,
   "themeScale": 2.0,
+  "grids": {
+    "horizontal-scroll-bar-thumb": [
+  	  "3",
+  	  "1",
+  	  "46",
+  	  "8"
+  	],
+  	"vertical-scroll-bar-thumb": [
+  	  "4",
+  	  "6",
+  	  "8",
+  	  "45"
+  	]
+  },
   "skins": {
     "button": {
       "up": {
@@ -40,7 +54,7 @@
         "texture": "button-hover-skin0000",
         "scale9": "BUTTON_SCALE_9_GRID"
       },
-      
+
       "selected_up": {
         "type": "texture",
         "texture": "toggle-button-selected-up-skin0000",
@@ -70,7 +84,7 @@
         "type": "texture",
         "texture": "check-hover-icon0000"
       },
-      
+
       "selected_up": {
         "type": "texture",
         "texture": "check-selected-up-icon0000"
@@ -83,6 +97,56 @@
         "type": "texture",
         "texture": "check-selected-hover-icon0000"
       }
-	}
+  	},
+  	"scroll_bar": {
+  	  "horizontal_track": {
+  	    "type": "texture",
+  	    "texture": "horizontal-slider-track-enabled-skin0000",
+  		"scale9": "HORIZONTAL_SLIDER_TRACK_SCALE_9_GRID"
+  	  },
+  	  "vertical_track": {
+  	    "type": "texture",
+  		"texture": "vertical-slider-track-enabled-skin0000",
+  		"scale9": "VERTICAL_SLIDER_TRACK_SCALE_9_GRID"
+  	  }
+  	},
+  	"scroll_thumb": {
+  	  "horizontal_up": {
+  	    "texture": "horizontal-scroll-bar-thumb-up-skin0000",
+  		  "type": "texture",
+  		  "middleWidth": 2,
+  		  "scale9": "horizontal-scroll-bar-thumb"
+  	  },
+  	  "horizontal_hover": {
+  	    "texture": "horizontal-scroll-bar-thumb-hover-skin0000",
+  		  "type": "texture",
+  		  "middleWidth": 2,
+  		  "scale9": "horizontal-scroll-bar-thumb"
+  	  },
+  	  "horizontal_down": {
+  	    "texture": "horizontal-scroll-bar-thumb-down-skin0000",
+  		  "type": "texture",
+  	    "middleWidth": 2,
+  		  "scale9": "horizontal-scroll-bar-thumb"
+  	  },
+  	  "vertical_up": {
+  	    "texture": "vertical-scroll-bar-thumb-up-skin0000",
+  		  "type": "texture",
+  		  "centerHeight": 2,
+  		  "scale9": "vertical-scroll-bar-thumb"
+  	  },
+  	  "vertical_hover": {
+  	    "texture": "vertical-scroll-bar-thumb-hover-skin0000",
+  		  "type": "texture",
+  		  "centerHeight": 2,
+  		  "scale9": "vertical-scroll-bar-thumb"
+  	  },
+  	  "vertical_down": {
+  	    "texture": "vertical-scroll-bar-thumb-down-skin0000",
+  		  "type": "texture",
+  		  "centerHeight": 2,
+  		  "scale9": "vertical-scroll-bar-thumb"
+  	  }
+  	}
   }
 }

@@ -6,9 +6,13 @@
  * @extends PIXI.Container
  * @memberof GOWN
  * @constructor
+ * @param texture {Texture}
+ * @param rect rectangle with position and dimensions of the center piece. Will be used to calculate positons of all other pieces {PIXI.Rectangle}
+ * @middleWidth (optional) alternative width to crop the center piece (only needed if we want to scale the image smaller than the original)
+ * @centerHeight (optional) alternative height to crop the center piece (only needed if we want to scale the image smaller than the original)
  */
 
-function ScaleContainer(texture, rect) {
+function ScaleContainer(texture, rect, middleWidth, centerHeight) {
     PIXI.Container.call( this );
 
     this.rect = rect;
@@ -28,49 +32,72 @@ function ScaleContainer(texture, rect) {
     var ch = rect.height;
     var bh = this.frame.height - (ch + th);
 
-    // top
+    middleWidth = middleWidth || mw;
+    centerHeight = centerHeight || ch;
+
+    /**
+     * calculated min. width based on tile sizes in pixel without scaling
+     * (if middleWidth is not set it is the same as the width of the
+     *  texture in the atlas)
+     */
+    this.minWidth = lw + middleWidth + rw;
+
+    /**
+     * calculated min. height based on tile sizes in pixel without scaling
+     * (if middleWidth is not set it is the same as the height of the
+     *  texture in the atlas)
+     */
+    this.minHeight = th + centerHeight + bh;
+
+    // top left
     if (lw > 0 && th > 0) {
         this.tl = this._getTexture(0, 0, lw, th);
         this.addChild(this.tl);
     }
+    // top middle
     if (mw > 0 && th > 0) {
-        this.tm = this._getTexture(lw, 0, mw, th);
+        this.tm = this._getTexture(lw, 0, middleWidth, th);
         this.addChild(this.tm);
         this.tm.x = lw;
     }
+    // top right
     if (rw > 0 && th > 0) {
         this.tr = this._getTexture(lw + mw, 0, rw, th);
         this.addChild(this.tr);
     }
 
-    // center
+    // center left
     if (lw > 0 && ch > 0) {
-        this.cl = this._getTexture(0, th, lw, ch);
+        this.cl = this._getTexture(0, th, lw, centerHeight);
         this.addChild(this.cl);
         this.cl.y = th;
     }
+    // center middle
     if (mw > 0 && ch > 0) {
-        this.cm = this._getTexture(lw, th, mw, ch);
+        this.cm = this._getTexture(lw, th, middleWidth, centerHeight);
         this.addChild(this.cm);
         this.cm.y = th;
         this.cm.x = lw;
     }
+    // center right
     if (rw > 0 && ch > 0) {
-        this.cr = this._getTexture(lw + mw, th, rw, ch);
+        this.cr = this._getTexture(lw + mw, th, rw, centerHeight);
         this.addChild(this.cr);
         this.cr.y = th;
     }
 
-    // bottom
+    // bottom left
     if (lw > 0 && bh > 0) {
         this.bl = this._getTexture(0, th + ch, lw, bh);
         this.addChild(this.bl);
     }
+    // bottom middle
     if (mw > 0 && bh > 0) {
-        this.bm = this._getTexture(lw, th + ch, mw, bh);
+        this.bm = this._getTexture(lw, th + ch, middleWidth, bh);
         this.addChild(this.bm);
         this.bm.x = lw;
     }
+    // bottom right
     if (rw > 0 && bh > 0) {
         this.br = this._getTexture(lw + mw, th + ch, rw, bh);
         this.addChild(this.br);
@@ -139,6 +166,10 @@ Object.defineProperty(ScaleContainer.prototype, 'width', {
     },
     set: function(value) {
         if (this._width !== value) {
+            if (this.minWidth && this.minWidth > 0 &&
+                value < this.minWidth) {
+                value = this.minWidth;
+            }
             this._width = value;
             this.invalid = true;
             this._updateScales();
@@ -158,6 +189,10 @@ Object.defineProperty(ScaleContainer.prototype, 'height', {
     },
     set: function(value) {
         if (this._height !== value) {
+            if (this.minHeight && this.minHeight > 0 &&
+                value < this.minHeight) {
+                value = this.minHeight;
+            }
             this._height = value;
             this.invalid = true;
             this._updateScales();
@@ -234,14 +269,16 @@ ScaleContainer.prototype._positionTilable = function() {
 
 /**
  *
- * Helper function that creates a sprite that will contain a texture from the TextureCache based on the frameId
+ * Helper function that creates a sprite that will contain a texture from
+ * the TextureCache based on the frameId
  * The frame ids are created when a Texture packer file has been loaded
  *
  * @method fromFrame
  * @static
  * @param frameId {String} The frame Id of the texture in the cache
  * @param rect {Rectangle} defines tilable area
- * @return {ScaleTexture} A new Scalable Texture (e.g. a button) using a texture from the texture cache matching the frameId
+ * @return {ScaleTexture} A new Scalable Texture (e.g. a button) using
+ *                        a texture from the texture cache matching the frameId
  */
 ScaleContainer.fromFrame = function(frameId, rect) {
     var texture = PIXI.utils.TextureCache[frameId];
