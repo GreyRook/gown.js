@@ -1,5 +1,4 @@
 var Skinable = require('../core/Skinable');
-var ScaleContainer = require('../utils/ScaleContainer');
 
 /**
  * The basic Button with 3 states (up, down and hover) and a label that is
@@ -109,7 +108,7 @@ Button.prototype.skinLoaded = function(skin) {
     } else if (skin.minHeight) {
         this.height = skin.height = skin.minHeight;
     }
-}
+};
 
 Button.prototype.mousedown = function() {
     this.handleEvent(Button.DOWN);

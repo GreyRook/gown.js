@@ -1,5 +1,3 @@
-var Scroller = require('../controls/Scroller');
-
 /**
  * wrapper around PIXI.tween OR CreateJS/TweenJS to do animations/tweening
  * for exxample for List or Scroller, see Scroller.thrownTo.
@@ -12,7 +10,8 @@ function Tween(target, duration, easing, type) {
     this.createTween(target, duration, easing);
 }
 
-Tween.prototype = Object.create( Scroller.prototype );
+Tween.prototype = Object.create( {} );
+Tween.prototype.constructor = Tween;
 module.exports = Tween;
 
 Tween.PIXI_TWEEN = 'PIXI_TWEEN';

@@ -1,6 +1,4 @@
 var Control = require('./Control');
-var resizeScaling = require('../utils/resizeScaling');
-var mixin = require('../utils/mixin');
 
 /**
  * Control that requires a theme (e.g. a button)
@@ -21,8 +19,6 @@ function Skinable(theme) {
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
-
-    this.initResizeScaling();
 }
 
 Skinable.prototype = Object.create( Control.prototype );
@@ -92,9 +88,6 @@ Skinable.prototype.fromSkin = function(name, callback) {
         callback.call(this, skin);
     }
 };
-
-
-mixin(Skinable.prototype, resizeScaling);
 
 /**
  * change the skin name
