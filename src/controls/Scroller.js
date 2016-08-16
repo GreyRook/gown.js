@@ -182,7 +182,6 @@ Scroller.prototype.defaultScrollBarFactory = function(direction) {
     return new ScrollBar(direction, this.theme);
 };
 
-
 Scroller.prototype.revealHorizontalScrollBar = function() {
     //TODO: implement me!
 };
@@ -192,16 +191,57 @@ Scroller.prototype.revealVerticalScrollBar = function() {
 };
 
 /**
+ * manage tween to throw to horizontal or vertical position
+ * call finishScrolling when tween reaches the end position
  *
+ * @param targetPosition target position in pixel
+ * @param direction ('horizontal' or 'vertical')
  */
+Scroller.prototype._throwToTween = function(targetPosition, direction, finishScrolling) {
+    if (!this.tweens) {
+        this.tweens = {};
+    }
+    // remove old tween
+    var tween;
+    if (this.tweens.hasOwnProperty(direction)) {
+        tween = this.tweens[direction];
+        tween.remove();
+        delete this.tweens[direction];
+    }
+    if (currentPosition != targetPosition) {
+        tween = new Tween(target, duration);
+        this.tween[direction] = tween;
+        this.tween.to({})
+    }
+    return targetPosition;
+};
+
+/**
+ * throw the scroller to the specified position
+ * @param position as PIXI.Point
+ */
+//TODO: see https://github.com/BowlerHatLLC/feathers/blob/master/source/feathers/controls/Scroller.as#L4671
 Scroller.prototype.throwTo = function(targetPosition, duration) {
     duration = duration || 500;
-    /*
-    if position == endposition
-        stop tween
-    */
 
-    //HIER WEITER MACHEN!
+    var verticalScrollPosition = this._throwToTween(
+        targetPosition.x,
+        'horizontal');
+    var horizontalScrollPosition = this._throwToTween(
+        targetPosition.y,
+        'vertical'
+    );
+    if (verticalScrollPosition != this.verticalScrollPosition) {
+
+        // pass
+    }
+    if (horizontalScrollPosition != this.horizontalScrollPosition) {
+        // pass
+    }
+
+    if (changedPosition && duration == 0) {
+        this.completeScroll();
+		}
 };
 
 /**
