@@ -8,7 +8,8 @@ var Control = require('../core/Control');
  * @memberof GOWN
  * @constructor
  */
-function LayoutGroup(maxWidth, maxHeight) {
+function LayoutGroup(layout, maxWidth, maxHeight) {
+    this.layout = layout;
     this.percentWidth = this.percentWidth ;
     this.percentHeight = this.percentHeight;
     this.maxWidth = maxWidth || Infinity;

@@ -24,7 +24,7 @@ Tween.NONE = 'NONE';
 // it just capitalizes the first letter and let the other characters untouched
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-};
+}
 
 // TODO: possible alternative: create own easing data type
 // e.g. (in, out, inout and type)
@@ -43,7 +43,7 @@ Tween.CREATEJS_EASING = function(ease) {
         ease = ease.slice(3).toLowerCase() + 'Out';
     }
     return createjs.Ease[ease];
-});
+};
 
 Tween.PIXI_EASING = function(ease) {
     if (ease.endswith('InOut')) {
@@ -56,7 +56,7 @@ Tween.PIXI_EASING = function(ease) {
         ease = 'in' + capitalize(ease.slice(0, -2));
     }
     return PIXI.Easing[ease];
-});
+};
 
 /**
  * helper function to check if a tweening-library is present
@@ -83,7 +83,6 @@ Tween.prototype.createTween = function(target, duration, easing) {
     } else {
         this._tween = null;
     }
-
 };
 
 Tween.prototype.to = function(data) {

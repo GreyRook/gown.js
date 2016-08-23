@@ -92,5 +92,4 @@ Object.defineProperty(Control.prototype, 'enabled', {
     }
 });
 
-
 mixin(Control.prototype, resizeScaling);

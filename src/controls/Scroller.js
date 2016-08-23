@@ -208,10 +208,10 @@ Scroller.prototype._throwToTween = function(targetPosition, direction, finishScr
         tween.remove();
         delete this.tweens[direction];
     }
-    if (currentPosition != targetPosition) {
+    if (currentPosition !== targetPosition) {
         tween = new Tween(target, duration);
         this.tween[direction] = tween;
-        this.tween.to({})
+        this.tween.to({});
     }
     return targetPosition;
 };
@@ -231,15 +231,15 @@ Scroller.prototype.throwTo = function(targetPosition, duration) {
         targetPosition.y,
         'vertical'
     );
-    if (verticalScrollPosition != this.verticalScrollPosition) {
+    if (verticalScrollPosition !== this.verticalScrollPosition) {
 
         // pass
     }
-    if (horizontalScrollPosition != this.horizontalScrollPosition) {
+    if (horizontalScrollPosition !== this.horizontalScrollPosition) {
         // pass
     }
 
-    if (changedPosition && duration == 0) {
+    if (changedPosition && duration === 0) {
         this.completeScroll();
 		}
 };
@@ -252,7 +252,7 @@ Scroller.prototype.throwTo = function(targetPosition, duration) {
  */
 Object.defineProperty(Scroller.prototype, 'width', {
     get: function() {
-        if (!this._width) {
+        if (!this._width && this._viewPort) {
             return this._viewPort.width;
         }
         return this._width;
@@ -271,7 +271,7 @@ Object.defineProperty(Scroller.prototype, 'width', {
  */
 Object.defineProperty(Scroller.prototype, 'height', {
     get: function() {
-        if (!this._height) {
+        if (!this._height && this._viewPort) {
             return this._viewPort.height;
         }
         return this._height;

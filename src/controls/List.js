@@ -11,7 +11,7 @@ var DefaultListItemRenderer = require('./renderers/DefaultListItemRenderer');
  * @memberof GOWN
  * @constructor
  */
-function List(dataProvider, theme) {
+function List(dataProvider, layout, theme) {
     Scroller.call(this, theme);
     this.skinName = this.skinName || List.SKIN_NAME;
 
@@ -55,7 +55,7 @@ function List(dataProvider, theme) {
         this.viewPort = new LayoutGroup();
     }
 
-    var layout = this._layout;
+    layout = layout || this._layout;
 
     if (!layout) {
         layout = new PIXI.layout.VerticalLayout();

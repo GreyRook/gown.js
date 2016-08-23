@@ -180,6 +180,7 @@ ThemeParser.prototype.parseData = function(data) {
             // create skin from skinData for current skin
             var skin = this.skinFromData(skinData, data);
             if (skin) {
+                // skin.minWidth 
                 this.setSkin(componentName, stateName, skin);
             }
         }

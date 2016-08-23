@@ -22,6 +22,8 @@
   },
   "skins": {
     "button": {
+      "minWidth": 100,
+      "minHeight": 30,
       "up": {
         "type": "texture",
         "texture": "button-up-skin0000",
