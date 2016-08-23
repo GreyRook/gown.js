@@ -2,7 +2,7 @@
  * wrapper around PIXI.tween OR CreateJS/TweenJS to do animations/tweening
  * for exxample for List or Scroller, see Scroller.thrownTo.
  *
- * TODO: use greensock?
+ * TODO: support greensock?
  */
 
 function Tween(target, duration, easing, type) {
@@ -43,7 +43,7 @@ Tween.CREATEJS_EASING = function(ease) {
         ease = ease.slice(3).toLowerCase() + 'Out';
     }
     return createjs.Ease[ease];
-});
+};
 
 Tween.PIXI_EASING = function(ease) {
     if (ease.endswith('InOut')) {
@@ -56,7 +56,7 @@ Tween.PIXI_EASING = function(ease) {
         ease = 'in' + capitalize(ease.slice(0, -2));
     }
     return PIXI.Easing[ease];
-});
+};
 
 /**
  * helper function to check if a tweening-library is present
