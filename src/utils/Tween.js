@@ -2,7 +2,7 @@
  * wrapper around PIXI.tween OR CreateJS/TweenJS to do animations/tweening
  * for exxample for List or Scroller, see Scroller.thrownTo.
  *
- * TODO: use greensock?
+ * TODO: support greensock?
  */
 
 function Tween(target, duration, easing, type) {
