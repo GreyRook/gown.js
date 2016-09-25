@@ -1,5 +1,5 @@
-var Skinable = require('../core/Skinable'),
-    InputWrapper = require('../utils/InputWrapper');
+var Skinable = require('../core/Skinable');
+var keyboardSupport = require('../utils/keyboardSupport');
 
 /**
  * InputControl used for TextInput, TextArea and everything else that
@@ -15,9 +15,11 @@ var Skinable = require('../core/Skinable'),
  */
 function InputControl(text, theme) {
     Skinable.call(this, theme);
+
+    // make sure keyboardSupport is enabled
+    keyboardSupport(true);
+
     this.text = text || '';
-    // create DOM Input (if we need one)
-    InputWrapper.createInput();
     this.hasFocus = false;
 
     /**
@@ -168,9 +170,6 @@ InputControl.prototype.focus = function () {
         return;
      }
      */
-
-    // focus hidden input
-    InputWrapper.focus();
 };
 
 /**
@@ -214,7 +213,6 @@ InputControl.prototype.blur = function() {
         this.hasFocus = false;
 
         // blur hidden input
-        InputWrapper.blur();
         this.onblur();
     }
 };

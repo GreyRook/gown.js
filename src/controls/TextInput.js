@@ -1,6 +1,5 @@
 var Control = require('../core/Control'),
-    InputControl = require('./InputControl'),
-    InputWrapper = require('../utils/InputWrapper');
+    InputControl = require('./InputControl');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input
@@ -119,7 +118,7 @@ Object.defineProperty(TextInput.prototype, 'text', {
 
         // update text input if this text field has the focus
         if (this.hasFocus) {
-            InputWrapper.setText(this.value);
+            //InputWrapper.setText(this.value);
         }
 
         // reposition cursor
@@ -144,7 +143,7 @@ Object.defineProperty(TextInput.prototype, 'maxChars', {
         if (this._maxChars === value) {
             return;
         }
-        InputWrapper.setMaxLength(value);
+        //InputWrapper.setMaxLength(value);
         this._maxChars = value;
     }
 });
@@ -161,12 +160,12 @@ Object.defineProperty(TextInput.prototype, 'value', {
  * @method onfocus
  */
 TextInput.prototype.onfocus = function() {
-    InputWrapper.setText(this.value);
-    InputWrapper.setMaxLength(this.maxChars);
+    //InputWrapper.setText(this.value);
+    //InputWrapper.setMaxLength(this.maxChars);
     if (this._displayAsPassword) {
-        InputWrapper.setType('password');
+        //InputWrapper.setType('password');
     } else {
-        InputWrapper.setType('text');
+        //InputWrapper.setType('text');
     }
 };
 
@@ -182,7 +181,7 @@ TextInput.prototype.updateSelection = function (start, end) {
     if (this.selection[0] !== start || this.selection[1] !== end) {
         this.selection[0] = start;
         this.selection[1] = end;
-        InputWrapper.setSelection(start, end);
+        //InputWrapper.setSelection(start, end);
         this._cursorNeedsUpdate = true;
         this.updateSelectionBg();
         return true;
@@ -330,13 +329,13 @@ TextInput.prototype.onMouseUp = function (e) {
  * @method updateTextState
  */
 TextInput.prototype.updateTextState = function () {
-    var text = InputWrapper.getText();
+    //var text = InputWrapper.getText();
 
     if (text !== this.text) {
         this.text = text;
     }
 
-    var sel = InputWrapper.getSelection();
+    //var sel = InputWrapper.getSelection();
     if (this.updateSelection(sel[0], sel[1])) {
         this.cursorPos = sel[0];
     }

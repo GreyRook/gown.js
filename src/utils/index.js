@@ -9,7 +9,7 @@
  * @namespace GOWN.util
  */
 module.exports = {
-    InputWrapper:           require('./InputWrapper'),
+    keyboardSupport:        require('./keyboardSupport'),
     mouseWheelSupport:      require('./mouseWheelSupport'),
     position:               require('./position'),
     ScaleContainer:         require('./ScaleContainer'),

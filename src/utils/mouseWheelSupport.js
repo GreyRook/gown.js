@@ -42,7 +42,7 @@ function mouseWheelSupport(stage, enable) {
                 GOWN._mouseWheelHandler, false);
             canvas.addEventListener('DOMMouseScroll',
                 GOWN._mouseWheelHandler, false);
-        } else {
+        } else if (canvas.attachEvent) {
             canvas.attachEvent('onmousewheel',
                 GOWN._mouseWheelHandler);
         }
@@ -55,7 +55,7 @@ function mouseWheelSupport(stage, enable) {
                 GOWN._mouseWheelHandler);
             canvas.removeEventListener('DOMMouseScroll',
                 GOWN._mouseWheelHandler);
-        } else {
+        } else if (canvas.detachEvent) {
             canvas.detachEvent('onmousewheel',
                 GOWN._mouseWheelHandler);
         }
