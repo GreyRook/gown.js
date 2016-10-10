@@ -16,6 +16,8 @@ function LayoutGroup(layout, maxWidth, maxHeight) {
     this.maxHeight = maxHeight || Infinity;
     Control.call(this);
     this._needUpdate = true;
+    this.resizable = true;
+    this.on('resize', this.onResize, this);
 }
 
 LayoutGroup.prototype = Object.create( Control.prototype );
@@ -24,6 +26,8 @@ module.exports = LayoutGroup;
 
 /**
  * update before draw call (position label)
+ *
+ * (called from Control.prototype.updateTransform every frame)
  *
  * @method redraw
  */
@@ -42,6 +46,10 @@ LayoutGroup.prototype.redraw = function() {
         this.layout.layoutContainer(this);
         this._needUpdate = false;
     }
+};
+
+LayoutGroup.prototype.onResize = function() {
+    this._needUpdate = true;
 };
 
 /* istanbul ignore next */
