@@ -9,8 +9,6 @@
  * @namespace GOWN.util
  */
 module.exports = {
-    keyboardSupport:        require('./keyboardSupport'),
-    mouseWheelSupport:      require('./mouseWheelSupport'),
     position:               require('./position'),
     ScaleContainer:         require('./ScaleContainer'),
     SliderData:             require('./SliderData'),

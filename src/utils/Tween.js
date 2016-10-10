@@ -7,8 +7,11 @@
 
 function Tween(target, duration, easing, type) {
     this.duration = duration;
-    this.easing = easing;
+    this.easing = easing || 'linear';
     this.type = type || this.checkLibrary();
+    if (this.type === Tween.NONE) {
+        this._target = target;
+    }
     this.createTween(target, duration, easing);
 }
 
@@ -32,30 +35,30 @@ function capitalize(string) {
 // get string e.g. 'linear' or 'quadIn', return ease function
 Tween.CREATEJS_EASING = function(ease) {
     // inQutQuad to quadInOut
-    if (ease.startswith('inOut')) {
+    if (ease.substring(0, 5) === 'inOut') {
         ease = ease.slice(5).toLowerCase() + 'InOut';
     }
     // inQuad to quadIn
-    if (ease.startswith('in')) {
+    if (ease.substring(0, 2) === 'in') {
         ease = ease.slice(2).toLowerCase() + 'In';
     }
-    if (ease.startswith('out')) {
+    if (ease.substring(0, 3) === 'out') {
         ease = ease.slice(3).toLowerCase() + 'Out';
     }
     return createjs.Ease[ease];
 };
 
 Tween.PIXI_EASING = function(ease) {
-    if (ease.endswith('InOut')) {
+    if (ease.substring(ease.length-5) === 'InOut') {
         ease = 'inOut' + capitalize(ease.slice(0, -5));
     }
-    if (ease.endswith('Out')) {
+    if (ease.substring(ease.length-3) === 'Out') {
         ease = 'out' + capitalize(ease.slice(0, -3));
     }
-    if (ease.endswith('In')) {
+    if (ease.substring(ease.length-2) === 'In') {
         ease = 'in' + capitalize(ease.slice(0, -2));
     }
-    return PIXI.Easing[ease];
+    return PIXI.tween.Easing[ease]();
 };
 
 /**
@@ -72,13 +75,15 @@ Tween.prototype.checkLibrary = function() {
 };
 
 Tween.prototype.createTween = function(target, duration, easing) {
-    if (this.type === Tween.PIXI_TWEEN && this._tween) {
-        this._tween = PIXI.tween.TweenManager.createTween(target);
+    if (this.type === Tween.PIXI_TWEEN) {
+        this._tween = PIXI.tweenManager.createTween(target);
         // tweenjs stores time in ms
         this._tween.time = duration;
         // Easing is a function in PIXI.tween.Easing
-        this._tween.easing = Tween._pixiEasing[easing];
-    } else if (this.type === Tween.CREATEJS_TWEEN && this.tween) {
+        this._tween.easing = Tween.PIXI_EASING(easing);
+    } else if (this.type === Tween.CREATEJS_TWEEN) {
+        createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
+        createjs.Ticker.setFPS(60);
         this._tween = createjs.Tween.get(target, {loop: false});
     } else {
         this._tween = null;
@@ -88,8 +93,9 @@ Tween.prototype.createTween = function(target, duration, easing) {
 Tween.prototype.to = function(data) {
     if (this.type === Tween.PIXI_TWEEN && this._tween) {
         this._tween.to(data);
+        this._tween.start();
     } else if (this.type === Tween.CREATEJS_TWEEN && this._tween) {
-        this._tween.to(data, this.duration, this.easing);
+        this._tween.to(data, this.duration, Tween.CREATEJS_EASING(this.easing));
     } else if (this.type === Tween.NONE) {
         // no tween, set values directly and without wait
         // maybe we'd like to do some basic linear transitioning
