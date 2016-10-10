@@ -8,8 +8,8 @@
  * @class IconTextInput
  */
 
-var IconTextInput = function(icon, text, displayAsPassword, theme) {
-    GOWN.TextInput.call(this, text, displayAsPassword, theme);
+var IconTextInput = function(icon, text, theme) {
+    GOWN.TextInput.call(this, theme, text);
     this.icon  = icon;
 
     this.bg = new PIXI.shapes.Rect(0x111111, 0.5, 360, 46, 5);

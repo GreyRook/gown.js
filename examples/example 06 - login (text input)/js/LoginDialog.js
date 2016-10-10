@@ -11,9 +11,9 @@ var LoginDialog = function(app) {
     this.bg = new PIXI.shapes.Rect(0x515151, 0.7, 200, 350, 5);
     this.addChild(this.bg);
 
-    this.login_bg = new PIXI.shapes.Rect(0x111111, 0.5, 200, 100, 5);
-    this.login_bg.y = 250;
-    this.addChild(this.login_bg);
+    this.loginBg = new PIXI.shapes.Rect(0x111111, 0.5, 200, 100, 5);
+    this.loginBg.y = 250;
+    this.addChild(this.loginBg);
 
     // minimum width in Pixel
     this.minWidth = 200;
@@ -33,45 +33,51 @@ var LoginDialog = function(app) {
 
     this.loginText = new PIXI.Text('Login to your account', {
         fill: '#ffffff',
-        font: 'bold 14px Arial'
+        fontSize: 14,
+        fontFamily: 'Arial'
     });
     grp.addChild(this.loginText);
 
 
     this.mailText = new PIXI.Text('Email', {
         fill: '#cccccc',
-        font: '12px Arial'
+        fontSize: 12,
+        fontFamily: 'Arial'
     });
     grp.addChild(this.mailText);
 
-    var user_icon = new PIXI.Text('\uf007', {
+    var userIcon = new PIXI.Text('\uf007', {
         fill: '#ffffff',
-        font: '12px FontAwesome'
+        fontSize: 12,
+        fontFamily: 'FontAwesome'
     });
-    this.mail = new IconTextInput(user_icon, '');
+    this.mail = new IconTextInput(userIcon, '');
     grp.addChild(this.mail);
 
     grp.addSpacer(10);
 
     this.passText = new PIXI.Text('Password', {
         fill: '#cccccc',
-        font: '12px Arial'
+        fontSize: 12,
+        fontFamily: 'Arial'
     });
     grp.addChild(this.passText);
 
-    var lock_icon = new PIXI.Text('\uf023', {
+    var lockIcon = new PIXI.Text('\uf023', {
         fill: '#ffffff',
-        font: '12px FontAwesome'
+        fontSize: 12,
+        fontFamily: 'FontAwesome'
     });
-    this.pass = new IconTextInput(lock_icon, '', true);
+    this.pass = new IconTextInput(lockIcon, '');
     grp.addChild(this.pass);
 
     this.submitButton = new GOWN.Button();
-    this.submitButton.label = "sign in";
+    this.submitButton.label = 'sign in';
     this.submitButton.width = 150;
     this.submitButton.height = 40;
     this.addChild(this.submitButton);
-    app.on('resize', this.onresize.bind(this));
+    this.resizable = true;
+    this.on('resize', this.onResize.bind(this));
 
 };
 
@@ -83,8 +89,8 @@ LoginDialog.prototype.constructor = LoginDialog;
  * @param width
  * @param height
  */
-LoginDialog.prototype.onresize = function(width, height) {
-    var _width = Math.min(width, this.minWidth);
+LoginDialog.prototype.onResize = function(event) {
+    var _width = Math.min(event.data.width, this.minWidth);
     _width = Math.max(_width, this.maxWidth);
     this.width = _width;
     var pos = GOWN.utils.position;
@@ -93,9 +99,9 @@ LoginDialog.prototype.onresize = function(width, height) {
     // center
     pos.center(this);
 
-    pos.center(this.submitButton, this.login_bg);
+    pos.center(this.submitButton, this.loginBg);
 
-    this.submitButton.y += this.login_bg.y;
+    this.submitButton.y += this.loginBg.y;
     // obey borders
     this.x = Math.max(this.x, 0);
     this.y = Math.max(this.y, 0);
@@ -114,7 +120,7 @@ Object.defineProperty(LoginDialog.prototype, 'width', {
     },
     set: function(width) {
         this.bg.width = width;
-        this.login_bg.width = width;
+        this.loginBg.width = width;
         this._width = width;
     }
 });
@@ -132,7 +138,7 @@ Object.defineProperty(LoginDialog.prototype, 'height', {
     set: function(height) {
         this.bg.height = height;
         // show login background at bottom
-        this.login_bg.y = height - this.login_bg.height;
+        this.loginBg.y = height - this.loginBg.height;
         this._height = height;
     }
 });

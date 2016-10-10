@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/font-awesome.css">
     <!-- see http://www.html5gamedevs.com/topic/13098-pixi-and-fontawesome/ -->
     <!--link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"-->
-    <script src="../../lib/pixi.js"></script>
+    <script src="../../lib/pixi/pixi.js"></script>
     <script src="../../bin/gown-full.js"></script>
 
     <script src="js/LoginDialog.js"></script>
@@ -46,9 +46,11 @@
 
         var login = new LoginDialog(app);
         app.addChild(login);
-
-        // set width/height for layouting
-        app.onresize();
+        // initial resize
+        login.onResize({data: {
+            width: app._width,
+            height: app._height
+        }});
     }
 
 

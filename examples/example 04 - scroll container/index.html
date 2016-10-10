@@ -10,10 +10,8 @@
             background-color: #000000;
         }
     </style>
-    <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/gown.js"></script>
-    <script src="../../themes/AeonTheme.js"></script>
-    <script src="../../themes/ShapeTheme.js"></script>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../bin/gown-full.js"></script>
 </head>
 <body>
 <script>
@@ -26,7 +24,7 @@
 
     function onComplete() {
         //stage.addChild(toggleButton);
-        var sprite = PIXI.Sprite.fromImage("img/rainbow.png");
+        var sprite = PIXI.Sprite.fromImage("./img/rainbow.png");
         var sa_sprite = new GOWN.ScrollContainer();
         sa_sprite.addChild(sprite);
         sa_sprite.x = 240;
@@ -35,7 +33,7 @@
         stage.addChild(sa_sprite);
 
         grp = new GOWN.LayoutGroup();
-        grp.layout = new GOWN.VerticalLayout();
+        grp.layout = new PIXI.layout.VerticalLayout();
 
         // create layout container and add some buttons
         for (var i = 0; i < 20; i++) {
@@ -59,9 +57,8 @@
         requestAnimationFrame(animate);
     }
 
-    GOWN.loader.add("img/rainbow.png");
-    var theme = new GOWN.AeonTheme(
-            "../../themes/assets/aeon/aeon_desktop.json", onComplete);
+    var theme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+    theme.once(GOWN.Theme.COMPLETE, onComplete, this);
 
     function animate() {
         // render the stage
