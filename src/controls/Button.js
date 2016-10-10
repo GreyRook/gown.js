@@ -17,9 +17,17 @@ function Button(theme, skinName) {
 
     this.updateLabel = false; // label text changed
 
-    this.touchstart = this.mousedown;
-    this.touchend = this.mouseupoutside = this.mouseup;
-    this.touchendoutside = this.mouseout;
+    this.on('touchstart', this.onDown, this);
+    this.on('mousedown', this.onDown, this);
+
+    this.on('touchend', this.onUp, this);
+    this.on('mouseupoutside', this.onUp, this);
+    this.on('mouseup', this.onUp, this);
+
+    this.on('touchendoutside', this.onOut, this);
+    this.on('mouseout', this.onOut, this);
+
+    this.on('mouseover', this.onHover, this);
 }
 
 Button.prototype = Object.create( Skinable.prototype );
@@ -60,6 +68,17 @@ Button.DOWN = 'down';
  * @type String
  */
 Button.HOVER = 'hover';
+
+/**
+ * Hover state: mouse pointer hovers over the button
+ * (ignored on mobile)
+ *
+ * @property HOVER
+ * @static
+ * @final
+ * @type String
+ */
+Button.OUT = 'out';
 
 /**
  * names of possible states for a button
@@ -110,23 +129,20 @@ Button.prototype.skinLoaded = function(skin) {
     }
 };
 
-Button.prototype.mousedown = function() {
+Button.prototype.onDown = function() {
     this.handleEvent(Button.DOWN);
 };
 
-Button.prototype.mouseup = function() {
+Button.prototype.onUp = function() {
     this.handleEvent(Button.UP);
 };
 
-Button.prototype.mousemove = function() {
-};
-
-Button.prototype.mouseover = function() {
+Button.prototype.onHover = function() {
     this.handleEvent(Button.HOVER);
 };
 
-Button.prototype.mouseout = function() {
-    this.handleEvent('out');
+Button.prototype.onOut = function() {
+    this.handleEvent(Button.OUT);
 };
 
 
