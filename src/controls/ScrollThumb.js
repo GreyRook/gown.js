@@ -27,11 +27,17 @@ function ScrollThumb(scrollable, theme, skinName) {
     Button.call(this, theme, this.skinName);
     this.invalidTrack = true;
 
-    this.touchmove = this.mousemove;
+    this.on('touchmove', this.handleMove, this);
+    this.on('mousemove', this.handleMove, this);
+
     /* jshint unused: false */
-    this.touchdown = this.mousedown;
+    this.on('touchdown', this.handleDown, this);
+    this.on('mousedown', this.handleDown, this);
     /* jshint unused: false */
-    this.touchend = this.touchendoutside = this.mouseup;
+
+    this.on('mouseup', this.handleUp, this);
+    this.on('touchend', this.handleUp, this);
+    this.on('touchendoutside', this.handleUp, this);
 }
 
 ScrollThumb.prototype = Object.create( Button.prototype );
@@ -65,25 +71,19 @@ Object.defineProperty(ScrollThumb.prototype, 'currentState',{
     }
 });
 
-ScrollThumb.prototype.buttonmousedown = Button.prototype.mousedown;
-ScrollThumb.prototype.mousedown = function(mouseData) {
-    this.buttonmousedown(mouseData);
+ScrollThumb.prototype.handleDown = function(mouseData) {
     var local = mouseData.data.getLocalPosition(this.scrollable);
     this.scrollable._start = [local.x, local.y];
     //this.scrollable.handleDown(mouseData);
     mouseData.stopPropagation();
 };
 
-ScrollThumb.prototype.buttonmousemove = Button.prototype.mousemove;
-ScrollThumb.prototype.mousemove = function (mouseData) {
-    this.buttonmousemove(mouseData);
+ScrollThumb.prototype.handleMove = function (mouseData) {
     this.scrollable.handleMove(mouseData);
 };
 
-ScrollThumb.prototype.buttonmouseup = Button.prototype.mouseup;
-ScrollThumb.prototype.mouseup = function (mouseData) {
-    this.buttonmouseup(mouseData);
-    this.scrollable.handleUp();
+ScrollThumb.prototype.handleUp = function (mouseData) {
+    this.scrollable.handleUp(mouseData);
 };
 
 /**

@@ -30,8 +30,13 @@ function Scrollable(theme) {
     // # of pixel you scroll at a time (if the event delta is 1 / -1)
     this.scrolldelta = 10;
 
-    this.touchstart = this.mousedown = this.handleDown;
-    this.touchendoutside = this.touchend = this.mouseup = this.mouseupoutside = this.handleUp;
+    this.on('touchstart', this.handleDown, this);
+    this.on('mousedown', this.handleDown, this);
+
+    this.on('touchend', this.handleUp, this);
+    this.on('touchendoutside', this.handleUp, this);
+    this.on('mouseupoutside', this.handleUp, this);
+    this.on('mouseup', this.handleUp, this);
 
     this.thumbFactoryInvalid = true;
 }
@@ -77,6 +82,7 @@ Scrollable.prototype.createThumb = function() {
     this._thumbFactory = this._thumbFactory || this.defaultThumbFactory;
     this.thumb = this._thumbFactory();
     this.addChild(this.thumb);
+    this.positionThumb(this.value);
 };
 
 Scrollable.prototype.defaultThumbFactory = function() {
@@ -318,6 +324,65 @@ Scrollable.prototype.redraw = function() {
 
 
 /**
+ * calculate value of slider based on current pixel position of thumb
+ *
+ * @param position
+ * @method pixelToValue
+ * @returns Number value between minimum and maximum
+ */
+Scrollable.prototype.pixelToValue = function(position) {
+    var max = 0;
+    if (this.direction === Scrollable.HORIZONTAL) {
+        max = this.maxWidth();
+    } else {
+        max = this.maxHeight();
+    }
+    if (this._inverse) {
+        position = max - position;
+    }
+    return position / max * (this.maximum - this.minimum) + this.minimum;
+};
+
+/**
+ * calculate current pixel position of thumb based on given value
+ *
+ * @param value
+ * @method valueToPixel
+ * @returns Number position of the scroll thumb in pixel
+ */
+Scrollable.prototype.valueToPixel = function(value) {
+    var max = 0;
+    if (this.direction === Scrollable.HORIZONTAL) {
+        max = this.maxWidth();
+    } else {
+        max = this.maxHeight();
+    }
+    var position = (value - this.minimum) / (this.maximum - this.minimum) * max;
+    if (this._inverse) {
+        position = max - position;
+    }
+    return position;
+};
+
+/**
+ * position thumb to given value
+ *
+ * @param value
+ * @method positionThumb
+ * @returns Number position of the scroll thumb in pixel
+ */
+Scrollable.prototype.positionThumb = function(value) {
+    if (this.thumb) {
+        var pos = this.valueToPixel(value);
+        if (this.direction === Scrollable.HORIZONTAL) {
+            this.moveThumb(pos, 0);
+        } else {
+            this.moveThumb(0, pos);
+        }
+    }
+};
+
+/**
  * The width of the Scrollable, setting this will redraw the track and thumb.
 
  *
@@ -352,7 +417,7 @@ Object.defineProperty(Scrollable.prototype, 'inverse', {
             this._inverse = inverse;
 
             if (this.direction === Scrollable.HORIZONTAL) {
-                this.moveThumb(0, this.width - this.thumb.x);
+                this.moveThumb(this.width - this.thumb.x, 0);
             } else {
                 this.moveThumb(0, this.height - this.thumb.y);
             }
@@ -405,24 +470,19 @@ Object.defineProperty(Scrollable.prototype, 'value', {
             return;
         }
 
-        this.emit('change', value, this);
-        // move thumb
-        if (this.thumb) {
-            var pos = this.valueToLocation(value);
-            if (this.direction === Scrollable.HORIZONTAL) {
-                this.moveThumb(pos, 0);
-            } else {
-                this.moveThumb(0, pos);
-            }
-        }
-
-        this._value = value;
+        // inform system that value has been changed
+        var sliderData = new SliderData();
+        sliderData.value = value;
+        sliderData.target = this;
         if (this.change) {
-            var sliderData = new SliderData();
-            sliderData.value = this._value;
-            sliderData.target = this;
             this.change(sliderData);
         }
+        this.emit('change', sliderData, this);
+
+        // move thumb
+        this.positionThumb(value);
+
+        this._value = value;
     }
 });
 
