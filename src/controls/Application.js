@@ -15,18 +15,27 @@ var Control = require('../core/Control');
  *  (default: {backgroundColor: 0xffffff})
  * @param fullscreen {Boolean}
  *  (default: true)
+ * @param width {Number} width of the canvas
+ *  (default: 800)
+ * @param height {Number} height of the canvas
+ *  (default: 600)
  * @param renderer {WebGLRenderer|CanvasRenderer}
  *  (default: null - will create a new renderer)
  * @param stage {Stage}
  *  (default null - will use a new PIXI.Container)
  */
-function Application(config, fullscreen, renderer, stage) {
-    var width = 800;
-    var height = 600;
+function Application(config, fullscreen, width, height, renderer, stage) {
+    fullscreen = fullscreen === undefined ? true : fullscreen;
     if (fullscreen) {
         width = window.innerWidth;
         height = window.innerHeight;
+    } else {
+        width = width || 800;
+        height = height || 600;
     }
+
+    this.resizable = true;
+    this.on('resize', this.onResize, this);
 
     if (!config) {
         config = {
@@ -122,7 +131,6 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
 Application.prototype.destroy = function(destroyChildren, removeCanvas) {
     removeCanvas = removeCanvas === undefined || removeCanvas;
     this._removeBackground();
-    this.fullscreen = false; // remove event listener on resize using setter
     PIXI.Container.prototype.destroy.call(this, destroyChildren);
     if (removeCanvas) {
         document.body.removeChild(this._renderer.view);
@@ -134,17 +142,16 @@ Application.prototype.destroy = function(destroyChildren, removeCanvas) {
 /**
  * called when the browser window / the application is resized
  *
- * @method onresize
+ * @method resize
  */
-Application.prototype.onresize = function() {
-    this._width = window.innerWidth;
-    this._height = window.innerHeight;
+Application.prototype.onResize = function(eventData) {
+    this._width = eventData.data.width;
+    this._height = eventData.data.height;
     this._renderer.resize(this._width, this._height);
     if (this.bg) {
         this.bg.width = this._width;
         this.bg.height = this._height;
     }
-    this.emit('resize', this._width, this._height);
 };
 
 /**
@@ -170,16 +177,12 @@ Object.defineProperty(Application.prototype, 'fullscreen', {
         return this._fullscreen;
     },
     set: function(value) {
-        if (this._fullscreen && !value) {
-            window.removeEventListener('resize', this._onresize);
-        } else if (!this._fullscreen && value) {
+        if (!this._fullscreen && value) {
             this._renderer.view.style.top = 0;
             this._renderer.view.style.left = 0;
             this._renderer.view.style.right = 0;
             this._renderer.view.style.bottom = 0;
             this._renderer.view.style.position = 'absolute';
-            this._onresize = this.onresize.bind(this);
-            window.addEventListener('resize', this._onresize);
         }
         this._fullscreen = value;
     }
