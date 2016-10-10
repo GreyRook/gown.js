@@ -38,6 +38,8 @@ function DefaultListItemRenderer(theme) {
 
     this._data = null;
     this.dataInvalid = false;
+
+    this.percentWidth = this.percentHeight = 100;
 }
 
 DefaultListItemRenderer.prototype = Object.create( ToggleButton.prototype );
