@@ -49,7 +49,7 @@ function List(dataProvider, layout, theme) {
     if (!this.viewPort) {
 
         // We do not implement ListDataViewPort from feathers
-        // (most of what that it does is implemented in List directly to
+        // (most of what it does is implemented in List directly to
         //  manage the viewport)
         // and instead use the normal LayoutGroup (less abstraction, less code)
         this.viewPort = new LayoutGroup();
