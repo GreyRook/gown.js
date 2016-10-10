@@ -1,4 +1,5 @@
 /**
+ * XXX: replace with MouseWheelManager (see InteractionManager / KeyboardManager)
  * TODO: make it work with PIXI (this is just copied from createjs_ui / WIP)
  * (e.g. get currently selected object using this.stage.interactionManager.hitTest(this, e)
  * and then execute an "onwheel"-callback)
