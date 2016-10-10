@@ -1,5 +1,5 @@
-// full version of gown 
-// (includes pixi-layout and pixi-shape, so you only need to add pixi.js 
+// full version of gown
+// (includes pixi-layout and pixi-shape, so you only need to add pixi.js
 //  and gown.js into your html file)
 if (typeof PIXI === 'undefined') {
     if (window.console) {
@@ -39,6 +39,10 @@ if (typeof PIXI === 'undefined') {
     core.Theme =           require('./skin/Theme');
     core.ThemeFont =       require('./skin/ThemeFont');
     core.ThemeParser =     require('./skin/ThemeParser');
+
+    // manager
+    core.ResizeManager =     require('./interaction/ResizeManager');
+
 
     // add core plugins.
     core.utils          = require('./utils');
