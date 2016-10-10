@@ -13,15 +13,14 @@ pattern = '(?P<name>\w+):Rectangle( )*=( )*new( )*Rectangle\(( )*' \
 def get_scale_9_grids(as_path):
     scale_9_grids = {}
     base_path = os.path.split(as_path)[0]
-    f = file(as_path, 'r')
-    for line in f:
-        
-        for match in re.finditer(pattern, line):
-            scale_9_grids[ match.group('name') ] = (
-                match.group('x'), 
-                match.group('y'), 
-                match.group('width'), 
-                match.group('height'))
+    with open(as_path, 'r') as f:
+        for line in f:
+            for match in re.finditer(pattern, line):
+                scale_9_grids[ match.group('name') ] = (
+                    match.group('x'), 
+                    match.group('y'), 
+                    match.group('width'), 
+                    match.group('height'))
     return scale_9_grids
 
 

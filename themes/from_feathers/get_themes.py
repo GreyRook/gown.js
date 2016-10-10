@@ -31,7 +31,7 @@ def get_texture_name(theme_path):
         texture_file = os.path.join(assets_path, texture)
         if os.path.exists(texture_file+'.png') and \
             os.path.exists(texture_file+'.xml'):
-            return texture_file.split('/')[-1]
+            return texture_file.split(os.path.sep)[-1]
 
 
 def get_feathers_themes(feathers_themes_path):
@@ -127,7 +127,8 @@ def main():
         
         # manual entered data (as last step so the user can overwrite everything)
         if 'data_path' in theme:
-            data.update(json.load(file(theme['data_path'], 'r')))
+            with open(theme['data_path']) as f:
+                data.update(json.loads(f.read(), 'r'))
 
         # now that we have the data we just need to store everything in 
         # the assets-folder and copy the image
@@ -136,7 +137,8 @@ def main():
             process_assets(args.assets_path, name, theme['theme_path'])
             
         json_path = os.path.join(args.assets_path, name, name+'.json')
-        json.dump(data, file(json_path, 'w'), indent=2)
+        with open(json_path, 'w') as f:
+            json.dump(data, f, indent=2)
 
             
 
