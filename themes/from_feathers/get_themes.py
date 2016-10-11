@@ -128,7 +128,13 @@ def main():
         # manual entered data (as last step so the user can overwrite everything)
         if 'data_path' in theme:
             with open(theme['data_path'], 'r') as f:
-                data.update(json.load(f))
+                user_data = json.load(f)
+                for key, value in user_data.items():
+                    if (isinstance(value, dict)):
+                        data.setdefault(key, value)
+                        data[key].update(user_data[key])
+                    else:
+                        data[key] = value
 
         # now that we have the data we just need to store everything in
         # the assets-folder and copy the image
