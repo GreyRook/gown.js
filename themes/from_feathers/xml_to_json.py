@@ -59,8 +59,8 @@ def get_data(path):
 
 def convert(path):
     theme_path = os.path.splitext(path)[0]
-    json_file = file(theme_path + '.json', 'w')
-    json.dump(get_data(path), json_file, indent=2)
+    with open(theme_path + '.json', 'w') as json_file:
+        json.dump(get_data(path), json_file, indent=2, sort_keys=True)
     return theme_path
 
 

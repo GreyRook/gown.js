@@ -11,14 +11,14 @@ FEATHERS_THEMES = 'themes'
 
 def get_base_file(theme_path):
     # find Base<name>.as-Files to extract scale_9_grid values
-    as_path = os.path.join(theme_path, 
+    as_path = os.path.join(theme_path,
                            'source', 'feathers', 'themes')
     if not os.path.isdir(as_path):
         return
     for filename in os.listdir(as_path):
         if filename.startswith('Base'):
             base_path = os.path.join(as_path, filename)
-            
+
             return base_path
 
 
@@ -37,25 +37,25 @@ def get_texture_name(theme_path):
 def get_feathers_themes(feathers_themes_path):
     theme_data = {}
     themes = os.listdir(feathers_themes_path)
-    
+
     # find Base<name>.as-Files to extract scale_9_grid values
     for theme in themes:
         theme_path = os.path.join(feathers_themes_path, theme)
-        
+
         if not os.path.isdir(theme_path):
             # not even a directory, no warning printed
             continue
-        
+
         base_path = get_base_file(theme_path)
         if not base_path:
             print('skipping "{}", no Base*.as file found.'.format(theme))
             continue
-        
+
         texture_name = get_texture_name(theme_path)
         if not texture_name:
             print('skipping "{}", PNG/XML asset file(s) found.'.format(theme))
             continue
-        
+
         theme_data[texture_name] = {
             'theme_path': theme_path,
             'base_file': base_path,
@@ -63,7 +63,7 @@ def get_feathers_themes(feathers_themes_path):
             'theme_texture': os.path.join(theme_path, 'assets', 'images', texture_name)
         }
         print('found feathers theme: {} ({})'.format(theme, texture_name))
-        
+
     return theme_data
 
 
@@ -106,44 +106,40 @@ def main():
                         help='Path to manual theme data that will be merged with texture data')
     args = parser.parse_args()
     theme_data = get_theme_data(args.data_path)
-    
+
     feathers_data = get_feathers_themes(os.path.join(args.feathers_path, FEATHERS_THEMES))
     for name, theme in feathers_data.items():
         theme_data.setdefault(name, {})
         theme_data[name].update(theme)
-    
+
     for name, theme in theme_data.items():
         data = {}
-        
+
         # get texture positions and sizes from atlas file
         if 'theme_texture' in theme:
             data.update(xml_to_json.get_data(theme['theme_texture']+'.xml'))
-        
+
         # get scale 9 values from Base*.as file
         if 'base_file' in theme:
             grids = parse_feathers_theme.get_scale_9_grids(theme['base_file'])
             if grids:
                 data['grids'] = grids
-        
+
         # manual entered data (as last step so the user can overwrite everything)
         if 'data_path' in theme:
-            with open(theme['data_path']) as f:
-                data.update(json.loads(f.read(), 'r'))
+            with open(theme['data_path'], 'r') as f:
+                data.update(json.load(f))
 
-        # now that we have the data we just need to store everything in 
+        # now that we have the data we just need to store everything in
         # the assets-folder and copy the image
         create_theme_dir(args.assets_path, name)
         if 'theme_path' in theme:
             process_assets(args.assets_path, name, theme['theme_path'])
-            
+
         json_path = os.path.join(args.assets_path, name, name+'.json')
         with open(json_path, 'w') as f:
-            json.dump(data, f, indent=2)
-
-            
+            json.dump(data, f, indent=2, sort_keys=True)
 
 
 if __name__ == '__main__':
     main()
-
-
