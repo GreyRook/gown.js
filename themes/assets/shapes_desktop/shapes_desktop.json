@@ -1,30 +1,30 @@
 {
-  "textStyle": {
-    "fontFamily": "Droid Sans", 
-    "fill": "#fff"
-  }, 
-  "thumbSkin": true, 
-  "hoverSkin": true, 
+  "hoverSkin": true,
   "skins": {
-    "default": {
-      "all": {
-        "borderColor": "0x0000ff", 
-        "color": "0x6073c8", 
-        "type": "rect", 
-        "radius": 5, 
-        "alpha": 0.8, 
-        "border": 2
-      }
-    }, 
     "button": {
       "down": {
-        "color": "0xEA8686", 
-        "borderColor": "0xff0000"
-      }, 
+        "borderColor": "0xff0000",
+        "color": "0xEA8686"
+      },
       "hover": {
-        "color": "0x60c865", 
-        "borderColor": "0x00ff00"
+        "borderColor": "0x00ff00",
+        "color": "0x60c865"
+      }
+    },
+    "default": {
+      "all": {
+        "alpha": 0.8,
+        "border": 2,
+        "borderColor": "0x0000ff",
+        "color": "0x6073c8",
+        "radius": 5,
+        "type": "rect"
       }
     }
-  }
+  },
+  "textStyle": {
+    "fill": "#fff",
+    "fontFamily": "Droid Sans"
+  },
+  "thumbSkin": true
 }
