@@ -2642,6 +2642,144 @@
     }
   },
   "grids": {
+    "BUTTON_SCALE_9_GRID": [
+      "5",
+      "5",
+      "1",
+      "12"
+    ],
+    "CALLOUT_SCALE_9_GRID": [
+      "5",
+      "5",
+      "1",
+      "1"
+    ],
+    "FOCUS_INDICATOR_SCALE_9_GRID": [
+      "5",
+      "5",
+      "2",
+      "2"
+    ],
+    "HEADER_SCALE_9_GRID": [
+      "1",
+      "1",
+      "2",
+      "28"
+    ],
+    "HORIZONTAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID": [
+      "2",
+      "2",
+      "10",
+      "11"
+    ],
+    "HORIZONTAL_SCROLL_BAR_THUMB_SCALE_9_GRID": [
+      "5",
+      "2",
+      "42",
+      "6"
+    ],
+    "HORIZONTAL_SCROLL_BAR_TRACK_SCALE_9_GRID": [
+      "1",
+      "2",
+      "2",
+      "11"
+    ],
+    "HORIZONTAL_SLIDER_TRACK_SCALE_9_GRID": [
+      "3",
+      "0",
+      "1",
+      "4"
+    ],
+    "ITEM_RENDERER_SKIN_TEXTURE_REGION": [
+      "1",
+      "1",
+      "4",
+      "4"
+    ],
+    "PANEL_BORDER_SCALE_9_GRID": [
+      "5",
+      "5",
+      "1",
+      "1"
+    ],
+    "PROGRESS_BAR_FILL_TEXTURE_REGION": [
+      "1",
+      "1",
+      "4",
+      "4"
+    ],
+    "SEEK_SLIDER_MAXIMUM_TRACK_SCALE_9_GRID": [
+      "1",
+      "0",
+      "1",
+      "4"
+    ],
+    "SEEK_SLIDER_MINIMUM_TRACK_SCALE_9_GRID": [
+      "3",
+      "0",
+      "1",
+      "4"
+    ],
+    "SIMPLE_BORDER_SCALE_9_GRID": [
+      "2",
+      "2",
+      "2",
+      "2"
+    ],
+    "STEPPER_DECREMENT_BUTTON_SCALE_9_GRID": [
+      "1",
+      "1",
+      "15",
+      "1"
+    ],
+    "STEPPER_INCREMENT_BUTTON_SCALE_9_GRID": [
+      "1",
+      "9",
+      "15",
+      "1"
+    ],
+    "TAB_SCALE_9_GRID": [
+      "5",
+      "5",
+      "1",
+      "15"
+    ],
+    "TEXT_INPUT_SCALE_9_GRID": [
+      "2",
+      "2",
+      "1",
+      "1"
+    ],
+    "TOOL_TIP_SCALE_9_GRID": [
+      "5",
+      "5",
+      "1",
+      "1"
+    ],
+    "VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID": [
+      "2",
+      "2",
+      "11",
+      "10"
+    ],
+    "VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID": [
+      "2",
+      "5",
+      "6",
+      "42"
+    ],
+    "VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID": [
+      "2",
+      "1",
+      "11",
+      "2"
+    ],
+    "VERTICAL_SLIDER_TRACK_SCALE_9_GRID": [
+      "0",
+      "3",
+      "4",
+      "1"
+    ],
     "horizontal-scroll-bar-thumb": [
       "3",
       "1",
