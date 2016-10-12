@@ -60,7 +60,7 @@ InputControl.prototype.onKeyDown = function (eventData) {
     }
     var code = eventData.data.code;
     var key = eventData.data.key;
-    if (key === 'CapsLock' || key === 'Meta' || key === 'Shift' || key === 'Control' || key === 'Alt' || key === 'Dead' || code.substring(0,1) === 'F' || key === 'Insert' || key === 'Escape') {
+    if (key === 'CapsLock' || key === 'Meta' || key === 'Shift' || key === 'Control' || key === 'Alt' || key === 'Dead' || code.substring(0,1) === 'F' || key === 'Insert' || key === 'Escape' || key === 'NumLock') {
         // ignore single shift/control/alt key, meta and dead keys
         return;
     }
@@ -80,7 +80,7 @@ InputControl.prototype.onKeyDown = function (eventData) {
     // TODO implement insert key? it is gnored for now!
     var txt = this.text;
     var changed = false;
-    switch (code) {
+    switch (key) {
         case 'ArrowLeft':
             this.cursorPos--;
             if (eventData.data.shiftKey) {
@@ -153,7 +153,8 @@ InputControl.prototype.onKeyDown = function (eventData) {
             }
             break;
         default:
-            if (eventData.data.ctrlKey) {
+            // allow µ or ² but ignore keys for browser refresh / show Developer Tools
+            if (eventData.data.ctrlKey && (code !== 'KeyJ' || code !== 'KeyR')) {
                 return;
             }
             if (selected) {
