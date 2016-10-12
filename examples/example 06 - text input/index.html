@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>gown.js example: scrollbar</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../bin/gown-full.js"></script>
+</head>
+<body>
+<script>
+    var stage = new PIXI.Container();
+    var sizes = {w: 800, h: 600};
+    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+
+    var txt;
+
+    function onComplete() {
+        txt = new GOWN.TextInput('change me!');
+        txt.width = 200;
+        txt.height = 30;
+        txt.y = txt.x = 20;
+        stage.addChild(txt);
+
+        var txt2 = new GOWN.TextInput('...or me!');
+        txt2.width = 200;
+        txt2.height = 30;
+        txt2.x = 20;
+        txt2.displayAsPassword = true;
+        txt2.y = 70;
+        stage.addChild(txt2);
+
+        requestAnimationFrame(animate);
+    }
+
+    var theme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+    theme.once(GOWN.Theme.COMPLETE, onComplete, this);
+
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+</script>
+
+</body>
+</html>

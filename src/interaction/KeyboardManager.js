@@ -12,7 +12,8 @@ var EventEmitter = require('eventemitter3');
  * @param [options] {object}
  * @param [options.autoPreventDefault=true] {boolean} Should the manager automatically prevent default browser actions.
  */
-
+// TODO (maybe): move this to an own external lib for PIXI-Keyboard interaction
+// TODO: show keyboard in Cocoon.io - see Cocoon.Dialog.showKeyboard
 function KeyboardManager(renderer, options) {
     EventEmitter.call(this);
 
@@ -29,9 +30,9 @@ function KeyboardManager(renderer, options) {
      * Should default browser actions automatically be prevented.
      *
      * @member {boolean}
-     * @default true
+     * @default false
      */
-    this.autoPreventDefault = options.autoPreventDefault !== undefined ? options.autoPreventDefault : true;
+    this.autoPreventDefault = options.autoPreventDefault !== undefined ? options.autoPreventDefault : false;
 
     /**
      * An event data object to handle all the event tracking/dispatching
@@ -48,6 +49,11 @@ function KeyboardManager(renderer, options) {
         }
     };
 
+    this.onKeyUp = this.onKeyUp.bind(this);
+    this.keyUpProcess = this.keyUpProcess.bind(this);
+
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.keyDownProcess = this.keyDownProcess.bind(this);
 
     /**
      * Fired when a key (usually from a keyboard) is pressed
@@ -94,20 +100,135 @@ KeyboardManager.prototype.removeEvents = function () {
  * @private
  */
 KeyboardManager.prototype.onKeyDown = function (event) {
-    this.eventData.data.originalEvent = event;
+    if (this.autoPreventDefault) {
+        event.preventDefault();
+    }
+    this._keyEvent(event);
+    this.processInteractive(this.renderer._lastObjectRendered, this.keyDownProcess);
+    this.emit('keydown', this.eventData);
+};
+
+/**
+ * Is called when the key is released
+ *
+ * @param event {Event} The DOM event of a key being released
+ * @private
+ */
+KeyboardManager.prototype.onKeyUp = function (event) {
+    if (this.autoPreventDefault) {
+        event.preventDefault();
+    }
+    this._keyEvent(event);
+    this.processInteractive(this.renderer._lastObjectRendered, this.keyUpProcess);
+    this.emit('keyup', this.eventData);
+};
+
+/**
+ * Handle original key event and forward it to gown
+ *
+ * @param event {Event} The DOM event of a key being released
+ * @param type {string} type of the event (keyup or keydown)
+ * @private
+ */
+KeyboardManager.prototype._keyEvent = function(event) {
+
     this.eventData.stopped = false;
+    this.eventData.originalEvent = event;
+    this.eventData.data = this.getKeyData(event);
 
     if (this.autoPreventDefault) {
         event.preventDefault();
     }
-
-
-    this.emit(event);
 };
 
-KeyboardManager.prototype.onKeyUp = function (event) {
-
+/**
+ * Grabs the data from the keystroke
+ * @private
+ */
+KeyboardManager.prototype.getKeyData = function (event) {
+    return {
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
+        code: event.code,
+        key: event.key,
+        originalEvent: event
+    };
 };
 
-PIXI.WebGLRenderer.registerPlugin('interaction', KeyboardManager);
-PIXI.CanvasRenderer.registerPlugin('interaction', KeyboardManager);
+KeyboardManager.prototype.keyUpProcess = function(displayObject) {
+    this.dispatchEvent( displayObject, 'keyup', this.eventData );
+};
+
+KeyboardManager.prototype.keyDownProcess = function(displayObject) {
+    this.dispatchEvent( displayObject, 'keydown', this.eventData );
+};
+
+/**
+ * traverse through the scene graph to call given function on all displayObjects
+ * that can receive keys
+ *
+ * @param displayObject {PIXI.Container|PIXI.Sprite|PIXI.extras.TilingSprite} the displayObject that will be resized (recurcsivly crawls its children)
+ * @param [func] {Function} the function that will be called on each resizable object. The displayObject will be passed to the function
+ */
+KeyboardManager.prototype.processInteractive = function (displayObject, func)
+{
+    if(!displayObject || !displayObject.visible || displayObject.enabled === false)
+    {
+        return false;
+    }
+
+    var children = displayObject.children;
+
+    for (var i = children.length-1; i >= 0; i--) {
+        // unlike the InteractionManager we iterate over ALL children
+        // and check every one if it is resizable, because
+        // we assume that resize is something that could affect every component
+        // not only the one that has focus.
+        var child = children[i];
+        this.processInteractive(child, func);
+    }
+
+    // only the ones who can receive keys (e.g. InputControl) will listen to
+    if (displayObject.receiveKeys) {
+        func(displayObject);
+    }
+};
+
+/**
+ * Dispatches an event on the display object that has resizable set to true
+ *
+ * @param displayObject {PIXI.Container|PIXI.Sprite|PIXI.extras.TilingSprite} the display object in question
+ * @param eventString {string} the name of the event (e.g, resize or orientation)
+ * @param eventData {object} the event data object
+ * @private
+ */
+KeyboardManager.prototype.dispatchEvent = function ( displayObject, eventString, eventData )
+{
+    if(!eventData.stopped)
+    {
+        eventData.target = displayObject;
+        eventData.type = eventString;
+
+        displayObject.emit( eventString, eventData );
+
+        if( displayObject[eventString] )
+        {
+            displayObject[eventString]( eventData );
+        }
+    }
+};
+
+KeyboardManager.prototype.destroy = function(){
+    this.removeEvents();
+    this.removeAllListeners();
+    this.renderer = null;
+    this.eventData = null;
+    this.onKeyUp = null;
+    this.keyUpProcess = null;
+    this.onKeyDown = null;
+    this.keyDownProcess = null;
+};
+
+PIXI.WebGLRenderer.registerPlugin('keyboard', KeyboardManager);
+PIXI.CanvasRenderer.registerPlugin('keyboard', KeyboardManager);

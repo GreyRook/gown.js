@@ -2904,9 +2904,19 @@
         "texture": "text-input-background-disabled-skin0000",
         "type": "texture"
       },
+      "down": {
+        "scale9": "TEXT_INPUT_SCALE_9_GRID",
+        "texture": "text-input-background-enabled-skin0000",
+        "type": "texture"
+      },
       "error": {
         "scale9": "TEXT_INPUT_SCALE_9_GRID",
         "texture": "text-input-background-error-skin0000",
+        "type": "texture"
+      },
+      "hover": {
+        "scale9": "TEXT_INPUT_SCALE_9_GRID",
+        "texture": "text-input-background-enabled-skin0000",
         "type": "texture"
       },
       "up": {

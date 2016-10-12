@@ -149,6 +149,33 @@
   		  "centerHeight": 2,
   		  "scale9": "vertical-scroll-bar-thumb"
   	  }
-  	}
+    },
+    "text_input": {
+      "up": {
+        "type": "texture",
+        "texture": "text-input-background-enabled-skin0000",
+        "scale9": "TEXT_INPUT_SCALE_9_GRID"
+      },
+      "down": {
+        "type": "texture",
+        "texture": "text-input-background-enabled-skin0000",
+        "scale9": "TEXT_INPUT_SCALE_9_GRID"
+      },
+      "hover": {
+        "type": "texture",
+        "texture": "text-input-background-enabled-skin0000",
+        "scale9": "TEXT_INPUT_SCALE_9_GRID"
+      },
+      "disabled": {
+        "type": "texture",
+        "texture": "text-input-background-disabled-skin0000",
+        "scale9": "TEXT_INPUT_SCALE_9_GRID"
+      },
+      "error": {
+        "type": "texture",
+        "texture": "text-input-background-error-skin0000",
+        "scale9": "TEXT_INPUT_SCALE_9_GRID"
+      }
+    }
   }
 }

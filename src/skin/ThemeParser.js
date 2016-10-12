@@ -3,7 +3,8 @@ var Theme = require('./Theme'),
     ToggleButton = require('../controls/ToggleButton'),
 	ScrollBar = require('../controls/ScrollBar'),
 	ScrollThumb = require('../controls/ScrollThumb'),
-	Check = require('../controls/Check');
+	Check = require('../controls/Check'),
+    TextInput = require('../controls/TextInput');
 
 /**
  * load theme from .json file.
@@ -46,6 +47,7 @@ ThemeParser.prototype.getSkinComponents = function () {
 ThemeParser.components = {};
 ThemeParser.components[Button.SKIN_NAME] = Button.stateNames;
 ThemeParser.components[ToggleButton.SKIN_NAME] = ToggleButton.stateNames;
+ThemeParser.components[TextInput.SKIN_NAME] = TextInput.stateNames;
 ThemeParser.components[Check.SKIN_NAME] = ToggleButton.stateNames;
 ThemeParser.components[ScrollBar.SKIN_NAME] = [
 	'horizontal_track', 'vertical_track'
@@ -180,7 +182,7 @@ ThemeParser.prototype.parseData = function(data) {
             // create skin from skinData for current skin
             var skin = this.skinFromData(skinData, data);
             if (skin) {
-                // skin.minWidth 
+                // skin.minWidth
                 this.setSkin(componentName, stateName, skin);
             }
         }

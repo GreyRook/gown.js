@@ -1,5 +1,5 @@
-var Control = require('../core/Control'),
-    InputControl = require('./InputControl');
+var InputControl = require('./InputControl'),
+    position = require('../utils/position');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input
@@ -8,21 +8,20 @@ var Control = require('../core/Control'),
  * @extends GOWN.InputControl
  * @memberof GOWN
  * @param text editable text shown in input
- * @param displayAsPassword Display TextInput as Password (default false)
  * @param theme default theme
  * @constructor
  */
 
-function TextInput(text, displayAsPassword, theme, skinName) {
+function TextInput(text, theme, skinName) {
     // show and load background image as skin (exploiting skin states)
     this.skinName = skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || TextInput.stateNames;
-    this._currentState = 'background';
-    this.invalidState = true;
+
+    this.height = 30; // TODO: overwrite by theme!
 
     InputControl.call(this, text, theme);
+    this.currentState = TextInput.UP;
 
-    this._displayAsPassword = displayAsPassword || false;
 
     /**
      * timer used to indicate if the cursor is shown
@@ -61,31 +60,120 @@ function TextInput(text, displayAsPassword, theme, skinName) {
 
     // caret/selection sprite
     this.cursor = new PIXI.Text('|', this.theme.textStyle);
+    if (this.pixiText) {
+        this.cursor.y = this.pixiText.y;
+    }
     this.addChild(this.cursor);
 
     // selection background
     this.selectionBg = new PIXI.Graphics();
     this.addChildAt(this.selectionBg, 0);
 
-    // set up events
-    this.boundOnMouseUp = this.onMouseUp.bind(this);
-    this.boundOnMouseUpOutside = this.onMouseUpOutside.bind(this);
-    this.boundOnMouseDown = this.onMouseDown.bind(this);
-    this.boundOnMouseMove = this.onMouseMove.bind(this);
+    // setup events
+    this.on('touchstart', this.onDown, this);
+    this.on('mousedown', this.onDown, this);
 
-    this.mousemove = this.touchmove = this.boundOnMouseMove;
-    this.mousedown = this.touchstart = this.boundOnMouseDown;
-    this.mouseup = this.touchend = this.boundOnMouseUp;
-    this.mouseupoutside = this.touchendoutside = this.boundOnMouseUpOutside;
+    this.on('touchend', this.onUp, this);
+    this.on('mouseupoutside', this.onUp, this);
+    this.on('mouseup', this.onUp, this);
+
+    this.on('mousemove', this.onMove, this);
+    this.on('touchmove', this.onMove, this);
+
+    this.currentState = TextInput.UP;
 }
 
 TextInput.prototype = Object.create(InputControl.prototype);
 TextInput.prototype.constructor = TextInput;
 module.exports = TextInput;
 
+/**
+ * Up state: mouse button is released or finger is removed from the screen
+ *
+ * @property UP
+ * @static
+ * @final
+ * @type String
+ */
+TextInput.UP = 'up';
+
+/**
+ * Down state: mouse button is pressed or finger touches the screen
+ *
+ * @property DOWN
+ * @static
+ * @final
+ * @type String
+ */
+TextInput.DOWN = 'down';
+
+/**
+ * Hover state: mouse pointer hovers over the button
+ * (ignored on mobile)
+ *
+ * @property HOVER
+ * @static
+ * @final
+ * @type String
+ */
+TextInput.HOVER = 'hover';
+
+/**
+ * Hover state: mouse pointer hovers over the button
+ * (ignored on mobile)
+ *
+ * @property HOVER
+ * @static
+ * @final
+ * @type String
+ */
+TextInput.OUT = 'out';
+
+/**
+ * names of possible states for a button
+ *
+ * @property stateNames
+ * @static
+ * @final
+ * @type String
+ */
+TextInput.stateNames = [
+    TextInput.DOWN, TextInput.HOVER, TextInput.UP
+];
 
 // name of skin
 TextInput.SKIN_NAME = 'text_input';
+
+
+/*
+ * set display as password
+ */
+Object.defineProperty(TextInput.prototype, 'displayAsPassword', {
+    get: function () {
+        return this._displayAsPassword;
+    },
+    set: function (displayAsPassword) {
+        this._displayAsPassword = displayAsPassword;
+        this.setText(this._origText);
+    }
+});
+
+TextInput.prototype.setText = function(text) {
+    if (this._displayAsPassword) {
+        text = text.replace(/./gi, '*');
+    }
+    this._displayText = text || '';
+    if (!this.pixiText) {
+        this.pixiText = new PIXI.Text(text, this.theme.textStyle);
+        this.addChild(this.pixiText);
+        position.centerVertical(this.pixiText);
+        if (this.cursor) {
+            this.cursor.y = this.pixiText.y;
+        }
+    } else {
+        this.pixiText.text = text;
+    }
+};
 
 /**
  * set the text that is shown inside the input field.
@@ -96,7 +184,7 @@ TextInput.SKIN_NAME = 'text_input';
  */
 Object.defineProperty(TextInput.prototype, 'text', {
     get: function () {
-        return this._text;
+        return this._origText;
     },
     set: function (text) {
         text += ''; // add '' to assure text is parsed as string
@@ -105,21 +193,7 @@ Object.defineProperty(TextInput.prototype, 'text', {
             return;
         }
         this._origText = text;
-        if (this._displayAsPassword) {
-            text = text.replace(/./gi, '*');
-        }
-        this._text = text || '';
-        if (!this.pixiText) {
-            this.pixiText = new PIXI.Text(text, this.theme.textStyle);
-            this.addChild(this.pixiText);
-        } else {
-            this.pixiText.text = text;
-        }
-
-        // update text input if this text field has the focus
-        if (this.hasFocus) {
-            //InputWrapper.setText(this.value);
-        }
+        this.setText(text);
 
         // reposition cursor
         this._cursorNeedsUpdate = true;
@@ -153,21 +227,6 @@ Object.defineProperty(TextInput.prototype, 'value', {
         return this._origText;
     }
 });
-
-/**
- * set text and type of DOM text input
- *
- * @method onfocus
- */
-TextInput.prototype.onfocus = function() {
-    //InputWrapper.setText(this.value);
-    //InputWrapper.setMaxLength(this.maxChars);
-    if (this._displayAsPassword) {
-        //InputWrapper.setType('password');
-    } else {
-        //InputWrapper.setType('text');
-    }
-};
 
 /**
  * set selected text
@@ -211,23 +270,21 @@ TextInput.prototype.onblur = function() {
 };
 
 TextInput.prototype.inputControlKeyDown = InputControl.prototype.onKeyDown;
-TextInput.prototype.onKeyDown = function () {
-    this.inputControlKeyDown();
+TextInput.prototype.onKeyDown = function (eventData) {
+    this.inputControlKeyDown(eventData);
     // update the canvas input state information from the hidden input
     this.updateTextState();
 };
 
-TextInput.prototype.inputControlKeyUp = InputControl.prototype.onKeyUp;
 TextInput.prototype.onKeyUp = function () {
     this.updateTextState();
-    this.inputControlKeyUp();
 };
 
 /**
  * position cursor on the text
  */
 TextInput.prototype.setCursorPos = function () {
-    this.cursor.x = this.textWidth(this.text.substring(0, this.cursorPos)) | 0;
+    this.cursor.x = this.textWidth(this._displayText.substring(0, this.cursorPos)) | 0;
 };
 
 /**
@@ -236,6 +293,7 @@ TextInput.prototype.setCursorPos = function () {
  * @method drawCursor
  */
 TextInput.prototype.drawCursor = function () {
+    // TODO: use Tween instead!
     if (this.hasFocus || this._mouseDown) {
         var time = Date.now();
 
@@ -255,12 +313,15 @@ TextInput.prototype.drawCursor = function () {
     }
 };
 
+// performance increase to avoid using call.. (10x faster)
+TextInput.prototype.redrawInputControl = InputControl.prototype.redraw;
+
 TextInput.prototype.redraw = function () {
     this.drawCursor();
-    Control.prototype.redraw.call(this);
+    this.redrawInputControl();
 };
 
-TextInput.prototype.onMouseMove = function (e) {
+TextInput.prototype.onMove = function (e) {
     var mouse = this.mousePos(e);
     if (!this.hasFocus || !this._mouseDown || this.selectionStart < 0) { // || !this.containsPoint(mouse)) {
         return false;
@@ -278,7 +339,7 @@ TextInput.prototype.onMouseMove = function (e) {
     return true;
 };
 
-TextInput.prototype.onMouseDown = function (e) {
+TextInput.prototype.onDown = function (e) {
     var originalEvent = e.data.originalEvent;
     if (originalEvent.which === 2 || originalEvent.which === 3) {
         originalEvent.preventDefault();
@@ -299,7 +360,7 @@ TextInput.prototype.onMouseDown = function (e) {
     return true;
 };
 
-TextInput.prototype.onMouseUp = function (e) {
+TextInput.prototype.onUp = function (e) {
     var originalEvent = e.data.originalEvent;
     if (originalEvent.which === 2 || originalEvent.which === 3) {
         originalEvent.preventDefault();
@@ -329,15 +390,42 @@ TextInput.prototype.onMouseUp = function (e) {
  * @method updateTextState
  */
 TextInput.prototype.updateTextState = function () {
-    //var text = InputWrapper.getText();
-
-    if (text !== this.text) {
-        this.text = text;
-    }
-
-    //var sel = InputWrapper.getSelection();
-    if (this.updateSelection(sel[0], sel[1])) {
-        this.cursorPos = sel[0];
-    }
     this.setCursorPos();
 };
+
+/**
+ * set text style (size, font etc.) for text and cursor
+ */
+Object.defineProperty(TextInput.prototype, 'style', {
+    set: function(style) {
+        this.cursor.style = style;
+        this.pixiText.style = style;
+        this.setCursorPos();
+        this._cursorNeedsUpdate = true;
+    }
+});
+
+/**
+ * The current state (one of _validStates)
+ *
+ * @property currentState
+ * @type String
+ */
+Object.defineProperty(TextInput.prototype, 'currentState',{
+    get: function() {
+        return this._currentState;
+    },
+    set: function(value) {
+        if (this._currentState === value) {
+            return;
+        }
+        if (this._validStates.indexOf(value) < 0) {
+            throw new Error('Invalid state: ' + value + '.');
+        }
+        this._currentState = value;
+        // invalidate state so the next draw call will redraw the control
+        this.invalidState = true;
+    }
+});
+
+// TODO: autoSizeIfNeeded
