@@ -13,9 +13,9 @@ function Button(theme, skinName) {
     this.skinName = skinName || Button.SKIN_NAME;
     this._validStates = this._validStates || Button.stateNames;
     Skinable.call(this, theme);
-    this.handleEvent('up');
+    this.handleEvent(Button.UP);
 
-    this.updateLabel = false; // label text changed
+    this.updateLabel = true; // label text changed
 
     this.on('touchstart', this.onDown, this);
     this.on('mousedown', this.onDown, this);
