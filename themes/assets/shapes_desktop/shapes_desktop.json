@@ -9,7 +9,8 @@
       "hover": {
         "borderColor": "0x00ff00",
         "color": "0x60c865"
-      }
+      },
+      "up": {}
     },
     "default": {
       "all": {

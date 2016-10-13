@@ -12,10 +12,11 @@ var EventEmitter = require('eventemitter3');
 function Theme(global) {
     EventEmitter.call(this);
 
-    // at its core a theme is just a dict that holds a collection of skins
+    // at its core a theme is just a dict that holds a collection of skins.
+    // every skin is a function that returns a renderable item (e.g. a texture)
     this._skins = {};
 
-    // default font for labels (e.g. buttons)
+    // default global font for all labels (e.g. button label)
     if (this.textStyle) {
         this.textStyle.clone();
     } else {

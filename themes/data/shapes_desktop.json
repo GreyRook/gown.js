@@ -17,6 +17,7 @@
       }
     },
     "button": {
+      "up": {},
       "down": {
         "color": "0xEA8686",
         "borderColor": "0xff0000"

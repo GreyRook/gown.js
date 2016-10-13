@@ -1,10 +1,4 @@
-var Theme = require('./Theme'),
-    Button = require('../controls/Button'),
-    ToggleButton = require('../controls/ToggleButton'),
-	ScrollBar = require('../controls/ScrollBar'),
-	ScrollThumb = require('../controls/ScrollThumb'),
-	Check = require('../controls/Check'),
-    TextInput = require('../controls/TextInput');
+var Theme = require('./Theme');
 
 /**
  * load theme from .json file.
@@ -43,16 +37,6 @@ ThemeParser.prototype.getSkinComponents = function () {
     }
     return cmps;
 };
-
-ThemeParser.components = {};
-ThemeParser.components[Button.SKIN_NAME] = Button.stateNames;
-ThemeParser.components[ToggleButton.SKIN_NAME] = ToggleButton.stateNames;
-ThemeParser.components[TextInput.SKIN_NAME] = TextInput.stateNames;
-ThemeParser.components[Check.SKIN_NAME] = ToggleButton.stateNames;
-ThemeParser.components[ScrollBar.SKIN_NAME] = [
-	'horizontal_track', 'vertical_track'
-];
-ThemeParser.components[ScrollThumb.SKIN_NAME] = ScrollThumb.THUMB_STATES;
 
 ThemeParser.prototype.loadComplete = function(loader, resources) {
     this.setCache(resources);
@@ -163,13 +147,19 @@ ThemeParser.prototype.parseData = function(data) {
         return;
     }
 
-    for (var componentName in ThemeParser.components) {
+    for (var componentName in data.skins) {
+        if (componentName === 'default') {
+            continue;
+        }
         // create skin for componentName (e.g. button) from data
 
-        var states = ThemeParser.components[componentName];
+        var states = data.skins[componentName];
         //var skins = data.skins[componentName];
-        for (var i = 0; i < states.length; i++) {
-            var stateName = states[i];
+        for (var stateName in states) {
+            if (stateName === 'all') {
+                continue;
+            }
+
             var skinData = {};
             // set defaults
             this.getSkinData(stateName, skinData, data.skins.default);
