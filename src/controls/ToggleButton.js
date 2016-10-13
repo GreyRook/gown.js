@@ -109,9 +109,29 @@ ToggleButton.prototype.handleEvent = function(type) {
     if (!this._enabled) {
         return;
     }
-    var pressedBefore = this._pressed;
     this.buttonHandleEvent(type);
-    if (type === Button.UP && this._over && pressedBefore) {
+    if (type === Button.UP && this._over) {
         this.toggle();
     }
 };
+
+
+/**
+ * fallback skin if other skin does not exist (e.g. if a mobile theme
+ * that does not provide a "hover" state is used on a desktop system)
+ *
+ * @property skinFallback
+ * @type String
+ */
+Object.defineProperty(ToggleButton.prototype, 'skinFallback', {
+    get: function() {
+        var selected = '';
+        if (this._currentState && this._currentState.indexOf('selected_') === 0) {
+            selected = 'selected_';
+        }
+        return selected + this._skinFallback;
+    },
+    set: function(value) {
+        this._skinFallback = value;
+    }
+});

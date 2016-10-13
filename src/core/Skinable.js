@@ -1,7 +1,8 @@
 var Control = require('./Control');
 
 /**
- * Control that requires a theme (e.g. a button)
+ * Control with a managed skin
+ * (e.g. a button that has different skins for up/hover/down states)
  *
  * @class Skinable
  * @extends GOWN.Control
@@ -19,6 +20,11 @@ function Skinable(theme) {
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
+    // overwrite skin values before next draw call.
+    this.invalidSkinData = true;
+
+    // default skin fallback state is 'up' (works for buttons)
+    this.skinFallback = 'up';
 }
 
 Skinable.prototype = Object.create( Control.prototype );
@@ -33,7 +39,7 @@ Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
  * @param theme the new theme {Theme}
  */
 Skinable.prototype.setTheme = function(theme) {
-    if (theme === this.theme && theme) {
+    if (theme === this.theme || !theme) {
         return;
     }
 
@@ -41,6 +47,15 @@ Skinable.prototype.setTheme = function(theme) {
     this.preloadSkins();
     // force states to redraw
     this.invalidState = true;
+};
+
+/**
+ * overwrite data from theme for this specific component.
+ * (usable if you want to change e.g. background color based on selected items)
+ */
+Skinable.prototype.updateTheme = function(data) {
+    this.skinData = data;
+    this.invalidSkinData = true;
 };
 
 /**
@@ -86,7 +101,10 @@ Skinable.prototype.fromSkin = function(name, callback) {
     }
     if (skin) {
         callback.call(this, skin);
+    } else if (this.skinFallback && this.skinFallback !== name) {
+        skin = this.fromSkin(this.skinFallback, callback);
     }
+    return skin;
 };
 
 /**
@@ -108,5 +126,21 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
         }
         this._skinName = value;
         this.invalidState = true;
+    }
+});
+
+/**
+ * fallback skin if other skin does not exist (e.g. if a mobile theme
+ * that does not provide a "hover" state is used on a desktop system)
+ *
+ * @property skinFallback
+ * @type String
+ */
+Object.defineProperty(Skinable.prototype, 'skinFallback', {
+    get: function() {
+        return this._skinFallback;
+    },
+    set: function(value) {
+        this._skinFallback = value;
     }
 });
