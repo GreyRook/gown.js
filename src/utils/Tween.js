@@ -92,10 +92,12 @@ Tween.prototype.createTween = function(target, duration, easing) {
 
 Tween.prototype.to = function(data) {
     if (this.type === Tween.PIXI_TWEEN && this._tween) {
+        this._tween.stop();
         this._tween.to(data);
         this._tween.start();
     } else if (this.type === Tween.CREATEJS_TWEEN && this._tween) {
         this._tween.to(data, this.duration, Tween.CREATEJS_EASING(this.easing));
+        this._tween.play();
     } else if (this.type === Tween.NONE) {
         // no tween, set values directly and without wait
         // maybe we'd like to do some basic linear transitioning
