@@ -11,7 +11,7 @@ var DefaultListItemRenderer = require('./renderers/DefaultListItemRenderer');
  * @memberof GOWN
  * @constructor
  */
-function List(dataProvider, layout, theme) {
+function List(theme) {
     Scroller.call(this, theme);
     this.skinName = this.skinName || List.SKIN_NAME;
 
@@ -35,7 +35,6 @@ function List(dataProvider, layout, theme) {
     this._itemRendererFactory = this._itemRendererFactory || this._defaultItemRendererFactory;
 
     // The collection of data displayed by the list.
-    this.dataProvider = dataProvider;
 
     /**
      * properties that will be passed down to every item
@@ -54,18 +53,7 @@ function List(dataProvider, layout, theme) {
         // and instead use the normal LayoutGroup (less abstraction, less code)
         this.viewPort = new LayoutGroup();
     }
-
-    layout = layout || this._layout;
-
-    if (!layout) {
-        layout = new PIXI.layout.VerticalLayout();
-        layout.padding = 0;
-        layout.gap = 0;
-        layout.horizontalAlign = PIXI.layout.VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
-        layout.verticalAlign = PIXI.layout.VerticalLayout.VERTICAL_ALIGN_TOP;
-    }
-    // use setter to set layout of the viewport
-    this.layout = layout;
+    this.layoutChanged = true;
 }
 
 List.prototype = Object.create( Scroller.prototype );
@@ -129,6 +117,15 @@ List.prototype.redraw = function() {
         this.refreshRenderers();
     }
     this.scrollerRedraw();
+
+    if (!this.layout) {
+        var layout = new PIXI.layout.VerticalLayout();
+        layout.padding = 0;
+        layout.gap = 0;
+        layout.horizontalAlign = PIXI.layout.VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
+        layout.verticalAlign = PIXI.layout.VerticalLayout.VERTICAL_ALIGN_TOP;
+        this.layout = layout;
+    }
 };
 
 List.prototype.refreshRenderers = function () {
