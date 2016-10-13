@@ -2,7 +2,8 @@ var resizeScaling = require('../utils/resizeScaling');
 var mixin = require('../utils/mixin');
 
 /**
- * base for all UI controls (see controls/)
+ * base for all UI controls (see ../controls/)
+ *
  * based on pixi-DisplayContainer that supports adding children, so all
  * controls are container
  * @class Control
@@ -65,15 +66,6 @@ Control.prototype.updateTransform = function() {
  */
 Control.prototype.mousePos = function(e) {
     return e.data.getLocalPosition(this);
-};
-
-/**
- * update before draw call
- * redraw control for current state from theme
- *
- * @method redraw
- */
-Control.prototype.redraw = function() {
 };
 
 /**
