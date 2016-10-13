@@ -39,6 +39,9 @@ function DefaultListItemRenderer(theme) {
     this._data = null;
     this.dataInvalid = false;
 
+    // TODO: use min/max and/or default values instead, because percentages
+    // have higher priority, so this forces the user to remove the percentage
+    // before he can set pixel values.
     this.percentWidth = this.percentHeight = 100;
 }
 
