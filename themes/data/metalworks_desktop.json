@@ -48,8 +48,7 @@
         "type": "texture",
         "texture": "button-down-skin0000",
         "scale9": "BUTTON_SCALE9_GRID"
-    },
-
+      },
       "selected_up": {
         "type": "texture",
         "texture": "toggle-button-selected-up-skin0000",
@@ -59,6 +58,32 @@
         "type": "texture",
         "texture": "button-down-skin0000",
         "scale9": "BUTTON_SCALE9_GRID"
+      }
+    },
+    "scroll_bar": {
+      "horizontal_track": {
+        "type": "texture",
+        "texture": "background-skin0000",
+        "scale9": "DEFAULT_SCALE9_GRID"
+      },
+      "vertical_track": {
+        "type": "texture",
+        "texture": "background-skin0000",
+        "scale9": "DEFAULT_SCALE9_GRID"
+      }
+    },
+    "scroll_thumb": {
+      "horizontal_up": {
+        "texture": "horizontal-simple-scroll-bar-thumb-skin0000",
+        "type": "texture",
+        "middleWidth": 2,
+        "scale9": "HORIZONTAL_SCROLL_BAR_THUMB_SCALE9_GRID"
+      },
+      "vertical_up": {
+        "texture": "vertical-simple-scroll-bar-thumb-skin0000",
+        "type": "texture",
+        "centerHeight": 2,
+        "scale9": "VERTICAL_SCROLL_BAR_THUMB_SCALE9_GRID"
       }
     }
   }

@@ -2167,6 +2167,32 @@
         "type": "texture"
       }
     },
+    "scroll_bar": {
+      "horizontal_track": {
+        "scale9": "DEFAULT_SCALE9_GRID",
+        "texture": "background-skin0000",
+        "type": "texture"
+      },
+      "vertical_track": {
+        "scale9": "DEFAULT_SCALE9_GRID",
+        "texture": "background-skin0000",
+        "type": "texture"
+      }
+    },
+    "scroll_thumb": {
+      "horizontal_up": {
+        "middleWidth": 2,
+        "scale9": "HORIZONTAL_SCROLL_BAR_THUMB_SCALE9_GRID",
+        "texture": "horizontal-simple-scroll-bar-thumb-skin0000",
+        "type": "texture"
+      },
+      "vertical_up": {
+        "centerHeight": 2,
+        "scale9": "VERTICAL_SCROLL_BAR_THUMB_SCALE9_GRID",
+        "texture": "vertical-simple-scroll-bar-thumb-skin0000",
+        "type": "texture"
+      }
+    },
     "toggle_button": {
       "down": {
         "scale9": "BUTTON_SCALE9_GRID",
