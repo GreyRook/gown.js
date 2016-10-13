@@ -23,13 +23,15 @@
     var txt;
 
     function onComplete() {
-        txt = new GOWN.TextInput('change me!');
+        txt = new GOWN.TextInput();
+        txt.text = 'change me!';
         txt.width = 200;
         txt.height = 30;
         txt.y = txt.x = 20;
         stage.addChild(txt);
 
-        var txt2 = new GOWN.TextInput('...or me!');
+        var txt2 = new GOWN.TextInput();
+        txt2.text = '...or me!';
         txt2.width = 200;
         txt2.height = 30;
         txt2.x = 20;

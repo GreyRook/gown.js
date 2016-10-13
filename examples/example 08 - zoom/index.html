@@ -49,9 +49,11 @@
             }
         );
 
-        var slider = new GOWN.Slider(null, aeontheme);
+        var slider = new GOWN.Slider(aeontheme);
 
-        var txt = new GOWN.TextInput('0');
+        var txt = new GOWN.TextInput();
+        txt.width = 200;
+        txt.height = 30;
         txt.change = function(text) {
             slider.value = parseFloat(text);
         };

@@ -40,7 +40,8 @@
 	var aeonTheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
 
     function onCompleteMetal() {
-        var list = metalList = new GOWN.List(groceryList, null, metalTheme);
+        var list = metalList = new GOWN.List(metalTheme);
+        list.dataProvider = groceryList;
         list.itemRendererProperties.labelField = "text";
         list.viewPort.width = list.width = 100;
         list.allowMultipleSelection = true;
@@ -67,7 +68,7 @@
     }
 
     function onCompleteAeon() {
-        var list = aeonList = new GOWN.List(null, null, aeonTheme);
+        var list = aeonList = new GOWN.List(aeonTheme);
         list.dataProvider = groceryList;
         list.itemRendererProperties.labelField = "text";
         list.viewPort.width = list.width = 100;

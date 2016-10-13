@@ -17,15 +17,16 @@
 <script>
     var stage = new PIXI.Container();
     var NUM_THEMES = 3;
-    var themes_loaded = 0;
+    var themesLoaded = 0;
 
     var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
     var aeontheme;
+    var aeonbtn;
 
     function onCompleteAeon() {
-        var aeonbtn;
+
         aeonbtn = new GOWN.Button(aeontheme);
         aeonbtn.width = 150;
         aeonbtn.height = 100;
@@ -40,41 +41,42 @@
             }
         });
 
-        themes_loaded++;
-        if (themes_loaded === NUM_THEMES) {
+        themesLoaded++;
+        if (themesLoaded === NUM_THEMES) {
             requestAnimationFrame(animate);
         }
     }
 
     aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
     aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
-    var shapeTheme;
-    function onCompleteShape() {
-        var btn = new GOWN.Button(shapeTheme);
-        btn.width = 150;
-        btn.height = 100;
-        btn.x = 170;
-        btn.y = 30;
-        btn.label = "second";
-        stage.addChild(btn);
+    var bootTheme;
+    var bootBtn;
+    function onCompleteBootstraphish() {
+        bootBtn = new GOWN.Button(bootTheme);
+        bootBtn.width = 150;
+        bootBtn.height = 100;
+        bootBtn.x = 170;
+        bootBtn.y = 30;
+        bootBtn.label = "second";
+        stage.addChild(bootBtn);
 
-        btn.on(GOWN.Button.TRIGGERED, function () {
+        bootBtn.on(GOWN.Button.TRIGGERED, function () {
             if (window.console) {
                 console.log("you clicked the second button!");
             }
         });
-
-        themes_loaded++;
-        if (themes_loaded === NUM_THEMES) {
+        themesLoaded++;
+        if (themesLoaded === NUM_THEMES) {
             requestAnimationFrame(animate);
         }
     }
 
-    shapeTheme = new GOWN.ThemeParser('../../themes/assets/shapes_desktop/shapes_desktop.json');
-    shapeTheme.once(GOWN.Theme.COMPLETE, onCompleteShape, this);
+    bootTheme = new GOWN.ThemeParser('../../themes/assets/bootstrapish/bootstrapish.json');
+    bootTheme.once(GOWN.Theme.COMPLETE, onCompleteBootstraphish, this);
 
+    var metalbtn;
     function onCompleteMetal() {
-        var metalbtn = new GOWN.Button(metaltheme);
+        metalbtn = new GOWN.Button(metaltheme);
         metalbtn.width = 150;
         metalbtn.height = 100;
         metalbtn.x = 320;
@@ -88,8 +90,8 @@
             }
         });
 
-        themes_loaded++;
-        if (themes_loaded === NUM_THEMES) {
+        themesLoaded++;
+        if (themesLoaded === NUM_THEMES) {
             requestAnimationFrame(animate);
         }
     }

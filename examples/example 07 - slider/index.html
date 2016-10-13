@@ -48,7 +48,8 @@
 
         slider = new GOWN.Slider(aeonTheme);
 
-        var txt = new GOWN.TextInput('0');
+        var txt = new GOWN.TextInput();
+        txt.text = '0'
         txt.change = function(text) {
             slider.value = parseFloat(text);
         };
