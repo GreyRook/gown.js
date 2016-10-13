@@ -25,12 +25,13 @@
 
     var themesComplete = 0;
 	var slider = null;
+    var metalSlider = null;
 
     function onCompleteMetal() {
-        var slider = new GOWN.Slider(metalTheme);
-        slider.x = 400;
-        slider.width = 300;
-        stage.addChild(slider);
+        metalSlider = new GOWN.Slider(metalTheme);
+        metalSlider.x = 400;
+        metalSlider.width = 300;
+        stage.addChild(metalSlider);
         themesComplete++;
         if (themesComplete == 2)
             requestAnimationFrame(animate);
@@ -49,6 +50,8 @@
         slider = new GOWN.Slider(aeonTheme);
 
         var txt = new GOWN.TextInput();
+        txt.width = 200;
+        txt.height = 30;
         txt.text = '0'
         txt.change = function(text) {
             slider.value = parseFloat(text);
