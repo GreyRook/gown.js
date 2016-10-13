@@ -17,11 +17,25 @@
         "type": "texture",
         "texture": "button-down-skin0000",
         "scale9": "BUTTON_SCALE9_GRID"
-      },
-      "hover": {
+      }
+    },
+    "check": {
+      "up": {
         "type": "texture",
-        "texture": "quiet-button-hover-skin0000",
-        "scale9": "BUTTON_SCALE9_GRID"
+        "texture": "check-up-icon0000"
+      },
+      "down": {
+        "type": "texture",
+        "texture": "check-down-icon0000"
+      },
+
+      "selected_up": {
+        "type": "texture",
+        "texture": "check-selected-up-icon0000"
+      },
+      "selected_down": {
+        "type": "texture",
+        "texture": "check-selected-down-icon0000"
       }
     },
     "toggle_button": {
@@ -34,13 +48,8 @@
         "type": "texture",
         "texture": "button-down-skin0000",
         "scale9": "BUTTON_SCALE9_GRID"
-      },
-      "hover": {
-        "type": "texture",
-        "texture": "quiet-button-hover-skin0000",
-        "scale9": "BUTTON_SCALE9_GRID"
-      },
-      
+    },
+
       "selected_up": {
         "type": "texture",
         "texture": "toggle-button-selected-up-skin0000",
@@ -49,11 +58,6 @@
       "selected_down": {
         "type": "texture",
         "texture": "button-down-skin0000",
-        "scale9": "BUTTON_SCALE9_GRID"
-      },
-      "selected_hover": {
-        "type": "texture",
-        "texture": "quiet-button-hover-skin0000",
         "scale9": "BUTTON_SCALE9_GRID"
       }
     }

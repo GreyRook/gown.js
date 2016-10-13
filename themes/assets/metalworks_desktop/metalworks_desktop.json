@@ -2143,14 +2143,27 @@
         "texture": "button-down-skin0000",
         "type": "texture"
       },
-      "hover": {
-        "scale9": "BUTTON_SCALE9_GRID",
-        "texture": "quiet-button-hover-skin0000",
-        "type": "texture"
-      },
       "up": {
         "scale9": "BUTTON_SCALE9_GRID",
         "texture": "button-up-skin0000",
+        "type": "texture"
+      }
+    },
+    "check": {
+      "down": {
+        "texture": "check-down-icon0000",
+        "type": "texture"
+      },
+      "selected_down": {
+        "texture": "check-selected-down-icon0000",
+        "type": "texture"
+      },
+      "selected_up": {
+        "texture": "check-selected-up-icon0000",
+        "type": "texture"
+      },
+      "up": {
+        "texture": "check-up-icon0000",
         "type": "texture"
       }
     },
@@ -2160,19 +2173,9 @@
         "texture": "button-down-skin0000",
         "type": "texture"
       },
-      "hover": {
-        "scale9": "BUTTON_SCALE9_GRID",
-        "texture": "quiet-button-hover-skin0000",
-        "type": "texture"
-      },
       "selected_down": {
         "scale9": "BUTTON_SCALE9_GRID",
         "texture": "button-down-skin0000",
-        "type": "texture"
-      },
-      "selected_hover": {
-        "scale9": "BUTTON_SCALE9_GRID",
-        "texture": "quiet-button-hover-skin0000",
         "type": "texture"
       },
       "selected_up": {
