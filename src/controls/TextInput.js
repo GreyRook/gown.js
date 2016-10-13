@@ -12,14 +12,14 @@ var InputControl = require('./InputControl'),
  * @constructor
  */
 
-function TextInput(text, theme, skinName) {
+function TextInput(theme, skinName) {
     // show and load background image as skin (exploiting skin states)
     this.skinName = skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || TextInput.stateNames;
 
     this.height = 30; // TODO: overwrite by theme!
 
-    InputControl.call(this, text, theme);
+    InputControl.call(this, theme);
     this.currentState = TextInput.UP;
 
 
