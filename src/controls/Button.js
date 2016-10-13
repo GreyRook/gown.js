@@ -28,6 +28,7 @@ function Button(theme, skinName) {
     this.on('mouseout', this.onOut, this);
 
     this.on('mouseover', this.onHover, this);
+    this.on('touchmove', this.onTouchMove, this);
 }
 
 Button.prototype = Object.create( Skinable.prototype );
@@ -145,6 +146,14 @@ Button.prototype.onOut = function() {
     this.handleEvent(Button.OUT);
 };
 
+Button.prototype.onTouchMove = function(eventData) {
+    // TODO: this still behaves strange:
+    //       if you touch down a button and move your finger around the button
+    //       gets deselected, even if you are on the button
+    if (eventData.data.target === this) {
+        this.handleEvent(Button.HOVER);
+    }
+};
 
 /**
  * update width/height of the button
@@ -189,7 +198,10 @@ Button.prototype.handleEvent = function(type) {
     }
     if (type === Button.DOWN) {
         this.currentState = Button.DOWN;
+        // click / touch DOWN so the button is pressed and the pointer has to
+        // be over the Button
         this._pressed = true;
+        this._over = true;
     } else if (type === Button.UP) {
         this._pressed = false;
 
@@ -200,6 +212,7 @@ Button.prototype.handleEvent = function(type) {
                 this.currentState = Button.HOVER;
             }
         } else {
+            // user releases the mouse / touch outside of the button boundaries
             this.currentState = Button.UP;
         }
     } else if (type === Button.HOVER) {
