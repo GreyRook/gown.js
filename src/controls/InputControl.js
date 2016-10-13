@@ -12,13 +12,14 @@ var Skinable = require('../core/Skinable');
  * @memberof GOWN
  * @constructor
  */
-function InputControl(text, theme) {
+function InputControl(theme) {
     Skinable.call(this, theme);
     this.cursorPos = 0;
 
     this.receiveKeys = true;
 
-    this.text = text || '';
+    this.text = this.text || '';
+
     this.hasFocus = false;
 
     /**
