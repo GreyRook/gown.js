@@ -27,6 +27,7 @@ if (typeof PIXI === 'undefined') {
     core.ScrollThumb =            require('./controls/ScrollThumb');
     core.Slider =                 require('./controls/Slider');
     core.TextInput =              require('./controls/TextInput');
+    core.TextArea =               require('./controls/TextArea');
     core.ToggleButton =           require('./controls/ToggleButton');
 
     // data

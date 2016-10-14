@@ -39,6 +39,14 @@
         txt2.y = 70;
         stage.addChild(txt2);
 
+        var textArea = new GOWN.TextArea();
+        textArea.text = 'And this is text is a bit longer so it is inside a text area. Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        textArea.height = 200;
+        textArea.width = 200;
+        textArea.x = 20;
+        textArea.y = 120;
+        stage.addChild(textArea);
+
         requestAnimationFrame(animate);
     }
 
