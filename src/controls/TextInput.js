@@ -40,6 +40,11 @@ Object.defineProperty(TextInput.prototype, 'displayAsPassword', {
     }
 });
 
+
+TextInput.prototype.getLines = function() {
+    return [this.text];
+};
+
 TextInput.prototype.inputControlSetText = InputControl.prototype.setText;
 TextInput.prototype.setText = function(text) {
     if (this._displayAsPassword) {
@@ -56,41 +61,20 @@ TextInput.prototype.setText = function(text) {
     }
 };
 
-TextInput.prototype.posToCoord = function(pos) {
-    var text = this.pixiText.text,
-        totalWidth = this.pixiText.x;
-
-    if (pos.x < text.length) {
-        return totalWidth + this.textWidth(text.substring(0, pos.x));
-    } else {
-        return totalWidth + this.textWidth(text);
-    }
-};
-
 TextInput.prototype.updateSelectionBg = function() {
-    var start = this.posToCoord(this.selection[0]),
-        end = this.posToCoord(this.selection[1]);
+    var start = this.selection[0],
+        end = this.selection[1];
 
     this.selectionBg.clear();
     if (start !== end) {
+        start = this.textWidth(this.text.substring(0, start));
+        end = this.textWidth(this.text.substring(0, end));
         this.selectionBg.beginFill(0x0080ff);
-        this.selectionBg.drawRect(0, 0, end - start, this.pixiText.height);
-        this.selectionBg.x = start;
+        this.selectionBg.drawRect(start, 0, end - start, this.pixiText.height);
+        this.selectionBg.x = this.pixiText.x;
         this.selectionBg.y = this.pixiText.y;
     }
 };
-
-TextInput.prototype.inputControlKeyDown = InputControl.prototype.onKeyDown;
-TextInput.prototype.onKeyDown = function (eventData) {
-    this.inputControlKeyDown(eventData);
-    // update the canvas input state information from the hidden input
-    this.updateTextState();
-};
-
-TextInput.prototype.onKeyUp = function () {
-    this.updateTextState();
-};
-
 
 
 // TODO: autoSizeIfNeeded

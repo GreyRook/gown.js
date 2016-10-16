@@ -14,9 +14,28 @@ var Skinable = require('../core/Skinable');
  */
 function InputControl(theme) {
     Skinable.call(this, theme);
-    this.cursorPos = {x:0, y:0};
 
     this.receiveKeys = true;
+
+    /**
+     * current position of the cursor in the text
+     */
+    this.cursorPos = 0;
+
+    /**
+     * character position of selected area in the text (start and end)
+     *
+     * @type {Array}
+     * @private
+     */
+    this.selection = [0, 0];
+
+    /**
+     * character position that marks the beginning of the current selection
+     */
+    this.selectionStart = 0;
+
+    this.textOffset = new PIXI.Point(5, 4);
 
     this.text = this.text || '';
 
@@ -59,16 +78,6 @@ function InputControl(theme) {
      */
     this.blinkInterval = 500;
 
-    /**
-     * selected area (start and end)
-     *
-     * @type {Array}
-     * @private
-     */
-    this.selection = [
-        {x: 0, y: 0},
-        {x: 0, y: 0}];
-
     // caret/selection sprite
     this.cursor = new PIXI.Text('|', this.cursorStyle);
     if (this.pixiText) {
@@ -79,8 +88,6 @@ function InputControl(theme) {
     // selection background
     this.selectionBg = new PIXI.Graphics();
     this.addChildAt(this.selectionBg, 0);
-
-    this.selectionStart = {x: -1, y: -1};
 
     // TODO: remove events on destroy
     // setup events
@@ -172,16 +179,17 @@ InputControl.prototype.onKeyDown = function (eventData) {
     }
     var code = eventData.data.code;
     var key = eventData.data.key;
+    // TODO implement the insert key to overwrite text? it is gnored for now!
     if (key === 'WakeUp' || key === 'CapsLock' || key === 'Meta' ||
         key === 'Shift' || key === 'Control' || key === 'Alt' ||
         key === 'Dead' || code.substring(0,1) === 'F' || key === 'Insert' ||
         key === 'Escape' || key === 'NumLock') {
-        // ignore single shift/control/alt key, meta and dead keys
+        // ignore single shift/control/alt, meta and dead keys
         return;
     }
 
     if (key === 'Tab') {
-        // TODO: implement Tab
+        // TODO: implement Tab / TabIndex
         return;
     }
     if (key === 'Enter') {
@@ -191,67 +199,70 @@ InputControl.prototype.onKeyDown = function (eventData) {
 
     // check for selected Text
     var selected = this.selection && (
-        this.selection[0].x - this.selection[1].x !== 0 &&
-        this.selection[0].y - this.selection[1].y !== 0);
+        this.selection[0] !== this.selection[1]);
 
-    // TODO implement insert key? it is gnored for now!
-    var txt = this.text;
-    var changed = false;
     switch (key) {
         case 'ArrowLeft':
-            this.cursorPos--;
+            this.moveCursorLeft();
             if (eventData.data.shiftKey) {
-                this.updateSelection(this.selection[0]-1, this.selection[1]);
+                this.updateSelection(this.cursorPos, this.selection[1]);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
-            this._cursorNeedsUpdate = true;
             break;
         case 'ArrowRight':
-            this.cursorPos++;
+            this.moveCursorRight();
             if (eventData.data.shiftKey) {
-                this.updateSelection(this.selection[0], this.selection[1]+1);
+                this.updateSelection(this.selection[0], this.cursorPos);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
-            this._cursorNeedsUpdate = true;
             break;
-        case 'ArrowUp':
-        case 'Home':
+        case 'PageDown':
         case 'PageUp':
-            this.cursorPos = 0;
+        case 'Home':
+        case 'End':
+            // TODO: implement jump to first/last character
+            // ignored for now...
+            break;
+
+        case 'ArrowUp':
+            /*this.moveCursorUp();
             if (eventData.data.shiftKey) {
-                this.updateSelection(0, this.selection[1]);
+                if (maxLines === 0) {
+                    this.cursorPos = 0;
+                }
+                this.updateSelection(this.cursorPos, this.selection[1]);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
-            this._cursorNeedsUpdate = true;
+            this._cursorNeedsUpdate = true;*/
             break;
         case 'ArrowDown':
-        case 'End':
-        case 'PageDown':
-            this.cursorPos = txt.length;
+            /*this.moveCursorDown();
             if (eventData.data.shiftKey) {
-                this.updateSelection(this.selection[0], txt.length);
+                if (maxLines === 0) {
+                    this.cursorPos = this.text.length;
+                }
+                this.updateSelection(this.selection[0], this.cursorPos);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
-            this._cursorNeedsUpdate = true;
+            this._cursorNeedsUpdate = true;*/
             break;
         case 'Backspace':
             if (selected) {
                 // remove only the selected Text
                 this.deleteSelection();
                 this.updateSelection(this.cursorPos, this.cursorPos);
-                changed = true;
             } else if (this.cursorPos > 0) {
                 //if (eventData.data.ctrlKey) {
                     // TODO: delete previous word!
                 //}
                 // remove last char at cursorPosition
-                this.text = [txt.slice(0, this.cursorPos-1), txt.slice(this.cursorPos)].join('');
-                this.cursorPos--;
-                changed = true;
+                this.moveCursorLeft();
+                this.deleteText(this.cursorPos, this.cursorPos+1);
+                // ignore browser-back
                 eventData.originalEvent.preventDefault();
             }
             break;
@@ -259,50 +270,59 @@ InputControl.prototype.onKeyDown = function (eventData) {
             if (selected) {
                 this.deleteSelection();
                 this.updateSelection(this.cursorPos, this.cursorPos);
-                changed = true;
-            } else if (this.cursorPos < txt.length) {
+            } else if (this.cursorPos < this.text.length) {
                 //if (eventData.data.ctrlKey) {
                     // TODO: delete previous word!
                 //}
                 // remove next char after cursorPosition
-                this.text = [txt.slice(0, this.cursorPos), txt.slice(this.cursorPos+1)].join('');
-                changed = true;
+                this.deleteText(this.cursorPos, this.cursorPos+1);
             }
             break;
         default:
             // select all text
             if (eventData.data.ctrlKey && code === 'KeyA') {
-                this.cursorPos = txt.length;
+                this.cursorPos = this.text.length;
                 this.updateSelection(0, this.cursorPos);
                 this._cursorNeedsUpdate = true;
                 return;
             }
             // allow µ or ² but ignore keys for browser refresh / show Developer Tools
-            if (eventData.data.ctrlKey && (code !== 'KeyJ' || code !== 'KeyR')) {
+            if (eventData.data.ctrlKey && (code === 'KeyJ' || code === 'KeyR')) {
                 return;
             }
             if (selected) {
-                txt = this.deleteSelection();
+                this.deleteSelection();
             }
             if (key.length !== 1) {
                 throw new Error('unknown key ' + key);
             }
-            this.text = [txt.slice(0, this.cursorPos), key, txt.slice(this.cursorPos)].join('');
-            changed = true;
-            this.cursorPos.x++;
+
+            this.insertChar(key);
             this.updateSelection(this.cursorPos, this.cursorPos);
-    }
-    if (changed) {
-        this.emit('change', this);
-        this._cursorNeedsUpdate = true;
     }
 };
 
-/**
- * delete next character
- */
-InputControl.prototype.deleteNext = function() {
+InputControl.prototype.moveCursorLeft = function() {
+    this.cursorPos = Math.max(this.cursorPos-1, 0);
+    this._cursorNeedsUpdate = true;
+};
 
+InputControl.prototype.moveCursorRight = function() {
+    this.cursorPos = Math.min(this.cursorPos+1, this.text.length);
+    this._cursorNeedsUpdate = true;
+};
+
+/**
+ * insert char at current cursor position
+ */
+InputControl.prototype.insertChar = function(char) {
+    if (this.maxChars > 0 && this.pixiText.text >= this.maxChars) {
+        this.pixiText.text = this.pixiText.text.substring(0, this.maxChars);
+        return;
+    }
+    this.text = [this.text.slice(0, this.cursorPos), char, this.text.slice(this.cursorPos)].join('');
+    this.moveCursorRight();
+    this.emit('change', this);
 };
 
 /**
@@ -310,10 +330,26 @@ InputControl.prototype.deleteNext = function() {
  *
  */
 InputControl.prototype.deleteSelection = function() {
-    var s0 = this.selection[0];
-    var s1 = this.selection[1];
-    this.text = [this.text.slice(0, s0.x), this.text.slice(s1.x)].join('');
-    this.cursorPos = s0;
+    var start = this.selection[0];
+    var end = this.selection[1];
+    if (start < end) {
+        this.cursorPos = start;
+        return this.deleteText(start, end);
+    } else if (start > end) {
+        this.cursorPos = end;
+        return this.deleteText(end, start);
+    }
+    throw new Error('can not delete text! (start & end are the same)');
+};
+
+
+
+/**
+ * deletion from to multiple lines
+ */
+InputControl.prototype.deleteText = function(fromPos, toPos) {
+    this.text = [this.text.slice(0, fromPos), this.text.slice(toPos)].join('');
+    this.emit('change', this);
     return this.text;
 };
 
@@ -337,12 +373,12 @@ InputControl.prototype.setText = function(text) {
     this._displayText = text || '';
     if (!this.pixiText) {
         this.pixiText = new PIXI.Text(text, this.textStyle);
+        this.pixiText.position = this.textOffset;
         this.addChild(this.pixiText);
     } else {
         this.pixiText.text = text;
     }
 };
-
 
 /**
  * set the text that is shown inside the input field.
@@ -353,6 +389,9 @@ InputControl.prototype.setText = function(text) {
  */
 Object.defineProperty(InputControl.prototype, 'text', {
     get: function () {
+        if (this.pixiText) {
+            return this.pixiText.text;
+        }
         return this._origText;
     },
     set: function (text) {
@@ -386,8 +425,19 @@ Object.defineProperty(InputControl.prototype, 'maxChars', {
         if (this._maxChars === value) {
             return;
         }
-        //InputWrapper.setMaxLength(value);
+        if (this.pixiText.text > value) {
+            this.pixiText.text = this.pixiText.text.substring(0, value);
+            if (this.cursorPos > value) {
+                this.cursorPos = value;
+                this._cursorNeedsUpdate = true;
+            }
+            this.updateSelection(
+                Math.max(this.selection[0], value),
+                Math.max(this.selection[1], value)
+            );
+        }
         this._maxChars = value;
+
     }
 });
 
@@ -401,55 +451,18 @@ Object.defineProperty(InputControl.prototype, 'value', {
  * set selected text
  *
  * @method updateSelection
- * @param start
- * @param end
+ * @param start start position in the text
+ * @param end end position in the text
  * @returns {boolean}
  */
 InputControl.prototype.updateSelection = function (start, end) {
-    if (this.selection[0].x !== start.x || this.selection[1].x !== end.x ||
-        this.selection[0].y !== start.y || this.selection[1].y !== end.y) {
+    if (this.selection[0] !== start || this.selection[1] !== end) {
         this.selection[0] = start;
         this.selection[1] = end;
-        //InputWrapper.setSelection(start, end);
-        this._cursorNeedsUpdate = true;
-        // should be implemented in your Input, see TextInput / TextArea
-        this.updateSelectionBg();
-
+        this._selectionNeedsUpdate = true;
         return true;
-    } else {
-        return false;
     }
-};
-
-/**
- * determine where the click was made along the string
- *
- * @method clickPos
- * @param x
- * @param y
- * @returns {Array} x/y values of position
- */
-InputControl.prototype.clickPos = function(x)
-{
-    var displayText = this.pixiText._text,
-        totalWidth = this.pixiText.x,
-        posX = 0;
-
-    if (x < this.textWidth(displayText) + totalWidth)
-    {
-        // loop through each character to identify the position
-        for (var i=0; i<displayText.length; i++)
-        {
-            totalWidth += this.textWidth(displayText[i]);
-            if (totalWidth >= x)
-            {
-                posX = i;
-                break;
-            }
-        }
-    }
-
-    return {x:posX, y:0};
+    return false;
 };
 
 /**
@@ -531,7 +544,20 @@ InputControl.prototype.blur = function() {
  * position cursor on the text
  */
 InputControl.prototype.setCursorPos = function () {
-    this.cursor.x = this.pixiText.x + this.textWidth(this._displayText.substring(0, this.cursorPos.x)) | 0;
+    this.textToPixelPos(this.cursorPos, this.cursor.position);
+    this.cursor.position.x += this.pixiText.x;
+    this.cursor.position.y += this.pixiText.y;
+};
+
+/**
+ * height of the line in pixel
+ * (assume that every character of pixi text has the same line height)
+ */
+InputControl.prototype.lineHeight = function() {
+    var style = this.pixiText._style;
+    var fontProperties = this.pixiText.determineFontProperties(this.pixiText._font);
+    var lineHeight = style.lineHeight || fontProperties.fontSize + style.strokeThickness;
+    return lineHeight;
 };
 
 /**
@@ -561,25 +587,24 @@ InputControl.prototype.drawCursor = function () {
 };
 
 InputControl.prototype.onMove = function (e) {
-    var mouse = this.mousePos(e);
+    var mouse = e.data.getLocalPosition(this.pixiText);
     if (!this.hasFocus || !this._mouseDown) { // || !this.containsPoint(mouse)) {
         return false;
     }
 
-    var curPos = this.clickPos(mouse.x, mouse.y),
+    var curPos = this.pixelToTextPos(mouse),
         start = this.selectionStart,
         end = curPos;
 
     if (this.updateSelection(start, end)) {
         this.cursorPos = curPos;
-        this.setCursorPos();
         this._cursorNeedsUpdate = true;
     }
     return true;
 };
 
 InputControl.prototype.onDown = function (e) {
-    var mouse = this.mousePos(e);
+    var mouse = e.data.getLocalPosition(this.pixiText);
     var originalEvent = e.data.originalEvent;
     if (originalEvent.which === 2 || originalEvent.which === 3) {
         originalEvent.preventDefault();
@@ -592,10 +617,10 @@ InputControl.prototype.onDown = function (e) {
     this._mouseDown = true;
 
     // start the selection drag if inside the input
-    this.selectionStart = this.clickPos(mouse.x, mouse.y);
+    this.selectionStart = this.pixelToTextPos(mouse);
     this.updateSelection(this.selectionStart, this.selectionStart);
     this.cursorPos = this.selectionStart;
-    this.setCursorPos();
+    this._cursorNeedsUpdate = true;
     return true;
 };
 
@@ -605,33 +630,80 @@ InputControl.prototype.onUp = function (e) {
         originalEvent.preventDefault();
         return false;
     }
-    /*
-    var mouse = this.mousePos(e);
 
-    // update selection if a drag has happened
-    var clickPos = this.clickPos(mouse.x, mouse.y);
-
-    // update the cursor position
-    if (!(clickPos == this.selectionStart)) {
-        this.cursorPos = clickPos;
-        this.setCursorPos();
-        this.updateSelection(this.cursorPos, this.cursorPos);
-    }
-    */
-
-    this.selectionStart.x = -1;
-    this.selectionStart.y = -1;
+    this.selectionStart = -1;
     this._mouseDown = false;
     return true;
 };
 
 /**
- * synchronize TextInput with DOM element
+ * from position in the text to pixel position
+ * (for cursor/selection positioning)
  *
- * @method updateTextState
+ * @method textToPixelPos
+ * @param textPos current character position in the text
+ * @returns {Point} pixel position
  */
-InputControl.prototype.updateTextState = function () {
-    this.setCursorPos();
+InputControl.prototype.textToPixelPos = function(textPos, position) {
+    var lines = this.getLines();
+    var x = 0;
+    for (var y = 0; y < lines.length; y++) {
+        var lineLength = lines[y].length;
+        if (lineLength < textPos) {
+            textPos -= lineLength + 1;
+        } else {
+            var text = lines[y];
+            x = this.textWidth(text.substring(0, textPos));
+            break;
+        }
+    }
+
+    if (!position) {
+        position = new PIXI.Point(x, y * this.lineHeight());
+    } else {
+        position.x = x;
+        position.y = y * this.lineHeight();
+    }
+    return position;
+};
+
+/**
+ * from pixel position on the text to character position inside the text
+ * (used when clicked on the text)
+ *
+ * @method pixelToTextPos
+ * @param mousePos position of the mouse on the PIXI Text
+ * @returns {Number} position in the text
+ */
+InputControl.prototype.pixelToTextPos = function(pixelPos) {
+    var textPos = 0;
+    var lines = this.getLines();
+    // calculate current line we are in
+    var currentLine = Math.min(
+        Math.max(
+            parseInt(pixelPos.y / this.lineHeight()),
+            0),
+        lines.length - 1);
+    // sum all characters of previous lines
+    for (var i = 0; i < currentLine; i++) {
+        textPos += lines[i].length + 1;
+    }
+
+    var displayText = lines[currentLine];
+    var totalWidth = 0;
+    if (pixelPos.x < this.textWidth(displayText)) {
+        // loop through each character to identify the position
+        for (i = 0; i < displayText.length; i++) {
+            totalWidth += this.textWidth(displayText[i]);
+            if (totalWidth >= pixelPos.x) {
+                textPos += i;
+                break;
+            }
+        }
+    } else {
+        textPos += displayText.length;
+    }
+    return textPos;
 };
 
 /**
@@ -640,7 +712,7 @@ InputControl.prototype.updateTextState = function () {
  * @method onblur
  */
 InputControl.prototype.onblur = function() {
-    this.updateSelection({x:0, y:0}, {x:0, y:0});
+    this.updateSelection(0, 0);
     this.emit('focusOut', this);
 };
 
@@ -649,6 +721,9 @@ InputControl.prototype.redrawSkinable = Skinable.prototype.redraw;
 InputControl.prototype.redraw = function () {
     if (this.drawCursor) {
         this.drawCursor();
+    }
+    if (this._selectionNeedsUpdate) {
+        this.updateSelectionBg();
     }
     this.redrawSkinable();
 };
@@ -684,7 +759,7 @@ Object.defineProperty(InputControl.prototype, 'style', {
         this.textStyle = style;
         if (this.pixiText) {
             this.pixiText.style = style;
-            this.setCursorPos();
+            this._cursorNeedsUpdate = true;
         }
         this._cursorNeedsUpdate = true;
     }

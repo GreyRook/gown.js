@@ -18,6 +18,11 @@ function TextArea(theme, skinName) {
     this._validStates = this._validStates || InputControl.stateNames;
 
     InputControl.call(this, theme);
+
+    this._fromPos = new PIXI.Point(0, 0);
+    this._toPos = new PIXI.Point(0, 0);
+    this._fromText = new PIXI.Point(0, 0);
+    this._toText = new PIXI.Point(0, 0);
 }
 
 TextArea.prototype = Object.create(InputControl.prototype);
@@ -28,81 +33,84 @@ module.exports = TextArea;
 // name of skin
 TextArea.SKIN_NAME = 'text_input';
 
-/*
- * calculate position in the text in pixel based on text width and lineHeight
- */
-TextArea.prototype.posToCoord = function(pos) {
-    var lines = this.getLines();
-    var text = lines[pos.y];
-    var textWidth = 0;
-
-    if (pos.x < text.length) {
-        textWidth = this.textWidth(text.substring(0, pos.x));
-    } else {
-        textWidth = this.textWidth(text);
-    }
-
-
-    return {
-        x: this.pixiText.x + textWidth,
-        y: this.pixiText.y + pos.y * this.lineHeight()
-    };
-};
-
 
 TextArea.prototype.updateSelectionBg = function() {
     var start = this.selection[0],
         end = this.selection[1];
     this.selectionBg.clear();
-    if (start.x !== end.x && start.y === end.y) {
-        start = this.posToCoord(this.selection[0]);
-        end = this.posToCoord(this.selection[1]);
-        this.selectionBg.beginFill(0x0080ff);
-        // draw first rect from start to end of line
-        this.selectionBg.drawRect(start.x, start.y, end.x - start.x, this.lineHeight());
-        this.selectionBg.endFill();
-    } else if (start.y < end.y) {
-        this._drawSelectionBg(start, end);
-    } else if (start.y > end.y) {
-        this._drawSelectionBg(end, start);
-    }
-};
-
-TextArea.prototype._drawSelectionBg = function (_from, _to) {
-    var _fromCoords = this.posToCoord(_from);
-    var _toCoords = this.posToCoord(_to);
-    this.selectionBg.beginFill(0x0080ff);
-    var line = this.posToCoord({x: Infinity, y: _from.y});
-    this.selectionBg.drawRect(_fromCoords.x, _fromCoords.y, line.x - _fromCoords.x, this.lineHeight());
-    for (var i = _from.y+1; i < _to.y; i++) {
-        line = this.posToCoord({x: Infinity, y: i});
-        this.selectionBg.drawRect(0, line.y, line.x, this.lineHeight());
-    }
-    this.selectionBg.drawRect(0, _toCoords.y, _toCoords.x, this.lineHeight());
-};
-
-/**
- * calculate line height
- * (assume that every character of the pixi text has the same line height)
- */
-TextArea.prototype.lineHeight = function() {
-    var style = this.pixiText._style;
-    var fontProperties = this.pixiText.determineFontProperties(this.pixiText._font);
-    var lineHeight = style.lineHeight || fontProperties.fontSize + style.strokeThickness;
-    return lineHeight;
-};
-
-/**
- * position cursor on the text
- */
-TextArea.prototype.setCursorPos = function () {
-    this.cursor.y = this.cursorPos.y * this.lineHeight() + this.pixiText.y;
-    if (this.cursorPos.y < 0) {
-        this.cursor.x = this.pixiText.x;
+    if (start === end) {
         return;
     }
-    var txt = this.getLines()[this.cursorPos.y];
-    this.cursor.x = this.pixiText.x + this.textWidth(txt.substring(0, this.cursorPos.x)) | 0;
+    if (start < end) {
+        this._drawSelectionBg(start, end);
+    } else if (start > end) {
+        this._drawSelectionBg(end, start);
+    }
+    this.selectionBg.x = this.pixiText.x;
+    this.selectionBg.y = this.pixiText.y;
+};
+
+
+/**
+ * calculate position in Text
+ */
+TextArea.prototype.textToLinePos = function(textPos, position) {
+    var lines = this.getLines();
+    var x = 0;
+    for (var y = 0; y < lines.length; y++) {
+        var lineLength = lines[y].length;
+        if (lineLength < textPos) {
+            textPos -= lineLength + 1;
+        } else {
+            x = textPos;
+            break;
+        }
+    }
+
+    if (!position) {
+        position = new PIXI.Point(x, y);
+    } else {
+        position.x = x;
+        position.y = y;
+    }
+    return position;
+};
+
+/**
+ * new selection over multiple lines
+ */
+TextArea.prototype._drawSelectionBg = function (fromTextPos, toTextPos) {
+    this.textToPixelPos(fromTextPos, this._fromPos);
+    this.textToPixelPos(toTextPos, this._toPos);
+
+    this.selectionBg.beginFill(0x0080ff);
+    if (this._toPos.y === this._fromPos.y) {
+        this.selectionBg.drawRect(
+            this._fromPos.x,
+            this._fromPos.y,
+            this._toPos.x - this._fromPos.x,
+            this.lineHeight());
+        return;
+    }
+
+    this.textToLinePos(fromTextPos, this._fromText);
+    this.textToLinePos(toTextPos, this._toText);
+    var lines = this.getLines();
+    // draw till the end of the line
+    var startPos = this._fromText.x;
+    for (var i = this._fromText.y; i < this._toText.y; i++) {
+        var text = lines[i];
+        this.selectionBg.drawRect(
+            startPos > 0 ? this._fromPos.x : 0,
+            i * this.lineHeight(),
+            this.textWidth(text.substring(startPos, text.length)),
+            this.lineHeight());
+        startPos = 0;
+    }
+    this.selectionBg.drawRect(0,
+        this._toPos.y,
+        this._toPos.x,
+        this.lineHeight());
 };
 
 TextArea.prototype.getLines = function() {
@@ -110,45 +118,21 @@ TextArea.prototype.getLines = function() {
     return wrappedText.split(/(?:\r\n|\r|\n)/);
 };
 
-/**
- * determine where the click was made along the string
- *
- * @method clickPos
- * @param x
- * @param y
- * @returns {Array} x/y values of position
- */
-TextArea.prototype.clickPos = function(x, y)
-{
-    var totalWidth = this.pixiText.x,
-        lines = this.getLines(),
-        posX = 0;
 
-
-    var posY = Math.min(
-        Math.max(
-            parseInt(y / this.lineHeight()),
-            0),
-        lines.length - 1);
-    var displayText = lines[posY];
-
-    if (x < this.textWidth(displayText) + totalWidth)
-    {
-        // loop through each character to identify the position
-        for (var i=0; i<displayText.length; i++)
-        {
-            totalWidth += this.textWidth(displayText[i]);
-            if (totalWidth >= x)
-            {
-                posX = i;
-                break;
-            }
+Object.defineProperty(InputControl.prototype, 'width', {
+    get: function () {
+        return this._width;
+    },
+    set: function(value) {
+        this._width = value;
+        this.minWidth = Math.min(value, this.minWidth);
+        if (this.pixiText) {
+            this.pixiText.style.wordWrapWidth = value - this.textOffset.x * 2;
+            this._cursorNeedsUpdate = true;
+            this._selectionNeedsUpdate = true;
         }
     }
-
-    return {x:posX, y:posY};
-};
-
+});
 
 Object.defineProperty(TextArea.prototype, 'style', {
     get: function() {
@@ -161,10 +145,12 @@ Object.defineProperty(TextArea.prototype, 'style', {
         }
         style = style.clone();
         style.wordWrap = true;
+        if (!style.wordWrapWidth && this.textOffset && this.width) {
+            style.wordWrapWidth = this.width - this.textOffset.x * 2;
+        }
         this.textStyle = style;
         if (this.pixiText) {
             this.pixiText.style = style;
-            this.setCursorPos();
         }
         this._cursorNeedsUpdate = true;
     }
