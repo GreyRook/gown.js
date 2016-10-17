@@ -1,5 +1,6 @@
-var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
-               'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
+var OPTIONS = ['fontSize', 'fontFamily', '_fontSize', '_fontFamily',
+               'wordWrap', 'wordWrapWidth', 'lineHeight',
+               'fill', 'align', 'stroke', 'strokeThickness',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
                'dropShadowDistance', 'padding', 'textBaseline',
                'lineJoin', 'miterLimit'];
