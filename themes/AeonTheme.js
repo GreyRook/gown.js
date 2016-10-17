@@ -108,6 +108,13 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("check-selected-hover-icon"));
     }
 
+    if(GOWN.DropDownList){
+        var ddl = GOWN.DropDownList;
+        this.setSkin(ddl.SKIN_NAME, "drop_down-list",
+            this.getScaleContainer("drop-down-list-grid",
+                AeonTheme.DROPDOWNLIST_GRID));
+    }
+
 
     // TODO: emit
     if (this._onComplete) {
@@ -124,5 +131,6 @@ AeonTheme.TEXT_INPUT_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 148, 18);
 AeonTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(2, 5, 6, 42);
 AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(2, 1, 11, 2);
 AeonTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 11, 10);
+AeonTheme.DROPDOWNLIST_GRID = new PIXI.Rectangle(2, 2, 200, 30);
 
 GOWN.AeonTheme = AeonTheme;
