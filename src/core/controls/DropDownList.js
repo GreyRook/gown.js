@@ -36,21 +36,21 @@ DropDownList.prototype.redrawSkinable = Skinable.prototype.redraw;
 DropDownList.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
 DropDownList.prototype.updateDimensions = function() {
-    var width = this.worldWidth;
+    //var width = this.worldWidth;
     var height = this.worldHeight;
-    if (this.hitArea) {
-        this.hitArea.width = width;
-        this.hitArea.height = height;
-    } else {
-        this.hitArea = new PIXI.Rectangle(0, 0, width, height);
-    }
-
-    var name = 'dropDownListSkin'; //TODO ???
-    var skin = this.skinCache[name];
-    if (skin) {
-        skin.width = width;
-        skin.height = height;
-    }
+    // if (this.hitArea) {
+    //     this.hitArea.width = width;
+    //     this.hitArea.height = height;
+    // } else {
+    //     this.hitArea = new PIXI.Rectangle(0, 0, width, height);
+    // }
+    //
+    // var name = 'dropDownListSkin'; //TODO ???
+    // var skin = this.skinCache[name];
+    // if (skin) {
+    //     skin.width = width;
+    //     skin.height = height;
+    // }
 
     if(this.labelText) {
         var scaleY = height / this._height;
@@ -62,12 +62,14 @@ DropDownList.prototype.updateDimensions = function() {
 };
 
 DropDownList.prototype.updateLabelDimensions = function () { //todo
-    if (this.labelText && this.labelText.text &&
-        (this.worldWidth - this.labelText.width) >= 0 &&
-        (this.worldHeight - this.labelText.height) >= 0) {
-        this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
-        this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
-    }
+    // if (this.labelText && this.labelText.text &&
+    //     (this.worldWidth - this.labelText.width) >= 0 &&
+    //     (this.worldHeight - this.labelText.height) >= 0) {
+    //     // this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
+    //     // this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
+    //     this.labelText.x = 60;
+    //     this.labelText.y = 5;
+    // }
 };
 
 DropDownList.prototype.redraw = function() {
@@ -89,14 +91,26 @@ DropDownList.prototype.redraw = function() {
  * @method createLabel
  */
 DropDownList.prototype.createLabel = function() {
+    var wrapper = new PIXI.Graphics();
+    wrapper.beginFill(0xff7f08);
+    wrapper.drawRect(20, 0, 420, 40);
+    wrapper.x = 15;
+    wrapper.y = 0;
+    wrapper.endFill();
+
     if(this.labelText) {
         this.labelText.text = this._label;
         this.labelText.style = this.theme.textStyle.clone();
     } else {
-        this.labelText = new PIXI.Text(this._label, this.theme.textStyle.clone());
+        //this.labelText = new PIXI.Text(this._label, this.theme.textStyle.clone());
+        this.labelText = new PIXI.Text(this._label, {fontFamily : 'Arial', fontSize: 12, fill : 0xffffff, align : 'center'});
         this.labelText.interactive = true;
         this.labelText.click = this.toggleDropDown.bind(this);
-        this.addChild(this.labelText);
+        this.labelText.x = 60;
+        this.labelText.y = 5;
+        wrapper.addChild(this.labelText);
+
+        this.addChild(wrapper);
     }
     this.updateLabelDimensions();
     this.updateLabel = false;
@@ -115,7 +129,7 @@ DropDownList.prototype.createDropDown = function () { //TODO
             wrapper.beginFill(0x574f46);
             wrapper.drawRect(20, 20, 420, 220);
             wrapper.x = 15;
-            wrapper.y = 15;
+            wrapper.y = 25;
             wrapper.endFill();
 
             var container = new PIXI.Graphics();
@@ -126,23 +140,19 @@ DropDownList.prototype.createDropDown = function () { //TODO
             container.endFill();
 
             this.elementList.forEach(function (el, i) {
-                var line = new PIXI.Graphics();
-                line.beginFill(0x24211e);
-                line.drawRect(10, 20 + 30 * i, 400, 2);
-                line.endFill();
-
-                var labelText = new PIXI.Text(el.text,{fontFamily : 'Arial', fontSize: 24, fill : 0xe4e4e4, align : 'center'}); // use own styles
-                labelText.x = 20;
-                labelText.y = 20 + 30 * i + 20;
+                var labelText = new PIXI.Text(el.text,{fontFamily : 'Arial', fontSize: 18, fill : 0xe4e4e4, align : 'center'}); // use own styles
+                labelText.x = 40;
+                labelText.y = 20 + 30 * i;
                 labelText.interactive = true;
                 labelText.click = this.selectDropDownElement.bind(this, labelText._text);
 
-                container.addChild(line);
-                container.addChild(labelText);
-                if(this.elementList.length === i+1){//last elem
-                    container.addChild(line);
-                }
+                var line = new PIXI.Graphics();
+                line.beginFill(0x24211e);
+                line.drawRect(10, 50 + 30 * i, 400, 2);
+                line.endFill();
 
+                container.addChild(labelText);
+                container.addChild(line);
             }.bind(this));
             wrapper.addChild(container);
             this.addChild(wrapper);
