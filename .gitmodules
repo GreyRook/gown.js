@@ -7,6 +7,3 @@
 [submodule "examples/example 15 - resize canvas/lib/css-element-queries"]
 	path = examples/example 15 - resize canvas/lib/css-element-queries
 	url = git@github.com:marcj/css-element-queries.git
-[submodule "examples/example 13 - login dialog/FontDetect"]
-	path = examples/example 13 - login dialog/lib/FontDetect
-	url = git@github.com:JenniferSimonds/FontDetect.git
