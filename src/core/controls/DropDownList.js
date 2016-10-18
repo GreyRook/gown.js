@@ -23,8 +23,8 @@ function DropDownList(elementList ,theme, skinName) {
     this.updateElementList = true; // list changed
 
     this.selectedValue = null;
-
 }
+
 DropDownList.prototype = Object.create( Skinable.prototype );
 DropDownList.prototype.constructor = DropDownList;
 module.exports = DropDownList;
@@ -39,7 +39,7 @@ DropDownList.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
 DropDownList.prototype.updateDimensions = function() {
     //var width = this.worldWidth;
-    var height = this.worldHeight;
+    //var height = this.worldHeight;
     // if (this.hitArea) {
     //     this.hitArea.width = width;
     //     this.hitArea.height = height;
@@ -55,9 +55,9 @@ DropDownList.prototype.updateDimensions = function() {
     // }
 
     if(this.labelText) {
-        var scaleY = height / this._height;
-        this.labelText.style.fontSize = this.theme.textStyle.fontSize * scaleY;
-        this.labelText.style = this.labelText.style; // trigger setter
+       // var scaleY = height / this._height;
+       // this.labelText.style.fontSize = this.theme.textStyle.fontSize * scaleY;
+        //this.labelText.style = this.labelText.style; // trigger setter
         this.updateLabelDimensions();
     }
     this.runUpdateDimensions = false;
@@ -74,6 +74,11 @@ DropDownList.prototype.updateLabelDimensions = function () { //todo
     // }
 };
 
+/**
+ * update before draw call
+ *
+ * @method redraw
+ */
 DropDownList.prototype.redraw = function() {
     if(this.runUpdateDimensions){
         this.updateDimensions();
@@ -88,16 +93,16 @@ DropDownList.prototype.redraw = function() {
 };
 
 /**
- * create/update a label for this dropDown //todo
+ * create/update a label for this dropDown
  *
  * @method createLabel
  */
-DropDownList.prototype.createLabel = function() {
+DropDownList.prototype.createLabel = function() {//todo refactoring
     var wrapper = new PIXI.Graphics();
     wrapper.beginFill(0xff7f08);
     wrapper.lineStyle(2, 0x000000, 1);
-    wrapper.drawRoundedRect(95, 0, 250, 40, 4);
-    wrapper.x = 15;
+    wrapper.drawRoundedRect(110, 0, 250, 40, 4);
+    wrapper.x = 0;
     wrapper.y = 0;
     wrapper.endFill();
     wrapper.interactive = true;
@@ -119,51 +124,81 @@ DropDownList.prototype.createLabel = function() {
 };
 
 /**
- * create/update DropDownList todo
+ * create/update DropDownList
  *
  * @method createDropDown
  */
 
-DropDownList.prototype.createDropDown = function () { //TODO
+DropDownList.prototype.createDropDown = function () { //TODO refactoring add constans
     if(this.elementList) {
         if(this.showDropDown){
             var wrapper = new PIXI.Graphics();
-            wrapper.lineStyle(10, 0x574f46, 1);
-            wrapper.beginFill(0x383430);
-            wrapper.drawRect(20, 25, 420, 220);
+            wrapper.beginFill(0x574f46);
+            wrapper.lineStyle(2, 0x000000, 1);
             wrapper.x = 15;
-            wrapper.y = 25;
+            wrapper.y = 55;
+            wrapper.moveTo(0,0);
+            wrapper.lineTo(0, 250);
+            wrapper.lineTo(450, 250);
+            wrapper.lineTo(450, 0);
+            wrapper.lineTo(235, 0);
+            wrapper.lineTo(225, -15);
+            wrapper.lineTo(215, 0);
+            wrapper.lineTo(0, 0);
             wrapper.endFill();
 
+
+
+
+            var dropDownContainer = new PIXI.Graphics();
+            dropDownContainer.beginFill(0x383430);
+            dropDownContainer.drawRect(10, 15, 420, 220);
+            dropDownContainer.x = 0;
+            dropDownContainer.y = 0;
+            dropDownContainer.endFill();
+
             var grp = new GOWN.LayoutGroup();
-            grp.y = 30;
+            grp.y = 15;
+            grp.x = 5;
             var inner = new GOWN.LayoutGroup();
             inner.layout = new GOWN.VerticalLayout();
-            inner.layout.gap = 30;
+            inner.layout.gap = 15;
 
-            this.elementList.forEach(function (el, i) {
-                // var line = new PIXI.Graphics();
-                // line.beginFill(0x383430);
-                // line.drawRect(0, 0, 410, 2);
-                // line.x = 0;
-                // line.y = 45 + 30 * i;
-                // line.endFill();
+            this.elementList.forEach(function (el) {
+                var container = new PIXI.Container();
+                var line = new PIXI.Graphics();
+                line.beginFill(0x000000);
+                line.drawRect(5, 0, 410, 2);
+                line.x = 5;
+                line.y = 65;
+                line.endFill();
 
-
-                var labelText = new PIXI.Text(el.text,{fontFamily : 'Arial', fontSize: 18, fill : 0xe4e4e4, align : 'center'}); // use own styles
+                var labelText = new PIXI.Text(el.text, {fontFamily : 'Arial', fontSize: 18, fill : 0xe4e4e4, align : 'center'}); // use own styles
                 labelText.x = 40;
-                labelText.y = 30 + 30 * i;
-                labelText.interactive = true;
-                labelText.click = this.selectDropDownElement.bind(this, labelText._text);
-                labelText.hitArea = new PIXI.Rectangle(0, 0, 410, 40);
+                labelText.y = 14;
+                container.hitArea = new PIXI.Rectangle(0, 0, 410, 73);
 
-                inner.addChild(labelText);
-                //inner.addChild(line);
+                container.interactive = true;
+                container.click = this.selectDropDownElement.bind(this, labelText._text);
+
+                if(this.selectedValue && this.selectedValue === labelText._text){
+                    var circle = new PIXI.Graphics();
+                    circle.lineStyle(0);
+                    circle.beginFill(0xff7f08);
+                    circle.drawCircle(370, 31,10);
+                    circle.endFill();
+                    container.addChild(circle);
+                }
+
+                container.addChild(labelText);
+                container.addChild(line);
+
+                inner.addChild(container);
             }.bind(this));
 
             var innerScroll = new GOWN.ScrollArea(inner);
-            innerScroll.width = wrapper.width - 10;
-            innerScroll.height = wrapper.height - 20;
+            innerScroll.width = dropDownContainer.width;
+            innerScroll.height = dropDownContainer.height;
             grp.addChild(innerScroll);
 
 
@@ -171,9 +206,11 @@ DropDownList.prototype.createDropDown = function () { //TODO
             grp.addChild(sb);
             sb.x = innerScroll.width;
             sb.height = innerScroll.height;
-            wrapper.addChild(grp);
 
-             this.addChild(wrapper);
+            dropDownContainer.addChild(grp);
+            wrapper.addChild(dropDownContainer);
+
+            this.addChild(wrapper);
         }
     }
     this.updateLabelDimensions();
