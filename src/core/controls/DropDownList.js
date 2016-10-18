@@ -22,6 +22,8 @@ function DropDownList(elementList ,theme, skinName) {
 
     this.updateElementList = true; // list changed
 
+    this.selectedValue = null;
+
 }
 DropDownList.prototype = Object.create( Skinable.prototype );
 DropDownList.prototype.constructor = DropDownList;
@@ -86,27 +88,27 @@ DropDownList.prototype.redraw = function() {
 };
 
 /**
- * create/update a label for this button //todo
+ * create/update a label for this dropDown //todo
  *
  * @method createLabel
  */
 DropDownList.prototype.createLabel = function() {
     var wrapper = new PIXI.Graphics();
     wrapper.beginFill(0xff7f08);
-    wrapper.drawRect(20, 0, 420, 40);
+    wrapper.lineStyle(2, 0x000000, 1);
+    wrapper.drawRoundedRect(95, 0, 250, 40, 4);
     wrapper.x = 15;
     wrapper.y = 0;
     wrapper.endFill();
+    wrapper.interactive = true;
+    wrapper.click = this.toggleDropDown.bind(this);
 
     if(this.labelText) {
         this.labelText.text = this._label;
-        this.labelText.style = this.theme.textStyle.clone();
+        this.labelText.style = {fontFamily : 'Arial', fontSize: 12, fill : 0x000000, align : 'center'};
     } else {
-        //this.labelText = new PIXI.Text(this._label, this.theme.textStyle.clone());
-        this.labelText = new PIXI.Text(this._label, {fontFamily : 'Arial', fontSize: 12, fill : 0xffffff, align : 'center'});
-        this.labelText.interactive = true;
-        this.labelText.click = this.toggleDropDown.bind(this);
-        this.labelText.x = 60;
+        this.labelText = new PIXI.Text(this._label, {fontFamily : 'Arial', fontSize: 12, fill : 0x000000, align : 'center'});
+        this.labelText.x = 145;
         this.labelText.y = 5;
         wrapper.addChild(this.labelText);
 
@@ -117,7 +119,7 @@ DropDownList.prototype.createLabel = function() {
 };
 
 /**
- * create/update DropDownList
+ * create/update DropDownList todo
  *
  * @method createDropDown
  */
@@ -126,36 +128,52 @@ DropDownList.prototype.createDropDown = function () { //TODO
     if(this.elementList) {
         if(this.showDropDown){
             var wrapper = new PIXI.Graphics();
-            wrapper.beginFill(0x574f46);
-            wrapper.drawRect(20, 20, 420, 220);
+            wrapper.lineStyle(10, 0x574f46, 1);
+            wrapper.beginFill(0x383430);
+            wrapper.drawRect(20, 25, 420, 220);
             wrapper.x = 15;
             wrapper.y = 25;
             wrapper.endFill();
 
-            var container = new PIXI.Graphics();
-            container.beginFill(0x383430);
-            container.drawRect(10, 10, 400, 200);
-            container.x = 20;
-            container.y = 20;
-            container.endFill();
+            var grp = new GOWN.LayoutGroup();
+            grp.y = 30;
+            var inner = new GOWN.LayoutGroup();
+            inner.layout = new GOWN.VerticalLayout();
+            inner.layout.gap = 30;
 
             this.elementList.forEach(function (el, i) {
+                // var line = new PIXI.Graphics();
+                // line.beginFill(0x383430);
+                // line.drawRect(0, 0, 410, 2);
+                // line.x = 0;
+                // line.y = 45 + 30 * i;
+                // line.endFill();
+
+
                 var labelText = new PIXI.Text(el.text,{fontFamily : 'Arial', fontSize: 18, fill : 0xe4e4e4, align : 'center'}); // use own styles
                 labelText.x = 40;
-                labelText.y = 20 + 30 * i;
+                labelText.y = 30 + 30 * i;
                 labelText.interactive = true;
                 labelText.click = this.selectDropDownElement.bind(this, labelText._text);
+                labelText.hitArea = new PIXI.Rectangle(0, 0, 410, 40);
 
-                var line = new PIXI.Graphics();
-                line.beginFill(0x24211e);
-                line.drawRect(10, 50 + 30 * i, 400, 2);
-                line.endFill();
-
-                container.addChild(labelText);
-                container.addChild(line);
+                inner.addChild(labelText);
+                //inner.addChild(line);
             }.bind(this));
-            wrapper.addChild(container);
-            this.addChild(wrapper);
+
+            var innerScroll = new GOWN.ScrollArea(inner);
+            innerScroll.width = wrapper.width - 10;
+            innerScroll.height = wrapper.height - 20;
+            grp.addChild(innerScroll);
+
+
+            var sb = new GOWN.ScrollBar(innerScroll);
+            grp.addChild(sb);
+            sb.x = innerScroll.width;
+            sb.height = innerScroll.height;
+            wrapper.addChild(grp);
+
+             this.addChild(wrapper);
         }
     }
     this.updateLabelDimensions();
@@ -190,6 +208,7 @@ DropDownList.prototype.cleanChilds = function () {
 DropDownList.prototype.selectDropDownElement = function (text) {
     this.toggleDropDown();
     this.label = text;
+    this.selectedValue = text;
 };
 
 
@@ -215,7 +234,7 @@ Object.defineProperty(DropDownList.prototype, 'label', {
 
 
 /**
- * Create/Update the elementList of the dropDownList. //todo
+ * Create/Update the elementList of the dropDownList.
  *
  * @property elementList
  * @type Array
