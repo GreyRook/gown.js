@@ -1,9 +1,12 @@
-[submodule "examples/example 6 - login (text input)/lib/FontDetect"]
-	path = examples/example 6 - login (text input)/lib/FontDetect
-	url = git@github.com:JenniferSimonds/FontDetect.git
 [submodule "external/pixi-layout"]
 	path = external/pixi-layout
 	url = git@github.com:brean/pixi-layout.git
 [submodule "external/pixi-shapes"]
 	path = external/pixi-shapes
 	url = git@github.com:brean/pixi-shapes.git
+[submodule "examples/example 15 - resize canvas/lib/css-element-queries"]
+	path = examples/example 15 - resize canvas/lib/css-element-queries
+	url = git@github.com:marcj/css-element-queries.git
+[submodule "examples/example 13 - login dialog/FontDetect"]
+	path = examples/example 13 - login dialog/FontDetect
+	url = git@github.com:JenniferSimonds/FontDetect.git

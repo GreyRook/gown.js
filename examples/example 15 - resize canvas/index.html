@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>gown.js example: resize canvas using css-element-queries</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        #content {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #header {
+            position: relative;
+            height: 40px;
+            width: 100%;
+            font-size: 20px;
+            text-align: center;
+            border: 1px solid blue;
+            left: 0;
+            right: 0;
+        }
+
+        #middle {
+            position: absolute;
+            top: 40px;
+            bottom: 30px;
+            left:0;
+            right:0;
+        }
+
+        #left {
+            position: relative;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            border: 1px solid yellow;
+        }
+
+        #main {
+            position: absolute;
+            left: 300px;
+            right: 150px;
+            top: 0px;
+            bottom: 0px;
+            border: 1px solid green;
+            position: absolute;
+
+        }
+
+        #right {
+            height: 100%;
+            position: absolute;
+            right: 0;
+            width: 150px;
+            top: 0;
+            border: 1px solid red;
+        }
+
+        #footer {
+            height: 30px;
+            font-size: 20px;
+            text-align: center;
+            bottom: 0;
+            right: 0;
+            position: fixed;
+            width: 100%;
+            border: 1px solid orange;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../bin/gown-full.js"></script>
+</head>
+<body>
+    <div id="content">
+        <div id="header">GOWN.js Header</div>
+        <div id="middle">
+            <div id="left">sth. on the left</div>
+            <div id="main">
+            </div>
+            <div id="right">some right text</div>
+        </div>
+        <div id="footer">this could be your corporate information in the footer...</div>
+    </div>
+<script>
+    var app = new GOWN.Application();
+</script>
+
+</body>
+</html>
