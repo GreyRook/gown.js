@@ -48,6 +48,10 @@ function ResizeManager(renderer, options) {
 
     this.element = null;
 
+    this.resizeTimeout = 0;
+
+    this.useResizeDoneTimeout = options.useResizeDoneTimeout !== undefined ? options.useResizeDoneTimeout : true;
+
     /**
      * An event data object to handle all the event tracking/dispatching
      *
@@ -73,6 +77,12 @@ ResizeManager.prototype = Object.create(EventEmitter.prototype);
 ResizeManager.prototype.constructor = ResizeManager;
 module.exports = ResizeManager;
 
+/**
+ * time after the resize when we will update
+ * (prevent the canvas from flickering when resizing)
+ */
+ResizeManager.RESIZE_DONE_TIMEOUT = 200;
+
  /**
  * Registers all the DOM events
  *
@@ -94,16 +104,34 @@ ResizeManager.prototype.removeEvents = function () {
 };
 
 /**
- * Is called when the application gets resized
+ * Is called when the application/browser window gets resized
  *
  * @param event {Event} The DOM event of a key being pressed down
  * @private
  */
-ResizeManager.prototype.onResize = function (event) {
-    if (this.autoPreventDefault) {
-        event.preventDefault();
+ResizeManager.prototype.onResize = function (_event) {
+    if (!this.element && this.fullscreen === false) {
+        // we assume you have a fixed size?!
+        // TODO: do not add resizeManager in the first place?
+        return;
     }
-    this._resizeEvent(event);
+    if (this.autoPreventDefault) {
+        _event.preventDefault();
+    }
+
+    if (this.useResizeDoneTimeout) {
+        var scope = this;
+        if (this.resizeTimeout) {
+            clearInterval(this.resizeTimeout);
+        }
+        this.resizeTimeout = setInterval(function () {
+            clearInterval(scope.resizeTimeout);
+            scope._resizeEvent(_event);
+        }, ResizeManager.RESIZE_DONE_TIMEOUT);
+    } else {
+        this._resizeEvent(_event);
+    }
+
 };
 
 
@@ -188,6 +216,11 @@ ResizeManager.prototype.processInteractive = function (displayObject, func)
         return false;
     }
 
+    // resize parent first
+    if (displayObject.resizable) {
+        func(displayObject);
+    }
+
     var children = displayObject.children;
 
     for (var i = children.length-1; i >= 0; i--) {
@@ -197,10 +230,6 @@ ResizeManager.prototype.processInteractive = function (displayObject, func)
         // not only the one that has focus.
         var child = children[i];
         this.processInteractive(child, func);
-    }
-
-    if (displayObject.resizable) {
-        func(displayObject);
     }
 };
 
