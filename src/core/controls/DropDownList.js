@@ -16,8 +16,6 @@ function DropDownList(theme) {
 
     this.events = [];
 
-    this.runUpdateDimensions = true;
-
     this.updateLabel = false; // label text changed
 
     this.updateDropDown = true; // list changed
@@ -40,9 +38,6 @@ DropDownList.prototype.redrawSkinable = Skinable.prototype.redraw;
 
 DropDownList.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
-DropDownList.prototype.updateDimensions = function() {
-    this.runUpdateDimensions = false;
-};
 
 
 /**
@@ -51,9 +46,6 @@ DropDownList.prototype.updateDimensions = function() {
  * @method redraw
  */
 DropDownList.prototype.redraw = function() {
-    if(this.runUpdateDimensions){
-        this.updateDimensions();
-    }
     if(this.updateDropDown){
         this.createDropDown();
     }
@@ -130,56 +122,70 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
             wrapper.lineStyle(6, 0x000000, 0.3);
             wrapper.y = 20;
             wrapper.moveTo(0,0);
-            wrapper.lineTo(0, 230);
-            wrapper.lineTo(240, 230);
+            wrapper.lineTo(0, 165);
+            wrapper.lineTo(240, 165);
             wrapper.lineTo(240, 0);
             wrapper.lineTo(0, 0);
             wrapper.endFill();
 
 
-            var grp = new GOWN.LayoutGroup();
-            var inner = new GOWN.LayoutGroup();
-            inner.layout = new GOWN.VerticalLayout();
+            var inner = new PIXI.Container();
             inner.y = 40;
-            inner.layout.gap = 60;
 
             this.elementList.forEach(function (el, i) {
-                var container = new PIXI.Container();
-
-                if(this.currentState === DropDownList.HOVER_CONTAINER){
-                    if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
-                        var background = new PIXI.Graphics();
-                        background.beginFill(0xD3D3D3);
-                        background.drawRect(4, 0, 232, 40);
-                        background.endFill();
-                        container.addChild(background);
-                    }
-                }
 
                 var itemText = new PIXI.Text(el.text, this.theme.textStyle.clone()); // use own styles
-                itemText.x = 5;
-                itemText.y = 14;
-                container.hitArea = new PIXI.Rectangle(4, 0, 232, 40);
-
-                container.interactive = true;
-                container.click = this.selectDropDownElement.bind(this, itemText._text);
-                container.mouseover = function() {
-                    this.handleEvent(DropDownList.HOVER_CONTAINER, i);
-                }.bind(this);
-
-                container.mouseout = function() {
-                    this.handleEvent(DropDownList.NORMAL);
-                }.bind(this);
 
 
-                container.addChild(itemText);
-                inner.addChild(container);
+                if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
+                    var background = new PIXI.Graphics();
+                    background.beginFill(0xD3D3D3);
+                    background.drawRect(4,i * 40 , 232, 40);
+                    background.endFill();
+
+                    itemText.x = 5;
+                    itemText.y = 14 + i * 40;
+
+
+                    background.interactive = true;
+                    background.click = this.selectDropDownElement.bind(this, itemText._text);
+                    background.mouseover = function() {
+                        this.handleEvent(DropDownList.HOVER_CONTAINER, i);
+                    }.bind(this);
+
+                    background.mouseout = function() {
+                        this.handleEvent(DropDownList.NORMAL);
+                    }.bind(this);
+
+                    background.addChild(itemText);
+                    inner.addChild(background);
+                }
+                else{
+                    var container = new PIXI.Container();
+
+                    itemText.x = 5;
+                    itemText.y = 14 + i * 40;
+
+                    container.hitArea = new PIXI.Rectangle(4, i * 40, 232, 40);
+
+                    container.interactive = true;
+                    container.click = this.selectDropDownElement.bind(this, itemText._text);
+                    container.mouseover = function() { //TODO add throttle. cant use mouseenter
+                        this.handleEvent(DropDownList.HOVER_CONTAINER, i);
+                    }.bind(this);
+
+                    container.mouseout = function() {
+                        this.handleEvent(DropDownList.NORMAL);
+                    }.bind(this);
+
+
+                    container.addChild(itemText);
+                    inner.addChild(container);
+                }
             }.bind(this));
 
 
-            grp.addChild(inner);
-
-            wrapper.addChild(grp);
+            wrapper.addChild(inner);
 
             this.addChild(wrapper);
         }
@@ -200,7 +206,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
 DropDownList.HOVER_CONTAINER = 'hover_container';
 
 /**
- * Hover state: initial state
+ * State: initial state
  * (ignored on mobile)
  *
  * @property NORMAL
