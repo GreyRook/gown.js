@@ -181,7 +181,8 @@ InputControl.prototype.onKeyDown = function (eventData) {
     // TODO implement the insert key to overwrite text? it is gnored for now!
     if (key === 'WakeUp' || key === 'CapsLock' ||
         key === 'Shift' || key === 'Control' || key === 'Alt' ||
-        key.substring(0,1) === 'F' || key === 'Insert' ||
+        (key.substring(0,1) === 'F' && key.length > 1) || // F1-F12
+        key === 'Insert' ||
         key === 'Escape' || key === 'NumLock' ||
         key === 'Meta' || // Chrome Meta/Windows Key
         key === 'Win' || // Internet Explorer Meta/Windows Key
