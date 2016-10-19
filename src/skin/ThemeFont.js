@@ -38,6 +38,7 @@ ThemeFont.prototype.clone = function() {
             re[key] = this[key];
         }
     }
+    re._updateFont();
     return re;
 };
 
