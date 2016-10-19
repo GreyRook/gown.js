@@ -108,12 +108,6 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("check-selected-hover-icon"));
     }
 
-    if(GOWN.DropDownList){
-        var ddl = GOWN.DropDownList;
-        this.setSkin(ddl.SKIN_NAME, "drop_down-list",
-            this.getScaleContainer("drop-down-list-grid",
-                AeonTheme.DROPDOWNLIST_GRID));
-    }
 
 
     // TODO: emit

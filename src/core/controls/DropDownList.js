@@ -8,21 +8,24 @@ var Skinable = require('../Skinable');
  * @memberof GOWN
  * @constructor
  */
-function DropDownList(elementList ,theme, skinName) {
-    this.skinName = skinName || DropDownList.SKIN_NAME;
+function DropDownList(theme) {
+    this.skinName = DropDownList.SKIN_NAME;
     Skinable.call(this, theme);
 
-    this.elementList = elementList;
+    this.showDropDown = false;
 
-    this.showDropDown = true;
+    this.events = [];
 
     this.runUpdateDimensions = true;
 
     this.updateLabel = false; // label text changed
 
-    this.updateElementList = true; // list changed
+    this.updateDropDown = true; // list changed
 
-    this.selectedValue = null;
+    this.currentState = DropDownList.NORMAL;
+
+    this.hoveredElementIndex = null;
+
 }
 
 DropDownList.prototype = Object.create( Skinable.prototype );
@@ -38,41 +41,9 @@ DropDownList.prototype.redrawSkinable = Skinable.prototype.redraw;
 DropDownList.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
 DropDownList.prototype.updateDimensions = function() {
-    //var width = this.worldWidth;
-    //var height = this.worldHeight;
-    // if (this.hitArea) {
-    //     this.hitArea.width = width;
-    //     this.hitArea.height = height;
-    // } else {
-    //     this.hitArea = new PIXI.Rectangle(0, 0, width, height);
-    // }
-    //
-    // var name = 'dropDownListSkin'; //TODO ???
-    // var skin = this.skinCache[name];
-    // if (skin) {
-    //     skin.width = width;
-    //     skin.height = height;
-    // }
-
-    if(this.labelText) {
-       // var scaleY = height / this._height;
-       // this.labelText.style.fontSize = this.theme.textStyle.fontSize * scaleY;
-        //this.labelText.style = this.labelText.style; // trigger setter
-        this.updateLabelDimensions();
-    }
     this.runUpdateDimensions = false;
 };
 
-DropDownList.prototype.updateLabelDimensions = function () { //todo
-    // if (this.labelText && this.labelText.text &&
-    //     (this.worldWidth - this.labelText.width) >= 0 &&
-    //     (this.worldHeight - this.labelText.height) >= 0) {
-    //     // this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
-    //     // this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
-    //     this.labelText.x = 60;
-    //     this.labelText.y = 5;
-    // }
-};
 
 /**
  * update before draw call
@@ -83,7 +54,7 @@ DropDownList.prototype.redraw = function() {
     if(this.runUpdateDimensions){
         this.updateDimensions();
     }
-    if(this.updateElementList){
+    if(this.updateDropDown){
         this.createDropDown();
     }
     if (this.updateLabel) {
@@ -99,27 +70,49 @@ DropDownList.prototype.redraw = function() {
  */
 DropDownList.prototype.createLabel = function() {//todo refactoring
     var wrapper = new PIXI.Graphics();
-    wrapper.beginFill(0xff7f08);
-    wrapper.lineStyle(2, 0x000000, 1);
-    wrapper.drawRoundedRect(110, 0, 250, 40, 4);
-    wrapper.x = 0;
-    wrapper.y = 0;
-    wrapper.endFill();
+    wrapper.drawRoundedRect(0, 0, 250, 55, 4);
+    wrapper.x = 5;
+    wrapper.y = 5;
     wrapper.interactive = true;
     wrapper.click = this.toggleDropDown.bind(this);
+    wrapper.hitArea = new PIXI.Rectangle(0, 15, 250, 35);
+    wrapper.interactive = true;
+    wrapper.buttonMode = true;
+    wrapper.defaultCursor = 'pointer';
 
-    if(this.labelText) {
-        this.labelText.text = this._label;
-        this.labelText.style = {fontFamily : 'Arial', fontSize: 12, fill : 0x000000, align : 'center'};
-    } else {
-        this.labelText = new PIXI.Text(this._label, {fontFamily : 'Arial', fontSize: 12, fill : 0x000000, align : 'center'});
-        this.labelText.x = 145;
-        this.labelText.y = 5;
-        wrapper.addChild(this.labelText);
-
-        this.addChild(wrapper);
+    this.labelText = new PIXI.Text('Label', this.theme.textStyle.clone());
+    this.labelText.y = 0;
+    this.labelText.x = 0;
+    if(this.showDropDown){
+        this.labelText.style.fill = '#FF0000';
     }
-    this.updateLabelDimensions();
+
+    var mark = new PIXI.Text('^', this.theme.textStyle.clone());
+    mark.x = 220;
+    mark.y = 30;
+
+    var line = new PIXI.Graphics();
+    line.beginFill(0xf1f2f3);
+    line.drawRect(0, 0, 230, 2);
+    line.x = 0;
+    line.y = 45;
+    line.endFill();
+
+
+    wrapper.addChild(this.labelText);
+    wrapper.addChild(mark);
+    wrapper.addChild(line);
+
+
+
+    this.selectedItemText = new PIXI.Text(this._label, this.theme.textStyle.clone());
+    this.selectedItemText.x = 0;
+    this.selectedItemText.y = 25;
+
+    wrapper.addChild(this.selectedItemText);
+
+    this.addChild(wrapper);
+
     this.updateLabel = false;
 };
 
@@ -133,88 +126,125 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
     if(this.elementList) {
         if(this.showDropDown){
             var wrapper = new PIXI.Graphics();
-            wrapper.beginFill(0x574f46);
-            wrapper.lineStyle(2, 0x000000, 1);
-            wrapper.x = 15;
-            wrapper.y = 55;
+            wrapper.beginFill(0xFFFFFF);
+            wrapper.lineStyle(6, 0x000000, 0.3);
+            wrapper.y = 20;
             wrapper.moveTo(0,0);
-            wrapper.lineTo(0, 250);
-            wrapper.lineTo(450, 250);
-            wrapper.lineTo(450, 0);
-            wrapper.lineTo(235, 0);
-            wrapper.lineTo(225, -15);
-            wrapper.lineTo(215, 0);
+            wrapper.lineTo(0, 230);
+            wrapper.lineTo(240, 230);
+            wrapper.lineTo(240, 0);
             wrapper.lineTo(0, 0);
             wrapper.endFill();
 
 
-
-
-            var dropDownContainer = new PIXI.Graphics();
-            dropDownContainer.beginFill(0x383430);
-            dropDownContainer.drawRect(10, 15, 420, 220);
-            dropDownContainer.x = 0;
-            dropDownContainer.y = 0;
-            dropDownContainer.endFill();
-
             var grp = new GOWN.LayoutGroup();
-            grp.y = 15;
-            grp.x = 5;
             var inner = new GOWN.LayoutGroup();
             inner.layout = new GOWN.VerticalLayout();
-            inner.layout.gap = 15;
+            inner.y = 40;
+            inner.layout.gap = 60;
 
-            this.elementList.forEach(function (el) {
+            this.elementList.forEach(function (el, i) {
                 var container = new PIXI.Container();
-                var line = new PIXI.Graphics();
-                line.beginFill(0x000000);
-                line.drawRect(5, 0, 410, 2);
-                line.x = 5;
-                line.y = 65;
-                line.endFill();
 
-                var labelText = new PIXI.Text(el.text, {fontFamily : 'Arial', fontSize: 18, fill : 0xe4e4e4, align : 'center'}); // use own styles
-                labelText.x = 40;
-                labelText.y = 14;
-                container.hitArea = new PIXI.Rectangle(0, 0, 410, 73);
-
-                container.interactive = true;
-                container.click = this.selectDropDownElement.bind(this, labelText._text);
-
-                if(this.selectedValue && this.selectedValue === labelText._text){
-                    var circle = new PIXI.Graphics();
-                    circle.lineStyle(0);
-                    circle.beginFill(0xff7f08);
-                    circle.drawCircle(370, 31,10);
-                    circle.endFill();
-                    container.addChild(circle);
+                if(this.currentState === DropDownList.HOVER_CONTAINER){
+                    if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
+                        var background = new PIXI.Graphics();
+                        background.beginFill(0xD3D3D3);
+                        background.drawRect(4, 0, 232, 40);
+                        background.endFill();
+                        container.addChild(background);
+                    }
                 }
 
-                container.addChild(labelText);
-                container.addChild(line);
+                var itemText = new PIXI.Text(el.text, this.theme.textStyle.clone()); // use own styles
+                itemText.x = 5;
+                itemText.y = 14;
+                container.hitArea = new PIXI.Rectangle(4, 0, 232, 40);
 
+                container.interactive = true;
+                container.click = this.selectDropDownElement.bind(this, itemText._text);
+                container.mouseover = function() {
+                    this.handleEvent(DropDownList.HOVER_CONTAINER, i);
+                }.bind(this);
+
+                container.mouseout = function() {
+                    this.handleEvent(DropDownList.NORMAL);
+                }.bind(this);
+
+
+                container.addChild(itemText);
                 inner.addChild(container);
             }.bind(this));
 
-            var innerScroll = new GOWN.ScrollArea(inner);
-            innerScroll.width = dropDownContainer.width;
-            innerScroll.height = dropDownContainer.height;
-            grp.addChild(innerScroll);
 
+            grp.addChild(inner);
 
-            var sb = new GOWN.ScrollBar(innerScroll);
-            grp.addChild(sb);
-            sb.x = innerScroll.width;
-            sb.height = innerScroll.height;
-
-            dropDownContainer.addChild(grp);
-            wrapper.addChild(dropDownContainer);
+            wrapper.addChild(grp);
 
             this.addChild(wrapper);
         }
     }
-    this.updateLabelDimensions();
-    this.updateElementList = false;
+    this.updateDropDown = false;
+};
+
+
+/**
+ * Hover state: mouse pointer hovers over the VariantContainer
+ * (ignored on mobile)
+ *
+ * @property HOVER
+ * @static
+ * @final
+ * @type String
+ */
+DropDownList.HOVER_CONTAINER = 'hover_container';
+
+/**
+ * Hover state: initial state
+ * (ignored on mobile)
+ *
+ * @property NORMAL
+ * @static
+ * @final
+ * @type String
+ */
+DropDownList.NORMAL = 'normal';
+
+
+
+/**
+ * names of possible states for a button
+ *
+ * @property stateNames
+ * @static
+ * @final
+ * @type String
+ */
+DropDownList.stateNames = [
+    DropDownList.HOVER_CONTAINER,DropDownList.NORMAL
+];
+/**
+ * handleEvent
+ */
+DropDownList.prototype.handleEvent = function(type, option) {
+    this.handelSubscribedCallouts(type);
+
+    if(type === DropDownList.HOVER_CONTAINER){
+        if(typeof option === 'number'){
+            this.currentState = DropDownList.HOVER_CONTAINER;
+            this.hoveredElementIndex = option;
+            this.cleanChilds();
+            this.updateDropDown = true;
+            this.updateLabel = true;
+        }
+    }
+    if(type === DropDownList.NORMAL){
+        this.currentState = DropDownList.NORMAL;
+        this.hoveredElementIndex = null;
+        this.cleanChilds();
+        this.updateDropDown = true;
+        this.updateLabel = true;
+    }
 };
 
 /**
@@ -223,7 +253,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
 DropDownList.prototype.toggleDropDown = function () {
     this.showDropDown = !this.showDropDown;
     this.cleanChilds();
-    this.updateElementList = true;
+    this.updateDropDown = true;
     this.updateLabel = true;
 };
 
@@ -236,7 +266,7 @@ DropDownList.prototype.cleanChilds = function () {
         var child = this.getChildAt(0);
         this.removeChild(child);
     }
-    this.labelText = null;
+    this.selectedItemText = null;
 };
 
 /**
@@ -245,7 +275,26 @@ DropDownList.prototype.cleanChilds = function () {
 DropDownList.prototype.selectDropDownElement = function (text) {
     this.toggleDropDown();
     this.label = text;
-    this.selectedValue = text;
+
+    this.handelSubscribedCallouts(Event.CHANGE, text);
+};
+
+/**
+ * DropDown addEventListener
+ */
+DropDownList.prototype.addEventListener = function (event, callback) {
+    this.events.push({event : event, callback: callback});
+};
+
+/**
+ * DropDown handelSubscribedCallouts
+ */
+DropDownList.prototype.handelSubscribedCallouts = function (eventName,text) {
+    this.events.forEach(function (event) {
+        if(event.event === eventName){
+            event.callback(text);
+        }
+    });
 };
 
 
@@ -285,6 +334,7 @@ Object.defineProperty(DropDownList.prototype, 'elementList', {
             return;
         }
         this._elementList = elementList;
-        this.updateElementList = true;
+        this.label = this._elementList[0].text;
+        this.updateDropDown = true;
     }
 });

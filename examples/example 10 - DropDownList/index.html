@@ -36,54 +36,21 @@
                 text:"sample2"
             },{
                 text:"sample3"
-            },{
-                text:"sample4"
-            },{
-                text:"sample5"
-            },{
-                text:"sample6"
-            },{
-                text:"sample7"
-            },{
-                text:"sample8"
-            },{
-                text:"sample9"
-            },{
-                text:"sample10"
-            },{
-                text:"sample11"
-            },{
-                text:"sample12"
-            },{
-                text:"sample13"
-            },{
-                text:"sample15"
-            },{
-                text:"sample16"
-            },{
-                text:"sample17"
-            },{
-                text:"sample18"
-            },{
-                text:"sample19"
-            },{
-                text:"sample20"
             }
         ];
 
-        aeonddl = new GOWN.DropDownList(elementList ,aeontheme);
-        aeonddl.width = 200;
-        aeonddl.height = 20;
-        aeonddl.x = 2;
-        aeonddl.y = 2;
-        aeonddl.label = "Select an item";
+        aeonddl = new GOWN.DropDownList(aeontheme);
+        aeonddl.x = 100;
+        aeonddl.y = 100;
+
+        aeonddl.elementList = elementList;
+
+        aeonddl.addEventListener( Event.CHANGE, function (text) {
+            console.log('select - ', text);
+        });
+
         stage.addChild(aeonddl);
 
-        aeonddl.tap = aeonddl.click = function (evt) {
-            if (window.console) {
-                console.log("you clicked the DropDownList!");
-            }
-        };
 
         requestAnimationFrame(animate);
     }
