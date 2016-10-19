@@ -122,8 +122,8 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
             wrapper.lineStyle(6, 0x000000, 0.3);
             wrapper.y = 20;
             wrapper.moveTo(0,0);
-            wrapper.lineTo(0, 165);
-            wrapper.lineTo(240, 165);
+            wrapper.lineTo(0, 43 + this.elementList.length * 40 );
+            wrapper.lineTo(240, 43 + this.elementList.length * 40 );
             wrapper.lineTo(240, 0);
             wrapper.lineTo(0, 0);
             wrapper.endFill();
