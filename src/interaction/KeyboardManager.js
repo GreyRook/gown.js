@@ -77,8 +77,16 @@ module.exports = KeyboardManager;
  * @private
  */
 KeyboardManager.prototype.addEvents = function () {
-    window.document.addEventListener('keydown', this.onKeyDown, true);
-    window.document.addEventListener('keyup', this.onKeyUp, true);
+    if (window.document.body) {
+        // Ineternet Explorer only listens to key-events on a dom-object,
+        // it ignores them when we listen on document
+        window.document.body.addEventListener('keydown', this.onKeyDown, true);
+        window.document.body.addEventListener('keyup', this.onKeyUp, true);
+    } else {
+        window.document.addEventListener('keydown', this.onKeyDown, true);
+        window.document.addEventListener('keyup', this.onKeyUp, true);
+    }
+
     this.eventsAdded = true;
 };
 
@@ -88,8 +96,14 @@ KeyboardManager.prototype.addEvents = function () {
  * @private
  */
 KeyboardManager.prototype.removeEvents = function () {
-    window.document.removeEventListener('keydown', this.onKeyDown, true);
-    window.document.removeEventListener('keyup', this.onKeyUp, true);
+    if (window.document.body) {
+
+        window.document.body.removeEventListener('keydown', this.onKeyDown, true);
+        window.document.body.removeEventListener('keyup', this.onKeyUp, true);
+    } else {
+        window.document.removeEventListener('keydown', this.onKeyDown, true);
+        window.document.removeEventListener('keyup', this.onKeyUp, true);
+    }
     this.eventsAdded = false;
 };
 
@@ -150,7 +164,6 @@ KeyboardManager.prototype.getKeyData = function (event) {
         altKey: event.altKey,
         ctrlKey: event.ctrlKey,
         shiftKey: event.shiftKey,
-        code: event.code,
         key: event.key,
         originalEvent: event
     };

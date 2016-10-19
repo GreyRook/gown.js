@@ -177,13 +177,17 @@ InputControl.prototype.onKeyDown = function (eventData) {
     if (!this.hasFocus) {
         return;
     }
-    var code = eventData.data.code;
     var key = eventData.data.key;
     // TODO implement the insert key to overwrite text? it is gnored for now!
-    if (key === 'WakeUp' || key === 'CapsLock' || key === 'Meta' ||
+    if (key === 'WakeUp' || key === 'CapsLock' ||
         key === 'Shift' || key === 'Control' || key === 'Alt' ||
-        key === 'Dead' || code.substring(0,1) === 'F' || key === 'Insert' ||
-        key === 'Escape' || key === 'NumLock') {
+        key.substring(0,1) === 'F' || key === 'Insert' ||
+        key === 'Escape' || key === 'NumLock' ||
+        key === 'Meta' || // Chrome Meta/Windows Key
+        key === 'Win' || // Internet Explorer Meta/Windows Key
+        key === 'Dead' || // Chrome Function/Dead Key
+        key === 'Unidentified' // Internet Explorer Function Key
+        ) {
         // ignore single shift/control/alt, meta and dead keys
         return;
     }
@@ -202,7 +206,8 @@ InputControl.prototype.onKeyDown = function (eventData) {
         this.selection[0] !== this.selection[1]);
 
     switch (key) {
-        case 'ArrowLeft':
+        case 'Left': // Internet Explorer left arrow
+        case 'ArrowLeft': // Chrome left arrow
             this.moveCursorLeft();
             if (eventData.data.shiftKey) {
                 this.updateSelection(this.cursorPos, this.selection[1]);
@@ -210,6 +215,7 @@ InputControl.prototype.onKeyDown = function (eventData) {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
             break;
+        case 'Right':
         case 'ArrowRight':
             this.moveCursorRight();
             if (eventData.data.shiftKey) {
@@ -225,7 +231,7 @@ InputControl.prototype.onKeyDown = function (eventData) {
             // TODO: implement jump to first/last character
             // ignored for now...
             break;
-
+        case 'Up':
         case 'ArrowUp':
             /*this.moveCursorUp();
             if (eventData.data.shiftKey) {
@@ -238,6 +244,7 @@ InputControl.prototype.onKeyDown = function (eventData) {
             }
             this._cursorNeedsUpdate = true;*/
             break;
+        case 'Down':
         case 'ArrowDown':
             /*this.moveCursorDown();
             if (eventData.data.shiftKey) {
@@ -262,11 +269,12 @@ InputControl.prototype.onKeyDown = function (eventData) {
                 // remove last char at cursorPosition
                 this.moveCursorLeft();
                 this.deleteText(this.cursorPos, this.cursorPos+1);
-                // ignore browser-back
-                eventData.originalEvent.preventDefault();
             }
+            // ignore browser-back
+            eventData.originalEvent.preventDefault();
             break;
-        case 'Delete':
+        case 'Del': // Internet Explorer Delete Key
+        case 'Delete': // Chrome Delete Key
             if (selected) {
                 this.deleteSelection();
                 this.updateSelection(this.cursorPos, this.cursorPos);
@@ -280,19 +288,30 @@ InputControl.prototype.onKeyDown = function (eventData) {
             break;
         default:
             // select all text
-            if (eventData.data.ctrlKey && code === 'KeyA') {
+            if (eventData.data.ctrlKey && key.toLowerCase() === 'a') {
                 this.cursorPos = this.text.length;
                 this.updateSelection(0, this.cursorPos);
                 this._cursorNeedsUpdate = true;
                 return;
             }
             // allow µ or ² but ignore keys for browser refresh / show Developer Tools
-            if (eventData.data.ctrlKey && (code === 'KeyJ' || code === 'KeyR')) {
+            if (eventData.data.ctrlKey && (key.toLowerCase() === 'j' || key.toLowerCase() === 'r')) {
                 return;
             }
             if (selected) {
                 this.deleteSelection();
             }
+
+
+            // Internet Explorer space bar
+            if (key === 'Spacebar') {
+                key = ' ';
+            }
+            if (key === ' ') {
+                // do not scroll down when the space bar has been pressed.
+                eventData.originalEvent.preventDefault();
+            }
+
             if (key.length !== 1) {
                 throw new Error('unknown key ' + key);
             }
