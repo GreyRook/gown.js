@@ -24,11 +24,17 @@ var Control = require('../core/Control');
  * @param stage {Stage}
  *  (default null - will use a new PIXI.Container)
  */
-function Application(config, fullscreen, width, height, renderer, stage) {
-    fullscreen = fullscreen === undefined ? true : fullscreen;
-    if (fullscreen) {
+function Application(config, screenMode, parentId, width, height, renderer, stage) {
+    this._screenMode = screenMode || Application.SCREEN_MODE_RESIZE;
+    var fullscreen = false;
+    var element = document.getElementById(parentId);
+    if (this._screenMode === Application.SCREEN_MODE_RESIZE) {
+        width = element.clientWidth;
+        height = element.clientHeight;
+    } else if (this._screenMode === Application.SCREEN_MODE_FULLSCREEN) {
         width = window.innerWidth;
         height = window.innerHeight;
+        fullscreen = true;
     } else {
         width = width || 800;
         height = height || 600;
@@ -53,7 +59,13 @@ function Application(config, fullscreen, width, height, renderer, stage) {
         }
         this._background = config.backgroundColor;
         renderer = PIXI.autoDetectRenderer(width, height, config);
-        document.body.appendChild(renderer.view);
+        renderer.plugins.resize.element = element;
+        renderer.plugins.resize.fullscreen = fullscreen;
+        if (element && !fullscreen) {
+            element.appendChild(renderer.view);
+        } else {
+            document.body.appendChild(renderer.view);
+        }
     }
     /* jshint ignore:start */
     this._stage = stage;
@@ -68,7 +80,6 @@ function Application(config, fullscreen, width, height, renderer, stage) {
     if (_background) {
         this.background = _background;
     }
-    this.fullscreen = fullscreen === undefined || fullscreen;
 
     this.animate();
 }
@@ -76,6 +87,21 @@ function Application(config, fullscreen, width, height, renderer, stage) {
 Application.prototype = Object.create( Control.prototype );
 Application.prototype.constructor = Application;
 module.exports = Application;
+
+/**
+ * use fixed width/height in pixel.
+ */
+Application.SCREEN_MODE_FIXED = 'screenModeFixed';
+
+/**
+ * use window.innerWidth/innerHeight to get the whole browser page width
+ */
+Application.SCREEN_MODE_FULLSCREEN = 'screenModeFullscreen';
+
+/**
+ * use resize to parent div width/height
+ */
+Application.SCREEN_MODE_RESIZE = 'screenModeResize';
 
 /**
  * call requestAnimationFrame to render the application at max. FPS
@@ -172,19 +198,31 @@ Application.prototype._removeBackground = function() {
  * @property enabled
  * @type Boolean
  */
-Object.defineProperty(Application.prototype, 'fullscreen', {
+Object.defineProperty(Application.prototype, 'screenMode', {
     get: function() {
         return this._fullscreen;
     },
     set: function(value) {
-        if (!this._fullscreen && value) {
+        if (value === Application.SCREEN_MODE_RESIZE_DIV) {
+            if (window.ResizeSensor) {
+                this.resizeSensor = new window.ResizeSensor();
+                this._screenMode = value;
+                return;
+            } else {
+                if (window.console) {
+                    window.console.warn('ResizeSensor not found, fallback to fullscreen');
+                }
+            }
+        }
+        if (value === Application.SCREEN_MODE_FULLSCREEN ||
+            value === Application.SCREEN_MODE_RESIZE_DIV) {
             this._renderer.view.style.top = 0;
             this._renderer.view.style.left = 0;
             this._renderer.view.style.right = 0;
             this._renderer.view.style.bottom = 0;
             this._renderer.view.style.position = 'absolute';
         }
-        this._fullscreen = value;
+        this._screenMode = value;
     }
 });
 

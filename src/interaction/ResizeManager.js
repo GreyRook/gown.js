@@ -39,6 +39,16 @@ function ResizeManager(renderer, options) {
     this.autoPreventDefault = options.autoPreventDefault !== undefined ? options.autoPreventDefault : true;
 
     /**
+     * should we use the whole browser width/height (window.innerHeight/Width)
+     *
+     * @member {boolean}
+     * @default false
+     */
+    this.fullscreen = options.fullscreen || false;
+
+    this.element = null;
+
+    /**
      * An event data object to handle all the event tracking/dispatching
      *
      * @member {object}
@@ -122,11 +132,17 @@ ResizeManager.prototype._resizeEvent = function(event) {
  * @private
  */
 ResizeManager.prototype.getSizeData = function (event) {
-    return {
-        width: window.innerWidth,
-        height: window.innerHeight,
+    var eventData = {
         originalEvent: event
     };
+    if (this.fullscreen) {
+        eventData.width = window.innerWidth;
+        eventData.height = window.innerHeight;
+    } else {
+        eventData.width = this.element.clientWidth;
+        eventData.height = this.element.clientHeight;
+    }
+    return eventData;
 };
 
 ResizeManager.prototype.processResize = function(displayObject) {

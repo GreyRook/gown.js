@@ -69,6 +69,14 @@
             border: 1px solid red;
         }
 
+        #center {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 300px;
+            right: 150px;
+        }
+
         #footer {
             height: 30px;
             font-size: 20px;
@@ -82,20 +90,52 @@
     </style>
     <script src="../../lib/pixi/pixi.js"></script>
     <script src="../../bin/gown-full.js"></script>
+    <!--script src="lib/css-element-queries/src/ResizeSensor.js"></script-->
 </head>
 <body>
     <div id="content">
         <div id="header">GOWN.js Header</div>
         <div id="middle">
             <div id="left">sth. on the left</div>
-            <div id="main">
-            </div>
+            <div id="center"></div>
             <div id="right">some right text</div>
         </div>
         <div id="footer">this could be your corporate information in the footer...</div>
     </div>
 <script>
-    var app = new GOWN.Application();
+    var config = {backgroundColor: 0xffffff};
+    var aeontheme;
+    var aeonbtn;
+    var app;
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+
+        function onCompleteAeon() {
+            var app = new GOWN.Application(config, GOWN.Application.SCREEN_MODE_RESIZE, 'center');
+            aeonbtn = new GOWN.Button(aeontheme);
+            aeonbtn.percentWidth = 100;
+            aeonbtn.percentHeight = 100;
+            aeonbtn.label = "scale button";
+            app.addChild(aeonbtn);
+            app.layout = new PIXI.layout.HorizontalLayout();
+
+            app.on('resize', function(eventData) {
+                app.layout.layoutContainer(app);
+            });
+            app.layout.layoutContainer(app);
+            aeonbtn.on(GOWN.Button.TRIGGERED, function () {
+                if (window.console) {
+                    console.log("you clicked the button!");
+                }
+            });
+        }
+
+
+
+        aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+        aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
+
+    });
 </script>
 
 </body>
