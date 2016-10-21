@@ -77,29 +77,31 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
     wrapper.buttonMode = true;
     wrapper.defaultCursor = 'pointer';
 
-    this.labelText = new PIXI.Text('Label', this.theme.textStyle.clone());
+    this.labelText = new PIXI.Text('Label', Object.assign({}, this.theme.labelStyle));
     this.labelText.y = 0;
     this.labelText.x = 0;
     if(this.showDropDown){
-        this.labelText.style.fill = '#FF0000';
+        this.labelText.style.fill = this.theme.labelTextColors.active;
+    }else{
+        this.labelText.style.fill = this.theme.labelTextColors.normal;
     }
 
     var mark = new PIXI.Graphics();
     mark.beginFill(0x000000);
-    mark.lineStyle(4, 0x000000);
+    mark.lineStyle(3, 0x000000);
     mark.moveTo(0,0);
-    mark.lineTo(4,0);
-    mark.lineTo(2,2);
+    mark.lineTo(3,0);
+    mark.lineTo(1.5,1.5);
     mark.lineTo(0,0);
     mark.endFill();
-    mark.x = 220;
+    mark.x = 215;
     mark.y = 30;
 
     var line = new PIXI.Graphics();
     line.beginFill(this.theme.line.lineColor || 0xf1f2f3);
     line.drawRect(0, 0, this.theme.line.width || 222, this.theme.line.height || 2);
-    line.x = 4;
-    line.y = 45;
+    line.x = 2;
+    line.y = 60;
     line.endFill();
 
 
@@ -109,7 +111,7 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
 
 
 
-    this.selectedItemText = new PIXI.Text(this._label, this.theme.textStyle.clone());
+    this.selectedItemText = new PIXI.Text(this._label, Object.assign({}, this.theme.textStyle));
     this.selectedItemText.x = 0;
     this.selectedItemText.y = 25;
 
@@ -140,11 +142,11 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
 
             var border = this.theme.getImage('text-input-background-disabled-skin');
             border = border();
-            border.x = -2;
-            border.y = -30;
+            border.x = -1;
+            border.y = 0;
 
-            border.scale.x=1.57;
-            border.scale.y= 1 + 2.4 * (this.elementList.length - 0.2);
+            border.scale.x= 1.57;
+            border.scale.y= 2.45 * (this.elementList.length - 0.2);
 
 
             var inner = new PIXI.Container();
@@ -152,17 +154,17 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
 
             this.elementList.forEach(function (el, i) {
 
-                var itemText = new PIXI.Text(el.text, this.theme.textStyle.clone()); // use own styles
+                var itemText = new PIXI.Text(el.text, Object.assign({}, this.theme.textStyle)); // use own styles
 
 
                 if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
                     var background = new PIXI.Graphics();
-                    background.beginFill(0xD3D3D3);
-                    background.drawRect(3,i * 40 , 234, 40);
+                    background.beginFill(0xEEEEEE);
+                    background.drawRect(0, 5 + i * 40 , 237, 40);
                     background.endFill();
 
                     itemText.x = 5;
-                    itemText.y = 14 + i * 40;
+                    itemText.y = 10 + i * 40;
 
 
                     background.interactive = true;
@@ -182,9 +184,9 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
                     var container = new PIXI.Container();
 
                     itemText.x = 5;
-                    itemText.y = 14 + i * 40;
+                    itemText.y = 10 + i * 40;
 
-                    container.hitArea = new PIXI.Rectangle(0, i * 40, 240, 40);
+                    container.hitArea = new PIXI.Rectangle(0, 5 + i * 40, 240, 40);
 
                     container.interactive = true;
                     container.click = this.selectDropDownElement.bind(this, itemText._text);
