@@ -130,7 +130,6 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
         if(this.showDropDown){
             var wrapper = new PIXI.Graphics();
             wrapper.beginFill(this.theme.background.color || 0xFFFFFF);
-            wrapper.lineStyle(6, 0xb3b3b3, 0.3);
             wrapper.y = 20;
             wrapper.moveTo(0,0);
             wrapper.lineTo(0, 43 + this.elementList.length * 40 );
@@ -138,7 +137,14 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
             wrapper.lineTo(240, 0);
             wrapper.lineTo(0, 0);
             wrapper.endFill();
-            wrapper.fillAlpha = 0.3;
+
+            var border = this.theme.getImage('text-input-background-disabled-skin');
+            border = border();
+            border.x = -2;
+            border.y = -30;
+
+            border.scale.x=1.57;
+            border.scale.y= 1 + 2.4 * (this.elementList.length - 0.2);
 
 
             var inner = new PIXI.Container();
@@ -197,6 +203,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
             }.bind(this));
 
 
+            wrapper.addChild(border);
             wrapper.addChild(inner);
 
             this.addChild(wrapper);
