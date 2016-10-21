@@ -24,6 +24,8 @@ function DropDownList(theme) {
 
     this.hoveredElementIndex = null;
 
+    this.initiated = false;
+
 }
 
 DropDownList.prototype = Object.create( Skinable.prototype );
@@ -46,6 +48,9 @@ DropDownList.prototype.skinableSetTheme = Skinable.prototype.setTheme;
  * @method redraw
  */
 DropDownList.prototype.redraw = function() {
+    if(!this.initiated){
+        this.initiate();
+    }
     if(this.updateDropDown){
         this.createDropDown();
     }
@@ -79,14 +84,21 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
         this.labelText.style.fill = '#FF0000';
     }
 
-    var mark = new PIXI.Text('^', this.theme.textStyle.clone());
+    var mark = new PIXI.Graphics();
+    mark.beginFill(0x000000);
+    mark.lineStyle(4, 0x000000);
+    mark.moveTo(0,0);
+    mark.lineTo(4,0);
+    mark.lineTo(2,2);
+    mark.lineTo(0,0);
+    mark.endFill();
     mark.x = 220;
     mark.y = 30;
 
     var line = new PIXI.Graphics();
     line.beginFill(0xf1f2f3);
-    line.drawRect(0, 0, 230, 2);
-    line.x = 0;
+    line.drawRect(0, 0, 222, 2);
+    line.x = 4;
     line.y = 45;
     line.endFill();
 
@@ -140,7 +152,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
                 if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
                     var background = new PIXI.Graphics();
                     background.beginFill(0xD3D3D3);
-                    background.drawRect(4,i * 40 , 232, 40);
+                    background.drawRect(0,i * 40 , 240, 40);
                     background.endFill();
 
                     itemText.x = 5;
@@ -166,7 +178,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
                     itemText.x = 5;
                     itemText.y = 14 + i * 40;
 
-                    container.hitArea = new PIXI.Rectangle(4, i * 40, 232, 40);
+                    container.hitArea = new PIXI.Rectangle(0, i * 40, 240, 40);
 
                     container.interactive = true;
                     container.click = this.selectDropDownElement.bind(this, itemText._text);
@@ -216,6 +228,15 @@ DropDownList.HOVER_CONTAINER = 'hover_container';
  */
 DropDownList.NORMAL = 'normal';
 
+/**
+ * State: clicked state
+ *
+ * @property NORMAL
+ * @static
+ * @final
+ * @type String
+ */
+DropDownList.CLICKED = 'clicked';
 
 
 /**
@@ -227,7 +248,7 @@ DropDownList.NORMAL = 'normal';
  * @type String
  */
 DropDownList.stateNames = [
-    DropDownList.HOVER_CONTAINER,DropDownList.NORMAL
+    DropDownList.HOVER_CONTAINER,DropDownList.NORMAL,DropDownList.CLICKED
 ];
 /**
  * handleEvent
@@ -254,6 +275,23 @@ DropDownList.prototype.handleEvent = function(type, option) {
 };
 
 /**
+ * override events handlers
+ */
+DropDownList.prototype.mousedown = function(event) {
+    event.stopPropagation();
+    this.handleEvent(DropDownList.CLICKED);
+};
+
+/**
+ * override events handlers
+ */
+DropDownList.prototype.touchstart = function(event) {
+    event.stopPropagation();
+    this.handleEvent(DropDownList.CLICKED);
+};
+
+
+/**
  * show/hide DropDown
  */
 DropDownList.prototype.toggleDropDown = function () {
@@ -261,6 +299,42 @@ DropDownList.prototype.toggleDropDown = function () {
     this.cleanChilds();
     this.updateDropDown = true;
     this.updateLabel = true;
+};
+
+
+/**
+ * initiate DropDown
+ * add event on stage that close dropDown on click
+ */
+DropDownList.prototype.initiate = function () {
+    this.parent.interactive = true;
+    var stage = this.getStage(this);
+    var self = this;
+
+    stage.on('mousedown', function () {
+        if(self.showDropDown){
+            self.toggleDropDown();
+        }
+    });
+
+    stage.on('touchstart', function () {
+        if(self.showDropDown){
+            self.toggleDropDown();
+        }
+    });
+
+    this.initiated = true;
+};
+
+/**
+ * find stage where dropDown placed
+ */
+DropDownList.prototype.getStage = function (element) {
+    if(element.parent && element.parent.children.length > 0){
+      return this.getStage(element.parent);
+    }else{
+        return element;
+    }
 };
 
 

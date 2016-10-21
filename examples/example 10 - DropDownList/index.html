@@ -19,6 +19,8 @@
 <body>
 <script>
     var stage = new PIXI.Container();
+    stage.height = 600;
+    stage.width = 800;
 
     var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
@@ -53,7 +55,26 @@
             console.log('select - ', text);
         });
 
+
+
+        var clickOutside = new PIXI.Graphics();
+        clickOutside.beginFill(0x000000);
+        clickOutside.y = 300;
+        clickOutside.x = 400;
+        clickOutside.moveTo(0,0);
+        clickOutside.lineTo(0, 43);
+        clickOutside.lineTo(240, 43);
+        clickOutside.lineTo(240, 0);
+        clickOutside.lineTo(0, 0);
+        clickOutside.endFill();
+
+        var description = new PIXI.Text('Test click outside',{fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center'});
+        clickOutside.addChild(description);
+
+
+
         stage.addChild(aeonddl);
+        stage.addChild(clickOutside);
 
 
         requestAnimationFrame(animate);
