@@ -161,13 +161,13 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
 
                     background.interactive = true;
                     background.click = this.selectDropDownElement.bind(this, itemText._text);
-                    background.mouseover = function() {
+                    background.on('mouseenter' ,function() {
                         this.handleEvent(DropDownList.HOVER_CONTAINER, i);
-                    }.bind(this);
+                    }.bind(this));
 
-                    background.mouseout = function() {
+                    background.on('mouseout',function() {
                         this.handleEvent(DropDownList.NORMAL);
-                    }.bind(this);
+                    }.bind(this));
 
                     background.addChild(itemText);
                     inner.addChild(background);
@@ -240,7 +240,7 @@ DropDownList.CLICKED = 'clicked';
 
 
 /**
- * names of possible states for a button
+ * names of possible states for a dropddown
  *
  * @property stateNames
  * @static
