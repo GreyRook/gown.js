@@ -152,7 +152,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
                 if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
                     var background = new PIXI.Graphics();
                     background.beginFill(0xD3D3D3);
-                    background.drawRect(0,i * 40 , 240, 40);
+                    background.drawRect(3,i * 40 , 234, 40);
                     background.endFill();
 
                     itemText.x = 5;
