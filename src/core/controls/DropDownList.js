@@ -96,8 +96,8 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
     mark.y = 30;
 
     var line = new PIXI.Graphics();
-    line.beginFill(0xf1f2f3);
-    line.drawRect(0, 0, 222, 2);
+    line.beginFill(this.theme.line.lineColor || 0xf1f2f3);
+    line.drawRect(0, 0, this.theme.line.width || 222, this.theme.line.height || 2);
     line.x = 4;
     line.y = 45;
     line.endFill();
@@ -125,13 +125,12 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
  *
  * @method createDropDown
  */
-
 DropDownList.prototype.createDropDown = function () { //TODO refactoring add constans
     if(this.elementList) {
         if(this.showDropDown){
             var wrapper = new PIXI.Graphics();
-            wrapper.beginFill(0xFFFFFF);
-            wrapper.lineStyle(6, 0x000000, 0.3);
+            wrapper.beginFill(this.theme.background.color || 0xFFFFFF);
+            wrapper.lineStyle(6, 0xb3b3b3, 0.3);
             wrapper.y = 20;
             wrapper.moveTo(0,0);
             wrapper.lineTo(0, 43 + this.elementList.length * 40 );
@@ -139,6 +138,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
             wrapper.lineTo(240, 0);
             wrapper.lineTo(0, 0);
             wrapper.endFill();
+            wrapper.fillAlpha = 0.3;
 
 
             var inner = new PIXI.Container();
@@ -250,6 +250,7 @@ DropDownList.CLICKED = 'clicked';
 DropDownList.stateNames = [
     DropDownList.HOVER_CONTAINER,DropDownList.NORMAL,DropDownList.CLICKED
 ];
+
 /**
  * handleEvent
  */
@@ -376,7 +377,6 @@ DropDownList.prototype.handelSubscribedCallouts = function (eventName,text) {
         }
     });
 };
-
 
 
 /**

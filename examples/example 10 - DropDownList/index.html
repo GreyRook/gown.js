@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>pixi UI example: Buttons with different themes</title>
+    <title>pixi UI example: Drop Down</title>
     <style>
         body {
             margin: 0;
@@ -13,8 +13,7 @@
     <script src="../../lib/pixi.js"></script>
     <script src="../../bin/gown.js"></script>
     <script src="../../themes/AeonTheme.js"></script>
-    <script src="../../themes/ShapeTheme.js"></script>
-    <script src="../../themes/MetalWorksMobileTheme.js"></script>
+    <script src="js/DropDownTheme.js"></script>
 </head>
 <body>
 <script>
@@ -25,9 +24,9 @@
     var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
-    var aeontheme;
+    var theme;
 
-    function onCompleteAeon() {
+    function themeComplete() {
         // initialize theme
         var aeonddl;
 
@@ -45,7 +44,7 @@
             }
         ];
 
-        aeonddl = new GOWN.DropDownList(aeontheme);
+        aeonddl = new GOWN.DropDownList(theme);
         aeonddl.x = 100;
         aeonddl.y = 100;
 
@@ -80,8 +79,8 @@
         requestAnimationFrame(animate);
     }
 
-    aeontheme = new GOWN.AeonTheme(
-            ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
+    theme = new DropDownTheme(["../../themes/assets/aeon/aeon_desktop.json"],
+            themeComplete);
 
 
     function animate() {
