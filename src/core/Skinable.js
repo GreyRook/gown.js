@@ -14,7 +14,6 @@ function Skinable(theme) {
     Control.call(this);
     this.skinCache = {};
     this.setTheme(theme || GOWN.theme);
-
     if (this.theme === undefined) {
         throw new Error('you need to define a theme first');
     }

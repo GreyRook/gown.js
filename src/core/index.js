@@ -18,6 +18,7 @@ module.exports = {
     CheckBox:               require('./controls/CheckBox'),
     InputControl:           require('./controls/InputControl'),
     LayoutGroup:            require('./controls/LayoutGroup'),
+    RadioButton:             require('./controls/RadioButton'),
     Scrollable:             require('./controls/Scrollable'),
     ScrollArea:             require('./controls/ScrollArea'),
     ScrollBar:              require('./controls/ScrollBar'),
@@ -25,6 +26,7 @@ module.exports = {
     Slider:                 require('./controls/Slider'),
     TextInput:              require('./controls/TextInput'),
     ToggleButton:           require('./controls/ToggleButton'),
+    ToggleGroup:       require('./controls/ToggleGroup'),
 
     // layout
     HorizontalLayout:     require('./layout/HorizontalLayout'),
