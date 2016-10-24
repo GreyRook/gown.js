@@ -17,7 +17,17 @@ function RadioButton(preselected, disabled, theme, skinName) {
 
     this.disabled = disabled || false;
 
+    this.updateLabel = false;
+
     this._currentState = (this.disabled) ? RadioButton.DISABLE : RadioButton.UP;
+    console.log(this.theme.textStyle.clone());
+    this.labelText = new PIXI.Text("Text", this.theme.textStyle.clone());
+    this.labelText.width = 100;
+
+        //this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
+        //this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
+    this.labelText.x = 20;
+    this.addChild(this.labelText);
 
     // Disable overrides the fact the radio button can be selected as true
     this.selected =(this.disabled) ? false : preselected || false;
@@ -190,7 +200,7 @@ Object.defineProperty(RadioButton.prototype, 'toggleGroup', {
  * Indicate whether or not the Radio Button is disabled
  *
  * @property disable
- * @type boolean
+ * @type Boolean
  */
 Object.defineProperty(RadioButton.prototype, 'disable', {
     set: function(isDisable) {
@@ -201,6 +211,71 @@ Object.defineProperty(RadioButton.prototype, 'disable', {
         return this.disabled;
     }
 });
+
+//
+
+/**
+ * Create/Update the label of the button.
+ *
+ * @property label
+ * @type String
+ */
+/*Object.defineProperty(Button.prototype, 'label', {
+    get: function() {
+        return this._label;
+    },
+    set: function(label) {
+        if(this._label === label) {
+            return;
+        }
+        this._label = label;
+        this.updateLabel = true;
+    }
+});
+
+RadioButton.prototype.createLabel = function() {
+    if(this.labelText) {
+        this.labelText.text = this._label;
+        this.labelText.style = this.theme.textStyle.clone();
+    } else {
+        this.labelText = new PIXI.Text(this._label, this.theme.textStyle.clone());
+        this.addChild(this.labelText);
+    }
+    this.updateLabelDimensions();
+    this.updateLabel = false;
+};*/
+
+/**
+ * create/update the position of the label
+ *
+ * @method updateLabelDimensions
+ */
+/*Button.prototype.updateLabelDimensions = function () {
+    if (this.labelText && this.labelText.text && 
+        (this.worldWidth - this.labelText.width) >= 0 &&
+        (this.worldHeight - this.labelText.height) >= 0) {
+        this.labelText.x = Math.floor((this.worldWidth - this.labelText.width) / 2);
+        this.labelText.y = Math.floor((this.worldHeight - this.labelText.height) / 2);
+    }
+};*/
+
+// performance increase to avoid using call.. (10x faster)
+//Button.prototype.redrawSkinable = Skinable.prototype.redraw;
+
+/**
+ * update before draw call (position label)
+ *
+ * @method redraw
+ */
+/*Button.prototype.redraw = function() {
+    if (this.updateLabel) {
+        this.createLabel();
+    }
+    this.redrawSkinable();
+};
+*/
+
+//
 
 RadioButton.prototype.toggleSelected = function () {
     if (!this.selected) {
