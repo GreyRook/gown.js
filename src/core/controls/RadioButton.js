@@ -206,6 +206,7 @@ Object.defineProperty(RadioButton.prototype, 'disable', {
     set: function(isDisable) {
         this.disabled = isDisable;
         this._currentState = (isDisable) ? RadioButton.DISABLE : RadioButton.UP;
+        this.selected = (isDisable) ? false : this.selected;
     },
     get: function() {
         return this.disabled;
@@ -278,7 +279,7 @@ RadioButton.prototype.createLabel = function() {
 //
 
 RadioButton.prototype.toggleSelected = function () {
-    if (!this.selected) {
+    if (!this.selected && !this.disable) {
         this.selected = !this.selected;
         if (this._toggleGroup) {
             this._toggleGroup.select(this);

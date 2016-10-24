@@ -80,26 +80,63 @@ describe("RadioButton", function() {
         btn.disable = true;
         expect(btn.disabled).equal(true);
         expect(btn.selected).equal(false);
-        btn.toggleSelected();
     });
 
     it("can be set disable and changes don't work", function() {
         var btn = new GOWN.RadioButton(false, true);
         btn.disable = true;
         btn.toggleSelected();
-        expect(btn.disabled).equal(true);
+        expect(btn.disable).equal(true);
         expect(btn.selected).equal(false);
     });
 
     it("can be re-enabled and change states", function() {
-
+        var btn = new GOWN.RadioButton(false, true);
+        btn.disable = false;
+        expect(btn.disable).equal(false);
+        expect(btn.selected).equal(false);
+        btn.toggleSelected();
+        expect(btn.disable).equal(false);
+        expect(btn.selected).equal(true);
     });
 
     it("can be added to a toggle group", function() {
-
+        var btn = new GOWN.RadioButton(false, false);
+        var group = new GOWN.ToggleGroup();
+        btn.toggleGroup = group;
+        expect(btn.toggleGroup).equal(group);
     });
 
-    it("multiple can be added to group and only 1 can be selected", function() {
+    it("multiple selected buttons will be added and only the last will be selected", function() {
+        var btn1 = new GOWN.RadioButton(true, false);
+        var btn2 = new GOWN.RadioButton(true, false);
+        var btn3 = new GOWN.RadioButton(true, false);
+        var group = new GOWN.ToggleGroup();
+        btn1.toggleGroup = group;
+        btn2.toggleGroup = group;
+        btn3.toggleGroup = group;
+        expect(btn1.selected).equal(false);
+        expect(btn2.selected).equal(false);
+        expect(btn3.selected).equal(true);     
+    });
 
+    it("3 buttons and switch between selected", function() {
+        var btn1 = new GOWN.RadioButton(false, false);
+        var btn2 = new GOWN.RadioButton(false, false);
+        var btn3 = new GOWN.RadioButton(false, false);
+        var group = new GOWN.ToggleGroup();
+        btn1.toggleGroup = group;
+        btn2.toggleGroup = group;
+        btn3.toggleGroup = group;
+
+        btn1.toggleSelected();
+        expect(btn1.selected).equal(true);
+        expect(btn2.selected).equal(false);
+        expect(btn3.selected).equal(false);
+
+        btn2.toggleSelected();   
+        expect(btn1.selected).equal(false);
+        expect(btn2.selected).equal(true);
+        expect(btn3.selected).equal(false);
     });
 });

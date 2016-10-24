@@ -55,7 +55,9 @@ ToggleGroup.prototype.remove = function(radioButton) {
  */
 ToggleGroup.prototype.select = function(radioButton) {
 	if (this.radios.indexOf(radioButton) !== -1) {
-		this.selectedRadio.selected = false;
+		if (this.selectedRadio) {
+			this.selectedRadio.selected = false;
+		}
 		this.selectedRadio = radioButton;
 	}
 };
