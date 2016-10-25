@@ -17,6 +17,9 @@ function InputControl(theme) {
 
     this.receiveKeys = true;
 
+    // prevent other interaction (touch/move) on this component
+    this.autoPreventInteraction = false;
+
     /**
      * current position of the cursor in the text
      */
@@ -93,13 +96,6 @@ function InputControl(theme) {
     // setup events
     this.on('touchstart', this.onDown, this);
     this.on('mousedown', this.onDown, this);
-
-    this.on('touchend', this.onUp, this);
-    this.on('mouseupoutside', this.onUp, this);
-    this.on('mouseup', this.onUp, this);
-
-    this.on('mousemove', this.onMove, this);
-    this.on('touchmove', this.onMove, this);
 
     this.on('keydown', this.onKeyDown, this);
     this.on('keyup', this.onKeyUp, this);
@@ -181,15 +177,18 @@ InputControl.prototype.onKeyDown = function (eventData) {
     // TODO implement the insert key to overwrite text? it is gnored for now!
     if (key === 'WakeUp' || key === 'CapsLock' ||
         key === 'Shift' || key === 'Control' || key === 'Alt' ||
-        (key.substring(0,1) === 'F' && key.length > 1) || // F1-F12
+        key.match(/^F\d{1,2}$/) || // F1-F12
         key === 'Insert' ||
         key === 'Escape' || key === 'NumLock' ||
         key === 'Meta' || // Chrome Meta/Windows Key
         key === 'Win' || // Internet Explorer Meta/Windows Key
         key === 'Dead' || // Chrome Function/Dead Key
-        key === 'Unidentified' // Internet Explorer Function Key
+        key === 'Unidentified' || // Internet Explorer Function Key
+        key === 'AudioVolumeDown' ||
+        key === 'AudioVolumeUp' ||
+        key === 'AudioVolumeMute'
         ) {
-        // ignore single shift/control/alt, meta and dead keys
+        // ignore special system and control keys
         return;
     }
 
@@ -607,6 +606,10 @@ InputControl.prototype.drawCursor = function () {
 };
 
 InputControl.prototype.onMove = function (e) {
+    if (this.autoPreventInteraction) {
+        e.stopPropagation();
+    }
+
     var mouse = e.data.getLocalPosition(this.pixiText);
     if (!this.hasFocus || !this._mouseDown) { // || !this.containsPoint(mouse)) {
         return false;
@@ -624,6 +627,10 @@ InputControl.prototype.onMove = function (e) {
 };
 
 InputControl.prototype.onDown = function (e) {
+    if (this.autoPreventInteraction) {
+        e.stopPropagation();
+    }
+
     var mouse = e.data.getLocalPosition(this.pixiText);
     var originalEvent = e.data.originalEvent;
     if (originalEvent.which === 2 || originalEvent.which === 3) {
@@ -641,10 +648,22 @@ InputControl.prototype.onDown = function (e) {
     this.updateSelection(this.selectionStart, this.selectionStart);
     this.cursorPos = this.selectionStart;
     this._cursorNeedsUpdate = true;
+
+    this.on('touchend', this.onUp, this);
+    this.on('mouseupoutside', this.onUp, this);
+    this.on('mouseup', this.onUp, this);
+
+    this.on('mousemove', this.onMove, this);
+    this.on('touchmove', this.onMove, this);
+
     return true;
 };
 
 InputControl.prototype.onUp = function (e) {
+    if (this.autoPreventInteraction) {
+        e.stopPropagation();
+    }
+
     var originalEvent = e.data.originalEvent;
     if (originalEvent.which === 2 || originalEvent.which === 3) {
         originalEvent.preventDefault();
@@ -653,6 +672,14 @@ InputControl.prototype.onUp = function (e) {
 
     this.selectionStart = -1;
     this._mouseDown = false;
+
+    this.off('touchend', this.onUp, this);
+    this.off('mouseupoutside', this.onUp, this);
+    this.off('mouseup', this.onUp, this);
+
+    this.off('mousemove', this.onMove, this);
+    this.off('touchmove', this.onMove, this);
+
     return true;
 };
 
