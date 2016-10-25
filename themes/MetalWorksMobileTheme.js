@@ -86,6 +86,29 @@ MetalWorksMobileTheme.prototype.loadComplete = function(loader, resources) {
     }
     */
 
+    if (GOWN.RadioButton) {
+        var rb = GOWN.RadioButton;
+
+        this.setSkin(rb.SKIN_NAME, rb.UP,
+            this.getImage("radio-up-icon"));
+        this.setSkin(rb.SKIN_NAME, rb.DOWN,
+            this.getImage("radio-down-icon"));
+        this.setSkin(rb.SKIN_NAME, rb.HOVER,
+            this.getImage("radio-hover-icon"));
+        this.setSkin(rb.SKIN_NAME, rb.DISABLE,
+            this.getImage("radio-disabled-icon"));
+        console.log("the image");
+        console.log(this.getImage("radio-up-icon"));
+
+        this.setSkin(rb.SKIN_NAME, rb.SELECTED_UP,
+            this.getImage("radio-selected-up-icon"));
+        this.setSkin(rb.SKIN_NAME, rb.SELECTED_DOWN,
+            this.getImage("radio-selected-down-icon"));
+        this.setSkin(rb.SKIN_NAME, rb.SELECTED_HOVER,
+            this.getImage("radio-selected-hover-icon"));
+        this.setSkin(rb.SKIN_NAME, rb.SELECTED_DISABLED,
+            this.getImage("radio-selected-disabled-icon"));
+    }
     // TODO: emit
     if (this._onComplete) {
         this._onComplete();

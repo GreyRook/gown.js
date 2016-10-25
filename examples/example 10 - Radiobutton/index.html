@@ -29,21 +29,26 @@
         // initialize theme
         tg = new GOWN.ToggleGroup();
         var aeonchk;
-        aeonchk = new GOWN.RadioButton();
+        aeonchk = new GOWN.RadioButton(true, false, "selected");
         aeonchk.x = aeonchk.y = 20;
         //aeonchk.disable = false;
         aeonchk.toggleGroup = tg;
-        console.log("the index");
-        console.log(aeonchk.selected);
 
         var aeonchk2;
-        aeonchk2 = new GOWN.RadioButton(true);
-        aeonchk2.x = 60;
-        aeonchk2.y = 20;
+        aeonchk2 = new GOWN.RadioButton(false, false, "not selected");
+        aeonchk2.x = 20;
+        aeonchk2.y = 60;
         aeonchk2.toggleGroup = tg;
+
+        var aeonchk3;
+        aeonchk3 = new GOWN.RadioButton(false, true, "disabled");
+        aeonchk3.x = 20;
+        aeonchk3.y = 100;
+        aeonchk3.toggleGroup = tg;
         //tg.add(aeonchk2);
         stage.addChild(aeonchk);
         stage.addChild(aeonchk2);
+        stage.addChild(aeonchk3);
 
         requestAnimationFrame(animate);
     }
@@ -53,17 +58,23 @@
         tg = new GOWN.ToggleGroup();
         console.log();
         var chk;
-        chk = new GOWN.RadioButton(false, metaltheme);
+        chk = new GOWN.RadioButton(true, false, "selected", metaltheme);
         chk.x = 20;
-        chk.y = 60;
+        chk.y = 140;
         tg.add(chk);
 
         var chk2;
-        chk2 = new GOWN.RadioButton(true, metaltheme);
-        chk2.x = 60;
-        chk2.y = 60;
+        chk2 = new GOWN.RadioButton(false, false, "not selected", metaltheme);
+        chk2.x = 20;
+        chk2.y = 180;
+
+        var chk3;
+        chk3 = new GOWN.RadioButton(false, true, "disabled", metaltheme);
+        chk3.x = 20;
+        chk3.y = 220;
         stage.addChild(chk);
         stage.addChild(chk2);
+        stage.addChild(chk3);
 
         requestAnimationFrame(animate);
     }
@@ -71,7 +82,7 @@
     aeontheme = new GOWN.AeonTheme(
         ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
 
-/*    metaltheme = new GOWN.MetalWorksMobileTheme(
+    /*metaltheme = new GOWN.MetalWorksMobileTheme(
         ["../../themes/assets/metalworks/metalworks.json"], onCompleteMetal, false);*/
 
     function animate() {
