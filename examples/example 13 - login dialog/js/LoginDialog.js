@@ -5,7 +5,7 @@
 /**
  * a simple dialog with a email and password text input
  */
-var LoginDialog = function(app) {
+var LoginDialog = function() {
     GOWN.Control.call(this);
     // background
     this.bg = new PIXI.shapes.Rect(0x515151, 0.7, 200, 350, 5);

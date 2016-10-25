@@ -42,7 +42,8 @@
     function onCompleteAeon() {
         // background
         app = new GOWN.Application({
-            backgroundColor: [0x688080, 0x9ba992]});
+            backgroundColor: [0x688080, 0x9ba992]},
+            GOWN.Application.SCREEN_MODE_FULLSCREEN);
 
         var login = new LoginDialog(app);
         app.addChild(login);
