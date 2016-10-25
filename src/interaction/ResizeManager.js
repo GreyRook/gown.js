@@ -81,7 +81,7 @@ module.exports = ResizeManager;
  * time after the resize when we will update
  * (prevent the canvas from flickering when resizing)
  */
-ResizeManager.RESIZE_DONE_TIMEOUT = 200;
+ResizeManager.RESIZE_DONE_TIMEOUT = 100;
 
  /**
  * Registers all the DOM events
