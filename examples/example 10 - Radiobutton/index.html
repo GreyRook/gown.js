@@ -52,38 +52,9 @@
 
         requestAnimationFrame(animate);
     }
-
-    function onCompleteMetal() {
-        // initialize theme
-        tg = new GOWN.ToggleGroup();
-        console.log();
-        var chk;
-        chk = new GOWN.RadioButton(true, false, "selected", metaltheme);
-        chk.x = 20;
-        chk.y = 140;
-        tg.add(chk);
-
-        var chk2;
-        chk2 = new GOWN.RadioButton(false, false, "not selected", metaltheme);
-        chk2.x = 20;
-        chk2.y = 180;
-
-        var chk3;
-        chk3 = new GOWN.RadioButton(false, true, "disabled", metaltheme);
-        chk3.x = 20;
-        chk3.y = 220;
-        stage.addChild(chk);
-        stage.addChild(chk2);
-        stage.addChild(chk3);
-
-        requestAnimationFrame(animate);
-    }
-
+    
     aeontheme = new GOWN.AeonTheme(
         ["../../themes/assets/aeon/aeon_desktop.json"], onCompleteAeon);
-
-    /*metaltheme = new GOWN.MetalWorksMobileTheme(
-        ["../../themes/assets/metalworks/metalworks.json"], onCompleteMetal, false);*/
 
     function animate() {
         // render the stage
