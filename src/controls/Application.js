@@ -25,13 +25,13 @@ var Control = require('../core/Control');
  *  (default null - will use a new PIXI.Container)
  */
 function Application(config, screenMode, parentId, width, height, renderer, stage) {
-    this._screenMode = screenMode || Application.SCREEN_MODE_RESIZE;
+    screenMode = screenMode || Application.SCREEN_MODE_RESIZE;
     var fullscreen = false;
     var element = document.getElementById(parentId);
-    if (this._screenMode === Application.SCREEN_MODE_RESIZE) {
+    if (screenMode === Application.SCREEN_MODE_RESIZE) {
         width = element.clientWidth;
         height = element.clientHeight;
-    } else if (this._screenMode === Application.SCREEN_MODE_FULLSCREEN) {
+    } else if (screenMode === Application.SCREEN_MODE_FULLSCREEN) {
         width = window.innerWidth;
         height = window.innerHeight;
         fullscreen = true;
@@ -74,8 +74,15 @@ function Application(config, screenMode, parentId, width, height, renderer, stag
     this._width = renderer.width;
     this._height = renderer.height;
 
+    this.screenMode = screenMode;
+
     Control.call(this);
     stage.addChild(this);
+
+    this.layoutInvalid = true;
+
+    // you can set a layout to apply percentages on redraw etc.
+    this.layout = this.layout || null;
 
     if (_background) {
         this.background = _background;
@@ -166,7 +173,19 @@ Application.prototype.destroy = function(destroyChildren, removeCanvas) {
 };
 
 /**
+ * redraw scene, apply layout if required
+ */
+Application.prototype.redraw = function() {
+    if (this.layoutInvalid && this.layout) {
+        this.layout.layoutContainer(this);
+    }
+    this.layoutInvalid = false;
+};
+
+/**
  * called when the browser window / the application is resized
+ * will set the dimensions of the canvas and layout children
+ * (if it has a layout)
  *
  * @method resize
  */
@@ -175,10 +194,31 @@ Application.prototype.onResize = function(eventData) {
     this._height = eventData.data.height;
     this._renderer.resize(this._width, this._height);
     if (this.bg) {
+        // TODO: add special layout for this and use percentWidth/Height of 100
         this.bg.width = this._width;
         this.bg.height = this._height;
     }
+    this.layoutInvalid = true;
 };
+
+/**
+ * allow layouting of children
+ *
+ * @property layout
+ * @type PIXI.layout.Layout
+ */
+Object.defineProperty(Application.prototype, 'layout', {
+    get: function() {
+        return this._layout;
+    },
+    set: function(value) {
+        if (value === this._layout) {
+            return;
+        }
+        this._layout = value;
+        this.layoutInvalid = true;
+    }
+});
 
 /**
  * remove background
@@ -200,22 +240,10 @@ Application.prototype._removeBackground = function() {
  */
 Object.defineProperty(Application.prototype, 'screenMode', {
     get: function() {
-        return this._fullscreen;
+        return this._screenMode;
     },
     set: function(value) {
-        if (value === Application.SCREEN_MODE_RESIZE_DIV) {
-            if (window.ResizeSensor) {
-                this.resizeSensor = new window.ResizeSensor();
-                this._screenMode = value;
-                return;
-            } else {
-                if (window.console) {
-                    window.console.warn('ResizeSensor not found, fallback to fullscreen');
-                }
-            }
-        }
-        if (value === Application.SCREEN_MODE_FULLSCREEN ||
-            value === Application.SCREEN_MODE_RESIZE_DIV) {
+        if (value === Application.SCREEN_MODE_FULLSCREEN) {
             this._renderer.view.style.top = 0;
             this._renderer.view.style.left = 0;
             this._renderer.view.style.right = 0;
