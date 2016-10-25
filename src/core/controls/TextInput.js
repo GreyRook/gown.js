@@ -24,7 +24,7 @@ function TextInput(text, displayAsPassword, theme, skinName) {
     InputControl.call(this, text, theme);
 
     this._displayAsPassword = displayAsPassword || false;
-    this._isNumber = false;
+
     /**
      * timer used to indicate if the cursor is shown
      *
@@ -158,14 +158,6 @@ Object.defineProperty(TextInput.prototype, 'value', {
     }
 });
 
-/*
- * set whether or not to display the input text
- * as a number only
-*/
-TextInput.prototype.displayAsNumber = function(display) {
-    this._isNumber = display;
-};
-
 /**
  * set text and type of DOM text input
  *
@@ -174,9 +166,7 @@ TextInput.prototype.displayAsNumber = function(display) {
 TextInput.prototype.onfocus = function() {
     InputWrapper.setText(this.value);
     InputWrapper.setMaxLength(this.maxChars);
-    if (this._isNumber) {
-        InputWrapper.setType('number');
-    } else if (this._displayAsPassword) {
+    if (this._displayAsPassword) {
         InputWrapper.setType('password');
     } else {
         InputWrapper.setType('text');
