@@ -100,6 +100,33 @@
         "texture": "check-selected-hover-icon0000"
       }
   	},
+    "radio": {
+      "up": {
+        "type": "texture",
+        "texture": "radio-up-icon0000"
+      },
+      "down": {
+        "type": "texture",
+        "texture": "radio-down-icon0000"
+      },
+      "hover": {
+        "type": "texture",
+        "texture": "radio-hover-icon0000"
+      },
+
+      "selected_up": {
+        "type": "texture",
+        "texture": "radio-selected-up-icon0000"
+      },
+      "selected_down": {
+        "type": "texture",
+        "texture": "radio-selected-down-icon0000"
+      },
+      "selected_hover": {
+        "type": "texture",
+        "texture": "radio-selected-hover-icon0000"
+      }
+    },
   	"scroll_bar": {
   	  "horizontal_track": {
   	    "type": "texture",

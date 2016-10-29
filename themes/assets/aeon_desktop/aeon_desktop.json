@@ -2848,6 +2848,46 @@
         "type": "texture"
       }
     },
+    "picker_list": {
+      "icon_down": {
+        "texture": "picker-list-down-icon0000",
+        "type": "texture"
+      },
+      "icon_hover": {
+        "texture": "picker-list-hover-icon0000",
+        "type": "texture"
+      },
+      "icon_up": {
+        "texture": "picker-list-up-icon0000",
+        "type": "texture"
+      }
+    },
+    "radio": {
+      "down": {
+        "texture": "radio-down-icon0000",
+        "type": "texture"
+      },
+      "hover": {
+        "texture": "radio-hover-icon0000",
+        "type": "texture"
+      },
+      "selected_down": {
+        "texture": "radio-selected-down-icon0000",
+        "type": "texture"
+      },
+      "selected_hover": {
+        "texture": "radio-selected-hover-icon0000",
+        "type": "texture"
+      },
+      "selected_up": {
+        "texture": "radio-selected-up-icon0000",
+        "type": "texture"
+      },
+      "up": {
+        "texture": "radio-up-icon0000",
+        "type": "texture"
+      }
+    },
     "scroll_bar": {
       "horizontal_track": {
         "scale9": "HORIZONTAL_SLIDER_TRACK_SCALE_9_GRID",

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>gown.js example: Radio button</title>
+    <!-- see https://feathersui.com/help/radio.html -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../bin/gown-full.js"></script>
+</head>
+<body>
+<script>
+    var stage = new PIXI.Container();
+
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+
+	var aeonTheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+    var chk;
+
+    function onCompleteAeon() {
+        var toggleGrp = new GOWN.ToggleGroup();
+        toggleGrp.on(GOWN.ToggleGroup.CHANGE, function(item) {
+            if (window.console) {
+                console.log('selected index:', toggleGrp.selectedIndex);
+                console.log('selected item:', item);
+            }
+        })
+
+        var aeonchk;
+        aeonchk = new GOWN.Radio(aeonTheme);
+        aeonchk.toggleGroup = toggleGrp;
+        aeonchk.x = aeonchk.y = 20;
+        stage.addChild(aeonchk);
+
+        var aeonchk2;
+        aeonchk2 = new GOWN.Radio(aeonTheme);
+        aeonchk2.selected = true;
+        aeonchk2.toggleGroup = toggleGrp;
+        aeonchk2.x = 60;
+        aeonchk2.y = 20;
+        stage.addChild(aeonchk2);
+
+        requestAnimationFrame(animate);
+    }
+
+    aeonTheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
+
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+</script>
+
+</body>
+</html>

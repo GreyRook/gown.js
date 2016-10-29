@@ -19,6 +19,7 @@ if (typeof PIXI === 'undefined') {
     core.LayoutGroup =            require('./controls/LayoutGroup');
     core.List =                   require('./controls/List');
     core.PickerList =             require('./controls/PickerList');
+    core.Radio =                  require('./controls/Radio');
     core.Scrollable =             require('./controls/Scrollable');
     core.ScrollBar =              require('./controls/ScrollBar');
     core.ScrollContainer =        require('./controls/ScrollContainer');
@@ -29,6 +30,7 @@ if (typeof PIXI === 'undefined') {
     core.TextInput =              require('./controls/TextInput');
     core.TextArea =               require('./controls/TextArea');
     core.ToggleButton =           require('./controls/ToggleButton');
+    core.ToggleGroup =            require('./controls/ToggleGroup');
 
     // data
     core.ListCollection =         require('./data/ListCollection');

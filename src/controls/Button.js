@@ -297,6 +297,7 @@ Button.prototype.setTheme = function(theme) {
 
 /**
  * The current state (one of _validStates)
+ * TODO: move to skinable?
  *
  * @property currentState
  * @type String

@@ -65,6 +65,28 @@ Object.defineProperty(ToggleButton.prototype, 'currentState',{
 });
 
 /**
+ * set selection state
+ * @param selected {bool} value of selection
+ * @param emit {bool=false} set to true if you want to emit the change signal
+ *        (used to prevent infinite loop in ToggleGroup)
+ */
+ToggleButton.prototype.setSelected = function(selected, emit) {
+    var state = this._currentState;
+    this.invalidState = this._selected !== selected || this.invalidState;
+    if (state.indexOf('selected_') === 0) {
+        state = state.substr(9, state.length);
+    }
+    if (this._selected !== selected) {
+        this._selected = selected;
+        if (emit) {
+            this.emit(ToggleButton.CHANGE, this, selected);
+        }
+    }
+    this._pressed = false; //to prevent toggling on touch/mouse up
+    this.currentState = state;
+};
+
+/**
  * Indicate if the button is selected (pressed)
  *
  * @property selected
@@ -72,17 +94,7 @@ Object.defineProperty(ToggleButton.prototype, 'currentState',{
  */
 Object.defineProperty(ToggleButton.prototype, 'selected', {
     set: function(selected) {
-        var state = this._currentState;
-        this.invalidState = this._selected !== selected || this.invalidState;
-        if (state.indexOf('selected_') === 0) {
-            state = state.substr(9, state.length);
-        }
-        if (this._selected !== selected) {
-            this._selected = selected;
-            this.emit(ToggleButton.CHANGE, this, selected);
-        }
-        this._pressed = false; //to prevent toggling on touch/mouse up
-        this.currentState = state;
+        this.setSelected(selected, true);
     },
     get: function() {
         return this._selected;
