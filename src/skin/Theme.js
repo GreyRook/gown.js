@@ -138,7 +138,12 @@ Theme.prototype.getScaleContainer = function(name, grid, middleWidth, centerHeig
 Theme.prototype.getImage = function(name) {
     var scope = this;
     return function() {
-        return new PIXI.Sprite(scope.textureCache[name]);
+        if (scope.textureCache && name in scope.textureCache) {
+            return new PIXI.Sprite(scope.textureCache[name]);
+        } else {
+            // not found - try to load the image.
+            return new PIXI.Sprite(PIXI.Texture.fromImage(name));
+        }
     };
 };
 
