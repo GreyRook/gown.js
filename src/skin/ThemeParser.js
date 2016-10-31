@@ -78,7 +78,7 @@ ThemeParser.prototype.getScale9 = function(scale) {
 ThemeParser.prototype.skinFromData = function(skinData, data) {
     if (skinData.type === 'texture') {
         var scale9;
-        if (skinData.scale9 in data.grids) {
+        if (skinData.scale9 && skinData.scale9 in data.grids) {
             scale9 = this.getScale9(data.grids[skinData.scale9]);
         } else {
             return this.getImage(skinData.texture);
