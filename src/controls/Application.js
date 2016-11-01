@@ -41,7 +41,6 @@ function Application(config, screenMode, parentId, width, height, renderer, stag
     }
 
     this.resizable = true;
-    this.on('resize', this.onResize, this);
 
     if (!config) {
         config = {
@@ -77,6 +76,9 @@ function Application(config, screenMode, parentId, width, height, renderer, stag
     this.screenMode = screenMode;
 
     Control.call(this);
+
+    this.on('resize', this.onResize, this);
+
     stage.addChild(this);
 
     this.layoutInvalid = true;
