@@ -179,7 +179,7 @@ List.prototype.itemRendererChangeHandler = function(itemRenderer, value) {
         }
     }
 
-    this.emit('change', itemRenderer, value);
+    this.emit(List.CHANGE, itemRenderer, value);
 };
 
 /**
@@ -314,3 +314,5 @@ Object.defineProperty(List.prototype, 'dataProvider', {
         return this._dataProvider;
     }
 });
+
+// TODO: selectedItem
