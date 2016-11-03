@@ -22,9 +22,6 @@ function DefaultListItemRenderer(theme) {
 	 * function is not null, then the <code>labelField</code> will be
 	 * ignored.
 	 *
-	 * <p>The function is expected to have the following signature:</p>
-	 * <pre>function( item )</pre> and return a string
-	 *
 	 * <p>In the following example, the label function is customized:</p>
 	 * renderer.labelFunction = function( item ) {
 	 *    return item.firstName + " " + item.lastName;
@@ -49,11 +46,8 @@ DefaultListItemRenderer.prototype = Object.create( ToggleButton.prototype );
 DefaultListItemRenderer.prototype.constructor = DefaultListItemRenderer;
 module.exports = DefaultListItemRenderer;
 
-//DefaultListItemRenderer.STYLE_NAME = "default_item_renderer";
-
 // performance increase to avoid using call.. (10x faster)
 DefaultListItemRenderer.prototype.redrawButton = Button.prototype.redraw;
-
 /**
  * update before draw call update button text
  *
