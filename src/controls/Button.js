@@ -10,9 +10,10 @@ var Skinable = require('../core/Skinable');
  * @constructor
  */
 function Button(theme, skinName) {
-    this.skinName = skinName || Button.SKIN_NAME;
-    this._validStates = this._validStates || Button.stateNames;
     Skinable.call(this, theme);
+    this._validStates = this._validStates || Button.stateNames;
+    this.skinName = skinName || Button.SKIN_NAME;
+
     this.handleEvent(Button.UP);
 
     this.updateLabel = true; // label text changed
@@ -96,6 +97,9 @@ Button.TRIGGERED = 'triggered';
  * @method preloadSkins
  */
 Button.prototype.preloadSkins = function() {
+    if (!this._validStates) {
+        return;
+    }
     for (var i = 0; i < this._validStates.length; i++) {
         var name = this._validStates[i];
         this.fromSkin(name, this.skinLoaded);

@@ -23,6 +23,9 @@ function Skinable(theme) {
     // overwrite skin values before next draw call.
     this.invalidSkinData = true;
 
+    // will destroy the skin cache when the skinable gets destroyed
+    this.allowDestroyCache = true;
+
     // default skin fallback state is 'up' (works for buttons)
     this.skinFallback = 'up';
 }
@@ -108,6 +111,26 @@ Skinable.prototype.fromSkin = function(name, callback) {
 };
 
 /**
+ * empty skin cache and load skins again
+ */
+Skinable.prototype.reloadSkin = function() {
+    for (var name in this.skinCache) {
+        var skin = this.skinCache[name];
+        if (skin && skin.destroy && this.allowDestroyCache) {
+            skin.destroy();
+        }
+    }
+    for (name in this.skinCache) {
+        delete this.skinCache[name];
+    }
+    this.skinCache = {};
+    if (this.preloadSkins) {
+        this.preloadSkins();
+    }
+    this.invalidState = true;
+};
+
+/**
  * change the skin name
  * You normally set the skin name as constant in your control, but if you
  * want you can set another skin name to change skins for single components
@@ -125,6 +148,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
             return;
         }
         this._skinName = value;
+        this.reloadSkin();
         this.invalidState = true;
     }
 });
@@ -132,6 +156,7 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
 /**
  * fallback skin if other skin does not exist (e.g. if a mobile theme
  * that does not provide a "hover" state is used on a desktop system)
+ * (normally the default "up"-state skin)
  *
  * @property skinFallback
  * @type String
@@ -144,3 +169,15 @@ Object.defineProperty(Skinable.prototype, 'skinFallback', {
         this._skinFallback = value;
     }
 });
+
+Skinable.prototype.containerDestroy = PIXI.Container.prototype.destroy;
+Skinable.prototype.destroy = function() {
+    for (var name in this.skinCache) {
+        var skin = this.skinCache[name];
+        if (skin.destroy && this.allowDestroyCache) {
+            skin.destroy();
+        }
+    }
+    this._currentSkin = null;
+    this.containerDestroy();
+};
