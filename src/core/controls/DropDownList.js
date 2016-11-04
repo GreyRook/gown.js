@@ -77,13 +77,13 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
     wrapper.buttonMode = true;
     wrapper.defaultCursor = 'pointer';
 
-    this.labelText = new PIXI.Text('Label', Object.assign({}, this.theme.labelStyle));
+    this.labelText = new PIXI.Text('Label', Object.assign({}, this.theme.labelStyle || {font:"15px Arial", fill : 0xDDDDDD}));
     this.labelText.y = 0;
     this.labelText.x = 0;
     if(this.showDropDown){
-        this.labelText.style.fill = this.theme.labelTextColors.active;
+        this.labelText.style.fill = this.theme.labelTextColors.active || '#FF93A7';
     }else{
-        this.labelText.style.fill = this.theme.labelTextColors.normal;
+        this.labelText.style.fill = this.theme.labelTextColors.normal || '#DDDDDD';
     }
 
     var mark = new PIXI.Graphics();
@@ -111,7 +111,7 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
 
 
 
-    this.selectedItemText = new PIXI.Text(this._label, Object.assign({}, this.theme.textStyle));
+    this.selectedItemText = new PIXI.Text(this._label, Object.assign({}, this.theme.textStyle || {font:"20px Arial", fill : 0x4E5769}));
     this.selectedItemText.x = 0;
     this.selectedItemText.y = 25;
 
@@ -154,7 +154,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
 
             this.elementList.forEach(function (el, i) {
 
-                var itemText = new PIXI.Text(el.text, Object.assign({}, this.theme.textStyle)); // use own styles
+                var itemText = new PIXI.Text(el.text, Object.assign({}, this.theme.textStyle || {font:"20px Arial", fill : 0x4E5769})); // use own styles
 
 
                 if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
