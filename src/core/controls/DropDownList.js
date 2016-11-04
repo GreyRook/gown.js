@@ -317,21 +317,23 @@ DropDownList.prototype.toggleDropDown = function () {
  * add event on stage that close dropDown on click
  */
 DropDownList.prototype.initiate = function () {
-    this.parent.interactive = true;
-    var stage = this.getStage(this);
-    var self = this;
+    if(this.parent){
+        this.parent.interactive = true;
+        var stage = this.getStage(this);
+        var self = this;
 
-    stage.on('mousedown', function () {
-        if(self.showDropDown){
-            self.toggleDropDown();
-        }
-    });
+        stage.on('mousedown', function () {
+            if(self.showDropDown){
+                self.toggleDropDown();
+            }
+        });
 
-    stage.on('touchstart', function () {
-        if(self.showDropDown){
-            self.toggleDropDown();
-        }
-    });
+        stage.on('touchstart', function () {
+            if(self.showDropDown){
+                self.toggleDropDown();
+            }
+        });
+    }
 
     this.initiated = true;
 };
