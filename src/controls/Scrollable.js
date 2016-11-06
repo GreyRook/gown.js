@@ -11,6 +11,7 @@ var Skinable = require('../core/Skinable'),
  * @memberof GOWN
  * @constructor
  */
+// TODO: remove setting value (value manipulation is for Slider only)
 function Scrollable(theme) {
     this.mode = this.mode || Scrollable.DESKTOP_MODE;
 
@@ -87,6 +88,9 @@ Scrollable.prototype.createThumb = function() {
 
 Scrollable.prototype.defaultThumbFactory = function() {
     return new ScrollThumb(this, this.theme);
+};
+
+Scrollable.prototype.scrollToPosition = function(horizontalScrollPosition, verticalScrollPosition) {
 };
 
 /**
@@ -174,8 +178,10 @@ Scrollable.prototype.handleWheel = function (event) {
  * @param x x-position that has been scrolled to (ignored when vertical)
  * @param y y-position that has been scrolled to (ignored when horizontal)
  */
-/* jshint unused: false */
+
 Scrollable.prototype.thumbMoved = function(x, y) {
+    var pos = this.direction === Scrollable.HORIZONTAL ? x : y;
+    this.value = this.pixelToValue(pos);
 };
 
 /**

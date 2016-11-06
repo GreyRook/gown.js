@@ -112,7 +112,6 @@ ScrollThumb.prototype.showTrack = function(skin) {
  * @method redraw
  */
 ScrollThumb.prototype.redraw = function() {
-    this.redrawSkinable();
     if (this.invalidTrack && this.theme.thumbSkin) {
         this.fromSkin(this.scrollable.direction+'_thumb', this.showTrack);
     }
