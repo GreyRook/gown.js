@@ -127,6 +127,20 @@
         "texture": "radio-selected-hover-icon0000"
       }
     },
+    "picker_list": {
+      "icon_up": {
+        "type": "texture",
+        "texture": "picker-list-up-icon0000"
+      },
+      "icon_down": {
+        "type": "texture",
+        "texture": "picker-list-down-icon0000"
+      },
+      "icon_hover": {
+        "type": "texture",
+        "texture": "picker-list-hover-icon0000"
+      }
+    },
   	"scroll_bar": {
   	  "horizontal_track": {
   	    "type": "texture",
