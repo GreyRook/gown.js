@@ -77,14 +77,14 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
     wrapper.buttonMode = true;
     wrapper.defaultCursor = 'pointer';
 
-    this.labelText = new PIXI.Text('Label', this.theme.labelStyle.clone());
+    this.labelText = new PIXI.Text('Label', this.theme.labelStyle.clone() || {font:'15px Arial', fill : 0xDDDDDD});
     this.labelText.y = 0;
     this.labelText.x = 0;
 
     if(this.showDropDown){
-        this.labelText.style.fill = this.theme.labelTextColors.active;
+        this.labelText.style.fill = this.theme.labelTextColors ? this.theme.labelTextColors.active : '#FF93A7';
     }else{
-        this.labelText.style.fill = this.theme.labelTextColors.normal;
+        this.labelText.style.fill = this.theme.labelTextColors ? this.theme.labelTextColors.normal : '#DDDDDD';
     }
 
     var mark = new PIXI.Graphics();
@@ -99,8 +99,8 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
     mark.y = 30;
 
     var line = new PIXI.Graphics();
-    line.beginFill(this.theme.line.lineColor);
-    line.drawRect(0, 0,this.theme.line.width,this.theme.line.height);
+    line.beginFill( this.theme.line  ? this.theme.line.lineColor : 0xf1f2f3);
+    line.drawRect(0, 0, this.theme.line  ? this.theme.line.width : 222, this.theme.line  ? this.theme.line.height : 2);
     line.x = 2;
     line.y = 60;
     line.endFill();
@@ -110,9 +110,7 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
     wrapper.addChild(mark);
     wrapper.addChild(line);
 
-    var text = this.theme.textStyle.clone();
-
-    this.selectedItemText = new PIXI.Text(this._label, text);
+    this.selectedItemText = new PIXI.Text(this._label, this.theme.textStyle.clone() || {font:'20px Arial', fill : 0x4E5769});
     this.selectedItemText.x = 0;
     this.selectedItemText.y = 25;
 
@@ -132,7 +130,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
     if(this.elementList) {
         if(this.showDropDown){
             var wrapper = new PIXI.Graphics();
-            wrapper.beginFill(this.theme.background.color);
+            wrapper.beginFill(this.theme.background ?this.theme.background.color : 0xFFFFFF);
             wrapper.y = 20;
             wrapper.moveTo(0,0);
             wrapper.lineTo(0, 43 + this.elementList.length * 40 );
@@ -155,7 +153,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
 
             this.elementList.forEach(function (el, i) {
 
-                var itemText = new PIXI.Text(el.text, this.theme.textStyle.clone()); // use own styles
+                var itemText = new PIXI.Text(el.text, this.theme.textStyle.clone() || {font:'20px Arial', fill : 0x4E5769}); // use own styles
 
 
                 if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
