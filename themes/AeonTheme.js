@@ -117,13 +117,15 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             };
         }
 
-        this.textStyle = this.createThemeFont(this.textStyle.fontFamily || "Arial",
-                                              this.textStyle.fontSize || 20,
-                                              this.textStyle.fill || 0x4E5769);
+        this.textStyle = this.createThemeFont(this.textStyle ? this.textStyle.fontFamily : "Arial",
+                                                this.textStyle ? this.textStyle.fontSize : 20,
+                                                this.textStyle ? this.textStyle.fill : 0x4E5769);
 
-        this.labelStyle = this.createThemeFont(this.textStyle.fontFamily || "Arial",
-                                              this.labelStyle.fontSize || 15,
-                                              this.labelStyle.fill || 0xDDDDDD);
+
+
+        this.labelStyle = this.createThemeFont(this.labelStyle ? this.labelStyle.fontFamily : "Arial",
+                                                this.labelStyle ? this.labelStyle.fontSize : 15,
+                                                this.labelStyle ? this.labelStyle.fill : 0xDDDDDD);
 
         if(!this.labelTextColors){
             this.labelTextColors = {
