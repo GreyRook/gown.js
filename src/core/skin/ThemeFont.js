@@ -2,7 +2,7 @@ var OPTIONS = ['fontSize', 'fontFamily', 'fill', 'align', 'stroke',
                'strokeThickness', 'wordWrap', 'wordWrapWidth', 'lineHeight',
                'dropShadow', 'dropShadowColor', 'dropShadowAngle',
                'dropShadowDistance', 'padding', 'textBaseline',
-               'lineJoin', 'miterLimit'];
+               'lineJoin', 'miterLimit', '_fontSize', '_fontFamily'];
 
 /**
  * @class ThemeFont
@@ -37,6 +37,8 @@ ThemeFont.prototype.clone = function() {
             re[key] = this[key];
         }
     }
+
+    re._updateFont();// force set font
     return re;
 };
 

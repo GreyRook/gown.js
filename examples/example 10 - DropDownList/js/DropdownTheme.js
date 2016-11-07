@@ -5,21 +5,22 @@ var DropDownTheme = function(jsonPath, onComplete, global) {
         width: 220,
         height: 2
     };
-
     this.textStyle = {
-        font:"20px Arial",
+        fontFamily : "Arial",
+        fontSize : 20,
         fill : 0x4E5769
     };
 
     this.labelStyle = {
-        font:"15px Arial",
+        fontFamily : "Arial",
+        fontSize : 15,
         fill : 0xDDDDDD
     };
 
     this.labelTextColors = {
         active : '#FF93A7',
         normal : '#DDDDDD'
-    }
+    };
 
     this.background = {
         color: 0xFFFFFF

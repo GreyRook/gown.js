@@ -108,6 +108,36 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("check-selected-hover-icon"));
     }
 
+    if (GOWN.DropDownList) {
+        if(!this.line){
+            this.line = {
+                lineColor: 0xEEEEEE,
+                width: 220,
+                height: 2
+            };
+        }
+
+        this.textStyle = this.createThemeFont(this.textStyle.fontFamily || "Arial",
+                                              this.textStyle.fontSize || 20,
+                                              this.textStyle.fill || 0x4E5769);
+
+        this.labelStyle = this.createThemeFont(this.textStyle.fontFamily || "Arial",
+                                              this.labelStyle.fontSize || 15,
+                                              this.labelStyle.fill || 0xDDDDDD);
+
+        if(!this.labelTextColors){
+            this.labelTextColors = {
+                active : '#FF93A7',
+                normal : '#DDDDDD'
+            };
+        }
+
+        if(this.background){
+            this.background = {
+                color: 0xFFFFFF
+            };
+        }
+    }
 
 
     // TODO: emit
@@ -125,6 +155,5 @@ AeonTheme.TEXT_INPUT_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 148, 18);
 AeonTheme.VERTICAL_SCROLL_BAR_THUMB_SCALE_9_GRID = new PIXI.Rectangle(2, 5, 6, 42);
 AeonTheme.VERTICAL_SCROLL_BAR_TRACK_SCALE_9_GRID = new PIXI.Rectangle(2, 1, 11, 2);
 AeonTheme.VERTICAL_SCROLL_BAR_STEP_BUTTON_SCALE_9_GRID = new PIXI.Rectangle(2, 2, 11, 10);
-AeonTheme.DROPDOWNLIST_GRID = new PIXI.Rectangle(2, 2, 200, 30);
 
 GOWN.AeonTheme = AeonTheme;
