@@ -105,6 +105,18 @@ Object.defineProperty(PickerList.prototype, 'dataProvider', {
     }
 });
 
+Object.defineProperty(PickerList.prototype, 'itemRendererProperties', {
+    set: function(itemRendererProperties) {
+        if (this.list) {
+            this.list.itemRendererProperties = itemRendererProperties;
+        }
+        this._itemRendererProperties = itemRendererProperties;
+    },
+    get: function() {
+        return this._itemRendererProperties;
+    }
+});
+
 PickerList.prototype.createButton = function() {
     this.button = this._buttonFactory(this.theme);
 
@@ -125,6 +137,9 @@ PickerList.prototype.createList = function() {
     if (this.itemRendererFactory) {
         this.list.itemRendererFactory = this.itemRendererFactory;
     }
+    if (this.itemRendererProperties) {
+        this.list.itemRendererProperties = this.itemRendererProperties;
+    }
     // forward list events
     this.list.on(List.CHANGE, this._listChange, this);
 };
@@ -134,6 +149,9 @@ PickerList.prototype.createList = function() {
  */
 PickerList.prototype._listChange = function(itemRenderer, value) {
     this.emit(List.CHANGE, itemRenderer, value);
+    if (this.button && value) {
+        this.button.label = itemRenderer.label;
+    }
     this.closeList();
 };
 

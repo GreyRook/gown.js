@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>pixi UI example: slider</title>
+    <title>GOWN.js example: PickerList</title>
     <style>
         body {
             margin: 0;
@@ -20,27 +20,49 @@
     var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
-	var metalTheme = new GOWN.ThemeParser("../../themes/assets/metalworks_desktop/metalworks_desktop.json");
+	//var metalTheme = new GOWN.ThemeParser("../../themes/assets/metalworks_desktop/metalworks_desktop.json");
 	var aeonTheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
 
-    function onCompleteMetal() {
-        var picker = new GOWN.PickerList(metalTheme);
-        picker.x = 400;
-        picker.width = 200;
-        picker.height = 40;
-        stage.addChild(picker);
-    }
-
     function onCompleteAeon() {
-        var picker = new GOWN.PickerList(aeonTheme);
-        picker.width = 100;
-        picker.height = 25;
-        stage.addChild(picker);
+        // TODO: implement sth. similar to the DropDownPopUpcontentManager
+        // and do NOT add the children to the PickerList directly
+        // see https://github.com/BowlerHatLLC/feathers/blob/master/source/feathers/controls/popups/DropDownPopUpContentManager.as
+        var list = new GOWN.PickerList(aeonTheme);
+        list.dataProvider = new GOWN.ListCollection([
+            { text: "Milk" },
+            { text: "Eggs" },
+            { text: "Bread" }
+        ]);
+        list.width = 100;
+        list.height = 44;
+        list.itemRendererProperties = {
+            labelField: 'text'
+        };
+
+        // TODO: remove this and set fixed width/height in DefaultListItemRenderer
+        list.itemRendererFactory = function(theme) {
+            var item = new GOWN.DefaultListItemRenderer(theme);
+            item.width = 100;
+            item.height = 44;
+            // TODO: important! do not set pecentWidth/percentHeight in the
+            // DefaultListItemRenderer
+            item.percentWidth = item.percentHeight = -1;
+            return item;
+        };
+        // TODO: calculate height of list based on items inside it!
+        list._listFactory = function(theme) {
+            var list = new GOWN.List(theme);
+            list.width = 100;
+            list.height = 3 * 44;
+            return list;
+        }
+
+        stage.addChild(list);
 
         requestAnimationFrame(animate);
     }
 
-	metalTheme.once(GOWN.Theme.COMPLETE, onCompleteMetal, this);
+	//metalTheme.once(GOWN.Theme.COMPLETE, onCompleteMetal, this);
     aeonTheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
 
     function animate() {
