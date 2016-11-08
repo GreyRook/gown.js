@@ -112,7 +112,7 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
         if(!this.line){
             this.line = {
                 lineColor: 0xEEEEEE,
-                width: 220,
+                width: 244,
                 height: 2
             };
         }

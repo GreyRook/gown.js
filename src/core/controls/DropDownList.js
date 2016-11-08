@@ -67,12 +67,12 @@ DropDownList.prototype.redraw = function() {
  */
 DropDownList.prototype.createLabel = function() {//todo refactoring
     var wrapper = new PIXI.Graphics();
-    wrapper.drawRoundedRect(0, 0, 250, 55, 4);
+    wrapper.drawRoundedRect(0, 0, 260, 55, 4);
     wrapper.x = 5;
     wrapper.y = 5;
     wrapper.interactive = true;
     wrapper.click = this.toggleDropDown.bind(this);
-    wrapper.hitArea = new PIXI.Rectangle(0, 15, 250, 35);
+    wrapper.hitArea = new PIXI.Rectangle(0, 15, 260, 47);
     wrapper.interactive = true;
     wrapper.buttonMode = true;
     wrapper.defaultCursor = 'pointer';
@@ -95,14 +95,14 @@ DropDownList.prototype.createLabel = function() {//todo refactoring
     mark.lineTo(1.5,1.5);
     mark.lineTo(0,0);
     mark.endFill();
-    mark.x = 215;
-    mark.y = 30;
+    mark.x = 235;
+    mark.y = 35;
 
     var line = new PIXI.Graphics();
     line.beginFill( this.theme.line  ? this.theme.line.lineColor : 0xf1f2f3);
-    line.drawRect(0, 0, this.theme.line  ? this.theme.line.width : 222, this.theme.line  ? this.theme.line.height : 2);
+    line.drawRect(0, 0, this.theme.line  ? this.theme.line.width : 244, this.theme.line  ? this.theme.line.height : 2);
     line.x = 2;
-    line.y = 60;
+    line.y = 55;
     line.endFill();
 
 
@@ -134,8 +134,8 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
             wrapper.y = 20;
             wrapper.moveTo(0,0);
             wrapper.lineTo(0, 43 + this.elementList.length * 40 );
-            wrapper.lineTo(240, 43 + this.elementList.length * 40 );
-            wrapper.lineTo(240, 0);
+            wrapper.lineTo(260, 43 + this.elementList.length * 40 );
+            wrapper.lineTo(260, 0);
             wrapper.lineTo(0, 0);
             wrapper.endFill();
 
@@ -144,12 +144,12 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
             border.x = -1;
             border.y = 0;
 
-            border.scale.x= 1.57;
-            border.scale.y= 2.45 * (this.elementList.length - 0.2);
+            border.scale.x= 1.7;
+            border.scale.y= 1.9 + 1.9 * (this.elementList.length);
 
 
             var inner = new PIXI.Container();
-            inner.y = 40;
+            inner.y = 35;
 
             this.elementList.forEach(function (el, i) {
 
@@ -159,7 +159,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
                 if(typeof this.hoveredElementIndex === 'number' && this.hoveredElementIndex === i){
                     var background = new PIXI.Graphics();
                     background.beginFill(0xEEEEEE);
-                    background.drawRect(0, 5 + i * 40 , 237, 40);
+                    background.drawRect(0, 5 + i * 40 , 257, 40);
                     background.endFill();
 
                     itemText.x = 5;
@@ -185,7 +185,7 @@ DropDownList.prototype.createDropDown = function () { //TODO refactoring add con
                     itemText.x = 5;
                     itemText.y = 10 + i * 40;
 
-                    container.hitArea = new PIXI.Rectangle(0, 5 + i * 40, 240, 40);
+                    container.hitArea = new PIXI.Rectangle(0, 5 + i * 40, 260, 40);
 
                     container.interactive = true;
                     container.click = this.selectDropDownElement.bind(this, itemText._text);

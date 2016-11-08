@@ -2,7 +2,7 @@ var DropDownTheme = function(jsonPath, onComplete, global) {
     GOWN.AeonTheme.call(this, jsonPath, onComplete, global);
     this.line = {
         lineColor: 0xEEEEEE,
-        width: 220,
+        width: 244,
         height: 2
     };
     this.textStyle = {
