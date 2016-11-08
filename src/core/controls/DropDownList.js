@@ -287,7 +287,7 @@ DropDownList.prototype.handleEvent = function(type, option) {
  * override events handlers
  */
 DropDownList.prototype.mousedown = function(event) {
-    event.stopPropagation();
+    event.originalTarget = 'DropDown';      //Workaround trigger of stage event on dropdown click
     this.handleEvent(DropDownList.CLICKED);
 };
 
@@ -295,7 +295,7 @@ DropDownList.prototype.mousedown = function(event) {
  * override events handlers
  */
 DropDownList.prototype.touchstart = function(event) {
-    event.stopPropagation();
+    event.originalTarget = 'DropDown';      //Workaround trigger of stage event on dropdown click
     this.handleEvent(DropDownList.CLICKED);
 };
 
@@ -320,17 +320,24 @@ DropDownList.prototype.initiate = function () {
         this.parent.interactive = true;
         var stage = this.getStage(this);
         var self = this;
+        stage.interactive = true;
 
-        stage.on('mousedown', function () {
-            if(self.showDropDown){
-                self.toggleDropDown();
+        stage.on('mousedown', function (e) {
+            if(e.target !== self && e.originalTarget !== 'DropDown'){
+                if(self.showDropDown){
+                    self.toggleDropDown();
+                }
             }
+            e.originalTarget = undefined; //Workaround trigger of stage event on dropdown click
         });
 
-        stage.on('touchstart', function () {
-            if(self.showDropDown){
-                self.toggleDropDown();
+        stage.on('touchstart', function (e) {
+            if(e.target !== self && e.originalTarget !== 'DropDown'){
+                if(self.showDropDown){
+                    self.toggleDropDown();
+                }
             }
+            e.originalTarget = undefined;
         });
     }
 
