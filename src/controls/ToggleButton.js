@@ -56,6 +56,9 @@ var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'cu
  * @type String
  */
 Object.defineProperty(ToggleButton.prototype, 'currentState',{
+    get: function() {
+        return this._currentState;
+    },
     set: function(value) {
         if (this._selected) {
             value = 'selected_' + value;
