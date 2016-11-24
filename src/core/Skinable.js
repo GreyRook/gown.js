@@ -174,7 +174,7 @@ Skinable.prototype.containerDestroy = PIXI.Container.prototype.destroy;
 Skinable.prototype.destroy = function() {
     for (var name in this.skinCache) {
         var skin = this.skinCache[name];
-        if (skin.destroy && this.allowDestroyCache) {
+        if (skin && skin.destroy && this.allowDestroyCache) {
             skin.destroy();
         }
     }
