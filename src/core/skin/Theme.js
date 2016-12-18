@@ -115,6 +115,26 @@ Theme.prototype.getSkin = function(comp, state) {
 };
 
 /**
+ * Create ThemeFont by fontParam
+ *
+ * @method createThemeFont
+ * @param fontFamily  {String}
+ * @param fontSize  {Number}
+ * @param fill font Color {String}
+ * @returns {GOWN.ThemeFont}
+ */
+Theme.prototype.createThemeFont = function(fontFamily, fontSize, fill) {
+    var themeFont = new ThemeFont({
+        fontFamily: fontFamily,
+        fontSize: fontSize,
+        fill : fill
+    });
+    themeFont._updateFont();//force refresh
+
+    return themeFont;
+};
+
+/**
  * Shortcut to remove the theme from global context
  *
  * @method removeTheme

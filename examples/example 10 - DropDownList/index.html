@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>pixi UI example: Drop Down</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi.js"></script>
+    <script src="../../bin/gown.js"></script>
+    <script src="../../themes/AeonTheme.js"></script>
+    <script src="js/DropDownTheme.js"></script>
+</head>
+<body>
+<script>
+    var stage = new PIXI.Container();
+    stage.height = 600;
+    stage.width = 800;
+
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+
+    var theme;
+
+    function themeComplete() {
+        // initialize theme
+        var aeonddl;
+
+        var elementList = [
+            {
+                text:"Item1"
+            },{
+                text:"Item2"
+            },{
+                text:"Item3"
+            }
+        ];
+
+        aeonddl = new GOWN.DropDownList(theme);
+        aeonddl.x = 100;
+        aeonddl.y = 100;
+
+        aeonddl.elementList = elementList;
+
+        aeonddl.addEventListener( Event.CHANGE, function (text) {
+            console.log('select - ', text);
+        });
+
+
+
+        var clickOutside = new PIXI.Graphics();
+        clickOutside.beginFill(0x000000);
+        clickOutside.y = 300;
+        clickOutside.x = 400;
+        clickOutside.moveTo(0,0);
+        clickOutside.lineTo(0, 43);
+        clickOutside.lineTo(240, 43);
+        clickOutside.lineTo(240, 0);
+        clickOutside.lineTo(0, 0);
+        clickOutside.endFill();
+
+        var description = new PIXI.Text('Test click outside',{fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center'});
+        clickOutside.addChild(description);
+
+
+
+        stage.addChild(aeonddl);
+        stage.addChild(clickOutside);
+
+
+        requestAnimationFrame(animate);
+    }
+
+    theme = new DropDownTheme(["../../themes/assets/aeon/aeon_desktop.json"],
+            themeComplete);
+
+
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+</script>
+
+</body>
+</html>

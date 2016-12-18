@@ -108,6 +108,39 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("check-selected-hover-icon"));
     }
 
+    if (GOWN.DropDownList || GOWN.AutoComplete) {
+        if(!this.line){
+            this.line = {
+                lineColor: 0xEEEEEE,
+                width: 244,
+                height: 2
+            };
+        }
+
+        this.textStyle = this.createThemeFont(this.textStyle ? this.textStyle.fontFamily : "Arial",
+                                                this.textStyle ? this.textStyle.fontSize : 20,
+                                                this.textStyle ? this.textStyle.fill : 0x4E5769);
+
+
+
+        this.labelStyle = this.createThemeFont(this.labelStyle ? this.labelStyle.fontFamily : "Arial",
+                                                this.labelStyle ? this.labelStyle.fontSize : 15,
+                                                this.labelStyle ? this.labelStyle.fill : 0xDDDDDD);
+
+        if(!this.labelTextColors){
+            this.labelTextColors = {
+                active : '#FF93A7',
+                normal : '#DDDDDD'
+            };
+        }
+
+        if(this.background){
+            this.background = {
+                color: 0xFFFFFF
+            };
+        }
+    }
+
 
     // TODO: emit
     if (this._onComplete) {
