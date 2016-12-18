@@ -14,6 +14,7 @@ module.exports = {
 
     // controls
     Application:            require('./controls/Application'),
+    AutoComplete:           require('./controls/AutoComplete'),
     Button:                 require('./controls/Button'),
     DropDownList:           require('./controls/DropDownList'),
     CheckBox:               require('./controls/CheckBox'),

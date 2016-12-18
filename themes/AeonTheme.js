@@ -108,7 +108,7 @@ AeonTheme.prototype.loadComplete = function(loader, resources) {
             this.getImage("check-selected-hover-icon"));
     }
 
-    if (GOWN.DropDownList) {
+    if (GOWN.DropDownList || GOWN.AutoComplete) {
         if(!this.line){
             this.line = {
                 lineColor: 0xEEEEEE,
