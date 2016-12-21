@@ -1,6 +1,5 @@
 var InputControl = require('./InputControl'),
-    TextInput = require('./TextInput'),
-    InputWrapper = require('../../utils/InputWrapper');
+    TextInput = require('./TextInput');
 
 /**
  * The basic AutoComplete. Needed for input with suggestions
@@ -10,11 +9,9 @@ var InputControl = require('./InputControl'),
  * @memberof GOWN
  * @constructor
  */
-function AutoComplete(text, theme) {
-    this.skinName = AutoComplete.SKIN_NAME;
+function AutoComplete(text, theme, skinName) {
+    this.skinName = skinName || AutoComplete.SKIN_NAME;
     this._validStates = this._validStates || AutoComplete.stateNames;
-    this._currentState = 'normal';
-    this.invalidState = true;
     this._displayAsPassword = false;
     this.results = this.source = [];
     this.hoveredElementText = null;
@@ -23,103 +20,11 @@ function AutoComplete(text, theme) {
 
     this._minAutoCompleteLength = 2;
     this._limitTo = 5;
-    /**
-     * timer used to indicate if the cursor is shown
-     *
-     * @property _cursorTimer
-     * @type {Number}
-     * @private
-     */
-    this._cursorTimer = 0;
-
-    /**
-     * indicates if the cursor position has changed
-     *
-     * @property _cursorNeedsUpdate
-     * @type {Boolean}
-     * @private
-     */
-
-    this._cursorNeedsUpdate = true;
-
-    /**
-     * interval for the cursor (in milliseconds)
-     *
-     * @property blinkInterval
-     * @type {number}
-     */
-    this.blinkInterval = 500;
-
-    /**
-     * selected area (start and end)
-     *
-     * @type {Array}
-     * @private
-     */
-    this.selection = [0, 0];
-
-    // caret/selection sprite
-    this.cursor = new PIXI.Text('|', this.theme.textStyle);
-    this.addChild(this.cursor);
-
-    // selection background
-    this.selectionBg = new PIXI.Graphics();
-    this.addChildAt(this.selectionBg, 0);
-
-    // set up events
-    this.boundOnMouseUp = this.onMouseUp.bind(this);
-    this.boundOnMouseUpOutside = this.onMouseUpOutside.bind(this);
-    this.boundOnMouseDown = this.onMouseDown.bind(this);
-    this.boundOnMouseMove = this.onMouseMove.bind(this);
-
-    this.mousemove = this.touchmove = this.boundOnMouseMove;
-    this.mousedown = this.touchstart = this.boundOnMouseDown;
-    this.mouseup = this.touchend = this.boundOnMouseUp;
-    this.mouseupoutside = this.touchendoutside = this.boundOnMouseUpOutside;
 }
 
 AutoComplete.prototype = Object.create(TextInput.prototype);
 AutoComplete.prototype.constructor = AutoComplete;
 module.exports = AutoComplete;
-
-// name of skin that will be applied
-AutoComplete.SKIN_NAME = 'autoComplete';
-
-/**
- * Hover state: mouse pointer hovers over the VariantContainer
- * (ignored on mobile)
- *
- * @property HOVER
- * @static
- * @final
- * @type String
- */
-AutoComplete.HOVER_CONTAINER = 'hover_container';
-
-/**
- * State: initial state
- * (ignored on mobile)
- *
- * @property BACKGROUND
- * @static
- * @final
- * @type String
- */
-AutoComplete.BACKGROUND = 'background';
-
-/**
- * State: clicked state
- *
- * @property CLICKED
- * @static
- * @final
- * @type String
- */
-AutoComplete.CLICKED = 'clicked';
-
-AutoComplete.stateNames = [
-    AutoComplete.HOVER_CONTAINER, AutoComplete.BACKGROUND, AutoComplete.CLICKED
-];
 
 AutoComplete.prototype.drawResults = function (text) {
     if (text.length < this._minAutoCompleteLength) {
@@ -222,49 +127,20 @@ AutoComplete.prototype.onMouseUpOutside = function () {
     this.toggleResults();
 };
 
-/**
- * set the text that is shown inside the input field.
- * calls onTextChange callback if text changes
- *
- * @property text
- * @type String
- */
-Object.defineProperty(AutoComplete.prototype, 'text', {
-    get: function () {
-        return this._text;
-    },
-    set: function (text) {
-        text += ''; // add '' to assure text is parsed as string
-        if (this._origText === text) {
-            // return if text has not changed
-            return;
-        }
-        this._origText = text;
-        this._text = text || '';
-        if (!this.pixiText) {
-            this.pixiText = new PIXI.Text(text, this.theme.textStyle);
-            this.addChild(this.pixiText);
-        } else {
-            this.pixiText.text = text;
-        }
-
-        // update text input if this text field has the focus
-        if (this.hasFocus) {
-            InputWrapper.setText(this.value);
-        }
-
-        // reposition cursor
-        this._cursorNeedsUpdate = true;
-        if (this.change) {
-            this.change(text);
-        }
-        if (this._source) {
-            this.toggleResults();
-            this.drawResults(text);
-        }
+InputControl.prototype.setText = function(text) {
+    this._displayText = text || '';
+    if (!this.pixiText) {
+        this.pixiText = new PIXI.Text(text, this.textStyle);
+        this.pixiText.position = this.textOffset;
+        this.addChild(this.pixiText);
+    } else {
+        this.pixiText.text = text;
     }
-});
-
+    if (this._source) {
+        this.toggleResults();
+        this.drawResults(text);
+    }
+};
 
 /**
  *
