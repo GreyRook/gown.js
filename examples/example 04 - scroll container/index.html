@@ -26,7 +26,7 @@
         //stage.addChild(toggleButton);
         var sprite = PIXI.Sprite.fromImage("./img/rainbow.png");
         var sa_sprite = new GOWN.ScrollContainer();
-        sa_sprite.addChild(sprite);
+        sa_sprite.viewPort = sprite;
         sa_sprite.x = 240;
         sa_sprite.y = 240;
         sa_sprite.width = sa_sprite.height = 180;
@@ -45,7 +45,7 @@
         }
 
         sa_grp = new GOWN.ScrollContainer();
-        sa_grp.addChild(grp);
+        sa_grp.viewPort = grp;
         sa_grp.x = 100;
         sa_grp.y = 100;
         sa_grp._useMask = false;
