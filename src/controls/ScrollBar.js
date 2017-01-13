@@ -44,7 +44,7 @@ ScrollBar.prototype.scrollableredraw = Scrollable.prototype.redraw;
  */
 ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
-        if (this.container && this.thumb) {
+        if (this.container && this.container.viewPort && this.thumb) {
             if (this.direction === Scrollable.HORIZONTAL) {
                 this.thumb.width = Math.max(this.minThumbWidth,
                     this.container.width /

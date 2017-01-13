@@ -288,16 +288,13 @@ Object.defineProperty(Scroller.prototype, 'viewPort', {
         if (this._viewPort === value) {
             return;
         }
-        if (this._viewPort) {
-            this.removeChild(this._viewPort);
-        }
         this._viewPort = value;
         if (this._viewPort) {
             this.addChildAt(this._viewPort, 0);
         }
         // position according to horizontal/vertical ScrollPosition
         this.scrollInvalid = true;
-        this.clippingInvalid = true;
+        // this.clippingInvalid = true;
         this.sizeInvalid = true;
     }
 });
@@ -1163,13 +1160,8 @@ Scroller.prototype.defaultScrollBarFactory = function (direction) {
     // TODO: SimpleScrollBar (like feathers?)
     var sb = new ScrollBar(direction, this.theme);
     if (direction === Scrollable.HORIZONTAL) {
-        sb.y = this.viewPort.height;
-        sb.x = this.viewPort.x;
-        sb.width = this.viewPort.width;
         sb.skinName = this.horizontalScrollBarStyleName;
     } else {
-        sb.x = this.viewPort.width;
-        sb.height = this.viewPort.height;
         sb.skinName = this.verticalScrollBarStyleName;
     }
     return sb;
