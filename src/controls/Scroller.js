@@ -694,19 +694,6 @@ Scroller.prototype.updateHorizontalScrollFromTouchPosition = function (touchX, i
         offset = touchX - this._startTouch.x;
     }
     var position = this._startScrollPosition.x + offset;
-    if (position < this._minHorizontalScrollPosition) {
-        if (this.hasElasticEdges) {
-            position -= (position - this._minHorizontalScrollPosition) * (1 - this.elasticity);
-        } else {
-            position = this._minHorizontalScrollPosition;
-        }
-    } else if (position > this._maxHorizontalScrollPosition) {
-        if (this.hasElasticEdges) {
-            position -= (position - this._maxHorizontalScrollPosition) * (1 - this.elasticity);
-        } else {
-            position = this._maxHorizontalScrollPosition;
-        }
-    }
     if (this.viewPort.width > this.width) {
         position = Math.min(position, 0);
         if (this.viewPort.width && this.viewPort.x < 0) {
@@ -725,20 +712,6 @@ Scroller.prototype.updateVerticalScrollFromTouchPosition = function (touchY, isS
         offset = touchY - this._startTouch.y;
     }
     var position = this._startScrollPosition.y + offset;
-    // var scroll = this.direction();
-    if (position < this._minVerticalScrollPosition) {
-        if (this.hasElasticEdges) {
-            position -= (position - this._minVerticalScrollPosition) * (1 - this.elasticity);
-        } else {
-            position = this._minVerticalScrollPosition;
-        }
-    } else if (position > this._maxVerticalScrollPosition) {
-        if (this.hasElasticEdges) {
-            position -= (position - this._maxVerticalScrollPosition) * (1 - this.elasticity);
-        } else {
-            position = this._maxVerticalScrollPosition;
-        }
-    }
     if (this.viewPort.height > this.height) {
         position = Math.min(position, 0);
         if (this.viewPort.height && this.viewPort.y < 0) {
