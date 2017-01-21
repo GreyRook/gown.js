@@ -177,7 +177,7 @@ InputControl.prototype.onKeyDown = function (eventData) {
     // TODO implement the insert key to overwrite text? it is gnored for now!
     if (key === 'WakeUp' || key === 'CapsLock' ||
         key === 'Shift' || key === 'Control' || key === 'Alt' ||
-        key === 'AltGraph' || 
+        key === 'AltGraph' ||
         key.match(/^F\d{1,2}$/) || // F1-F12
         key === 'Insert' ||
         key === 'Escape' || key === 'NumLock' ||
@@ -575,8 +575,7 @@ InputControl.prototype.setCursorPos = function () {
  */
 InputControl.prototype.lineHeight = function() {
     var style = this.pixiText._style;
-    var fontProperties = this.pixiText.determineFontProperties(this.pixiText._font);
-    var lineHeight = style.lineHeight || fontProperties.fontSize + style.strokeThickness;
+    var lineHeight = style.lineHeight || style.fontSize + style.strokeThickness;
     return lineHeight;
 };
 
