@@ -90,7 +90,7 @@ Scrollable.prototype.defaultThumbFactory = function() {
     return new ScrollThumb(this, this.theme);
 };
 
-Scrollable.prototype.scrollToPosition = function(horizontalScrollPosition, verticalScrollPosition) {
+Scrollable.prototype.scrollToPosition = function() {
 };
 
 /**
