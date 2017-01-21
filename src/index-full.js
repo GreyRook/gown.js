@@ -13,6 +13,7 @@ if (typeof PIXI === 'undefined') {
 
     // controls
     core.Application =            require('./controls/Application');
+    core.AutoComplete =           require('./controls/AutoComplete');
     core.Button =                 require('./controls/Button');
     core.Check =                  require('./controls/Check');
     core.InputControl =           require('./controls/InputControl');

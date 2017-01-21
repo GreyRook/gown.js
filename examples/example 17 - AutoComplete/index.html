@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>pixi UI example: Auto Complete</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi.js"></script>
+    <script src="../../bin/gown.js"></script>
+    <script src="../../themes/AeonTheme.js"></script>
+</head>
+<body>
+<script>
+    var stage = new PIXI.Container();
+
+    var renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0xffffff});
+    document.body.appendChild(renderer.view);
+
+    var theme;
+
+    function themeComplete() {
+        var aeonac;
+
+        // initialize theme
+        var border = theme.getImage('text-input-background-disabled-skin');
+        border = border();
+        border.x = 99;
+        border.y = 100;
+
+        var elementList = [
+            {
+                text: "Apple"
+            }, {
+                text: "Banana"
+            }, {
+                text: "Cherry"
+            }, {
+                text: "Grape"
+            }, {
+                text: "Lemon"
+            }, {
+                text: "Orange"
+            }, {
+                text: "Watermelon"
+            }
+        ];
+
+        aeonac = new GOWN.AutoComplete('Fruit', theme);
+        aeonac.y = 10;
+
+        aeonac.source = elementList;
+        aeonac.minAutoCompleteLength = 0;
+
+        border.scale.x = 1.7;
+        border.scale.y = 1.9;
+
+        border.addChild(aeonac);
+        stage.addChild(border);
+
+        requestAnimationFrame(animate);
+    }
+
+    theme = new GOWN.AeonTheme(["../../themes/assets/aeon/aeon_desktop.json"],
+        themeComplete);
+
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+</script>
+
+</body>
+</html>

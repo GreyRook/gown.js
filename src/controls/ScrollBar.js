@@ -1,11 +1,11 @@
 var Scrollable = require('./Scrollable');
 
-// TODO: decreement/increment Button
+// TODO: decrement/increment Button
 // TODO: thumbFactory?
 // TODO: this.showButtons
 
 /**
- * scoll bar with thumb
+ * scroll bar with thumb
  * hosting some Viewport (e.g. a ScrollContainer or a Texture)
  *
  * @class ScrollBar
@@ -16,10 +16,15 @@ var Scrollable = require('./Scrollable');
 function ScrollBar(direction, theme) {
     this.skinName = this.skinName || ScrollBar.SKIN_NAME;
 
-    this.direction = direction;
-    if (this.direction === undefined) {
-        this.direction = Scrollable.HORIZONTAL;
-    }
+    // this.viewPort = container;
+
+    this.direction = direction === undefined ?
+        Scrollable.HORIZONTAL : direction;
+
+    // if (container) {
+    //     // move thumb when viewPort moves
+    //     container[this.direction + '_bar'] = this;
+    // }
     Scrollable.call(this, theme);
 }
 
@@ -39,15 +44,15 @@ ScrollBar.prototype.scrollableredraw = Scrollable.prototype.redraw;
  */
 ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
-        if (this.scrollArea && this.thumb) {
+        if (this.container && this.container.viewPort && this.thumb) {
             if (this.direction === Scrollable.HORIZONTAL) {
                 this.thumb.width = Math.max(this.minThumbWidth,
-                    this.scrollArea.width /
-                    (this.scrollArea.content.width / this.scrollArea.width));
+                    this.container.width /
+                    (this.container.viewPort.width / this.container.width));
             } else {
                 this.thumb.height = Math.max(this.minThumbHeight,
-                    this.scrollArea.height /
-                    (this.scrollArea.content.height / this.scrollArea.height));
+                    this.container.height /
+                    (this.container.viewPort.height / this.container.height));
             }
         }
         this.scrollableredraw(this);
@@ -61,18 +66,17 @@ ScrollBar.prototype.redraw = function() {
  * @method thumbMoved
  */
 ScrollBar.prototype.thumbMoved = function(x, y) {
-    if (this.scrollArea && this.scrollArea.content) {
-
+    if (this.container && this.container.viewPort) {
         if (this._direction === Scrollable.HORIZONTAL) {
-            this.scrollArea._scrollContent(
-                -(this.scrollArea.content.width - this.scrollArea.width) *
-                    (x / (this.scrollArea.width - this.thumb.width)),
+            this.container._scrollContent(
+                -(this.container.viewPort.width - this.container.width) *
+                    (x / (this.container.width - this.thumb.width)),
                 0);
-        } else {
-            this.scrollArea._scrollContent(
+        } else if (this._direction === Scrollable.VERTICAL) {
+            this.container._scrollContent(
                 0,
-                -(this.scrollArea.content.height - this.scrollArea.height) *
-                    (y / (this.scrollArea.height - this.thumb.height)));
+                -(this.container.viewPort.height - this.container.height) *
+                    (y / (this.container.height - this.thumb.height)));
         }
     }
 };
