@@ -92,3 +92,7 @@ The `redraw` function is hooked into PIXI's render loop in the `updateTranform` 
 Known Bugs
 ==========
 see [Issues](https://github.com/brean/gown.js/issues/)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/brean/gown.js/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
