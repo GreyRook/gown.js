@@ -10,9 +10,8 @@
             background-color: #000000;
         }
     </style>
-    <script src="../../lib/pixi.js"></script>
-    <script src="../../bin/gown.js"></script>
-    <script src="../../themes/AeonTheme.js"></script>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../bin/gown-full.js"></script>
 </head>
 <body>
 <script>
@@ -65,8 +64,8 @@
         requestAnimationFrame(animate);
     }
 
-    theme = new GOWN.AeonTheme(["../../themes/assets/aeon/aeon_desktop.json"],
-        themeComplete);
+    theme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
+    theme.once(GOWN.Theme.COMPLETE, themeComplete, this);
 
     function animate() {
         // render the stage
