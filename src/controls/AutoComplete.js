@@ -16,7 +16,8 @@ function AutoComplete(text, theme, skinName) {
     this.results = this.source = [];
     this.hoveredElementText = null;
 
-    InputControl.call(this, text, theme);
+    TextInput.call(this, theme, skinName);
+    this.text = text;
 
     this._minAutoCompleteLength = 2;
     this._limitTo = 5;
@@ -30,12 +31,12 @@ AutoComplete.prototype.drawResults = function (text) {
     if (text.length < this._minAutoCompleteLength) {
         this.results = [];
     } else {
-        text = text.toString().toLowerCase();
+        var lowerCaseText = text.toString().toLowerCase();
         var results = this.source.filter(function (el) {
             var elementText = el.text.toString().toLowerCase();
-            return elementText.indexOf(text) >= 0;
+            return elementText.indexOf(lowerCaseText) >= 0;
         });
-        if (results.length === 1 && results[0].text === text) {
+        if (results.length === 1 && results[0].text.toString() === text.toString()) {
             results = [];
         }
         if (this.limitTo) {
@@ -102,14 +103,14 @@ AutoComplete.prototype.toggleResults = function () {
 
 AutoComplete.prototype.hoverResultElement = function (elementText) {
     if (elementText !== this.hoveredElementText) {
-        this.currentState = AutoComplete.HOVER_CONTAINER;
+        //this.currentState = AutoComplete.HOVER_CONTAINER;
         this.hoveredElementText = elementText;
         this.redrawResult();
     }
 };
 
 AutoComplete.prototype.removeHoverResultElement = function () {
-    this.currentState = AutoComplete.CLICKED;
+    //this.currentState = AutoComplete.CLICKED;
     this.hoveredElementText = null;
     this.redrawResult();
 };
@@ -127,15 +128,16 @@ AutoComplete.prototype.onMouseUpOutside = function () {
     this.toggleResults();
 };
 
-InputControl.prototype.setText = function(text) {
-    this._displayText = text || '';
-    if (!this.pixiText) {
-        this.pixiText = new PIXI.Text(text, this.textStyle);
-        this.pixiText.position = this.textOffset;
-        this.addChild(this.pixiText);
-    } else {
-        this.pixiText.text = text;
-    }
+AutoComplete.HOVER_CONTAINER = 'hoverContainer';
+
+AutoComplete.CLICKED = 'clicked';
+
+AutoComplete.stateNames = InputControl.stateNames.concat([
+    AutoComplete.HOVER_CONTAINER, AutoComplete.CLICKED
+]);
+
+AutoComplete.prototype.setText = function(text) {
+    TextInput.prototype.setText.call(this,text);
     if (this._source) {
         this.toggleResults();
         this.drawResults(text);
