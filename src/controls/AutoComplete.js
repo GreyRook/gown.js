@@ -31,12 +31,12 @@ AutoComplete.prototype.drawResults = function (text) {
     if (text.length < this._minAutoCompleteLength) {
         this.results = [];
     } else {
-        text = text.toString().toLowerCase();
+        var lowerCaseText = text.toString().toLowerCase();
         var results = this.source.filter(function (el) {
             var elementText = el.text.toString().toLowerCase();
-            return elementText.indexOf(text) >= 0;
+            return elementText.indexOf(lowerCaseText) >= 0;
         });
-        if (results.length === 1 && results[0].text === text) {
+        if (results.length === 1 && results[0].text.toString() === text.toString()) {
             results = [];
         }
         if (this.limitTo) {
