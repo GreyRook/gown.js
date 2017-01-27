@@ -16,7 +16,8 @@ function AutoComplete(text, theme, skinName) {
     this.results = this.source = [];
     this.hoveredElementText = null;
 
-    InputControl.call(this, text, theme);
+    InputControl.call(this, theme);
+    this.text = text;
 
     this._minAutoCompleteLength = 2;
     this._limitTo = 5;
@@ -126,6 +127,8 @@ AutoComplete.prototype.onMouseUpOutside = function () {
     this._mouseDown = false;
     this.toggleResults();
 };
+
+AutoComplete.stateNames = InputControl.stateNames.concat();
 
 InputControl.prototype.setText = function(text) {
     this._displayText = text || '';
