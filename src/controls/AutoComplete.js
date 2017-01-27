@@ -16,7 +16,7 @@ function AutoComplete(text, theme, skinName) {
     this.results = this.source = [];
     this.hoveredElementText = null;
 
-    InputControl.call(this, theme);
+    TextInput.call(this, theme, skinName);
     this.text = text;
 
     this._minAutoCompleteLength = 2;
@@ -103,14 +103,14 @@ AutoComplete.prototype.toggleResults = function () {
 
 AutoComplete.prototype.hoverResultElement = function (elementText) {
     if (elementText !== this.hoveredElementText) {
-        this.currentState = AutoComplete.HOVER_CONTAINER;
+        //this.currentState = AutoComplete.HOVER_CONTAINER;
         this.hoveredElementText = elementText;
         this.redrawResult();
     }
 };
 
 AutoComplete.prototype.removeHoverResultElement = function () {
-    this.currentState = AutoComplete.CLICKED;
+    //this.currentState = AutoComplete.CLICKED;
     this.hoveredElementText = null;
     this.redrawResult();
 };
@@ -128,17 +128,16 @@ AutoComplete.prototype.onMouseUpOutside = function () {
     this.toggleResults();
 };
 
-AutoComplete.stateNames = InputControl.stateNames.concat();
+AutoComplete.HOVER_CONTAINER = 'hoverContainer';
 
-InputControl.prototype.setText = function(text) {
-    this._displayText = text || '';
-    if (!this.pixiText) {
-        this.pixiText = new PIXI.Text(text, this.textStyle);
-        this.pixiText.position = this.textOffset;
-        this.addChild(this.pixiText);
-    } else {
-        this.pixiText.text = text;
-    }
+AutoComplete.CLICKED = 'clicked';
+
+AutoComplete.stateNames = InputControl.stateNames.concat([
+    AutoComplete.HOVER_CONTAINER, AutoComplete.CLICKED
+]);
+
+AutoComplete.prototype.setText = function(text) {
+    TextInput.prototype.setText.call(this,text);
     if (this._source) {
         this.toggleResults();
         this.drawResults(text);
