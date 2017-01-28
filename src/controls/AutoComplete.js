@@ -27,6 +27,35 @@ AutoComplete.prototype = Object.create(TextInput.prototype);
 AutoComplete.prototype.constructor = AutoComplete;
 module.exports = AutoComplete;
 
+AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
+    var itemText = new PIXI.Text(text, this.theme.textStyle ? this.theme.textStyle.clone() : {
+            font: '20px Arial',
+            fill: 0x4E5769
+        }); // use own styles
+    var container = new PIXI.Container();
+    if (this.hoveredElementText && this.hoveredElementText === itemText.text) {
+        var background = new PIXI.Graphics()
+            .beginFill(this.theme.hover ? this.theme.hover.color : 0xDDDDDD)
+            .drawRect(0, 0, width, height)
+            .endFill();
+        container.addChild(background);
+    }
+
+    itemText.x = 0;
+    itemText.y = 5;
+
+    container.hitArea = new PIXI.Rectangle(0, 0, width, height);
+
+    container.interactive = true;
+    container.click = this.selectResultElement.bind(this, itemText.text);
+    container.mouseover = this.hoverResultElement.bind(this, itemText.text);
+    container.mouseout = this.removeHoverResultElement.bind(this);
+
+    container.addChild(itemText);
+
+    return container;
+};
+
 AutoComplete.prototype.drawResults = function (text) {
     if (text.length < this._minAutoCompleteLength) {
         this.results = [];
@@ -59,30 +88,8 @@ AutoComplete.prototype.drawResults = function (text) {
     var inner = new PIXI.Container();
 
     for (var i = 0; i < this.results.length; i++) {
-        var itemText = new PIXI.Text(this.results[i].text, this.theme.textStyle ? this.theme.textStyle.clone() : {
-                font: '20px Arial',
-                fill: 0x4E5769
-            }); // use own styles
-        var container = new PIXI.Container();
-        if (this.hoveredElementText && this.hoveredElementText === itemText.text) {
-            var background = new PIXI.Graphics()
-                .beginFill(this.theme.hover ? this.theme.hover.color : 0xDDDDDD)
-                .drawRect(0, i * 20, 260, 20)
-                .endFill();
-            container.addChild(background);
-        }
-
-        itemText.x = 0;
-        itemText.y = i * 20 + 5;
-
-        container.hitArea = new PIXI.Rectangle(0, i * 20, 260, 20);
-
-        container.interactive = true;
-        container.click = this.selectResultElement.bind(this, itemText.text);
-        container.mouseover = this.hoverResultElement.bind(this, itemText.text);
-        container.mouseout = this.removeHoverResultElement.bind(this);
-
-        container.addChild(itemText);
+        var container = this.createSuggestionItem(this.results[i].text, 260, 20);
+        container.y = i * 20;
         inner.addChild(container);
     }
     wrapper.addChild(inner);
