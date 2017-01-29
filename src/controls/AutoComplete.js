@@ -41,8 +41,8 @@ AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
         container.addChild(background);
     }
 
-    itemText.x = 0;
-    itemText.y = 5;
+    itemText.x = this.textOffset.x;
+    itemText.y = this.textOffset.y;
 
     container.hitArea = new PIXI.Rectangle(0, 0, width, height);
 
