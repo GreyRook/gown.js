@@ -27,24 +27,39 @@ of [jsFiddle][1], [jsBin][2], or a link to your live site so that we can view a 
 the library, steps to reproduce, etc. "X isn't working!!!1!" will probably just be closed.
 
 
+## Building GOWN.js
+
+```bash
+# clone the repository
+git clone git@github.com:GreyRook/gown.js.git
+cd gown.js
+
+# all work currently is happening on the dev branch
+git checkount dev
+
+# there are two dependencies (pixi-layout and pixi-shapes)
+# those need to be checked out into ./external/
+# git submodules will take care of that for you via:
+git submodule update --init --recursive
+
+# install all depenencies
+npm i
+
+# run gulp
+gulp
+
+# find gown.js in ./bin/
+```
+
 ## Making Changes
-
-To setup for making changes you will need node.js, and grunt installed. You can download node.js
-from [nodejs.org][3]. After it has been installed open a console and run `npm i -g grunt-cli` to
-install the global `grunt` executable.
-
-After that you can clone the gown.js repository, and run `npm i` inside the cloned folder.
-This will install dependencies necessary for building the project. Once that is ready, make your
-changes and submit a Pull Request. When submitting a PR follow these guidlines:
 
 - **Send Pull Requests to the `dev` branch.** All Pull Requests must be sent to the `dev` branch,
 `master` is the latest release and PRs to that branch will be closed.
 
 - **Ensure changes are jshint validated.** After making a change be sure to run the build process
-to ensure that you didn't break anything. You can do this with `grunt && grunt test` which will run
-jshint, rebuild, then run the test suite.
+to ensure that you didn't break anything. You can do this with `npm test` which will run the test suite.
 
-- **Never commit new builds.** When making a code change, you should always run `grunt` which will
+- **Never commit new builds.** When making a code change, you should always run `gulp` which will
 rebuild the project, *however* please do not commit these new builds or your PR will be closed.
 
 - **Only commit relevant changes.** Don't include changes that are not directly relevant to the fix
