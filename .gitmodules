@@ -1,9 +1,9 @@
 [submodule "external/pixi-layout"]
 	path = external/pixi-layout
-	url = git@github.com:brean/pixi-layout.git
+	url = git@github.com:GreyRook/pixi-layout.git
 [submodule "external/pixi-shapes"]
 	path = external/pixi-shapes
-	url = git@github.com:brean/pixi-shapes.git
+	url = git@github.com:GreyRook/pixi-shapes.git
 [submodule "examples/example 13 - login dialog/lib/FontLoader"]
 	path = examples/example 13 - login dialog/lib/FontLoader
 	url = git@github.com:smnh/FontLoader.git
