@@ -48,6 +48,7 @@ AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
 
     container.interactive = true;
     container.click = this.selectResultElement.bind(this, itemText.text);
+    container.tap = this.selectResultElement.bind(this, itemText.text);
     container.mouseover = this.hoverResultElement.bind(this, itemText.text);
     container.mouseout = this.removeHoverResultElement.bind(this);
 
