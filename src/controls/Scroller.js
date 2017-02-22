@@ -294,7 +294,7 @@ Object.defineProperty(Scroller.prototype, 'viewPort', {
         }
         // position according to horizontal/vertical ScrollPosition
         this.scrollInvalid = true;
-        // this.clippingInvalid = true;
+        this.clippingInvalid = true;
         this.sizeInvalid = true;
     }
 });
