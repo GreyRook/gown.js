@@ -9,3 +9,4 @@ test/gen/
 **/*.*~
 **/*.pyc
 themes/from_feathers/feathers
+.idea/
