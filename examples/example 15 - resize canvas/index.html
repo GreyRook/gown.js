@@ -130,12 +130,11 @@
             });
         }
 
-
-
         aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
         aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
-
+        GOWN.loader.load();
     });
+
 </script>
 
 </body>

@@ -13,7 +13,7 @@ function ThemeParser(jsonPath, global) {
     // components that show something and can be used as skin (see GOWN.shapes)
     this.skinComponents = this.skinComponents || this.getSkinComponents();
 
-    this.loadThemeData(jsonPath);
+    this.addThemeData(jsonPath);
 }
 
 ThemeParser.prototype = Object.create( Theme.prototype );
@@ -179,6 +179,6 @@ ThemeParser.prototype.parseData = function(data) {
     }
 };
 
-ThemeParser.prototype.loadThemeData = function(jsonPath) {
-    this.loadImage(jsonPath);
+ThemeParser.prototype.addThemeData = function(jsonPath) {
+    this.addImage(jsonPath);
 };
