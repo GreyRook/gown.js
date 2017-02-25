@@ -13,7 +13,7 @@
     <script src="../../lib/pixi/pixi.js"></script>
     <script src="../../lib/createjs/tweenjs-0.6.2.combined.js"></script>
     <script src="../../lib/pixi-tween/pixi-tween.js"></script>
-    <script src="../../bin/gown-full.js"></script>
+    <script src="../../bin/gown.js"></script>
 </head>
 <body>
 <script>
@@ -23,21 +23,21 @@
     document.body.appendChild(renderer.view);
 
     // force CREATEJS/TweenJS - see http://www.createjs.com/tweenjs
-    var rect = new PIXI.shapes.Rect(0xff0000);
+    var rect = new GOWN.shapes.Rect(0xff0000);
     rect.width = rect.height = 100;
     stage.addChild(rect);
     var tween = new GOWN.utils.Tween(rect, 10000, 'circIn', GOWN.utils.Tween.CREATEJS_TWEEN);
     tween.to({x:500});
 
     // force pixi-tween - see https://github.com/Nazariglez/pixi-tween
-    var rect2 = new PIXI.shapes.Rect(0x0000ff);
+    var rect2 = new GOWN.shapes.Rect(0x0000ff);
     rect2.y = rect2.width = rect2.height = 100;
     stage.addChild(rect2);
     var tween2 = new GOWN.utils.Tween(rect2, 10000, 'circIn', GOWN.utils.Tween.PIXI_TWEEN);
     tween2.to({x:500});
 
     // without the support of external libs we just apply the values directly
-    var rect3 = new PIXI.shapes.Rect(0x00ff00);
+    var rect3 = new GOWN.shapes.Rect(0x00ff00);
     rect3.width = rect3.height = 100;
     rect3.y = 200;
     stage.addChild(rect3);

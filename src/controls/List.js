@@ -119,11 +119,11 @@ List.prototype.redraw = function() {
     this.scrollerRedraw();
 
     if (!this.layout) {
-        var layout = new PIXI.layout.VerticalLayout();
+        var layout = new GOWN.layout.VerticalLayout();
         layout.padding = 0;
         layout.gap = 0;
-        layout.horizontalAlign = PIXI.layout.VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
-        layout.verticalAlign = PIXI.layout.VerticalLayout.VERTICAL_ALIGN_TOP;
+        layout.horizontalAlign = GOWN.layout.VerticalLayout.HORIZONTAL_ALIGN_JUSTIFY;
+        layout.verticalAlign = GOWN.layout.VerticalLayout.VERTICAL_ALIGN_TOP;
         this.layout = layout;
     }
 };

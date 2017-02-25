@@ -6,10 +6,32 @@ if (typeof PIXI === 'undefined') {
         window.console.warn('pixi.js has to be loaded before loading gown.js');
     }
 } else {
-    PIXI.shapes = require('../external/pixi-shapes/src');
-    PIXI.layout = require('../external/pixi-layout/src');
 
     var core = module.exports = require('./core');
+    // basic shapes
+    core.shapes = {
+        Shape:          require('./shapes/Shape'),
+        Arrow:          require('./shapes/Arrow'),
+        Diamond:        require('./shapes/Diamond'),
+        Ellipse:        require('./shapes/Ellipse'),
+        Line:           require('./shapes/Line'),
+        Rect:           require('./shapes/Rect')
+    };
+
+    // layouting
+    core.utils = {
+            itemDimensions:       require('./layout/utils/itemDimensions')
+    };
+
+    core.layout = {
+        HorizontalLayout:     require('./layout/HorizontalLayout'),
+        Layout:               require('./layout/Layout'),
+        LayoutAlignment:      require('./layout/LayoutAlignment'),
+        TiledColumnsLayout:   require('./layout/TiledColumnsLayout'),
+        TiledLayout:          require('./layout/TiledLayout'),
+        TiledRowsLayout:      require('./layout/TiledRowsLayout'),
+        VerticalLayout:       require('./layout/VerticalLayout')
+    };
 
     // controls
     core.Application =            require('./controls/Application');
@@ -34,7 +56,7 @@ if (typeof PIXI === 'undefined') {
     core.ToggleGroup =            require('./controls/ToggleGroup');
 
     // data
-    core.ListCollection =         require('./data/ListCollection');
+    core.ListCollection = require('./data/ListCollection');
 
     // control renderer
     core.DefaultListItemRenderer =  require('./controls/renderers/DefaultListItemRenderer');
@@ -49,13 +71,10 @@ if (typeof PIXI === 'undefined') {
     core.KeyboardManager =   require('./interaction/KeyboardManager');
 
     // add core plugins.
-    core.utils          = require('./utils');
+    core.utils = require('./utils');
 
     // use default pixi loader
     core.loader = PIXI.loader;
-
-    // mixin the deprecation features.
-    //Object.assign(core; require('./deprecation'));
 
     // export GOWN globally.
     global.GOWN = core;

@@ -11,7 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi/pixi.js"></script>
-    <script src="../../bin/gown-full.js"></script>
+    <script src="../../bin/gown.js"></script>
 </head>
 <body>
 <script>
@@ -42,7 +42,7 @@
             GOWN.ScrollBar.SKIN_NAME,
             "horizontal_progress",
             function () {
-                var rect = new PIXI.shapes.Rect(0xff0000, 1.0, 10, 10);
+                var rect = new GOWN.shapes.Rect(0xff0000, 1.0, 10, 10);
                 return rect;
             }
         );
