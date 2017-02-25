@@ -20,21 +20,21 @@ describe("ToggleButton", function() {
 
         // mouseup (after rollover) should also toggle the state,
         // a mousedown before that should not change the toggle state
-        btn.mouseover();
+        btn.emit('mouseover');
         expect(btn._currentState).equal(tb.SELECTED_HOVER);
-        btn.mousedown();
+        btn.emit('mousedown');
         expect(btn.selected).equal(true);
-        btn.mouseup();
+        btn.emit('mouseup');
         expect(btn.selected).equal(false);
 
-        btn.mouseover();
+        btn.emit('mouseover');
         expect(btn._currentState).equal(b.HOVER);
-        btn.mouseout();
+        btn.emit('mouseout');
         expect(btn._currentState).equal(b.UP);
 
         // press alone (without pressdown) does not toggle the button
         // and will be ignored
-        btn.mouseup();
+        btn.emit('mouseup');
         expect(btn.selected).equal(false);
         expect(btn._currentState).equal(b.UP);
     });

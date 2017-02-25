@@ -3,8 +3,8 @@
     "launch_in_dev" : ["Chrome", "Firefox"],
     "launch_in_ci" : ["Firefox"],
     "src_files" : [
-        "lib/pixi.js",
-        "bin/gown-full.js",
+        "lib/pixi/pixi.js",
+        "test/gen/gown.js",
         "test/setup.js",
         "test/src/*.js",
         "themes/*.js",

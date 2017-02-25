@@ -1,6 +1,4 @@
-const webpack = require('webpack');
-const path = require('path');
-const buildPath = path.resolve(__dirname, 'build');
+var webpack = require('webpack');
 
 module.exports = {
     entry: './src/index.js',
@@ -8,11 +6,6 @@ module.exports = {
     output: {
         path: 'bin',
         filename: 'gown.min.js'
-    },
-    module: {
-        loaders: [
-            { test: /\.css$/, loader: "style!css" }
-        ]
     },
     plugins: [
         // Minify the bundle

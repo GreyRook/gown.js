@@ -9,20 +9,18 @@ describe("test Application", function() {
         new GOWN.TestTheme();
     });
 
-    it("create and remove Application instance", function() {
+    /*it("create and remove Application instance", function() {
         var app = new GOWN.Application(0xff0000);
         app.destroy();
         app = null;
-    });
+
+    });*/
     it("test application fullscreen works", function() {
-        var app = new GOWN.Application({backgroundColor: 0xffffff}, true);
+        var app = new GOWN.Application({backgroundColor: 0xffffff}, GOWN.Application.SCREEN_MODE_FULLSCREEN);
 
         // TODO: resize!
         expect(app.width).equals(window.innerWidth);
         expect(app.height).equals(window.innerHeight);
-        expect(app.fullscreen).equals(true);
-        app.fullscreen = false;
-        expect(app.fullscreen).equals(false);
 
         app.destroy();
         app = null;

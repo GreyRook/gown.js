@@ -9,13 +9,13 @@
     <script type="text/javascript" src="./libs/mocha.js"></script>
     <script type="text/javascript" src="../node_modules/chai/chai.js"></script>
 
-    <script type="text/javascript" src="../lib/pixi.js" charset="utf-8"></script>
-    
+    <script type="text/javascript" src="../lib/pixi/pixi.js" charset="utf-8"></script>
+
     <script type="text/javascript" src="./libs/blanket.min.js"></script>
     <script type="text/javascript" src="./libs/mocha-blanket.js"></script>
 
-    <script type="text/javascript" src="./gen/test.gown.js" data-cover></script>
-    
+    <script type="text/javascript" src="./gen/gown.js" data-cover></script>
+
     <script type="text/javascript" src="./src/TestTheme.js"></script>
 
 
@@ -23,16 +23,16 @@
     var assert = chai.assert;
     var expect = chai.expect;
     chai.should();
-    
+
     mocha.setup('bdd');
   </script>
-  
+
   <script src="unit/Basics.test.js"></script>
   <script src="unit/Control.test.js"></script>
   <script src="unit/Theme.test.js"></script>
-  
+
   <script src="unit/Shapes.test.js"></script>
-  
+
   <script src="unit/Layout.test.js"></script>
   <script src="unit/TiledLayout.test.js"></script>
 
@@ -40,11 +40,11 @@
 
   <script src="unit/Application.test.js"></script>
   <script src="unit/Button.test.js"></script>
-  <script src="unit/ToggleButton.test.js"></script>    
+  <script src="unit/ToggleButton.test.js"></script>
   <script src="unit/ScaleContainer.test.js"></script>
 
   <script src="unit/position.test.js"></script>
-  
+
 </head>
 <body>
   <div id="mocha"></div>
@@ -54,4 +54,3 @@
 
 </body>
 </html>
-
