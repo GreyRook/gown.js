@@ -1,4 +1,5 @@
-var Skinable = require('../core/Skinable');
+var Skinable = require('../core/Skinable'),
+    InputWrapper = require('../utils/InputWrapper');
 
 /**
  * InputControl used for TextInput, TextArea and everything else that
@@ -41,6 +42,9 @@ function InputControl(theme) {
     this.textOffset = new PIXI.Point(5, 4);
 
     this.text = this.text || '';
+
+    // create DOM Input (if we need one)
+    InputWrapper.createInput();
 
     this.hasFocus = false;
 
@@ -97,8 +101,8 @@ function InputControl(theme) {
     this.on('touchstart', this.onDown, this);
     this.on('mousedown', this.onDown, this);
 
-    this.on('keydown', this.onKeyDown, this);
-    this.on('keyup', this.onKeyUp, this);
+    // this.on('keydown', this.onKeyDown, this);
+    // this.on('keyup', this.onKeyUp, this);
 }
 
 InputControl.prototype = Object.create( Skinable.prototype );
@@ -169,157 +173,23 @@ InputControl.stateNames = [
  */
 InputControl.currentInput = null;
 
-InputControl.prototype.onKeyDown = function (eventData) {
+InputControl.prototype.onInputChanged = function () {
     if (!this.hasFocus) {
         return;
     }
-    var key = eventData.data.key;
-    // TODO implement the insert key to overwrite text? it is gnored for now!
-    if (key === 'WakeUp' || key === 'CapsLock' ||
-        key === 'Shift' || key === 'Control' || key === 'Alt' ||
-        key === 'AltGraph' ||
-        key.match(/^F\d{1,2}$/) || // F1-F12
-        key === 'Insert' ||
-        key === 'Escape' || key === 'NumLock' ||
-        key === 'Meta' || // Chrome Meta/Windows Key
-        key === 'Win' || // Internet Explorer Meta/Windows Key
-        key === 'Dead' || // Chrome Function/Dead Key
-        key === 'Unidentified' || // Internet Explorer Function Key
-        key === 'AudioVolumeDown' ||
-        key === 'AudioVolumeUp' ||
-        key === 'AudioVolumeMute'
-        ) {
-        // ignore special system and control keys
-        return;
+
+    var text = InputWrapper.getText();
+
+    //overrides the current text with the user input from the InputWrapper
+    if(text !== this.text) {
+        this.text = text;
     }
 
-    if (key === 'Tab') {
-        // TODO: implement Tab / TabIndex
-        return;
+    var sel = InputWrapper.getSelection();
+    if (this.updateSelection(sel[0], sel[1])) {
+        this.cursorPos = sel[0];
     }
-    if (key === 'Enter') {
-        this.emit('enter', this);
-        return;
-    }
-
-    // check for selected Text
-    var selected = this.selection && (
-        this.selection[0] !== this.selection[1]);
-
-    switch (key) {
-        case 'Left': // Internet Explorer left arrow
-        case 'ArrowLeft': // Chrome left arrow
-            this.moveCursorLeft();
-            if (eventData.data.shiftKey) {
-                this.updateSelection(this.cursorPos, this.selection[1]);
-            } else {
-                this.updateSelection(this.cursorPos, this.cursorPos);
-            }
-            break;
-        case 'Right':
-        case 'ArrowRight':
-            this.moveCursorRight();
-            if (eventData.data.shiftKey) {
-                this.updateSelection(this.selection[0], this.cursorPos);
-            } else {
-                this.updateSelection(this.cursorPos, this.cursorPos);
-            }
-            break;
-        case 'PageDown':
-        case 'PageUp':
-        case 'Home':
-        case 'End':
-            // TODO: implement jump to first/last character
-            // ignored for now...
-            break;
-        case 'Up':
-        case 'ArrowUp':
-            /*this.moveCursorUp();
-            if (eventData.data.shiftKey) {
-                if (maxLines === 0) {
-                    this.cursorPos = 0;
-                }
-                this.updateSelection(this.cursorPos, this.selection[1]);
-            } else {
-                this.updateSelection(this.cursorPos, this.cursorPos);
-            }
-            this._cursorNeedsUpdate = true;*/
-            break;
-        case 'Down':
-        case 'ArrowDown':
-            /*this.moveCursorDown();
-            if (eventData.data.shiftKey) {
-                if (maxLines === 0) {
-                    this.cursorPos = this.text.length;
-                }
-                this.updateSelection(this.selection[0], this.cursorPos);
-            } else {
-                this.updateSelection(this.cursorPos, this.cursorPos);
-            }
-            this._cursorNeedsUpdate = true;*/
-            break;
-        case 'Backspace':
-            if (selected) {
-                // remove only the selected Text
-                this.deleteSelection();
-                this.updateSelection(this.cursorPos, this.cursorPos);
-            } else if (this.cursorPos > 0) {
-                //if (eventData.data.ctrlKey) {
-                    // TODO: delete previous word!
-                //}
-                // remove last char at cursorPosition
-                this.moveCursorLeft();
-                this.deleteText(this.cursorPos, this.cursorPos+1);
-            }
-            // ignore browser-back
-            eventData.originalEvent.preventDefault();
-            break;
-        case 'Del': // Internet Explorer Delete Key
-        case 'Delete': // Chrome Delete Key
-            if (selected) {
-                this.deleteSelection();
-                this.updateSelection(this.cursorPos, this.cursorPos);
-            } else if (this.cursorPos < this.text.length) {
-                //if (eventData.data.ctrlKey) {
-                    // TODO: delete previous word!
-                //}
-                // remove next char after cursorPosition
-                this.deleteText(this.cursorPos, this.cursorPos+1);
-            }
-            break;
-        default:
-            // select all text
-            if (eventData.data.ctrlKey && key.toLowerCase() === 'a') {
-                this.cursorPos = this.text.length;
-                this.updateSelection(0, this.cursorPos);
-                this._cursorNeedsUpdate = true;
-                return;
-            }
-            // allow µ or ² but ignore keys for browser refresh / show Developer Tools
-            if (eventData.data.ctrlKey && (key.toLowerCase() === 'j' || key.toLowerCase() === 'r')) {
-                return;
-            }
-            if (selected) {
-                this.deleteSelection();
-            }
-
-
-            // Internet Explorer space bar
-            if (key === 'Spacebar') {
-                key = ' ';
-            }
-            if (key === ' ') {
-                // do not scroll down when the space bar has been pressed.
-                eventData.originalEvent.preventDefault();
-            }
-
-            if (key.length !== 1) {
-                throw new Error('unknown key ' + key);
-            }
-
-            this.insertChar(key);
-            this.updateSelection(this.cursorPos, this.cursorPos);
-    }
+    this.setCursorPos();
 };
 
 InputControl.prototype.moveCursorLeft = function() {
@@ -340,7 +210,7 @@ InputControl.prototype.insertChar = function(char) {
         this.pixiText.text = this.pixiText.text.substring(0, this.maxChars);
         return;
     }
-    this.text = [this.text.slice(0, this.cursorPos), char, this.text.slice(this.cursorPos)].join('');
+    this.text = [this.value.slice(0, this.cursorPos), char, this.value.slice(this.cursorPos)].join('');
     this.moveCursorRight();
     this.emit('change', this);
 };
@@ -369,6 +239,8 @@ InputControl.prototype.deleteSelection = function() {
  */
 InputControl.prototype.deleteText = function(fromPos, toPos) {
     this.text = [this.text.slice(0, fromPos), this.text.slice(toPos)].join('');
+    InputWrapper.setText(this.value);
+    // InputWrapper.setCursorPos(this.cursorPos);
     this.emit('change', this);
     return this.text;
 };
@@ -480,6 +352,7 @@ InputControl.prototype.updateSelection = function (start, end) {
         this.selection[0] = start;
         this.selection[1] = end;
         this._selectionNeedsUpdate = true;
+        InputWrapper.setSelection(this.selection[0], this.selection[1]);
         return true;
     }
     return false;
@@ -522,6 +395,9 @@ InputControl.prototype.focus = function () {
     this.onfocus();
 
     this.emit('focusIn', this);
+
+    InputWrapper.focus();
+
     /*
      //TODO: disable/ is read only
      if(this.readonly) {
@@ -556,6 +432,7 @@ InputControl.prototype.blur = function() {
         this.hasFocus = false;
 
         // blur hidden input
+        InputWrapper.blur();
         this.onblur();
     }
 };
@@ -655,6 +532,10 @@ InputControl.prototype.onDown = function (e) {
 
     this.on('mousemove', this.onMove, this);
     this.on('touchmove', this.onMove, this);
+
+    // update the hidden input text and cursor position
+    InputWrapper.setText(this.value);
+    InputWrapper.setCursorPos(this.cursorPos);
 
     return true;
 };

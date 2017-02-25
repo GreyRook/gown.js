@@ -1,4 +1,5 @@
 var InputControl = require('./InputControl'),
+    InputWrapper = require('../utils/InputWrapper'),
     position = require('../utils/position');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
@@ -11,7 +12,6 @@ var InputControl = require('./InputControl'),
  * @param theme default theme
  * @constructor
  */
-
 function TextInput(theme, skinName) {
     // show and load background image as skin (exploiting skin states)
     this.skinName = skinName || TextInput.SKIN_NAME;
