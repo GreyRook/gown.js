@@ -1,11 +1,11 @@
-![gown.js](https://cdn.rawgit.com/brean/gown.js/master/logo.svg)
+![gown.js](https://cdn.rawgit.com/GreyRook/gown.js/master/logo.svg)
 ===========
 
 UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
 
-[![Inline docs](http://inch-ci.org/github/brean/gown.js.svg?branch=master)](http://inch-ci.org/github/brean/gown.js)
-[![Code Climate](https://codeclimate.com/github/brean/gown.js/badges/gpa.svg)](https://codeclimate.com/github/brean/gown.js)
-[![Build Status](https://travis-ci.org/brean/gown.js.svg?branch=master)](https://travis-ci.org/brean/gown.js)
+[![Inline docs](http://inch-ci.org/github/GreyRook/gown.js.svg?branch=master)](http://inch-ci.org/github/GreyRook/gown.js)
+[![Code Climate](https://codeclimate.com/github/GreyRook/gown.js/badges/gpa.svg)](https://codeclimate.com/github/GreyRook/gown.js)
+[![Build Status](https://travis-ci.org/GreyRook/gown.js.svg?branch=master)](https://travis-ci.org/GreyRook/gown.js)
 
 Features
 ========
@@ -29,7 +29,7 @@ Features
 Examples
 ========
 see the examples-folder in this repo or play with some example online at:
-http://brean.github.io/gown-examples/
+http://greyrook.github.io/gown-examples/
 
 Folder structure
 ================
@@ -91,4 +91,4 @@ The `redraw` function is hooked into PIXI's render loop in the `updateTranform` 
 
 Known Bugs
 ==========
-see [Issues](https://github.com/brean/gown.js/issues/)
+see [Issues](https://github.com/GreyRook/gown.js/issues/)
