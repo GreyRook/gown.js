@@ -15,12 +15,12 @@
   "scripts": {
     "build": "npm run dist",
     "clean": "rimraf dist && mkdirp dist",
-    "coverage": "npm test -- -c dist/gown.js -s -h",
+    "coverage": "npm test -- -c src/**/*.js -s -h",
     "dist": "webpack --config webpack-development.config.js && webpack --config webpack-production.config.js",
     "precoverage": "rimraf coverage",
     "predist": "rimraf dist/**",
     "preinstall": "npm i -g webpack@^2.2.1",
-    "test": "floss --path test/index.js"
+    "test": "floss -p test/index.js"
   },
   "files": [
     "dist/",

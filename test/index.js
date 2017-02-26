@@ -1,7 +1,8 @@
 require('../lib/pixi/pixi');
 PIXI.utils.skipHello(); // hide banner
 
-require('../dist/gown');
+require('../src/index');
+
 require('./themes/TestTheme');
 
 require('./Basics');

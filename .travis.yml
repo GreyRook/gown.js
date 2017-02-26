@@ -31,7 +31,7 @@ before_script:
 
 script:
   - npm run dist
-  - xvfb-maybe npm run test
+  - xvfb-maybe npm run coverage
 
 git:
     submodules: false
