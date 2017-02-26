@@ -30,11 +30,8 @@ before_script:
   - Xvfb :99 -screen 0 1024x768x24 -extension RANDR &
 
 script:
-  - npm run build
+  - npm run dist
   - xvfb-maybe npm run test
-
-script:
-    - npm test
 
 git:
     submodules: false
