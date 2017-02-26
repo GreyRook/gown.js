@@ -1,8 +1,10 @@
+var path = require('path');
+
 module.exports = {
     entry: './src/index.js',
     devtool: 'source-map',
     output: {
-        path: 'dist',
+        path: path.join(__dirname, 'dist'),
         filename: 'gown.js'
     }
 };

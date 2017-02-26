@@ -15,7 +15,6 @@
   "scripts": {
     "build": "npm run dist",
     "clean": "rimraf dist && mkdirp dist",
-    "build": "npm run dist",
     "coverage": "npm test -- -c dist/gown.js -s -h",
     "dist": "webpack --config webpack-development.config.js && webpack --config webpack-production.config.js",
     "precoverage": "rimraf coverage",
@@ -38,6 +37,7 @@
     "eslint": "^3.5.0",
     "floss": "^2.0.1",
     "mkdirp": "^0.5.1",
+    "path": "^0.12.7",
     "rimraf": "^2.5.1",
     "webpack": "^2.2.1"
   }
