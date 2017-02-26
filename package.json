@@ -13,7 +13,7 @@
     "url": "https://github.com/GreyRook/gown.js.git"
   },
   "scripts": {
-    "test": "webpack --config webpack-testing.config.js && testem ci",
+    "test": "webpack --config webpack-development.config.js && testem ci",
     "build": "webpack",
     "preinstall": "npm i -g webpack@2.2.1"
   },
