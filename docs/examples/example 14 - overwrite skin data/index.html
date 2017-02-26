@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>gown.js example: Overwrite skin data</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../dist/gown.js"></script>
+</head>
+<body>
+<script>
+    var stage = new PIXI.Container();
+    var sizes = {w: 800, h: 600};
+    var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+    var btn;
+
+    var theme = new GOWN.ThemeParser("../../themes/assets/shapes_desktop/shapes_desktop.json");
+
+    function onCompleteAeon() {
+        btn = new GOWN.Button();
+        btn.text = 'Show some color';
+        btn.width = btn.height = 100;
+        stage.addChild(btn);
+        animate();
+    }
+    theme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
+
+    var time = new Date();
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+        // change text color every second!
+        var now = new Date();
+        if (now - time > 1000) {
+            var data = {
+                "up": {
+                    "color": Math.random()*0xffffff,
+                    "radius": 25
+                },
+                "down": {
+                    "color": Math.random()*0xffffff,
+                    "radius": 25
+                }
+            };
+            btn.updateSkin(data);
+            time = now;
+        }
+    }
+
+    GOWN.loader.load();
+</script>
+
+</body>
+</html>
