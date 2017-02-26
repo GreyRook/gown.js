@@ -1,5 +1,3 @@
-'use strict';
-
 require('../lib/pixi/pixi');
 PIXI.utils.skipHello(); // hide banner
 
