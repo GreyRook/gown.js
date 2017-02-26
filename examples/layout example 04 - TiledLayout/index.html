@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>GOWN.layout example: layout with tiles that have fixed width/height (based on highest element)</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../dist/gown.js"></script>
+</head>
+<body>
+<script>
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+    var stage = new PIXI.Container();
+    var items = [];
+    var columns, layout;
+
+    function createRect(color, text, parent, width, height) {
+        parent = parent || stage;
+        var gr = new PIXI.Graphics();
+        var rect = new PIXI.Container();
+        var w = width || 30;
+        var h = height || 40;
+        w *= 2 * Math.random() + 0.8;
+        h *= 2 * Math.random() + 0.8;
+        var txt = new PIXI.Text(text);
+        txt.setStyle({align: 'center'});
+
+        rect.width = w;
+        rect.height = h;
+        gr.beginFill(color);
+        gr.drawRect(0, 0, w, h);
+
+        rect.addChild(gr);
+        rect.addChild(txt)
+        parent.addChild(rect);
+        return rect;
+    }
+
+    for (var i = 0; i < 25; i++) {
+        items.push(createRect(0xffffff*Math.random(), i+1+''));
+    }
+
+    // switch button for TiledColumnsLayout and TiledRowsLayout
+    var switchBtn = createRect(0xff0000,
+        "press to\nswitch\nlayout", stage,
+        100, 100);
+    switchBtn.x = renderer.width-100;
+    switchBtn.y = renderer.height-100;
+    switchBtn.interactive = true;
+
+    switchLayout();
+
+    function switchLayout() {
+        columns = !columns;
+        if (columns) {
+            layout = new GOWN.layout.TiledColumnsLayout();
+        } else {
+            layout = new GOWN.layout.TiledRowsLayout();
+        }
+        layout.gap = 10;
+        layout.layout(items, renderer.width, renderer.height);
+    }
+
+    switchBtn.on('mousedown', switchLayout);
+    switchBtn.on('touchstart', switchLayout);
+
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>

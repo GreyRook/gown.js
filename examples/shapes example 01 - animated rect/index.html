@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>GOWN.shapes example: animated rect with round edges</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../dist/gown.js"></script>
+</head>
+<body>
+<script>
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+
+    var stage = new PIXI.Container();
+    var rect = new GOWN.shapes.Rect(0xff0000, 1.0, 200, 200, 10);
+    rect.x = rect.y = 200;
+    stage.addChild(rect);
+
+    var direction = 1;
+
+    function animate() {
+        // animate the rect
+        if (rect.width >= 300) {
+            direction = -1;
+        } else if (rect.width <= 200) {
+            direction = 1;
+        }
+
+        rect.x -= 1.5 * direction;
+        rect.y = rect.x;
+        rect.width += 3 * direction;
+        rect.height = rect.width;
+        rect.radius = rect.width/8;
+
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>

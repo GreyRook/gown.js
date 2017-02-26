@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>GOWN.shapes example: animated rect with round edges</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../dist/gown.js"></script>
+</head>
+<body>
+Just like Paint, select a shape and draw it on the canvas:<br />
+<button onclick="drawTool('diamond')">Diamond</button>
+<button onclick="drawTool('ellipse')">Ellipse</button>
+<button onclick="drawTool('line')">Line</button>
+<button onclick="drawTool('rect')"">Rect</button>
+<br />
+<script>
+    var shapes = {
+        'diamond': GOWN.shapes.Diamond,
+        'ellipse': GOWN.shapes.Ellipse,
+        'line': GOWN.shapes.Line,
+        'rect': GOWN.shapes.Rect
+    };
+
+    var selectedTool = 'rect';
+    
+    function drawTool(tool) {
+        selectedTool = tool;
+    };
+    
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+    var stage = new PIXI.Container();
+    
+    var preview;
+    var startpos;
+    
+    function updatePreview() {
+        preview = new shapes[selectedTool](0xffffff*Math.random());
+        return preview;
+    }
+    
+    function mouseDown(e) {
+        preview = updatePreview();
+        startpos = preview.position = e.data.global.clone();
+        stage.addChild(preview);
+    };
+    
+    function mouseMove(e) {
+        if (startpos && preview) {
+            preview.width = e.data.global.x - startpos.x;
+            preview.height = e.data.global.y - startpos.y;
+        }
+    };
+    
+    function mouseUp(e) {
+        startpos = null;
+    };   
+    
+    var rect = new GOWN.shapes.Rect(0xffffff, 1, 800, 600);
+    rect.interactive = true;
+    rect.on("mousedown", mouseDown);
+    rect.on("mouseup", mouseUp);
+    rect.on("mousemove", mouseMove);
+    stage.addChild(rect);
+    
+    
+    function animate() {
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+    
+    animate();
+</script>
+
+</body>
+</html>
