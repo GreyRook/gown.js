@@ -40,6 +40,9 @@ for the [command line][fork-cli] and for the [GitHub Client][fork-gui].
 3. Next, run `npm install` from within your clone of your fork. That will install dependencies
 necessary to build pixi.js
 
+4. After you made your changes build the package running `npm run dist`. This will build the original
+and modified version of gown.js
+
 
 ### Making a Change
 
@@ -61,7 +64,8 @@ one of the above branches.
 
 You can test your change by using the automated tests packaged with gown.js. You can run these tests
 by running `npm test` from the command line. If you fix a bug please add a test that will catch that
-bug if it ever happens again. This prevents regressions from sneaking in.
+bug if it ever happens again. This prevents regressions from sneaking in. Please keep in mind that
+this will not build your packeage so you want to run `npm run dist` first
 
 ### Submitting Your Change
 

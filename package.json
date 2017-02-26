@@ -13,14 +13,32 @@
     "url": "https://github.com/GreyRook/gown.js.git"
   },
   "scripts": {
-    "test": "webpack --config webpack-testing.config.js && testem ci",
-    "build": "webpack",
-    "preinstall": "npm i -g webpack@2.2.1"
+    "build": "npm run dist",
+    "clean": "rimraf dist && mkdirp dist",
+    "build": "npm run dist",
+    "coverage": "npm test -- -c dist/gown.js -s -h",
+    "dist": "webpack --config webpack-development.config.js && webpack --config webpack-production.config.js",
+    "precoverage": "rimraf coverage",
+    "predist": "rimraf dist/**",
+    "preinstall": "npm i -g webpack@^2.2.1",
+    "test": "floss --path test/index.js"
   },
+  "files": [
+    "dist/",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
   "dependencies": {
-    "eventemitter3": "*"
+    "eventemitter3": "^2.0.0"
   },
   "devDependencies": {
-    "testem": "*"
+    "electron": "^1.4.15",
+    "eslint": "^3.5.0",
+    "floss": "^2.0.1",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.5.1",
+    "webpack": "^2.2.1"
   }
 }

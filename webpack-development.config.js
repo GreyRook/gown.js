@@ -2,7 +2,7 @@ module.exports = {
     entry: './src/index.js',
     devtool: 'source-map',
     output: {
-        path: 'bin',
+        path: 'dist',
         filename: 'gown.js'
     }
 };
