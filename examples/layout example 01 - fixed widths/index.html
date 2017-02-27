@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>GOWN.layout example: align some rectangles horizontally and vertically with a fixed gap</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../dist/gown.js"></script>
+</head>
+<body>
+<script>
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+
+    var stage = new PIXI.Container();
+
+    function createRect(color) {
+        var rect = new PIXI.Graphics();
+        rect.width = 20;
+        rect.height = 20;
+        rect.beginFill(color);
+        rect.drawRect(0, 0, 20, 20);
+        stage.addChild(rect);
+        return rect;
+    }
+
+    var horizontal = [];
+    var horizontal_layout = new GOWN.layout.HorizontalLayout();
+    horizontal_layout.gap = 5;
+
+    for (var i = 0; i < 8; i++) {
+        horizontal.push(createRect(0xfcd116));
+    }
+
+    horizontal_layout.layout(horizontal);
+
+    var vertical = [];
+    var vertical_layout = new GOWN.layout.VerticalLayout();
+    vertical_layout.gap = 5;
+    vertical_layout.paddingTop = 30;
+
+    for (i = 0; i < 10; i++) {
+        vertical.push(createRect(0x0000ff));
+    }
+
+    vertical_layout.layout(vertical);
+
+    function animate() {
+
+        // render the stage
+        renderer.render(stage);
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>

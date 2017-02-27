@@ -11,7 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi/pixi.js"></script>
-    <script src="../../bin/gown-full.js"></script>
+    <script src="../../dist/gown.js"></script>
 
 </head>
 <body>
@@ -29,7 +29,7 @@
         grp.width = sizes.w - (grp.x*2);
         grp.height = sizes.h - (grp.y*2);
 
-        grp.layout = new PIXI.layout.TiledColumnsLayout();
+        grp.layout = new GOWN.layout.TiledColumnsLayout();
         grp.layout.gap = 10;
         stage.addChild(grp);
 
@@ -49,10 +49,10 @@
 
         toggleButton.x = toggleButton.y = 20;
         toggleButton.on(GOWN.Button.TRIGGERED, function () {
-            if (grp.layout._orientation == PIXI.layout.TiledLayout.ORIENTATION_ROWS) {
-                grp.layout._orientation = PIXI.layout.TiledLayout.ORIENTATION_COLUMNS;
+            if (grp.layout._orientation == GOWN.layout.TiledLayout.ORIENTATION_ROWS) {
+                grp.layout._orientation = GOWN.layout.TiledLayout.ORIENTATION_COLUMNS;
             } else {
-                grp.layout._orientation = PIXI.layout.TiledLayout.ORIENTATION_ROWS;
+                grp.layout._orientation = GOWN.layout.TiledLayout.ORIENTATION_ROWS;
             }
             grp.layout._needUpdate = true;
         });
@@ -70,6 +70,7 @@
         renderer.render(stage);
         requestAnimationFrame(animate);
     }
+    GOWN.loader.load();
 </script>
 
 </body>

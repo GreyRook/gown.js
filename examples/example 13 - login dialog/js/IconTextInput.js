@@ -12,7 +12,7 @@ var IconTextInput = function(icon, text, theme) {
     GOWN.TextInput.call(this, theme, text);
     this.icon  = icon;
 
-    this.bg = new PIXI.shapes.Rect(0x111111, 0.5, 360, 46, 5);
+    this.bg = new GOWN.shapes.Rect(0x111111, 0.5, 360, 46, 5);
     this.icon.x = 7;
 
     this.addChild(this.bg);

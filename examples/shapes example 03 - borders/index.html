@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>GOWN.shapes example: some shapes with borders</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../dist/gown.js"></script>
+</head>
+<body>
+<script>
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0x4b78e7});
+    document.body.appendChild(renderer.view);
+    var stage = new PIXI.Container();
+
+    // rect with just a transparent border, no fill
+    // setting the color to null means you do not want to fill the rect.
+    var rect = new GOWN.shapes.Rect(null, 1, 200, 100);
+    rect.border = 10;
+    rect.borderAlpha = 0.5;
+    rect.x = rect.y = 100;
+    stage.addChild(rect);
+
+    // rect with fill to show that the border stretches to both sides.
+    rect = new GOWN.shapes.Rect(0xff0000, 1, 200, 100);
+    rect.border = 10;
+    rect.borderAlpha = 0.5;
+    rect.x = 100;
+    rect.y = 300;
+    stage.addChild(rect);
+
+    // rect with alpha to show that the overal alpha also affects the borderAlpha
+    rect = new GOWN.shapes.Rect(0xff0000, .5, 200, 100);
+    rect.border = 10;
+    rect.x = 350;
+    rect.y = 100;
+    stage.addChild(rect);
+
+    // if you like to have a solid border but a transparent fill you need to create 2 rects:
+    rect = new GOWN.shapes.Rect(0xff0000, .5, 200, 100);
+    rect.x = 350;
+    rect.y = 300;
+    stage.addChild(rect);
+
+    rect = new GOWN.shapes.Rect(null, 1, 200, 100);
+    rect.border = 10;
+    rect.borderAlpha = 1;
+    rect.x = 350;
+    rect.y = 300;
+    stage.addChild(rect);
+
+    // render the stage
+    renderer.render(stage);
+
+    // this is a static image - we will not update
+</script>
+
+</body>
+</html>

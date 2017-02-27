@@ -1,16 +1,22 @@
-var core = module.exports = require('../src/core');
+require('../lib/pixi/pixi');
+PIXI.utils.skipHello(); // hide banner
 
-// include themes
-//module.exports.TestTheme = require('./src/TestTheme');
+require('../src/index');
 
-// add core plugins.
-core.utils          = require('../src/utils');
+require('./themes/TestTheme');
 
-// use default pixi loader
-core.loader = PIXI.loader;
+require('./Basics');
 
-// mixin the deprecation features.
-//Object.assign(core, require('./deprecation'));
+require('./shapes/Shapes');
 
-// export GOWN globally.
-global.GOWN = core;
+require('./utils/position');
+require('./utils/ScaleContainer');
+
+require('./skin/Theme');
+
+require('./controls/Application');
+require('./controls/AutoComplete');
+require('./controls/Button');
+require('./controls/Control');
+require('./controls/PickerList');
+require('./controls/ToggleButton');

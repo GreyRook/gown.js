@@ -10,10 +10,10 @@ var Theme = require('./Theme');
 function ThemeParser(jsonPath, global) {
     Theme.call(this, global);
 
-    // components that show something and can be used as skin (see PIXI.shapes)
+    // components that show something and can be used as skin (see GOWN.shapes)
     this.skinComponents = this.skinComponents || this.getSkinComponents();
 
-    this.loadThemeData(jsonPath);
+    this.addThemeData(jsonPath);
 }
 
 ThemeParser.prototype = Object.create( Theme.prototype );
@@ -24,16 +24,16 @@ module.exports = ThemeParser;
 ThemeParser.DATA_LOADED = 'data_loaded';
 
 /**
- * get component classes that can create skins (in general all PIXI.shapes)
+ * get component classes that can create skins (in general all GOWN.shapes)
  * note that image textures are not components
  */
 ThemeParser.prototype.getSkinComponents = function () {
     var cmps = {};
-    if (PIXI.shapes) {
-        cmps.rect = PIXI.shapes.Rect;
-        cmps.diamond = PIXI.shapes.Diamond;
-        cmps.ellipse = PIXI.shapes.Ellipse;
-        cmps.line = PIXI.shapes.Line;
+    if (GOWN.shapes) {
+        cmps.rect = GOWN.shapes.Rect;
+        cmps.diamond = GOWN.shapes.Diamond;
+        cmps.ellipse = GOWN.shapes.Ellipse;
+        cmps.line = GOWN.shapes.Line;
     }
     return cmps;
 };
@@ -179,6 +179,6 @@ ThemeParser.prototype.parseData = function(data) {
     }
 };
 
-ThemeParser.prototype.loadThemeData = function(jsonPath) {
-    this.loadImage(jsonPath);
+ThemeParser.prototype.addThemeData = function(jsonPath) {
+    this.addImage(jsonPath);
 };

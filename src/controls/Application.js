@@ -207,7 +207,7 @@ Application.prototype.onResize = function(eventData) {
  * allow layouting of children
  *
  * @property layout
- * @type PIXI.layout.Layout
+ * @type GOWN.layout.Layout
  */
 Object.defineProperty(Application.prototype, 'layout', {
     get: function() {

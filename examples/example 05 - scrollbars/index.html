@@ -11,7 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi/pixi.js"></script>
-    <script src="../../bin/gown-full.js"></script>
+    <script src="../../dist/gown.js"></script>
 </head>
 <body>
 <script>
@@ -29,7 +29,7 @@
         // HORIZONTAL
 
         inner_horizontal = new GOWN.LayoutGroup();
-        inner_horizontal.layout = new PIXI.layout.HorizontalLayout();
+        inner_horizontal.layout = new GOWN.layout.HorizontalLayout();
         inner_horizontal.layout.gap = 10;
 
         // add some buttons
@@ -58,7 +58,7 @@
         // VERTICAL
         var grp = new GOWN.LayoutGroup();
         var inner = new GOWN.LayoutGroup();
-        inner.layout = new PIXI.layout.VerticalLayout();
+        inner.layout = new GOWN.layout.VerticalLayout();
         inner.layout.gap = 10;
 
         // add some buttons
@@ -96,6 +96,7 @@
         renderer.render(stage);
         requestAnimationFrame(animate);
     }
+    GOWN.loader.load();
 </script>
 
 </body>

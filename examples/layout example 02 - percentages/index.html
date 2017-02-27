@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>GOWN.layout example: calculate width/height using in pixel using percentages</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+    </style>
+    <script src="../../lib/pixi/pixi.js"></script>
+    <script src="../../dist/gown.js"></script>
+</head>
+<body>
+<script>
+    var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0xffffff});
+    document.body.appendChild(renderer.view);
+
+    var stage = new PIXI.Container();
+
+    function createRect(color, parent) {
+        parent = parent || stage;
+        var rect = new PIXI.Graphics();
+        rect.percentWidth = 100;
+        rect.percentHeight = 100;
+        rect.color = color;
+        rect.drawMe = function() {
+            // you like to use PIXI.shapes for something more complicated
+            this.beginFill(this.color);
+            this.drawRect(0, 0, this._width, this._height);
+        }
+        parent.addChild(rect);
+        return rect;
+    }
+
+    var container = new PIXI.Container();
+    container.width = 660;
+    container.height = 50;
+    stage.addChild(container);
+
+    for (var i = 0; i < 6; i++) {
+        var rect = createRect(0xffffff*Math.random(), container);
+    }
+    rect.percentWidth = 40;
+    rect.percentHeight = 70;
+
+    var layout = new GOWN.layout.HorizontalLayout();
+    layout.gap = 5;
+    layout.layoutContainer(container);
+
+    for (i = 0; i < 6; i++) {
+        container.children[i].drawMe();
+    }
+
+
+
+/*
+
+
+    nested_layout.gap = 3;
+
+    for (var i = 0; i < 3; i++) {
+        createRect(0x0000ff, container);
+    }
+    container.width = 200;
+    nested_layout.layoutContainer(container);
+    stage.addChild(container);
+
+    horizontal_layout.layout(stage.children, 400);
+*/
+
+
+    renderer.render(stage);
+</script>
+
+</body>
+</html>

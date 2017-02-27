@@ -8,10 +8,10 @@
 var LoginDialog = function() {
     GOWN.Control.call(this);
     // background
-    this.bg = new PIXI.shapes.Rect(0x515151, 0.7, 200, 350, 5);
+    this.bg = new GOWN.shapes.Rect(0x515151, 0.7, 200, 350, 5);
     this.addChild(this.bg);
 
-    this.loginBg = new PIXI.shapes.Rect(0x111111, 0.5, 200, 100, 5);
+    this.loginBg = new GOWN.shapes.Rect(0x111111, 0.5, 200, 100, 5);
     this.loginBg.y = 250;
     this.addChild(this.loginBg);
 
@@ -24,7 +24,7 @@ var LoginDialog = function() {
 
     var grp = new GOWN.LayoutGroup();
     this.grp = grp;
-    grp.layout = new PIXI.layout.VerticalLayout();
+    grp.layout = new GOWN.layout.VerticalLayout();
     grp.y = 20;
     grp.x = 10;
 

@@ -65,18 +65,17 @@ Theme.prototype.setSkin = function(comp, id, skin) {
 /**
  * Set up the asset loader and load files
  *
- * @method loadImage
+ * @method addImage
  * @param jsonPath {Array}
  */
-Theme.prototype.loadImage = function(jsonPath) {
+Theme.prototype.addImage = function(jsonPath) {
     this._jsonPath = jsonPath;
-    GOWN.loader
-        .add(jsonPath)
-        .load(this.loadComplete.bind(this));
+    GOWN.loader.add(jsonPath)
+        .once('complete', this.loadComplete.bind(this));
 };
 
 /**
- * executed when loadImage has finished
+ * executed when the image has been loaded (see addImage)
  *
  * @method loadComplete
  */

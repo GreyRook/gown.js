@@ -89,7 +89,7 @@
         }
     </style>
     <script src="../../lib/pixi/pixi.js"></script>
-    <script src="../../bin/gown-full.js"></script>
+    <script src="../../dist/gown.js"></script>
     <!--script src="lib/css-element-queries/src/ResizeSensor.js"></script-->
 </head>
 <body>
@@ -117,7 +117,7 @@
             aeonbtn.percentHeight = 100;
             aeonbtn.label = "scale button";
             app.addChild(aeonbtn);
-            app.layout = new PIXI.layout.HorizontalLayout();
+            app.layout = new GOWN.layout.HorizontalLayout();
 
             app.on('resize', function(eventData) {
                 app.layout.layoutContainer(app);
@@ -130,12 +130,11 @@
             });
         }
 
-
-
         aeontheme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
         aeontheme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
-
+        GOWN.loader.load();
     });
+
 </script>
 
 </body>

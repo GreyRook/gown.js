@@ -11,7 +11,7 @@
         }
     </style>
     <script src="../../lib/pixi/pixi.js"></script>
-    <script src="../../bin/gown-full.js"></script>
+    <script src="../../dist/gown.js"></script>
 </head>
 <body>
 <script>
@@ -33,7 +33,7 @@
         stage.addChild(sa_sprite);
 
         grp = new GOWN.LayoutGroup();
-        grp.layout = new PIXI.layout.VerticalLayout();
+        grp.layout = new GOWN.layout.VerticalLayout();
 
         // create layout container and add some buttons
         for (var i = 0; i < 20; i++) {
@@ -65,6 +65,7 @@
         renderer.render(stage);
         requestAnimationFrame(animate);
     }
+    GOWN.loader.load();
 </script>
 
 </body>
