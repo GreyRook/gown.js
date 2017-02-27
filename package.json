@@ -1,6 +1,6 @@
 {
   "name": "gown.js",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pixi UI provides basic UI components for Pixi.js. Inspired by feathers UI",
   "author": "Andreas Bresser",
   "main": "./src/index.js",

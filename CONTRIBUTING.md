@@ -52,10 +52,8 @@ make your change to (and send a PR to) depends on the type of change you are mak
 
 Here is our branch breakdown:
 
-- `master` - Make your change to the `master` branch if it is an *urgent* hotfix.
-- `dev` - Make your change to `dev` if it is a *non-urgent* bugfix or a backwards-compatible feature.
-- `pixi` development also has a `next` branch for wild/crazy ideas. We suggest you use an own branch
-  for those ideas on your private fork. You can call it "feature-<my-crazy-idea>"
+- `master` - This is the current development branch
+- `v0.1.x` - bugfix-only branch
 
 Your change should be made directly to the branch in your fork, or to a branch in your fork made off of
 one of the above branches.
