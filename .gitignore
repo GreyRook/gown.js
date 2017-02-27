@@ -1,6 +1,5 @@
 dist/
 lib-cov/
-docs/
 coverage
 node_modules/
 .grunt
