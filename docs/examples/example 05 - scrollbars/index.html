@@ -20,23 +20,26 @@
     var renderer = PIXI.autoDetectRenderer(sizes.w, sizes.h, {backgroundColor : 0xffffff});
     document.body.appendChild(renderer.view);
 
-    function onComplete() {
+    var grp, btn, sa_grp;
+    var inner_horizontal, inner_scroll_horizontal, sb_horizontal;
 
-        // # HORIZONTAL
-        var group = new GOWN.LayoutGroup();
-        stage.addChild(group); // add our group to pixi stage
-        var groupLayout = new GOWN.layout.HorizontalLayout();
-        groupLayout.gap = 10;
-        group.layout = groupLayout; // assign to main group
+    function onComplete() {
+        var i;
+
+        // HORIZONTAL
+
+        inner_horizontal = new GOWN.LayoutGroup();
+        inner_horizontal.layout = new GOWN.layout.HorizontalLayout();
+        inner_horizontal.layout.gap = 10;
+
         // add some buttons
-        for (var i = 0; i < 100; i++) {
-            var btn = new GOWN.Button();
+        for (i = 0; i < 100; i++) {
+            btn = new GOWN.Button();
             btn.height = 25;
             btn.width = 80;
             btn.label = (i+1)+". button";
-            group.addChild(btn);
+            inner_horizontal.addChild(btn);
         }
-
         /* inner_scroll_horizontal = new GOWN.ScrollArea();
         inner_scroll_horizontal.width = 500;
 
@@ -52,22 +55,20 @@
         sb_horizontal.width = inner_scroll_horizontal.width;
         */
 
-        // # VERTICAL
-        var group = new GOWN.LayoutGroup();
-        stage.addChild(group); // add our group to pixi stage
-        var groupLayout = new GOWN.layout.VerticalLayout();
-        groupLayout.gap = 10;
-        group.layout = groupLayout; // assign to main group
-        var btns = [];
+        // VERTICAL
+        var grp = new GOWN.LayoutGroup();
+        var inner = new GOWN.LayoutGroup();
+        inner.layout = new GOWN.layout.VerticalLayout();
+        inner.layout.gap = 10;
+
         // add some buttons
-        for (var i = 0; i < 12; i++) {
-            var btn = new GOWN.Button();
+        for (i = 0; i < 12; i++) {
+            btn = new GOWN.Button();
             btn.height = 25;
             btn.width = 80;
             btn.label = (i+1)+". button";
-            group.addChild(btn);
+            inner.addChild(btn);
         }
-
         /*
         var inner_scroll = new GOWN.ScrollArea(inner);
         inner_scroll.width = 100;
@@ -82,8 +83,7 @@
 
         stage.addChild(grp);
         grp.y = 100;
-        */
-
+*/
         requestAnimationFrame(animate);
     }
 
