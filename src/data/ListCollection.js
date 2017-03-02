@@ -14,6 +14,7 @@ var EventEmitter = require('eventemitter3');
  * @constructor
  */
 function ListCollection(data) {
+    EventEmitter.call(this);
     if (!data) {
         data = [];
     }
