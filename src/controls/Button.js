@@ -157,9 +157,10 @@ Button.prototype.onOut = function() {
 };
 
 Button.prototype.onTouchMove = function(eventData) {
-    // TODO: this still behaves strange:
-    //       if you touch down a button and move your finger around the button
-    //       gets deselected, even if you are on the button
+    // please note that if the user takes his finger from the screen when
+    // he is over the button, the button skin for "hovered" will be used.
+    // In a mobile UI you might not want to have any hovered skins/use the
+    // same skin for "hover" and "up".
     if (eventData.data.target === this) {
         this.handleEvent(Button.HOVER);
     }
