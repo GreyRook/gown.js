@@ -21,39 +21,52 @@
     document.body.appendChild(renderer.view);
 
     var grp, btn, sa_grp;
-    var inner_horizontal, inner_scroll_horizontal, sb_horizontal;
+    var inner_horizontal, horizontal_container, horizontal_scrollbar;
 
     function onComplete() {
         var i;
 
         // HORIZONTAL
-
         inner_horizontal = new GOWN.LayoutGroup();
         inner_horizontal.layout = new GOWN.layout.HorizontalLayout();
         inner_horizontal.layout.gap = 10;
 
         // add some buttons
-        for (i = 0; i < 100; i++) {
+        for (i = 0; i < 50; i++) {
             btn = new GOWN.Button();
             btn.height = 25;
             btn.width = 80;
             btn.label = (i+1)+". button";
             inner_horizontal.addChild(btn);
         }
-        /* inner_scroll_horizontal = new GOWN.ScrollArea();
+
+        horizontal_container = new GOWN.ScrollContainer();
+        horizontal_container.addChild(inner_horizontal);
+        stage.addChild(horizontal_container);
+
+        horizontal_scrollbar = new GOWN.ScrollBar();
+        horizontal_scrollbar.container = horizontal_container;
+        horizontal_scrollbar.y = 60;
+        horizontal_scrollbar.x = 10;
+        horizontal_scrollbar.width = 780;
+        stage.addChild(horizontal_scrollbar);
+
+        // TODO: let the scrollbar move the content,
+        // implement locationToValue? implement thumb_touchHandler?
+
+        /*
+        inner_scroll_horizontal = new GOWN.ScrollArea();
         inner_scroll_horizontal.width = 500;
 
         inner_scroll_horizontal.content = inner_horizontal;
         inner_scroll_horizontal.x = 200;
-        stage.addChild(inner_scroll_horizontal); */
+        stage.addChild(inner_scroll_horizontal);
 
-        /*
         sb_horizontal = new GOWN.ScrollBar(inner_scroll_horizontal);
         stage.addChild(sb_horizontal);
         sb_horizontal.y = inner_scroll_horizontal.height;
         sb_horizontal.x = inner_scroll_horizontal.x;
         sb_horizontal.width = inner_scroll_horizontal.width;
-        */
 
         // VERTICAL
         var grp = new GOWN.LayoutGroup();
@@ -69,13 +82,14 @@
             btn.label = (i+1)+". button";
             inner.addChild(btn);
         }
-        /*
+        */
+/*
         var inner_scroll = new GOWN.ScrollArea(inner);
         inner_scroll.width = 100;
         inner_scroll.height = 150;
         grp.addChild(inner_scroll);
-
-
+*/
+/*
         var sb = new GOWN.ScrollBar(inner_scroll);
         grp.addChild(sb);
         sb.x = inner_scroll.width;

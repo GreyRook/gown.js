@@ -131,8 +131,9 @@ Application.prototype.animate = function() {
 /* jshint ignore:end */
 
 /**
- * creates a gradient rect that can be used as background
+ * creates a gradient rect that can for example be used as background
  * (uses a separate canvas to create a new Texture)
+ * TODO: check if this works outside the browser/in cordova or cocoon
  *
  * @method _createGradientRect
  * @private
