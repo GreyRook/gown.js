@@ -1,0 +1,40 @@
+{
+  "hoverSkin": true, 
+  "skins": {
+    "button": {
+      "down": {
+        "borderColor": "0xff0000", 
+        "color": "0xEA8686"
+      }, 
+      "hover": {
+        "borderColor": "0x00ff00", 
+        "color": "0x60c865"
+      }, 
+      "up": {}
+    }, 
+    "default": {
+      "all": {
+        "alpha": 0.8, 
+        "border": 2, 
+        "borderColor": "0x0000ff", 
+        "color": "0x6073c8", 
+        "radius": 5, 
+        "type": "rect"
+      }
+    }, 
+    "input": {
+      "up": {
+        "border": 1, 
+        "borderColor": "0xcccccc", 
+        "color": "0xffffff", 
+        "radius": 0, 
+        "type": "rect"
+      }
+    }
+  }, 
+  "textStyle": {
+    "fill": "#000", 
+    "fontFamily": "Droid Sans"
+  }, 
+  "thumbSkin": true
+}
