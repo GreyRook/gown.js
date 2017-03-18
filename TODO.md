@@ -1,13 +1,19 @@
 TODO next
 =========
+Most important for now are bugfixes, take a look at the [Issue tracker](https://github.com/GreyRook/gown.js/issues/), especially the [examples that are not working](https://github.com/GreyRook/gown.js/issues/95).
+
+ - create Miller List example (as requested on github)
+
+ - create bootstrap-theme for basic buttons.
+
+ - minWidth/minHeight for themes.
+
  - update themes and test all components with current theming (add scalemode for theming)
 
  - POM integration: provide registerPOMElements-function (see https://github.com/GreyRook/POM/issues/10 )
 
  - mouse wheel support
 
- - theme for TextInput
- 
  - other themes from feathers (metalworks-mobile, topcoat-light, minimal, ...)
 
 TODO
@@ -18,23 +24,29 @@ This list is not ordered by priority nor does it contain any promise that those 
 
  - mouse wheel support
 
- - more (unit) tests/better coverage
+ - Refactor to ES6
 
-   - test Application
+ - Better Testing
 
-   - test Scrollable, Slider and SliderData
+   - Browserstack integration for tests
 
-   - test ScrollBar, ScrollThumb, List and ScrollContainer
+   - better testing using js-imagediff and grunt ([like EaselJS does](http://blog.createjs.com/unit-tests-in-easeljs-preloadjs/))
 
-   - test InputControl and InputWrapper
+   - more (unit) tests/better coverage
 
-   - ignore renderAreaWebGL and renderWebGL in blanket tests
+     - test Application
+
+     - test Scrollable, Slider and SliderData
+
+     - test ScrollBar, ScrollThumb, List and ScrollContainer
+
+     - test InputControl and InputWrapper
 
  - How-To tutorial and beginners documentation!
 
- - more examples for the examples-side (see [gown-examples](https://brean.github.io/gown-examples/) )
+ - create new examples-side (see [gown-examples](https://brean.github.io/gown-examples/) for the old one).
 
- - benchmarking capabilities and performance optimisation
+ - benchmarking capabilities and performance optimization
 
  - handle if gown.js gets imported before pixi (?)
 
@@ -47,8 +59,6 @@ This list is not ordered by priority nor does it contain any promise that those 
    - RadioBox
 
    - Toggle
-
-   - TextArea
 
    - DOMComponent
 
@@ -96,9 +106,21 @@ This list is not ordered by priority nor does it contain any promise that those 
 
      - Grid System ( Like [Bootstrap Grid CSS](http://getbootstrap.com/css/#grid) )
 
- - button icon
+ - Icon for TextInput and Button
+
+ - Popup for Button (like the alt-Tooltip for HTML-Buttons)
+
+ - Anchorlayout
 
  - cleanup-functions to free memory/remove event listener etc. (extend pixi destroy funtion)
+
+   - remove events
+
+   - remove child elements
+
+   - destroy child elements
+
+   - set values to "null"
 
  - more examples:
 
@@ -121,8 +143,6 @@ This list is not ordered by priority nor does it contain any promise that those 
  - Screen transitions
 
  - Animations (transition animations - see feathers -> motion -> transition ?)
-
- - better testing using js-imagediff and grunt ([like EaselJS does](http://blog.createjs.com/unit-tests-in-easeljs-preloadjs/))
 
  - Drag-and-Drop support (see [PIXI.draggalbe](https://github.com/SebastianNette/PIXI.draggable) )
 
