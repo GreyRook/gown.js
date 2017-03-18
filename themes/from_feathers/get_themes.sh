@@ -7,4 +7,4 @@ else
     git clone https://github.com/BowlerHatLLC/feathers.git
 fi
 
-python get_themes.py feathers ../assets ../data
+python get_themes.py feathers ../../docs/themes/assets ../data

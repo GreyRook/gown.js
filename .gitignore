@@ -1,4 +1,5 @@
 dist/
+docs/dist/
 lib-cov/
 coverage
 node_modules/

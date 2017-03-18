@@ -4,7 +4,7 @@ import os
 import json
 
 THEME_SCALE = 2
-THEME_ASSETS = '../assets/'
+THEME_ASSETS = '../../docs/themes/assets/'
 
 mappings = {
     'BUTTON_SCALE_9_GRID': ['button-hover-skin0000', 'button-up-skin0000', "button-disabled-skin0000"]

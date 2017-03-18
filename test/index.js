@@ -1,4 +1,4 @@
-require('../lib/pixi/pixi');
+require('../docs/lib/pixi/pixi');
 PIXI.utils.skipHello(); // hide banner
 
 require('../src/index');

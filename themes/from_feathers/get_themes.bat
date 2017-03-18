@@ -7,5 +7,5 @@ IF EXIST "feathers\NUL" (
     git clone https://github.com/BowlerHatLLC/feathers.git
 )
 
-python get_themes.py feathers ../assets ../data
-pause 
+python get_themes.py feathers ../../docs/themes/assets ../data
+pause

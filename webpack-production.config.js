@@ -5,7 +5,7 @@ module.exports = {
     entry: './src/index.js',
     devtool: 'source-map',
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, 'docs', 'dist'),
         filename: 'gown.min.js'
     },
     plugins: [
