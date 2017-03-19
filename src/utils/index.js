@@ -9,6 +9,9 @@
  * @namespace GOWN.util
  */
 module.exports = {
+    DOMInputWrapper:        require('./DOMInputWrapper'),
+    InputWrapper:           require('./InputWrapper'),
+    KeyboardInputWrapper:   require('./KeyboardInputWrapper'),
     position:               require('./position'),
     ScaleContainer:         require('./ScaleContainer'),
     SliderData:             require('./SliderData'),

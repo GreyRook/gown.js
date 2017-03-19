@@ -1,5 +1,5 @@
 var Skinable = require('../core/Skinable'),
-    InputWrapper = require('../utils/InputWrapper');
+    KeyboardManager = require('../interaction/KeyboardManager');
 
 /**
  * InputControl used for TextInput, TextArea and everything else that
@@ -13,7 +13,7 @@ var Skinable = require('../core/Skinable'),
  * @memberof GOWN
  * @constructor
  */
-function InputControl(theme) {
+function InputControl(theme, type) {
     Skinable.call(this, theme);
 
     this.receiveKeys = true;
@@ -42,9 +42,6 @@ function InputControl(theme) {
     this.textOffset = new PIXI.Point(5, 4);
 
     this.text = this.text || '';
-
-    // create DOM Input (if we need one)
-    InputWrapper.createInput();
 
     this.hasFocus = false;
 
@@ -84,6 +81,13 @@ function InputControl(theme) {
      * @type {number}
      */
     this.blinkInterval = 500;
+
+
+    // create dom element for DOMInputWrapper
+    // (not needed if we run inside cordova/cocoon)
+    if (KeyboardManager.wrapper.createInput) {
+        KeyboardManager.wrapper.createInput(type);
+    }
 
     // caret/selection sprite
     this.cursor = new PIXI.Text('|', this.cursorStyle);
@@ -178,14 +182,14 @@ InputControl.prototype.onInputChanged = function () {
         return;
     }
 
-    var text = InputWrapper.getText();
+    var text = KeyboardManager.wrapper.getText();
 
     //overrides the current text with the user input from the InputWrapper
     if(text !== this.text) {
         this.text = text;
     }
 
-    var sel = InputWrapper.getSelection();
+    var sel = KeyboardManager.wrapper.getSelection();
     if (this.updateSelection(sel[0], sel[1])) {
         this.cursorPos = sel[0];
     }
@@ -232,15 +236,13 @@ InputControl.prototype.deleteSelection = function() {
     throw new Error('can not delete text! (start & end are the same)');
 };
 
-
-
 /**
  * deletion from to multiple lines
  */
 InputControl.prototype.deleteText = function(fromPos, toPos) {
     this.text = [this.text.slice(0, fromPos), this.text.slice(toPos)].join('');
-    InputWrapper.setText(this.value);
-    // InputWrapper.setCursorPos(this.cursorPos);
+    KeyboardManager.wrapper.setText(this.value);
+    // KeyboardManager.wrapper.setCursorPos(this.cursorPos);
     this.emit('change', this);
     return this.text;
 };
@@ -352,7 +354,7 @@ InputControl.prototype.updateSelection = function (start, end) {
         this.selection[0] = start;
         this.selection[1] = end;
         this._selectionNeedsUpdate = true;
-        InputWrapper.setSelection(this.selection[0], this.selection[1]);
+        KeyboardManager.wrapper.setSelection(this.selection[0], this.selection[1]);
         return true;
     }
     return false;
@@ -396,7 +398,7 @@ InputControl.prototype.focus = function () {
 
     this.emit('focusIn', this);
 
-    InputWrapper.focus();
+    KeyboardManager.wrapper.focus();
 
     /*
      //TODO: disable/ is read only
@@ -431,8 +433,8 @@ InputControl.prototype.blur = function() {
         GOWN.InputControl.currentInput = null;
         this.hasFocus = false;
 
-        // blur hidden input
-        InputWrapper.blur();
+        // blur hidden input (if DOMInputWrapper is used)
+        KeyboardManager.wrapper.blur();
         this.onblur();
     }
 };
@@ -534,8 +536,8 @@ InputControl.prototype.onDown = function (e) {
     this.on('touchmove', this.onMove, this);
 
     // update the hidden input text and cursor position
-    InputWrapper.setText(this.value);
-    InputWrapper.setCursorPos(this.cursorPos);
+    KeyboardManager.wrapper.setText(this.value);
+    KeyboardManager.wrapper.setCursorPos(this.cursorPos);
 
     return true;
 };

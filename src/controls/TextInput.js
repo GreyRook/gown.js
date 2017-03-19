@@ -1,5 +1,4 @@
 var InputControl = require('./InputControl'),
-    InputWrapper = require('../utils/InputWrapper'),
     position = require('../utils/position');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
@@ -17,7 +16,7 @@ function TextInput(theme, skinName) {
     this.skinName = skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || InputControl.stateNames;
 
-    InputControl.call(this, theme);
+    InputControl.call(this, theme, 'input');
 }
 
 TextInput.prototype = Object.create(InputControl.prototype);

@@ -1,4 +1,5 @@
 var InputControl = require('./InputControl');
+
 /**
  * A text entry control that allows users to enter and edit multiple lines of
  * uniformly-formatted text with the ability to scroll.
@@ -17,7 +18,7 @@ function TextArea(theme, skinName) {
     this.skinName = skinName || TextArea.SKIN_NAME;
     this._validStates = this._validStates || InputControl.stateNames;
 
-    InputControl.call(this, theme);
+    InputControl.call(this, theme, 'textarea');
 
     this._fromPos = new PIXI.Point(0, 0);
     this._toPos = new PIXI.Point(0, 0);
