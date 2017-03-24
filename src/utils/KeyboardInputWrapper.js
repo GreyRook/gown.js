@@ -14,20 +14,20 @@ var InputWrapper = require('./InputWrapper');
 function KeyboardInputWrapper(manager) {
     InputWrapper.call(this, manager, KeyboardInputWrapper.name);
 
-    /**
-     * An event data object to handle all the event tracking/dispatching
-     *
-     * @member {object}
-     */
-    this.eventData = {
-        stopped: false,
-        target: null,
-        type: null,
-        data: {},
-        stopPropagation:function(){
-            this.stopped = true;
-        }
-    };
+    // the text that is stored internally
+    // (for password fields this should be the cleartext password, for numberinputs
+    //  the number as string)
+    this._text = '';
+
+    // current cursor position
+    this.cursorPos = 0;
+
+    this.maxChars = 0;
+
+    // character position that marks the beginning of the current selection
+    this.selectionStart = 0;
+
+    this._selection = [0, 0];
 
     /**
      * Fired when a key is pressed (usually a touch on a virtual keyboard
@@ -91,15 +91,12 @@ KeyboardInputWrapper.prototype.removeEvents = function () {
  * @private
  */
 KeyboardInputWrapper.prototype.onKeyDown = function (event) {
-    if (this.autoPreventDefault) {
-        event.preventDefault();
-    }
-    this._keyEvent(event);
-    this.processKeyDown();
+    this.processKeyDown(event);
+    this.manager._keyDownEvent(event);
+
     // TODO: call processInteractive in KeyboardManager after a change
     // (same behavior for KeyboardInputWrapper and DOMInputWrapper)
     //this.processInteractive(this.renderer._lastObjectRendered, this.keyDownProcess);
-    //this.emit('keydown', this.eventData);
 };
 
 /**
@@ -110,33 +107,13 @@ KeyboardInputWrapper.prototype.onKeyDown = function (event) {
  */
 
 KeyboardInputWrapper.prototype.onKeyUp = function (event) {
-    if (this.autoPreventDefault) {
-        event.preventDefault();
-    }
-/*    this._keyEvent(event);
+    this.manager._keyUpEvent(event);
     // TODO: call processInteractive in KeyboardManager after a change
     // (same behavior for KeyboardInputWrapper and DOMInputWrapper)
     //this.processInteractive(this.renderer._lastObjectRendered, this.keyUpProcess);
-    this.emit('keyup', this.eventData);*/
+
 };
 
-
-/**
- * Handle original key event and forward it to gown
- *
- * @param event {Event} The DOM event of a key being released
- * @param type {string} type of the event (keyup or keydown)
- * @private
- */
-KeyboardInputWrapper.prototype._keyEvent = function(event) {
-    this.eventData.stopped = false;
-    this.eventData.originalEvent = event;
-    this.eventData.data = this.getKeyData(event);
-
-    if (this.autoPreventDefault) {
-        event.preventDefault();
-    }
-};
 
 /**
  * Grabs the data from the keystroke
@@ -194,9 +171,8 @@ KeyboardInputWrapper.prototype.keyDownProcess = function(displayObject) {
 /**
  * handle keyboard input
  */
-KeyboardInputWrapper.prototype.processKeyDown = function () {
-    var eventData = this.eventData;
-    var key = eventData.data.key;
+KeyboardInputWrapper.prototype.processKeyDown = function (event) {
+    var key = event.key;
     // TODO implement the insert key to overwrite text? it is gnored for now!
     if (key === 'WakeUp' || key === 'CapsLock' ||
         key === 'Shift' || key === 'Control' || key === 'Alt' ||
@@ -210,18 +186,11 @@ KeyboardInputWrapper.prototype.processKeyDown = function () {
         key === 'Unidentified' || // Internet Explorer Function Key
         key === 'AudioVolumeDown' ||
         key === 'AudioVolumeUp' ||
-        key === 'AudioVolumeMute'
+        key === 'AudioVolumeMute' ||
+        key === 'Enter' || // TODO: implement submit in InputControl
+        key === 'Tab' // TODO: implement Tab / TabIndex in InputControl
         ) {
         // ignore special system and control keys
-        return;
-    }
-
-    if (key === 'Tab') {
-        // TODO: implement Tab / TabIndex
-        return;
-    }
-    if (key === 'Enter') {
-        this.emit('enter', this);
         return;
     }
 
@@ -232,21 +201,25 @@ KeyboardInputWrapper.prototype.processKeyDown = function () {
     switch (key) {
         case 'Left': // Internet Explorer left arrow
         case 'ArrowLeft': // Chrome left arrow
+            /*
             this.moveCursorLeft();
             if (eventData.data.shiftKey) {
                 this.updateSelection(this.cursorPos, this.selection[1]);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
+            */
             break;
         case 'Right':
         case 'ArrowRight':
+            /*
             this.moveCursorRight();
             if (eventData.data.shiftKey) {
                 this.updateSelection(this.selection[0], this.cursorPos);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
+            */
             break;
         case 'PageDown':
         case 'PageUp':
@@ -285,8 +258,8 @@ KeyboardInputWrapper.prototype.processKeyDown = function () {
         case 'Backspace':
             if (selected) {
                 // remove only the selected Text
-                this.deleteSelection();
-                this.updateSelection(this.cursorPos, this.cursorPos);
+                // this.deleteSelection();
+                // this.updateSelection(this.cursorPos, this.cursorPos);
             } else if (this.cursorPos > 0) {
                 //if (eventData.data.ctrlKey) {
                     // TODO: delete previous word!
@@ -296,13 +269,13 @@ KeyboardInputWrapper.prototype.processKeyDown = function () {
                 this.deleteText(this.cursorPos, this.cursorPos+1);
             }
             // ignore browser-back
-            eventData.originalEvent.preventDefault();
+            event.preventDefault();
             break;
         case 'Del': // Internet Explorer Delete Key
         case 'Delete': // Chrome Delete Key
             if (selected) {
-                this.deleteSelection();
-                this.updateSelection(this.cursorPos, this.cursorPos);
+                // this.deleteSelection();
+                // this.updateSelection(this.cursorPos, this.cursorPos);
             } else if (this.cursorPos < this.text.length) {
                 //if (eventData.data.ctrlKey) {
                     // TODO: delete previous word!
@@ -313,19 +286,19 @@ KeyboardInputWrapper.prototype.processKeyDown = function () {
             break;
         default:
             // select all text
-            if (eventData.data.ctrlKey && key.toLowerCase() === 'a') {
+            if (event.ctrlKey && key.toLowerCase() === 'a') {
                 this.cursorPos = this.text.length;
-                this.updateSelection(0, this.cursorPos);
-                this._cursorNeedsUpdate = true;
+                // this.updateSelection(0, this.cursorPos);
+                // this._cursorNeedsUpdate = true;
                 return;
             }
             // allow µ or ² but ignore keys for browser refresh / show Developer Tools
             // TODO: AltGraph?
-            if (eventData.data.ctrlKey && (key.toLowerCase() === 'j' || key.toLowerCase() === 'r')) {
+            if (event.ctrlKey && (key.toLowerCase() === 'j' || key.toLowerCase() === 'r')) {
                 return;
             }
             if (selected) {
-                this.deleteSelection();
+                // this.deleteSelection();
             }
             // Internet Explorer space bar
             if (key === 'Spacebar') {
@@ -333,7 +306,7 @@ KeyboardInputWrapper.prototype.processKeyDown = function () {
             }
             if (key === ' ') {
                  // do not scroll down when//overrides the space bar has been pressed.
-                 eventData.originalEvent.preventDefault();
+                 event.preventDefault();
              }
 
              if (key.length !== 1) {
@@ -341,15 +314,84 @@ KeyboardInputWrapper.prototype.processKeyDown = function () {
              }
 
              this.insertChar(key);
-             this.updateSelection(this.cursorPos, this.cursorPos);
+             // TODO: update selection
     }
+};
+
+KeyboardInputWrapper.prototype.moveCursorLeft = function() {
+    this.cursorPos = Math.max(this.cursorPos-1, 0);
+};
+
+KeyboardInputWrapper.prototype.moveCursorRight = function() {
+    this.cursorPos = Math.min(this.cursorPos+1, this.text.length);
 };
 
 
 KeyboardInputWrapper.prototype.insertChar = function(chr) {
-    this._text.split(this._cursorPos, 0, chr);
-    //TODO: dispatch Event that text has been changed
+    if (this.maxChars > 0 && this.pixiText.text >= this.maxChars) {
+        this._text = this._text.substring(0, this.maxChars);
+        return;
+    }
+
+    this._text = this._text.slice(0, this.cursorPos) + chr +
+        this._text.slice(this.cursorPos, this._text.length);
+    this.moveCursorRight();
 };
+
+/**
+ * deletion from to multiple lines
+ */
+KeyboardInputWrapper.prototype.deleteText = function(fromPos, toPos) {
+    this._text = [this._text.slice(0, fromPos), this._text.slice(toPos)].join('');
+    return this._text;
+};
+
+/**
+ * set selected text
+ *
+ * @method updateSelection
+ * @param start start position in the text
+ * @param end end position in the text
+ * @returns {boolean}
+ */
+KeyboardInputWrapper.prototype.updateSelection = function (start, end) {
+    if (this._selection[0] !== start || this._selection[1] !== end) {
+        this._selection[0] = start;
+        this._selection[1] = end;
+        return true;
+    }
+    return false;
+};
+
+/**
+ * The text content
+ *
+ * @property text
+ * @type String
+ */
+Object.defineProperty(KeyboardInputWrapper.prototype, 'text',{
+    get: function() {
+        return this._text;
+    },
+    set: function(value) {
+        this._text = value;
+    }
+});
+
+/**
+ * current selection
+ *
+ * @property selection
+ * @type Array
+ */
+Object.defineProperty(KeyboardInputWrapper.prototype, 'selection',{
+    get: function() {
+        return this._selection;
+    },
+    set: function(value) {
+        this._selection = value;
+    }
+});
 
 KeyboardInputWrapper.prototype.destroy = function () {
     this.removeEvents();

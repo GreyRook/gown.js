@@ -36,6 +36,7 @@ TextArea.SKIN_NAME = 'text_input';
 
 
 TextArea.prototype.updateSelectionBg = function() {
+    /*
     var start = this.selection[0],
         end = this.selection[1];
     this.selectionBg.clear();
@@ -49,6 +50,7 @@ TextArea.prototype.updateSelectionBg = function() {
     }
     this.selectionBg.x = this.pixiText.x;
     this.selectionBg.y = this.pixiText.y;
+*/
 };
 
 

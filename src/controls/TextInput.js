@@ -61,6 +61,7 @@ TextInput.prototype.setText = function(text) {
 };
 
 TextInput.prototype.updateSelectionBg = function() {
+/*
     var start = this.selection[0],
         end = this.selection[1];
 
@@ -73,6 +74,7 @@ TextInput.prototype.updateSelectionBg = function() {
         this.selectionBg.x = this.pixiText.x;
         this.selectionBg.y = this.pixiText.y;
     }
+    */
 };
 
 

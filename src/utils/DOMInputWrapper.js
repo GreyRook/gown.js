@@ -16,7 +16,12 @@ var InputWrapper = require('./InputWrapper'),
  * @memberof GOWN
  */
 function DOMInputWrapper(manager) {
+    // we do not need to handle selection and text content ourself -
+    // there is a DOM element that stores text and selection for us.
+
     InputWrapper.call(this, manager, DOMInputWrapper.name);
+
+    this.tagName = 'input';
 }
 DOMInputWrapper.prototype = Object.create( InputWrapper.prototype );
 DOMInputWrapper.prototype.constructor = DOMInputWrapper;
@@ -31,33 +36,29 @@ DOMInputWrapper.name = 'dom_input';
  * @type Object
  * @static
  */
-DOMInputWrapper.hiddenInput = {'input': null, 'textarea': null};
-
-/**
- * currently used text input that has the focus (either TextInput or TextArea)
- *
- * @property currentHiddenText
- * @type DOMObject
- * @static
- */
-DOMInputWrapper.currentHiddenText = null;
+DOMInputWrapper.hiddenInput = {
+    'input': null,
+    'textarea': null
+};
 
 /**
  * create/return unique input field.
  * @param type used dom element (input or textarea)
  * @returns {DOMObject}
  */
-DOMInputWrapper.prototype.createInput = function(type) {
-    if (!DOMInputWrapper.hiddenInput[type]) {
-        var domInput = document.createElement(type);
+DOMInputWrapper.prototype.createInput = function(tagName) {
+    if (!DOMInputWrapper.hiddenInput[tagName]) {
+        var domInput = document.createElement(tagName);
         this.hideInput(domInput);
         this.addEventListener(domInput);
         document.body.appendChild(domInput);
-        DOMInputWrapper.hiddenInput[type] = domInput;
+        DOMInputWrapper.hiddenInput[tagName] = domInput;
     }
-    return DOMInputWrapper.hiddenInput[type];
 };
 
+/**
+ * use CSS style to hide DOM input or textarea
+ */
 DOMInputWrapper.prototype.hideInput = function(domInput) {
     domInput.tabindex = -1;
     domInput.style.position = 'fixed';
@@ -70,6 +71,9 @@ DOMInputWrapper.prototype.hideInput = function(domInput) {
     domInput.style.zIndex = 10;
 };
 
+/**
+ * add keyboard events for DOM elements
+ */
 DOMInputWrapper.prototype.addEventListener = function(domInput) {
     // add blur handler
     domInput.addEventListener('blur', this.onBlur, false);
@@ -99,39 +103,54 @@ DOMInputWrapper.prototype.onKeyUp = function() {
 DOMInputWrapper.textProp = 'value';
 
 /**
- * activate the text input
+ * activate the dom text input / text area
+ * if the InputControl receives the text or not is defined in the focus function
+ * of the InputControl itself. There
  */
-InputWrapper.focus = function(type) {
-    if (InputWrapper.hiddenInput[type]) {
-        InputWrapper.hiddenInput[type].focus();
+DOMInputWrapper.prototype.focus = function() {
+    if (DOMInputWrapper.hiddenInput[this.tagName]) {
+        DOMInputWrapper.hiddenInput[this.tagName].focus();
     }
 };
 
 /**
  * deactivate the text input
  */
-InputWrapper.blur = function(type) {
-    if (InputWrapper.hiddenInput[type]) {
-        InputWrapper.hiddenInput[type].blur();
+DOMInputWrapper.blur = function() {
+    if (DOMInputWrapper.hiddenInput[this.tagName]) {
+        DOMInputWrapper.hiddenInput[this.tagName].blur();
     }
 };
 
+/**
+ * The text content
+ *
+ * @property text
+ * @type String
+ */
+Object.defineProperty(DOMInputWrapper.prototype, 'text',{
+    get: function() {
+        var textProp = DOMInputWrapper.textProp;
+        var txt = DOMInputWrapper.hiddenInput[this.tagName][textProp];
+        return txt.replace(/\r/g, '');
+    },
+    set: function(value) {
+        var textProp = DOMInputWrapper.textProp;
+        DOMInputWrapper.hiddenInput[this.tagName][textProp] = value;
+    }
+});
 
 /**
  * set selection
  * @returns {DOMObject}
  */
-InputWrapper.setSelection = function(start, end) {
-    if (InputWrapper.hiddenInput) {
-        if(start < end) {
-            InputWrapper.hiddenInput.selectionStart = start;
-            InputWrapper.hiddenInput.selectionEnd = end;
-        } else {
-            InputWrapper.hiddenInput.selectionStart = end;
-            InputWrapper.hiddenInput.selectionEnd = start;
-        }
+InputWrapper.setSelection = function(tagName, start, end) {
+    if(start < end) {
+        InputWrapper.hiddenInput[tagName].selectionStart = start;
+        InputWrapper.hiddenInput[tagName].selectionEnd = end;
     } else {
-        InputWrapper._selection = [start, end];
+        InputWrapper.hiddenInput[tagName].selectionStart = end;
+        InputWrapper.hiddenInput[tagName].selectionEnd = start;
     }
 };
 
@@ -139,23 +158,19 @@ InputWrapper.setSelection = function(start, end) {
  * get start and end of selection
  * @returns {Array}
  */
-InputWrapper.getSelection = function() {
-    if (InputWrapper.hiddenInput) {
-        return [
-            InputWrapper.hiddenInput.selectionStart,
-            InputWrapper.hiddenInput.selectionEnd
-        ];
-    } else {
-        return InputWrapper._selection;
-    }
+InputWrapper.getSelection = function(tagName) {
+    return [
+        InputWrapper.hiddenInput[tagName].selectionStart,
+        InputWrapper.hiddenInput[tagName].selectionEnd
+    ];
 };
 
 /**
  * set cursor position of the hidden input
  */
-InputWrapper.setCursorPos = function (pos) {
-    if (InputWrapper.hiddenInput) {
-        var elem = InputWrapper.hiddenInput;
+InputWrapper.setCursorPos = function (tagName, pos) {
+    if (InputWrapper.hiddenInput[tagName]) {
+        var elem = InputWrapper.hiddenInput[tagName];
         if(elem.createTextRange) {
             var range = elem.createTextRange();
             range.move('character', pos);
@@ -165,38 +180,10 @@ InputWrapper.setCursorPos = function (pos) {
             if(elem.selectionStart) {
                 elem.focus();
                 elem.setSelectionRange(pos, pos);
-            }
-            else
+            } else {
                 elem.focus();
+            }
         }
-    }
-};
-
-/**
- * get text value from hiddenInput
- * @returns {String}
- */
-InputWrapper.getText = function() {
-    if (InputWrapper.hiddenInput) {
-        var textProp = InputWrapper.textProp;
-        var txt = InputWrapper.hiddenInput[textProp];
-        return txt.replace(/\r/g, '');
-    } else {
-        return InputWrapper._text;
-    }
-
-};
-
-/**
- * set text value to hiddenInput
- * @param {String} text
- */
-InputWrapper.setText = function(text) {
-    if (InputWrapper.hiddenInput) {
-        var textProp = InputWrapper.textProp;
-        InputWrapper.hiddenInput[textProp] = text;
-    } else {
-        InputWrapper._text = text;
     }
 };
 
@@ -213,29 +200,5 @@ InputWrapper.setMaxLength = function(length) {
         }
     } else {
         InputWrapper._maxLength = length;
-    }
-};
-
-/**
- * set the input type of the hidden input
- * @param length
- */
-InputWrapper.setType = function(type) {
-    if (InputWrapper.hiddenInput) {
-        InputWrapper.hiddenInput.type = type;
-    } else {
-        InputWrapper._type = type;
-    }
-};
-
-/**
- * get the input type of the hidden input
- * @returns {String}
- */
-InputWrapper.getType = function() {
-    if (InputWrapper.hiddenInput) {
-        return InputWrapper.hiddenInput.type;
-    } else {
-        return InputWrapper._type;
     }
 };
