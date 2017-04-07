@@ -1,5 +1,5 @@
 var InputControl = require('./InputControl'),
-    position = require('../utils/position');
+    KeyboardManager = require('../interaction/KeyboardManager');
 /**
  * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input
@@ -35,7 +35,7 @@ Object.defineProperty(TextInput.prototype, 'displayAsPassword', {
     },
     set: function (displayAsPassword) {
         this._displayAsPassword = displayAsPassword;
-        this.setText(this._origText);
+        this.setPixiText(this._origText);
     }
 });
 
@@ -44,26 +44,21 @@ TextInput.prototype.getLines = function() {
     return [this.text];
 };
 
-TextInput.prototype.inputControlSetText = InputControl.prototype.setText;
-TextInput.prototype.setText = function(text) {
+TextInput.prototype.inputControlSetPixiText = InputControl.prototype.setPixiText;
+TextInput.prototype.setPixiText = function(text) {
     if (this._displayAsPassword) {
         text = text.replace(/./gi, '*');
     }
-    var hasText = this.pixiText !== undefined;
-    this.inputControlSetText(text);
-    if (!hasText && this.height > 0) {
-        position.centerVertical(this.pixiText);
-        // set cursor to start position
-        if (this.cursor) {
-            this.cursor.y = this.pixiText.y;
-        }
-    }
+    this.inputControlSetPixiText(text);
 };
 
 TextInput.prototype.updateSelectionBg = function() {
-/*
-    var start = this.selection[0],
-        end = this.selection[1];
+    if (!this.hasFocus) {
+        return;
+    }
+    var selection = KeyboardManager.wrapper.selection;
+    var start = selection[0],
+        end = selection[1];
 
     this.selectionBg.clear();
     if (start !== end) {
@@ -74,7 +69,6 @@ TextInput.prototype.updateSelectionBg = function() {
         this.selectionBg.x = this.pixiText.x;
         this.selectionBg.y = this.pixiText.y;
     }
-    */
 };
 
 

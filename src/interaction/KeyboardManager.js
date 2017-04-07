@@ -170,9 +170,7 @@ KeyboardManager.prototype.destroy = function(){
     this.renderer = null;
     this.eventData = null;
     this.onKeyUp = null;
-    this.keyUpProcess = null;
     this.onKeyDown = null;
-    this.keyDownProcess = null;
 };
 
 PIXI.WebGLRenderer.registerPlugin('keyboard', KeyboardManager);

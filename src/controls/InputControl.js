@@ -25,8 +25,11 @@ function InputControl(theme, type) {
     // prevent other interaction (touch/move) on this component
     // (to allow text selection, set to true if you like to have the
     //  InputControl as child of some element that can be moved)
+    // thid does NOT effect text input
     this.autoPreventInteraction = false;
 
+    // offset from the top-left corner in pixel to the skin
+    // TODO: put in theme!
     this.textOffset = new PIXI.Point(5, 4);
 
     this.text = this.text || '';
@@ -77,7 +80,7 @@ function InputControl(theme, type) {
         KeyboardManager.wrapper.createInput(type);
     }
 
-    // add events to listen to react to the input wrapper
+    // add events to listen to react to the Keyboard- and InteractionManager
     this.addEvents();
 
     // cursor is the caret/selection sprite
@@ -186,20 +189,12 @@ InputControl.prototype.onInputChanged = function () {
 };
 
 /**
- * delete selected text
- *
+ * position cursor on the text
  */
-InputControl.prototype.deleteSelection = function() {
-    var start = this.selection[0];
-    var end = this.selection[1];
-    if (start < end) {
-        this.cursorPos = start;
-        return this.deleteText(start, end);
-    } else if (start > end) {
-        this.cursorPos = end;
-        return this.deleteText(end, start);
-    }
-    throw new Error('can not delete text! (start & end are the same)');
+InputControl.prototype.setCursorPos = function () {
+    this.textToPixelPos(KeyboardManager.wrapper.cursorPos, this.cursor.position);
+    this.cursor.position.x += this.pixiText.x;
+    this.cursor.position.y += this.pixiText.y;
 };
 
 InputControl.prototype.skinableSetTheme = Skinable.prototype.setTheme;
@@ -218,7 +213,7 @@ InputControl.prototype.setTheme = function(theme) {
     this.style = theme.textStyle;
 };
 
-InputControl.prototype.setText = function(text) {
+InputControl.prototype.setPixiText = function(text) {
     this._displayText = text || '';
     if (!this.pixiText) {
         this.pixiText = new PIXI.Text(text, this.textStyle);
@@ -250,7 +245,7 @@ Object.defineProperty(InputControl.prototype, 'text', {
             return;
         }
         this._origText = text;
-        this.setText(text);
+        this.setPixiText(text);
 
         // reposition cursor
         this._cursorNeedsUpdate = true;
@@ -276,10 +271,7 @@ Object.defineProperty(InputControl.prototype, 'maxChars', {
         }
         if (this.pixiText.text > value) {
             this.pixiText.text = this.pixiText.text.substring(0, value);
-            if (this.cursorPos > value) {
-                this.cursorPos = value;
-                this._cursorNeedsUpdate = true;
-            }
+            KeyboardManager.wrapper.maxChars = value;
         }
         this._maxChars = value;
 
@@ -361,15 +353,6 @@ InputControl.prototype.blur = function() {
 };
 
 /**
- * position cursor on the text
- */
-InputControl.prototype.setCursorPos = function () {
-    this.textToPixelPos(this.cursorPos, this.cursor.position);
-    this.cursor.position.x += this.pixiText.x;
-    this.cursor.position.y += this.pixiText.y;
-};
-
-/**
  * height of the line in pixel
  * (assume that every character of pixi text has the same line height)
  */
@@ -420,7 +403,6 @@ InputControl.prototype.onMove = function (e) {
         end = curPos;
 
     if (KeyboardManager.wrapper.updateSelection(start, end)) {
-        this.cursorPos = curPos;
         this._cursorNeedsUpdate = true;
         this._selectionNeedsUpdate = true;
     }
@@ -575,9 +557,11 @@ InputControl.prototype.onblur = function() {
 // performance increase to avoid using call.. (10x faster)
 InputControl.prototype.redrawSkinable = Skinable.prototype.redraw;
 InputControl.prototype.redraw = function () {
+    // TODO: do NOT use redraw for this but events on the InputWrapper instead!
     if (this.drawCursor) {
         this.drawCursor();
     }
+    // TODO: do NOT use redraw for this but events on the InputWrapper instead!
     if (this._selectionNeedsUpdate) {
         this.updateSelectionBg();
     }

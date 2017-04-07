@@ -87,20 +87,24 @@ KeyboardInputWrapper.prototype.removeEvents = function () {
 /**
  * Is called when the key is pressed down
  *
+ * This will call manager.processKeyboard on all displayObjects that
+ * have receiveKeys set to true  and it will emit the event 'keyDown'
+ * on the manager
+ *
  * @param event {Event} The DOM event of a key being pressed down
  * @private
  */
 KeyboardInputWrapper.prototype.onKeyDown = function (event) {
     this.processKeyDown(event);
     this.manager._keyDownEvent(event);
-
-    // TODO: call processInteractive in KeyboardManager after a change
-    // (same behavior for KeyboardInputWrapper and DOMInputWrapper)
-    //this.processInteractive(this.renderer._lastObjectRendered, this.keyDownProcess);
 };
 
 /**
  * Is called when the key is released
+ *
+ * This will call manager.processKeyboard on all displayObjects that
+ * have receiveKeys set to true  and it will emit the event 'keyDown'
+ * on the manager
  *
  * @param event {Event} The DOM event of a key being released
  * @private
@@ -108,10 +112,6 @@ KeyboardInputWrapper.prototype.onKeyDown = function (event) {
 
 KeyboardInputWrapper.prototype.onKeyUp = function (event) {
     this.manager._keyUpEvent(event);
-    // TODO: call processInteractive in KeyboardManager after a change
-    // (same behavior for KeyboardInputWrapper and DOMInputWrapper)
-    //this.processInteractive(this.renderer._lastObjectRendered, this.keyUpProcess);
-
 };
 
 
@@ -128,45 +128,6 @@ KeyboardInputWrapper.prototype.getKeyData = function (event) {
         originalEvent: event
     };
 };
-
-// TODO: dispatch event after text has been altered
-/**
- * Dispatches an event on the display object that has resizable set to true
- *
- * @param displayObject {PIXI.Container|PIXI.Sprite|PIXI.extras.TilingSprite} the display object in question
- * @param eventString {string} the name of the event (e.g, resize or orientation)
- * @param eventData {object} the event data object
- * @private
- */
-/*
-KeyboardInputWrapper.prototype.dispatchEvent = function ( displayObject, eventString, eventData )
-{
-    if(!eventData.stopped)
-    {
-        eventData.target = displayObject;
-        eventData.type = eventString;
-
-        displayObject.emit( eventString, eventData );
-
-        if( displayObject[eventString] )
-        {
-            displayObject[eventString]( eventData );
-        }
-    }
-};
-
-KeyboardInputWrapper.prototype.keyUpProcess = function(displayObject) {
-    this.dispatchEvent( displayObject, 'keyup', this.eventData );
-};
-
-KeyboardInputWrapper.prototype.keyDownProcess = function(displayObject) {
-    this.dispatchEvent( displayObject, 'keydown', this.eventData );
-
-    // TODO: store text, if a key has been pressed append it to the text and dispatch
-    // event on manager thet the text has been changed (so the manager can
-    // forward it to the InputControl)
-};
-*/
 
 /**
  * handle keyboard input
@@ -201,33 +162,44 @@ KeyboardInputWrapper.prototype.processKeyDown = function (event) {
     switch (key) {
         case 'Left': // Internet Explorer left arrow
         case 'ArrowLeft': // Chrome left arrow
-            /*
+
             this.moveCursorLeft();
-            if (eventData.data.shiftKey) {
+            if (event.shiftKey) {
                 this.updateSelection(this.cursorPos, this.selection[1]);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
-            */
+
             break;
         case 'Right':
         case 'ArrowRight':
-            /*
+
             this.moveCursorRight();
-            if (eventData.data.shiftKey) {
+            if (event.shiftKey) {
                 this.updateSelection(this.selection[0], this.cursorPos);
             } else {
                 this.updateSelection(this.cursorPos, this.cursorPos);
             }
-            */
             break;
-        case 'PageDown':
         case 'PageUp':
         case 'Home':
+            // jump to last character
+            this.cursorPos = 0;
+            if (event.shiftKey) {
+                this.updateSelection(this.cursorPos, this.selection[1]);
+            } else {
+                this.updateSelection(this.cursorPos, this.cursorPos);
+            }
+            break;
+        case 'PageDown':
         case 'End':
-            // TODO: implement jump to first/last character
-            // ignored for now (because you normally don't have those keys on
-            // a mobile device)
+            // jump to last character
+            this.cursorPos = this._text.length;
+            if (event.shiftKey) {
+                this.updateSelection(this.selection[0], this.cursorPos);
+            } else {
+                this.updateSelection(this.cursorPos, this.cursorPos);
+            }
             break;
         case 'Up':
         case 'ArrowUp':
@@ -258,8 +230,8 @@ KeyboardInputWrapper.prototype.processKeyDown = function (event) {
         case 'Backspace':
             if (selected) {
                 // remove only the selected Text
-                // this.deleteSelection();
-                // this.updateSelection(this.cursorPos, this.cursorPos);
+                this.deleteSelection();
+                this.updateSelection(this.cursorPos, this.cursorPos);
             } else if (this.cursorPos > 0) {
                 //if (eventData.data.ctrlKey) {
                     // TODO: delete previous word!
@@ -274,8 +246,8 @@ KeyboardInputWrapper.prototype.processKeyDown = function (event) {
         case 'Del': // Internet Explorer Delete Key
         case 'Delete': // Chrome Delete Key
             if (selected) {
-                // this.deleteSelection();
-                // this.updateSelection(this.cursorPos, this.cursorPos);
+                this.deleteSelection();
+                this.updateSelection(this.cursorPos, this.cursorPos);
             } else if (this.cursorPos < this.text.length) {
                 //if (eventData.data.ctrlKey) {
                     // TODO: delete previous word!
@@ -288,7 +260,7 @@ KeyboardInputWrapper.prototype.processKeyDown = function (event) {
             // select all text
             if (event.ctrlKey && key.toLowerCase() === 'a') {
                 this.cursorPos = this.text.length;
-                // this.updateSelection(0, this.cursorPos);
+                this.updateSelection(0, this.cursorPos);
                 // this._cursorNeedsUpdate = true;
                 return;
             }
@@ -298,7 +270,7 @@ KeyboardInputWrapper.prototype.processKeyDown = function (event) {
                 return;
             }
             if (selected) {
-                // this.deleteSelection();
+                this.deleteSelection();
             }
             // Internet Explorer space bar
             if (key === 'Spacebar') {
@@ -354,6 +326,7 @@ KeyboardInputWrapper.prototype.deleteText = function(fromPos, toPos) {
  * @param end end position in the text
  * @returns {boolean}
  */
+// TODO: throw an event for the InputControl so it only updates the ui
 KeyboardInputWrapper.prototype.updateSelection = function (start, end) {
     if (this._selection[0] !== start || this._selection[1] !== end) {
         this._selection[0] = start;
@@ -392,6 +365,24 @@ Object.defineProperty(KeyboardInputWrapper.prototype, 'selection',{
         this._selection = value;
     }
 });
+
+
+/**
+ * delete selected text
+ *
+ */
+KeyboardInputWrapper.prototype.deleteSelection = function() {
+     var start = this._selection[0];
+     var end = this._selection[1];
+     if (start < end) {
+         this.cursorPos = start;
+         return this.deleteText(start, end);
+     } else if (start > end) {
+         this.cursorPos = end;
+         return this.deleteText(end, start);
+     }
+     throw new Error('can not delete text! (start & end are the same)');
+ };
 
 KeyboardInputWrapper.prototype.destroy = function () {
     this.removeEvents();
