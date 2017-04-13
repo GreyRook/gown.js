@@ -33,7 +33,7 @@ function KeyboardInputWrapper(manager) {
      * Fired when a key is pressed (usually a touch on a virtual keyboard
      * on the screen)
      */
-     this.addEvents();
+     this.addEventListener();
 }
 KeyboardInputWrapper.prototype = Object.create( InputWrapper.prototype );
 KeyboardInputWrapper.prototype.constructor = KeyboardInputWrapper;
@@ -46,7 +46,7 @@ KeyboardInputWrapper.name = 'keyboard';
 *
 * @private
 */
-KeyboardInputWrapper.prototype.addEvents = function () {
+KeyboardInputWrapper.prototype.addEventListener = function () {
     if (!this.eventsAdded) {
         this._onKeyDown = this.onKeyDown.bind(this);
         this._onKeyUp = this.onKeyUp.bind(this);
@@ -69,7 +69,7 @@ KeyboardInputWrapper.prototype.addEvents = function () {
  *
  * @private
  */
-KeyboardInputWrapper.prototype.removeEvents = function () {
+KeyboardInputWrapper.prototype.removeEventListener = function () {
     if (this.eventsAdded) {
         if (window.document.body) {
             window.document.body.removeEventListener('keydown', this._onKeyDown, true);
@@ -114,20 +114,6 @@ KeyboardInputWrapper.prototype.onKeyUp = function (event) {
     this.manager._keyUpEvent(event);
 };
 
-
-/**
- * Grabs the data from the keystroke
- * @private
- */
-KeyboardInputWrapper.prototype.getKeyData = function (event) {
-    return {
-        altKey: event.altKey,
-        ctrlKey: event.ctrlKey,
-        shiftKey: event.shiftKey,
-        key: event.key,
-        originalEvent: event
-    };
-};
 
 /**
  * handle keyboard input
@@ -383,7 +369,3 @@ KeyboardInputWrapper.prototype.deleteSelection = function() {
      }
      throw new Error('can not delete text! (start & end are the same)');
  };
-
-KeyboardInputWrapper.prototype.destroy = function () {
-    this.removeEvents();
-};

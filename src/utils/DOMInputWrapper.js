@@ -49,7 +49,7 @@ DOMInputWrapper.hiddenInput = {
 DOMInputWrapper.prototype.createInput = function(tagName) {
     if (!DOMInputWrapper.hiddenInput[tagName]) {
         var domInput = document.createElement(tagName);
-        this.hideInput(domInput);
+        //this.hideInput(domInput);
         this.addEventListener(domInput);
         document.body.appendChild(domInput);
         DOMInputWrapper.hiddenInput[tagName] = domInput;
@@ -75,10 +75,33 @@ DOMInputWrapper.prototype.hideInput = function(domInput) {
  * add keyboard events for DOM elements
  */
 DOMInputWrapper.prototype.addEventListener = function(domInput) {
-    // add blur handler
-    domInput.addEventListener('blur', this.onBlur, false);
-    // on key up
-    domInput.addEventListener('keyup', this.onKeyUp);
+    if (!this.eventsAdded) {
+        this._onKeyDown = this.onKeyDown.bind(this);
+        this._onKeyUp = this.onKeyUp.bind(this);
+        // add blur handler
+        domInput.addEventListener('blur', this.onBlur, false);
+        // on key up
+        domInput.addEventListener('keyup', this._onKeyUp);
+        domInput.addEventListener('keydown', this._onKeyDown);
+    }
+    this.eventsAdded = true;
+};
+
+/**
+ * remove keyboard events for DOM elements
+ */
+DOMInputWrapper.prototype.removeEventListener = function(domInput) {
+    if (this.eventsAdded) {
+        // add blur handler
+        domInput.removeEventListener('blur', this.onBlur, false);
+        // on key up
+        domInput.removeEventListener('keyup', this._onKeyUp);
+        domInput.removeEventListener('keydown', this._onKeyDown);
+
+        this._onKeyDown = null;
+        this._onKeyUp = null;
+    }
+    this.eventsAdded = false;
 };
 
 DOMInputWrapper.prototype.onBlur = function() {
@@ -87,11 +110,12 @@ DOMInputWrapper.prototype.onBlur = function() {
     }
 };
 
-DOMInputWrapper.prototype.onKeyUp = function() {
-    if (InputControl.currentInput &&
-        InputControl.currentInput.hasFocus) {
-            InputControl.currentInput.onInputChanged();
-        }
+DOMInputWrapper.prototype.onKeyUp = function(event) {
+    this.manager._keyUpEvent(event);
+};
+
+DOMInputWrapper.prototype.onKeyDown = function (event) {
+    this.manager._keyDownEvent(event);
 };
 
 /**
@@ -107,7 +131,8 @@ DOMInputWrapper.textProp = 'value';
  * if the InputControl receives the text or not is defined in the focus function
  * of the InputControl itself. There
  */
-DOMInputWrapper.prototype.focus = function() {
+DOMInputWrapper.prototype.focus = function(tagName) {
+    this.tagName = tagName;
     if (DOMInputWrapper.hiddenInput[this.tagName]) {
         DOMInputWrapper.hiddenInput[this.tagName].focus();
     }
@@ -115,10 +140,11 @@ DOMInputWrapper.prototype.focus = function() {
 
 /**
  * deactivate the text input
+ * blurs ALL hiddenInputs
  */
 DOMInputWrapper.blur = function() {
-    if (DOMInputWrapper.hiddenInput[this.tagName]) {
-        DOMInputWrapper.hiddenInput[this.tagName].blur();
+    for (var tagName in DOMInputWrapper.hiddenInput) {
+        DOMInputWrapper.hiddenInput[tagName].blur();
     }
 };
 
@@ -140,30 +166,19 @@ Object.defineProperty(DOMInputWrapper.prototype, 'text',{
     }
 });
 
-/**
- * set selection
- * @returns {DOMObject}
- */
-InputWrapper.setSelection = function(tagName, start, end) {
-    if(start < end) {
-        InputWrapper.hiddenInput[tagName].selectionStart = start;
-        InputWrapper.hiddenInput[tagName].selectionEnd = end;
-    } else {
-        InputWrapper.hiddenInput[tagName].selectionStart = end;
-        InputWrapper.hiddenInput[tagName].selectionEnd = start;
-    }
+DOMInputWrapper.prototype.updateSelection = function(start, end) {
+    DOMInputWrapper.hiddenInput[this.tagName].selectionStart = start;
+    DOMInputWrapper.hiddenInput[this.tagName].selectionEnd = end;
 };
 
-/**
- * get start and end of selection
- * @returns {Array}
- */
-InputWrapper.getSelection = function(tagName) {
-    return [
-        InputWrapper.hiddenInput[tagName].selectionStart,
-        InputWrapper.hiddenInput[tagName].selectionEnd
-    ];
-};
+Object.defineProperty(DOMInputWrapper.prototype, 'selection',{
+    get: function() {
+        return [
+            DOMInputWrapper.hiddenInput[this.tagName].selectionStart,
+            DOMInputWrapper.hiddenInput[this.tagName].selectionEnd
+        ];
+    }
+});
 
 /**
  * set cursor position of the hidden input

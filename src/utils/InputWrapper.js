@@ -10,13 +10,28 @@ function InputWrapper(manager, name) {
 module.exports = InputWrapper;
 
 InputWrapper.prototype.focus = function() {
-    // only needed for DOMInputWrapper
+    // TODO: needed?
 };
 
 InputWrapper.prototype.blur = function() {
-    // only needed for DOMInputWrapper
+    // TODO: needed?
 };
 
 InputWrapper.prototype.destroy = function() {
     // remove DOM or events
+    this.removeEventListener();
+};
+
+/**
+ * Grabs the data from the keystroke
+ * @private
+ */
+InputWrapper.prototype.getKeyData = function (event) {
+    return {
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        shiftKey: event.shiftKey,
+        key: event.key,
+        originalEvent: event
+    };
 };

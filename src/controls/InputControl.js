@@ -78,6 +78,7 @@ function InputControl(theme, type) {
     // (not needed if we run inside cordova/cocoon)
     if (KeyboardManager.wrapper.createInput) {
         KeyboardManager.wrapper.createInput(type);
+        this.wrapperType = type;
     }
 
     // add events to listen to react to the Keyboard- and InteractionManager
@@ -319,14 +320,7 @@ InputControl.prototype.focus = function () {
 
     this.emit('focusIn', this);
 
-    KeyboardManager.wrapper.focus();
-
-    /*
-     //TODO: disable/ is read only
-     if(this.readonly) {
-        return;
-     }
-     */
+    KeyboardManager.wrapper.focus(this.wrapperType);
 };
 
 InputControl.prototype.onMouseUpOutside = function() {
