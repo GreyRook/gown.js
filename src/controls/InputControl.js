@@ -41,6 +41,8 @@ function InputControl(theme) {
 
     this.textOffset = new PIXI.Point(5, 4);
 
+    this.interceptors = [];
+
     this.text = this.text || '';
 
     // create DOM Input (if we need one)
@@ -181,8 +183,11 @@ InputControl.prototype.onInputChanged = function () {
     var text = InputWrapper.getText();
 
     //overrides the current text with the user input from the InputWrapper
-    if(text !== this.text) {
-        this.text = text;
+    this.text = text;
+  
+    if (this.text !== text) {
+      InputWrapper.setText(this.text);
+      return;
     }
 
     var sel = InputWrapper.getSelection();
@@ -282,16 +287,30 @@ InputControl.prototype.setText = function(text) {
 Object.defineProperty(InputControl.prototype, 'text', {
     get: function () {
         if (this.pixiText) {
-            return this.pixiText.text;
+            return this.pixiText.text.trim();
         }
         return this._origText;
     },
     set: function (text) {
+        var i = this.interceptors.length;
         text += ''; // add '' to assure text is parsed as string
+
         if (this._origText === text) {
             // return if text has not changed
             return;
         }
+
+        if (i) {
+            while (i--) {
+                text = this.interceptors[i](text);
+                if (text === null) {
+                    this.setText(this._origText);
+                    return;
+                }
+            }
+            
+        }
+      
         this._origText = text;
         this.setText(text);
 
