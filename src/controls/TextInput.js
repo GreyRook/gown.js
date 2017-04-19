@@ -1,6 +1,5 @@
 var InputControl = require('./InputControl'),
     InputWrapper = require('../utils/InputWrapper'),
-    Check = require('./Check'),
     position = require('../utils/position'),
     validators = require('../utils/validators');
 /**
@@ -19,6 +18,7 @@ function TextInput(theme, skinName) {
     this.skinName = skinName || TextInput.SKIN_NAME;
     this._validStates = this._validStates || InputControl.stateNames;
     this._type = TextInput.TEXT;
+    this._acceptComma = false;
     this.check = false;
 
     InputControl.call(this, theme);
@@ -76,16 +76,32 @@ Object.defineProperty(TextInput.prototype, 'type', {
         }
         this._type = type;
         if (type === TextInput.NUMBER) {
-            this.createCheck();
-            if (this.text && !validators.isNumber(this.text)) {
+            if (this.text && !this.validateTypeOfNumber(this.text)) {
                 this.text = '';
             }
-            this.interceptors.push(validateTypeOfNumber);
-        } else if (this.check) {
-            this.removeCheck();
+            this.interceptors.push(this.validateTypeOfNumber);
         }
     }
 });
+
+Object.defineProperty(TextInput.prototype, 'acceptComma', {
+    get: function () {
+        return this._acceptComma;
+    },
+    set: function (flag) {
+        var isTextValid = true;
+        if (typeof flag !== 'boolean') {
+            return;
+        }
+        this._acceptComma = flag;
+        if (this.type === TextInput.NUMBER && this.text) {
+            isTextValid = this.validateTypeOfNumber(this.text);
+        }
+        if (!isTextValid) {
+            this.text = '';
+        }
+    }
+})
 
 /*
  * set display as password
@@ -150,27 +166,38 @@ TextInput.prototype.updateSelectionBg = function() {
     }
 };
 
-TextInput.prototype.createCheck = function() {
-    // this.check = new Check(this.theme);
-    // this.addChild(this.check);
-}
+TextInput.prototype.validateTypeOfNumber = function(string) {
+    var arr,
+        intPart,
+        result = null;
 
-TextInput.prototype.removeCheck = function() {
-    // this.removeChild(this.check);
-    // this.check = null;
-}
-
-function validateTypeOfNumber(string) {
-    var result = null;
-    if (validators.isNumber(string)) {
-        result = string;
+    if (this.acceptComma) {
+        return validators.isNumberWithComma(string) ? string : result;
     }
-    return result;
+
+    arr = string.split('.');
+
+    if (arr.length > 2) {
+        return result;
+    }
+
+    if (arr[1] && !validators.isNumeric(arr[1])) {
+        return result;
+    }
+
+    intPart = arr[0].replace(/,/g, '');
+
+    if (intPart.length && !validators.isNumeric(intPart)) {
+        return result;
+    }
+    arr[0] = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    return arr.join('.');
 }
 
 function normalizeTypeOfNumber(string) {
     var lastChar = string[string.length - 1];
-    if (!Number.isInteger(parseInt(lastChar, 10))) {
+    if (!validators.isNumeric(lastChar)) {
         string = string.slice(0, -1);
     }
     return string;

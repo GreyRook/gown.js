@@ -300,15 +300,12 @@ Object.defineProperty(InputControl.prototype, 'text', {
             return;
         }
 
-        if (i) {
-            while (i--) {
-                text = this.interceptors[i](text);
-                if (text === null) {
-                    this.setText(this._origText);
-                    return;
-                }
+        while (i--) {
+            text = this.interceptors[i].call(this, text);
+            if (text === null) {
+                this.setText(this._origText);
+                return;
             }
-            
         }
       
         this._origText = text;
