@@ -80,6 +80,11 @@ Object.defineProperty(TextInput.prototype, 'type', {
                 this.text = '';
             }
             this.interceptors.push(this.validateTypeOfNumber);
+        } else {
+          var index = this.interceptors.indexOf(this.validateTypeOfNumber);
+          if (index !== -1) {
+            this.interceptors.splice(index, 1);
+          }
         }
     }
 });

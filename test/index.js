@@ -20,3 +20,4 @@ require('./controls/Button');
 require('./controls/Control');
 require('./controls/PickerList');
 require('./controls/ToggleButton');
+require('./controls/TextInput');
