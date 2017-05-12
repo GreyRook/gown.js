@@ -295,6 +295,10 @@ Object.defineProperty(InputControl.prototype, 'text', {
         var i = this.interceptors.length;
         text += ''; // add '' to assure text is parsed as string
 
+        if (this.maxChars > 0 && text.length > this.maxChars) {
+            return;
+        }
+
         if (this._origText === text) {
             // return if text has not changed
             return;
@@ -345,6 +349,7 @@ Object.defineProperty(InputControl.prototype, 'maxChars', {
             );
         }
         this._maxChars = value;
+        InputWrapper.setMaxLength(value);
 
     }
 });
