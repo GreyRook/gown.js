@@ -290,6 +290,9 @@ Object.defineProperty(InputControl.prototype, 'text', {
         text += ''; // add '' to assure text is parsed as string
 
         if (this.maxChars > 0 && text.length > this.maxChars) {
+            //reset hidden input to previous state
+            InputWrapper.setText(this._origText);
+            InputWrapper.setSelection(this.selection[0], this.selection[1]);
             return;
         }
 
@@ -413,11 +416,9 @@ InputControl.prototype.focus = function () {
 };
 
 InputControl.prototype.onMouseUpOutside = function() {
-    if(this.hasFocus && !this._mouseDown)
-    {
+    if (this.hasFocus && !this._mouseDown) {
         this.blur();
     }
-    this._mouseDown = false;
 };
 
 /**
@@ -439,6 +440,7 @@ InputControl.prototype.blur = function() {
 
         // blur hidden input
         InputWrapper.blur();
+
         this.onblur();
     }
 };
@@ -539,7 +541,8 @@ InputControl.prototype.onDown = function (e) {
     this.on('mousemove', this.onMove, this);
     this.on('touchmove', this.onMove, this);
 
-    // update the hidden input text and cursor position
+    // update the hidden input
+    InputWrapper.setMaxLength(this.maxChars);
     InputWrapper.setText(this.value);
     InputWrapper.setCursorPos(this.cursorPos);
 
@@ -557,7 +560,6 @@ InputControl.prototype.onUp = function (e) {
         return false;
     }
 
-    this.selectionStart = -1;
     this._mouseDown = false;
 
     this.off('touchend', this.onUp, this);
@@ -566,6 +568,14 @@ InputControl.prototype.onUp = function (e) {
 
     this.off('mousemove', this.onMove, this);
     this.off('touchmove', this.onMove, this);
+
+    this.focus();
+
+    // update the hidden input cursor position and selection
+    InputWrapper.setCursorPos(this.cursorPos);
+    InputWrapper.setSelection(this.selectionStart, this.cursorPos);
+
+    this.selectionStart = -1;
 
     return true;
 };
