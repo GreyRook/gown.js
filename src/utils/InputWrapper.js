@@ -76,10 +76,7 @@ InputWrapper.textProp = 'value';
  */
 InputWrapper.focus = function() {
     if (InputWrapper.hiddenInput) {
-        // the hidden input element only gets focused when the focus function is called within a timeout function
-        window.setTimeout(function () {
-            InputWrapper.hiddenInput.focus();
-        }, 0);
+        InputWrapper.hiddenInput.focus();
     }
 };
 
