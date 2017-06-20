@@ -70,7 +70,7 @@ Object.defineProperty(ToggleButton.prototype, 'currentState',{
 /**
  * set selection state
  * @param selected {bool} value of selection
- * @param emit {bool=false} set to true if you want to emit the change signal
+ * @param [emit] {bool} set to true if you want to emit the change signal
  *        (used to prevent infinite loop in ToggleGroup)
  */
 ToggleButton.prototype.setSelected = function(selected, emit) {
