@@ -47,7 +47,6 @@ function DefaultListItemRenderer(theme) {
      * The list item data
      *
      * @private
-     * @type Object
      * @default null
      */
     this._data = null;
@@ -90,8 +89,7 @@ DefaultListItemRenderer.prototype.redrawButton = Button.prototype.redraw;
 
 /**
  * update button text before draw call
- *
-
+ * @private
  */
 DefaultListItemRenderer.prototype.redraw = function() {
     if (this.dataInvalid) {
@@ -105,7 +103,6 @@ DefaultListItemRenderer.prototype.redraw = function() {
  * function to pass data to sub-components and react to data changes.
  *
  * <p>Don't forget to handle the case where the data is <code>null</code>.</p>
- *
  */
 DefaultListItemRenderer.prototype.commitData = function() {
     if(this._data) {
@@ -140,10 +137,9 @@ DefaultListItemRenderer.prototype.itemToLabel = function(item) {
 };
 
 /**
- * TODO
+ * Data
  *
- * @property data
- * @type Object
+ * @name GOWN.DefaultListItemRenderer#data
  */
 Object.defineProperty(DefaultListItemRenderer.prototype, 'data', {
     set: function(data) {
