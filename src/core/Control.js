@@ -2,10 +2,10 @@ var resizeScaling = require('../utils/resizeScaling');
 var mixin = require('../utils/mixin');
 
 /**
- * base for all UI controls (see ../controls/)
+ * Base for all UI controls.
  *
- * based on pixi-DisplayContainer that supports adding children, so all
- * controls are container
+ * Based on pixi-DisplayContainer that supports adding children, so all
+ * controls are container.
  * @class Control
  * @extends PIXI.Container
  * @memberof GOWN
@@ -25,11 +25,10 @@ Control.prototype.constructor = Control;
 module.exports = Control;
 
 /**
- * change the theme (every control can have a theme, even if it does not
+ * Change the theme (every control can have a theme, even if it does not
  * inherit Skinable, e.g. if there is only some color in the skin that will
  * be taken or if it has some skinable components as children)
  *
-
  * @param theme the new theme {Theme}
  */
 Control.prototype.setTheme = function(theme) {
@@ -41,12 +40,15 @@ Control.prototype.setTheme = function(theme) {
     this.invalidSkin = true;
 };
 
+/**
+ * @private
+ */
 Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTransform;
+
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
- *
-
+ * @private
  */
 Control.prototype.updateTransform = function() {
     if (!this.parent) {
@@ -59,9 +61,8 @@ Control.prototype.updateTransform = function() {
 };
 
 /**
- * get local mouse position from PIXI.InteractionData
+ * Get the local mouse position from PIXI.InteractionData
  *
-
  * @returns {PIXI.Point}
  */
 Control.prototype.mousePos = function(e) {
@@ -72,7 +73,7 @@ Control.prototype.mousePos = function(e) {
  * Enables/Disables the control.
  * (not implemented yet)
  *
- * @property enabled
+ * @name GOWN.Control#enabled
  * @type Boolean
  */
 Object.defineProperty(Control.prototype, 'enabled', {
