@@ -28,7 +28,7 @@ function Skinable(theme) {
     }
 
     /**
-     * invalidate state so the control will be redrawn next time
+     * Invalidate state so the control will be redrawn next time
      * @private
      * @type bool
      * @default true
@@ -36,7 +36,7 @@ function Skinable(theme) {
     this.invalidState = true; // draw for the first time
 
     /**
-     * overwrite skin values before next draw call.
+     * Overwrite skin values before next draw call.
      * @private
      * @type bool
      * @default true
@@ -44,14 +44,14 @@ function Skinable(theme) {
     this.invalidSkinData = true;
 
     /**
-     * will destroy the skin cache when the skinable gets destroyed
+     * Will destroy the skin cache when the skinable gets destroyed
      * @type bool
      * @default true
      */
     this.allowDestroyCache = true;
 
     /**
-     * default skin fallback state
+     * Default skin fallback state
      * @type String
      * @default 'up'
      * @private

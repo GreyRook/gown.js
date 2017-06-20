@@ -2,13 +2,13 @@ var ToggleButton = require('../ToggleButton');
 var Button = require('../Button');
 
 /**
- * TODO
+ * The default list item renderer.
  *
  * @class DefaultListItemRenderer
  * @extends GOWN.ToggleButton
  * @memberof GOWN
  * @constructor
- * @param theme theme for the DefaultListItemRenderer {Theme}
+ * @param [theme] theme for the DefaultListItemRenderer {Theme}
  */
 function DefaultListItemRenderer(theme) {
     ToggleButton.call(this, theme);
@@ -21,6 +21,7 @@ function DefaultListItemRenderer(theme) {
      * the item will be shown directly (using toString) if
      * labelField and labelFunction are not set.
      *
+     * @type String
      * @default 'text'
      */
     this.labelField = 'text';
@@ -35,19 +36,49 @@ function DefaultListItemRenderer(theme) {
 	 *    return item.firstName + " " + item.lastName;
 	 * };</listing>
 	 *
+     * @type function
 	 * @default null
 	 *
 	 * @see #labelField
 	 */
     this.labelFunction = null;
 
+    /**
+     * The list item data
+     *
+     * @private
+     * @type Object
+     * @default null
+     */
     this._data = null;
+
+    /**
+     * Overwrite data values before next draw call.
+     * @private
+     * @type bool
+     * @default false
+     */
     this.dataInvalid = false;
+
 
     // TODO: use min/max and/or default values instead, because percentages
     // have higher priority, so this forces the user to remove the percentage
     // before he can set pixel values.
-    this.percentWidth = this.percentHeight = 100;
+    /**
+     * Percent width
+     * @private
+     * @type Number
+     * @default 100
+     */
+    this.percentWidth = 100;
+
+    /**
+     * Percent height
+     * @private
+     * @type Number
+     * @default 100
+     */
+    this.percentHeight = 100;
 }
 
 DefaultListItemRenderer.prototype = Object.create( ToggleButton.prototype );
@@ -75,7 +106,6 @@ DefaultListItemRenderer.prototype.redraw = function() {
  *
  * <p>Don't forget to handle the case where the data is <code>null</code>.</p>
  *
-
  */
 DefaultListItemRenderer.prototype.commitData = function() {
     if(this._data) {
@@ -94,7 +124,6 @@ DefaultListItemRenderer.prototype.commitData = function() {
  *     <li><code>labelField</code></li>
  * </ol>
  *
-
  * @param item the item that gets converted to a label
  */
 DefaultListItemRenderer.prototype.itemToLabel = function(item) {
