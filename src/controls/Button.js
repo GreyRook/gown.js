@@ -8,14 +8,35 @@ var Skinable = require('../core/Skinable');
  * @extends GOWN.Skinable
  * @memberof GOWN
  * @constructor
+ * @param [theme] theme for the button{Theme}
+ * @param [skinName=Button.SKIN_NAME] name of the button skin {String}
  */
 function Button(theme, skinName) {
     Skinable.call(this, theme);
+
+    /**
+     * The valid button states
+     *
+     * @private
+     * @type {GOWN.Button}
+     * @default Button.stateNames
+     */
     this._validStates = this._validStates || Button.stateNames;
+
+    /**
+     * The skin name
+     *
+     * @type {String}
+     * @default Button.SKIN_NAME
+     */
     this.skinName = skinName || Button.SKIN_NAME;
 
     this.handleEvent(Button.UP);
 
+    /**
+     * @private
+     * @type {bool}
+     */
     this.updateLabel = true; // label text changed
 
     this.on('touchstart', this.onDown, this);
@@ -29,14 +50,18 @@ Button.prototype = Object.create( Skinable.prototype );
 Button.prototype.constructor = Button;
 module.exports = Button;
 
-// name of skin that will be applied
+/**
+ * Default button skin name
+ *
+ * @static
+ * @final
+ * @type String
+ */
 Button.SKIN_NAME = 'button';
 
-// Identifier for the different button states
 /**
  * Up state: mouse button is released or finger is removed from the screen
  *
- * @property UP
  * @static
  * @final
  * @type String
@@ -46,7 +71,6 @@ Button.UP = 'up';
 /**
  * Down state: mouse button is pressed or finger touches the screen
  *
- * @property DOWN
  * @static
  * @final
  * @type String
@@ -57,7 +81,6 @@ Button.DOWN = 'down';
  * Hover state: mouse pointer hovers over the button
  * (ignored on mobile)
  *
- * @property HOVER
  * @static
  * @final
  * @type String
@@ -65,10 +88,9 @@ Button.DOWN = 'down';
 Button.HOVER = 'hover';
 
 /**
- * Hover state: mouse pointer hovers over the button
+ * Out state: mouse pointer leaves the button
  * (ignored on mobile)
  *
- * @property HOVER
  * @static
  * @final
  * @type String
@@ -76,25 +98,30 @@ Button.HOVER = 'hover';
 Button.OUT = 'out';
 
 /**
- * names of possible states for a button
+ * Names of possible states for a button
  *
- * @property stateNames
  * @static
  * @final
- * @type String
+ * @type Array
+ * @private
  */
 Button.stateNames = [
     Button.DOWN, Button.HOVER, Button.UP
 ];
 
-// triggered event name for button
+/**
+ * triggered event name for button
+ *
+ * @static
+ * @final
+ * @type String
+ */
 Button.TRIGGERED = 'triggered';
 
 /**
  * initiate all skins first
  * (to prevent flickering)
- *
-
+ * @private
  */
 Button.prototype.preloadSkins = function() {
     if (!this._validStates) {
@@ -110,7 +137,8 @@ Button.prototype.preloadSkins = function() {
  * skin has been loaded (see preloadSkins) and stored into the skinCache.
  * add to container, hide and resize
  *
-
+ * @param skin the loaded skin
+ * @private
  */
 Button.prototype.skinLoaded = function(skin) {
     this.addChildAt(skin, 0);
@@ -127,6 +155,10 @@ Button.prototype.skinLoaded = function(skin) {
     }
 };
 
+/**
+ * onDown callback
+ * @private
+ */
 Button.prototype.onDown = function() {
     this.handleEvent(Button.DOWN);
     this.on('touchend', this.onUp, this);
@@ -137,6 +169,10 @@ Button.prototype.onDown = function() {
     this.on('mouseout', this.onOut, this);
 };
 
+/**
+ * onUp callback
+ * @private
+ */
 Button.prototype.onUp = function() {
     this.handleEvent(Button.UP);
     this.off('touchend', this.onUp, this);
@@ -144,18 +180,30 @@ Button.prototype.onUp = function() {
     this.off('mouseup', this.onUp, this);
 };
 
+/**
+ * onHover callback
+ * @private
+ */
 Button.prototype.onHover = function() {
     this.handleEvent(Button.HOVER);
     this.on('touchendoutside', this.onOut, this);
     this.on('mouseout', this.onOut, this);
 };
 
+/**
+ * onOut callback
+ * @private
+ */
 Button.prototype.onOut = function() {
     this.handleEvent(Button.OUT);
     this.off('touchendoutside', this.onOut, this);
     this.off('mouseout', this.onOut, this);
 };
 
+/**
+ * onTouchMove callback
+ * @private
+ */
 Button.prototype.onTouchMove = function(eventData) {
     // please note that if the user takes his finger from the screen when
     // he is over the button, the button skin for "hovered" will be used.
@@ -168,8 +216,7 @@ Button.prototype.onTouchMove = function(eventData) {
 
 /**
  * update width/height of the button
- *
-
+ * @private
  */
 Button.prototype.updateDimensions = function() {
     var width = this.worldWidth;
@@ -201,8 +248,8 @@ Button.prototype.updateDimensions = function() {
 /**
  * handle one of the mouse/touch events
  *
-
  * @param type one of the valid states
+ * @private
  */
 Button.prototype.handleEvent = function(type) {
     if (!this._enabled) {
@@ -247,8 +294,7 @@ Button.prototype.redrawSkinable = Skinable.prototype.redraw;
 
 /**
  * update before draw call (position label)
- *
-
+ * @private
  */
 Button.prototype.redraw = function() {
     if (this.updateLabel) {
@@ -259,8 +305,7 @@ Button.prototype.redraw = function() {
 
 /**
  * create/update a label for this button
- *
-
+ * @private
  */
 Button.prototype.createLabel = function() {
     if(this.labelText) {
@@ -278,8 +323,7 @@ Button.prototype.createLabel = function() {
 
 /**
  * create/update the position of the label
- *
-
+ * @private
  */
 Button.prototype.updateLabelDimensions = function () {
     if (this.labelText && this.labelText.text &&
@@ -293,9 +337,8 @@ Button.prototype.updateLabelDimensions = function () {
 Button.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
 /**
- * change the theme
+ * Change the theme
  *
-
  * @param theme the new theme {Theme}
  */
 Button.prototype.setTheme = function(theme) {
@@ -308,12 +351,10 @@ Button.prototype.setTheme = function(theme) {
     this.skinableSetTheme(theme);
 };
 
-
 /**
- * The current state (one of _validStates)
- * TODO: move to skinable?
+ * The current state
  *
- * @property currentState
+ * @name GOWN.Button#currentState
  * @type String
  */
 Object.defineProperty(Button.prototype, 'currentState',{
@@ -336,7 +377,7 @@ Object.defineProperty(Button.prototype, 'currentState',{
 /**
  * Create/Update the label of the button.
  *
- * @property label
+ * @name GOWN.Button#label
  * @type String
  */
 Object.defineProperty(Button.prototype, 'label', {
