@@ -29,7 +29,7 @@ module.exports = LayoutGroup;
  *
  * (called from Control.prototype.updateTransform every frame)
  *
- * @method redraw
+
  */
 LayoutGroup.prototype.redraw = function() {
     var dimensionChanged = false;
@@ -80,7 +80,7 @@ LayoutGroup.prototype.addSpacer = function(space) {
 /**
  * Indicates if the given child is inside the viewport (only used for scrolling)
  *
- * @method childIsRenderAble
+
  * @type boolean
  * @param child one child with set coordinates and dimensions
  * @param x X-position on the scroll-container
@@ -99,7 +99,7 @@ LayoutGroup.prototype.childIsRenderAble = function(child, x, y, width, height) {
 /**
  * Update renderable (culling of non visible objects)
  *
- * @method updateRenderable
+
  * @param x X-position on the scroll-container
  * @param y Y-position on the scroll-container
  * @param width width of the viewport

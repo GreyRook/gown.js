@@ -3,7 +3,7 @@ module.exports = {
     /**
      * this should be called from inside the constructor
      *
-     * @method initResizeScaling
+
      */
     initResizeScaling: function() {
         this.resizeScaling = true; // resize instead of scale
@@ -20,7 +20,7 @@ module.exports = {
      * update before draw call
      * redraw control for current state from theme
      *
-     * @method redraw
+
      */
     redraw: function() {
         // remove last skin after new one has been added

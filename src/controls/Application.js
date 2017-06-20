@@ -115,7 +115,7 @@ Application.SCREEN_MODE_RESIZE = 'screenModeResize';
 /**
  * call requestAnimationFrame to render the application at max. FPS
  *
- * @method animate
+
  */
 /* jshint ignore:start */
 Application.prototype.animate = function() {
@@ -135,7 +135,7 @@ Application.prototype.animate = function() {
  * (uses a separate canvas to create a new Texture)
  * TODO: check if this works outside the browser/in cordova or cocoon
  *
- * @method _createGradientRect
+
  * @private
  */
 Application.prototype._createGradientRect = function(gradient, width, height) {
@@ -160,7 +160,7 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
  * clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method destroy
+
  * @param [destroyChildren=false] {boolean} if set to true, all the children will have their destroy method called as well
  * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
@@ -190,7 +190,7 @@ Application.prototype.redraw = function() {
  * will set the dimensions of the canvas and layout children
  * (if it has a layout)
  *
- * @method resize
+
  */
 Application.prototype.onResize = function(eventData) {
     this._width = eventData.data.width;
@@ -225,7 +225,7 @@ Object.defineProperty(Application.prototype, 'layout', {
 
 /**
  * remove background
- * @method _removeBackground
+
  * @private
  */
 Application.prototype._removeBackground = function() {

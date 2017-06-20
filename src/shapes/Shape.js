@@ -93,7 +93,7 @@ Object.defineProperty(Shape.prototype, 'alpha', {
 /**
  * apply the color to the shape (called during redraw)
  *
- * @method applyColor
+
  */
 Shape.prototype.applyColor = function() {
     if (this.color > 0 && typeof this.color !== null) {
@@ -104,7 +104,7 @@ Shape.prototype.applyColor = function() {
 /**
  * apply the border around shape (called during redraw)
  *
- * @method drawBorder
+
  */
 Shape.prototype.drawBorder = function() {
     if (this.border) {
@@ -163,7 +163,7 @@ Object.defineProperty(Shape.prototype, 'border', {
 /**
  * draw the shape during redraw. defaults to a simple rect
  *
- * @method _drawShape
+
  * @private
  */
 Shape.prototype._drawShape = function() {
@@ -187,7 +187,7 @@ Shape.prototype.updateTransform = function() {
  * update before draw call
  * redraw control for current state from theme
  *
- * @method redraw
+
  */
 Shape.prototype.redraw = function() {
     if(!this.invalid) {

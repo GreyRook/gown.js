@@ -129,7 +129,7 @@ TiledLayout.prototype.layoutContainer = function(container) {
 /**
  * Positions (and possibly resizes) the supplied items.
  *
- * @method layout
+
  * @param items items that will be layouted
  * @param maxWidth
  * @param maxHeight

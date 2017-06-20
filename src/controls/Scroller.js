@@ -588,7 +588,7 @@ Scroller.prototype.controlRedraw = Control.prototype.redraw;
 /**
  * update before draw call
  *
- * @method redraw
+
  */
 Scroller.prototype.redraw = function () {
     this.scrollBarInvalid = true;

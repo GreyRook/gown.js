@@ -19,7 +19,7 @@ module.exports = Diamond;
 /**
  * draw the diamond during redraw.
  *
- * @method _drawShape
+
  * @private
  */
 Diamond.prototype._drawShape = function() {

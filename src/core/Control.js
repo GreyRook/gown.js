@@ -29,7 +29,7 @@ module.exports = Control;
  * inherit Skinable, e.g. if there is only some color in the skin that will
  * be taken or if it has some skinable components as children)
  *
- * @method setTheme
+
  * @param theme the new theme {Theme}
  */
 Control.prototype.setTheme = function(theme) {
@@ -46,7 +46,7 @@ Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTran
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
  *
- * @method updateTransform
+
  */
 Control.prototype.updateTransform = function() {
     if (!this.parent) {
@@ -61,7 +61,7 @@ Control.prototype.updateTransform = function() {
 /**
  * get local mouse position from PIXI.InteractionData
  *
- * @method mousePos
+
  * @returns {PIXI.Point}
  */
 Control.prototype.mousePos = function(e) {

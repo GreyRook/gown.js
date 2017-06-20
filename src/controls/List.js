@@ -109,7 +109,7 @@ List.prototype.scrollerRedraw = Scroller.prototype.redraw;
 /**
  * update before draw call
  *
- * @method redraw
+
  */
 List.prototype.redraw = function() {
     var basicsInvalid = this.dataInvalid;

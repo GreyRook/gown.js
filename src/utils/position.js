@@ -2,7 +2,7 @@
  * center element on parent vertically
  * @param elem
  * @param parent (optional)
- * @method centerVertical
+
  */
 function centerVertical(elem, parent) {
     parent = parent || elem.parent;
@@ -13,7 +13,7 @@ function centerVertical(elem, parent) {
  * center element on parent horizontally
  * @param elem
  * @param parent (optional)
- * @method centerHorizontal
+
  */
 function centerHorizontal(elem, parent) {
     parent = parent || elem.parent;
@@ -25,7 +25,7 @@ function centerHorizontal(elem, parent) {
  * center element on parent
  * @param elem
  * @param parent (optional)
- * @method center
+
  */
 function center(elem, parent) {
     centerVertical(elem, parent);
@@ -34,7 +34,7 @@ function center(elem, parent) {
 
 /**
  * put element to the bottom
- * 
+ *
  * @param elem
  * @param parent (optional)
  */
@@ -46,7 +46,7 @@ function bottom(elem, parent) {
 
 /**
  * put element to the right of its parent.
- * 
+ *
  * @param elem
  * @param parent (optional)
  */

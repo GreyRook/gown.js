@@ -29,7 +29,7 @@ LayoutAlignment.HORIZONTAL_ALIGNMENT = 'horizontal';
 * So if you set a width higher than 0 but also percentWidth,
 * the width will be recalculated according to percentWidth.
 *
-* @method inheritPercent
+
 * @param items
 * @param explicit space we have for the components
  */
@@ -63,7 +63,7 @@ LayoutAlignment.prototype.applyFixedPercent = function(items, explicit, alignmen
  * So if you set a width higher than 0 but also percentWidth,
  * the width will be recalculated according to percentWidth.
  *
- * @method applyPercent
+
  * @param items
  * @param explicit space we have for the components
  * (this function will handle padding and gap, so the explicitWidth is
@@ -121,7 +121,7 @@ LayoutAlignment.prototype.applyPercent = function(items, explicit) {
 /**
  * get current gap (includes first and last gap)
  *
- * @method _currentGap
+
  * @private
  * @param i current item position
  * @param items list of items (to determine if we are at the last gap)
@@ -150,7 +150,7 @@ LayoutAlignment.prototype.layoutContainer = function(container) {
 /**
  * Position (and possibly resizes) the supplied items.
  *
- * @method layout
+
  * @param items items that will be layouted {Array}
  * @param maxWidth max. width for the items {Number}
  * @param maxWidth max. height for the items {Number}

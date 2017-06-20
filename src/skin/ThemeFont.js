@@ -29,7 +29,7 @@ module.exports = ThemeFont;
 /**
  * clone ThemeFont instance
  *
- * @method clone
+
  */
 ThemeFont.prototype.clone = function() {
     var re = new ThemeFont();
@@ -45,7 +45,7 @@ ThemeFont.prototype.clone = function() {
 /**
  * update font string
  *
- * @method _updateFont
+
  * @private
  */
 ThemeFont.prototype._updateFont = function() {

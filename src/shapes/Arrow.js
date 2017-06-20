@@ -21,7 +21,7 @@ module.exports = Arrow;
 /**
  * draw the arrow during redraw.
  *
- * @method _drawShape
+
  * @private
  */
 Arrow.prototype._drawShape = function() {

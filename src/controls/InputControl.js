@@ -249,7 +249,7 @@ InputControl.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 /**
  * change the theme
  *
- * @method setTheme
+
  * @param theme the new theme {Theme}
  */
 InputControl.prototype.setTheme = function(theme) {
@@ -351,7 +351,7 @@ Object.defineProperty(InputControl.prototype, 'value', {
 /**
  * set selected text
  *
- * @method updateSelection
+
  * @param start start position in the text
  * @param end end position in the text
  * @returns {boolean}
@@ -370,7 +370,7 @@ InputControl.prototype.updateSelection = function (start, end) {
 /**
  * get text width
  *
- * @method textWidth
+
  * @param text
  * @returns {*}
  */
@@ -383,7 +383,7 @@ InputControl.prototype.textWidth = function(text) {
 /**
  * focus on this input and set it as current
  *
- * @method focus
+
  */
 InputControl.prototype.focus = function () {
     // is already current input
@@ -423,7 +423,7 @@ InputControl.prototype.onMouseUpOutside = function() {
 
 /**
  * callback to execute code on focus
- * @method onFocus
+
  */
 InputControl.prototype.onfocus = function () {
 };
@@ -431,7 +431,7 @@ InputControl.prototype.onfocus = function () {
 /**
  * blur the text input (remove focus)
  *
- * @method blur
+
  */
 InputControl.prototype.blur = function() {
     if (GOWN.InputControl.currentInput === this) {
@@ -467,7 +467,7 @@ InputControl.prototype.lineHeight = function() {
 /**
  * draw the cursor
  *
- * @method drawCursor
+
  */
 InputControl.prototype.drawCursor = function () {
     // TODO: use Tween instead!
@@ -584,7 +584,7 @@ InputControl.prototype.onUp = function (e) {
  * from position in the text to pixel position
  * (for cursor/selection positioning)
  *
- * @method textToPixelPos
+
  * @param textPos current character position in the text
  * @returns {Point} pixel position
  */
@@ -615,7 +615,7 @@ InputControl.prototype.textToPixelPos = function(textPos, position) {
  * from pixel position on the text to character position inside the text
  * (used when clicked on the text)
  *
- * @method pixelToTextPos
+
  * @param mousePos position of the mouse on the PIXI Text
  * @returns {Number} position in the text
  */
@@ -653,7 +653,7 @@ InputControl.prototype.pixelToTextPos = function(pixelPos) {
 /**
  * callback that will be executed once the text input is blurred
  *
- * @method onblur
+
  */
 InputControl.prototype.onblur = function() {
     this.updateSelection(0, 0);

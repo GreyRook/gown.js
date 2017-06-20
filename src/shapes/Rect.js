@@ -21,21 +21,21 @@ module.exports = Rect;
 /**
  * draw the rect during redraw. will use drawRoundRect if a radius is provided.
  *
- * @method _drawShape
+
  * @private
  */
 Rect.prototype._drawShape = function() {
     if (this.radius) {
         this.drawRoundedRect(
-            Math.min(this._width, 0), 
-            Math.min(this._height, 0), 
+            Math.min(this._width, 0),
+            Math.min(this._height, 0),
             Math.abs(this._width),
             Math.abs(this._height),
             this.radius);
     } else {
         this.drawRect(
-            Math.min(this._width, 0), 
-            Math.min(this._height, 0), 
+            Math.min(this._width, 0),
+            Math.min(this._height, 0),
             Math.abs(this._width),
             Math.abs(this._height));
     }

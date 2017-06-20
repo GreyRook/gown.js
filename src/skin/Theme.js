@@ -51,7 +51,7 @@ Theme.COMPLETE = 'complete';
 /**
  * Set skin for ui component
  *
- * @method setSkin
+
  * @param comp ui-component that we want to skin, e.g. "button" {String}
  * @param id id for the skin (e.g. state when the skinning function will be applied {String}
  * @param skin skin-function that will executed once the component gets updated  {String}
@@ -65,7 +65,7 @@ Theme.prototype.setSkin = function(comp, id, skin) {
 /**
  * Set up the asset loader and load files
  *
- * @method addImage
+
  * @param jsonPath {Array}
  */
 Theme.prototype.addImage = function(jsonPath) {
@@ -77,7 +77,7 @@ Theme.prototype.addImage = function(jsonPath) {
 /**
  * executed when the image has been loaded (see addImage)
  *
- * @method loadComplete
+
  */
 Theme.prototype.loadComplete = function(loader, resources) {
     this.setCache(resources);
@@ -89,7 +89,7 @@ Theme.prototype.loadComplete = function(loader, resources) {
 /**
  * set texture cache (normally called when loading is complete)
  *
- * @method loadComplete
+
  */
 Theme.prototype.setCache = function(resources) {
     this.textureCache = resources[this._jsonPath].textures;
@@ -100,7 +100,7 @@ Theme.prototype.setCache = function(resources) {
  * apply theme to controls
  * (normally executed only once after the texture has been loaded)
  *
- * @method applyTheme
+
  */
 Theme.prototype.applyTheme = function() {
     this.emit(Theme.COMPLETE, this);
@@ -109,7 +109,7 @@ Theme.prototype.applyTheme = function() {
 /**
  * Create new Scalable Container
  *
- * @method getScaleContainer
+
  * @param name id defined in the asset loader {String}
  * @param grid grid defining the inner square of the scalable container {Rectangle}
  * @returns {Function}
@@ -130,7 +130,7 @@ Theme.prototype.getScaleContainer = function(name, grid, middleWidth, centerHeig
 /**
  * Create new Sprite from image name
  *
- * @method getImage
+
  * @param name id defined in the asset loader {String}
  * @returns {Function}
  */
@@ -149,7 +149,7 @@ Theme.prototype.getImage = function(name) {
 /**
  * Get skin by component and state (or type)
  *
- * @method getSkin
+
  * @param comp name of the component (e.g. button) {String}
  * @param state (state or type of the skin e.g. "up") {String}
  * @returns {DisplayObject}
@@ -164,7 +164,7 @@ Theme.prototype.getSkin = function(comp, state) {
 /**
  * Shortcut to remove the theme from global context
  *
- * @method removeTheme
+
  */
 Theme.removeTheme = function() {
     GOWN.theme = undefined;

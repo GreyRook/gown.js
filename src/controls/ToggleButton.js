@@ -116,7 +116,7 @@ ToggleButton.prototype.buttonHandleEvent = Button.prototype.handleEvent;
 
 /**
  * handle Touch/Tab Event
- * @method handleEvent
+
  * @param {Object} type the type of the press/touch.
  * @protected
  **/

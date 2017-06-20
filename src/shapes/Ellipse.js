@@ -19,13 +19,13 @@ module.exports = Ellipse;
 /**
  * draw the ellipse during redraw.
  *
- * @method _drawShape
+
  * @private
  */
 Ellipse.prototype._drawShape = function() {
-    
 
-    this.drawEllipse(this.width/2, this.height/2, 
-        Math.abs(this.width/2), 
+
+    this.drawEllipse(this.width/2, this.height/2,
+        Math.abs(this.width/2),
         Math.abs(this.height/2));
 };
