@@ -8,7 +8,7 @@ var Skinable = require('../core/Skinable');
  * @extends GOWN.Skinable
  * @memberof GOWN
  * @constructor
- * @param [theme] theme for the button{Theme}
+ * @param [theme] theme for the button {Theme}
  * @param [skinName=Button.SKIN_NAME] name of the button skin {String}
  */
 function Button(theme, skinName) {
@@ -18,7 +18,7 @@ function Button(theme, skinName) {
      * The valid button states
      *
      * @private
-     * @type {GOWN.Button}
+     * @type Array
      * @default Button.stateNames
      */
     this._validStates = this._validStates || Button.stateNames;
@@ -26,7 +26,7 @@ function Button(theme, skinName) {
     /**
      * The skin name
      *
-     * @type {String}
+     * @type String
      * @default Button.SKIN_NAME
      */
     this.skinName = skinName || Button.SKIN_NAME;
@@ -35,7 +35,7 @@ function Button(theme, skinName) {
 
     /**
      * @private
-     * @type {bool}
+     * @type bool
      */
     this.updateLabel = true; // label text changed
 
@@ -249,7 +249,7 @@ Button.prototype.updateDimensions = function() {
  * handle one of the mouse/touch events
  *
  * @param type one of the valid states
- * @private
+ * @protected
  */
 Button.prototype.handleEvent = function(type) {
     if (!this._enabled) {
