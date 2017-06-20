@@ -94,7 +94,7 @@ Button.TRIGGERED = 'triggered';
  * initiate all skins first
  * (to prevent flickering)
  *
- * @method preloadSkins
+
  */
 Button.prototype.preloadSkins = function() {
     if (!this._validStates) {
@@ -110,7 +110,7 @@ Button.prototype.preloadSkins = function() {
  * skin has been loaded (see preloadSkins) and stored into the skinCache.
  * add to container, hide and resize
  *
- * @method skinLoaded
+
  */
 Button.prototype.skinLoaded = function(skin) {
     this.addChildAt(skin, 0);
@@ -169,7 +169,7 @@ Button.prototype.onTouchMove = function(eventData) {
 /**
  * update width/height of the button
  *
- * @method updateDimensions
+
  */
 Button.prototype.updateDimensions = function() {
     var width = this.worldWidth;
@@ -201,7 +201,7 @@ Button.prototype.updateDimensions = function() {
 /**
  * handle one of the mouse/touch events
  *
- * @method handleEvent
+
  * @param type one of the valid states
  */
 Button.prototype.handleEvent = function(type) {
@@ -248,7 +248,7 @@ Button.prototype.redrawSkinable = Skinable.prototype.redraw;
 /**
  * update before draw call (position label)
  *
- * @method redraw
+
  */
 Button.prototype.redraw = function() {
     if (this.updateLabel) {
@@ -260,7 +260,7 @@ Button.prototype.redraw = function() {
 /**
  * create/update a label for this button
  *
- * @method createLabel
+
  */
 Button.prototype.createLabel = function() {
     if(this.labelText) {
@@ -279,7 +279,7 @@ Button.prototype.createLabel = function() {
 /**
  * create/update the position of the label
  *
- * @method updateLabelDimensions
+
  */
 Button.prototype.updateLabelDimensions = function () {
     if (this.labelText && this.labelText.text &&
@@ -295,7 +295,7 @@ Button.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 /**
  * change the theme
  *
- * @method setTheme
+
  * @param theme the new theme {Theme}
  */
 Button.prototype.setTheme = function(theme) {

@@ -22,7 +22,7 @@ module.exports = Line;
 /**
  * draw the rect during redraw. will use drawRoundRect if a radius is provided.
  *
- * @method _drawShape
+
  * @private
  */
 Line.prototype._drawShape = function() {
@@ -56,7 +56,7 @@ Object.defineProperty(Line.prototype, 'reverse', {
  * update before draw call
  * Line has to be drawn different than other Shapes
  *
- * @method redraw
+
  */
 Line.prototype.redraw = function() {
     if(!this.invalid) {

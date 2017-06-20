@@ -89,7 +89,7 @@ ScrollThumb.prototype.handleUp = function (mouseData) {
 /**
  * show track icon on thumb
  *
- * @method showTrack
+
  * @param skin
  */
 ScrollThumb.prototype.showTrack = function(skin) {
@@ -109,7 +109,7 @@ ScrollThumb.prototype.showTrack = function(skin) {
 /**
  * redraw the skin
  *
- * @method redraw
+
  */
 ScrollThumb.prototype.redraw = function() {
     if (this.invalidTrack && this.theme.thumbSkin) {
@@ -125,7 +125,7 @@ ScrollThumb.prototype.redraw = function() {
  * @param y new calculated y position of the thumb
  * @returns {boolean} returns true if the position of the thumb has been
  * moved
- * @method move
+
  */
 ScrollThumb.prototype.move = function(x, y) {
     if (this.scrollable.direction === GOWN.Scrollable.HORIZONTAL) {

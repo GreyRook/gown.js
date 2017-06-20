@@ -112,7 +112,7 @@ module.exports = ScaleContainer;
 /**
  * set scaling width and height
  *
- * @method _updateScales
+
  * @private
  */
 ScaleContainer.prototype._updateScales = function() {
@@ -145,7 +145,7 @@ ScaleContainer.prototype._updateScales = function() {
 /**
  * create a new texture from a base-texture by given dimensions
  *
- * @method _getTexture
+
  * @private
  */
 ScaleContainer.prototype._getTexture = function(x, y, w, h) {
@@ -203,7 +203,7 @@ Object.defineProperty(ScaleContainer.prototype, 'height', {
 /**
  * update before draw call (reposition textures)
  *
- * @method redraw
+
  */
 ScaleContainer.prototype.redraw = function() {
     if (this.invalid) {
@@ -215,7 +215,7 @@ ScaleContainer.prototype.redraw = function() {
 /**
  * recalculate the position of the tiles (every time width/height changes)
  *
- * @method _positionTilable
+
  * @private
  */
 ScaleContainer.prototype._positionTilable = function() {
@@ -273,7 +273,7 @@ ScaleContainer.prototype._positionTilable = function() {
  * the TextureCache based on the frameId
  * The frame ids are created when a Texture packer file has been loaded
  *
- * @method fromFrame
+
  * @static
  * @param frameId {String} The frame Id of the texture in the cache
  * @param rect {Rectangle} defines tilable area

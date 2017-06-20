@@ -213,7 +213,7 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 /**
  * Position (and possibly resizes) the supplied items.
  *
- * @method layout
+
  * @param items items that will be layouted {Array}
  * @param viewPortBounds {ViewPortBounds}
  */

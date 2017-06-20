@@ -42,7 +42,7 @@ Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
 /**
  * change the theme
  *
- * @method setTheme
+
  * @param theme the new theme {Theme}
  */
 Skinable.prototype.setTheme = function(theme) {
@@ -87,7 +87,7 @@ Skinable.prototype.changeSkin = function(skin) {
 /**
  * initiate all skins first
  *
- * @method preloadSkins
+
  */
 Skinable.prototype.preloadSkins = function() {
 };
@@ -96,7 +96,7 @@ Skinable.prototype.preloadSkins = function() {
  * get image from skin (will execute a callback with the loaded skin
  * when it is loaded or call it directly when it already is loaded)
  *
- * @method fromSkin
+
  * @param name name of the state
  * @param callback callback that is executed if the skin is loaded
  */
@@ -119,7 +119,7 @@ Skinable.prototype.fromSkin = function(name, callback) {
 /**
  * empty skin cache and load skins again
  *
- * @method reloadSkin
+
  */
 Skinable.prototype.reloadSkin = function() {
     for (var name in this.skinCache) {

@@ -40,7 +40,7 @@ ScrollBar.SKIN_NAME = 'scroll_bar';
 ScrollBar.prototype.scrollableredraw = Scrollable.prototype.redraw;
 /**
  * recalculate scroll thumb width/height
- * @method redraw
+
  */
 ScrollBar.prototype.redraw = function() {
     if (this.invalidTrack) {
@@ -63,7 +63,7 @@ ScrollBar.prototype.redraw = function() {
  * thumb has been moved - scroll content to position
  * @param x x-position to scroll to (ignored when vertical)
  * @param y y-position to scroll to (ignored when horizontal)
- * @method thumbMoved
+
  */
 ScrollBar.prototype.thumbMoved = function(x, y) {
     if (this.container && this.container.viewPort) {

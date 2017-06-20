@@ -60,7 +60,7 @@ DefaultListItemRenderer.prototype.redrawButton = Button.prototype.redraw;
 /**
  * update button text before draw call
  *
- * @method redraw
+
  */
 DefaultListItemRenderer.prototype.redraw = function() {
     if (this.dataInvalid) {
@@ -75,7 +75,7 @@ DefaultListItemRenderer.prototype.redraw = function() {
  *
  * <p>Don't forget to handle the case where the data is <code>null</code>.</p>
  *
- * @method commitData
+
  */
 DefaultListItemRenderer.prototype.commitData = function() {
     if(this._data) {
@@ -94,7 +94,7 @@ DefaultListItemRenderer.prototype.commitData = function() {
  *     <li><code>labelField</code></li>
  * </ol>
  *
- * @method itemToLabel
+
  * @param item the item that gets converted to a label
  */
 DefaultListItemRenderer.prototype.itemToLabel = function(item) {
