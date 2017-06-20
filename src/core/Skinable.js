@@ -8,6 +8,8 @@ var Control = require('./Control');
  * @extends GOWN.Control
  * @memberof GOWN
  * @constructor
+ * @param theme theme for the skinable {Theme}
+ *  (default: GOWN.theme)
  */
 function Skinable(theme) {
     Control.call(this);
@@ -20,6 +22,8 @@ function Skinable(theme) {
 
     // invalidate state so the control will be redrawn next time
     this.invalidState = true; // draw for the first time
+
+    //TODO
     // overwrite skin values before next draw call.
     this.invalidSkinData = true;
 
@@ -52,9 +56,12 @@ Skinable.prototype.setTheme = function(theme) {
     this.invalidState = true;
 };
 
+//TODO unused definition?
 /**
  * overwrite data from theme for this specific component.
  * (usable if you want to change e.g. background color based on selected items)
+ *
+ * @param data updated skin data
  */
 Skinable.prototype.updateTheme = function(data) {
     this.skinData = data;
@@ -64,7 +71,6 @@ Skinable.prototype.updateTheme = function(data) {
 /**
  * remove old skin and add new one
  *
- * @method changeSkin
  * @param skin {DisplayObject}
  */
 Skinable.prototype.changeSkin = function(skin) {
@@ -112,6 +118,8 @@ Skinable.prototype.fromSkin = function(name, callback) {
 
 /**
  * empty skin cache and load skins again
+ *
+ * @method reloadSkin
  */
 Skinable.prototype.reloadSkin = function() {
     for (var name in this.skinCache) {
@@ -170,6 +178,8 @@ Object.defineProperty(Skinable.prototype, 'skinFallback', {
     }
 });
 
+
+//TODO documentation?
 Skinable.prototype.containerDestroy = PIXI.Container.prototype.destroy;
 Skinable.prototype.destroy = function() {
     for (var name in this.skinCache) {

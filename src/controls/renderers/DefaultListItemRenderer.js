@@ -1,8 +1,16 @@
 var ToggleButton = require('../ToggleButton');
 var Button = require('../Button');
 
+/**
+ * TODO
+ *
+ * @class DefaultListItemRenderer
+ * @extends GOWN.ToggleButton
+ * @memberof GOWN
+ * @constructor
+ * @param theme theme for the DefaultListItemRenderer {Theme}
+ */
 function DefaultListItemRenderer(theme) {
-    //this._skinName = DefaultListItemRenderer.SKIN_NAME;
     ToggleButton.call(this, theme);
 
     /**
@@ -48,8 +56,9 @@ module.exports = DefaultListItemRenderer;
 
 // performance increase to avoid using call.. (10x faster)
 DefaultListItemRenderer.prototype.redrawButton = Button.prototype.redraw;
+
 /**
- * update before draw call update button text
+ * update button text before draw call
  *
  * @method redraw
  */
@@ -59,16 +68,6 @@ DefaultListItemRenderer.prototype.redraw = function() {
     }
     this.redrawButton();
 };
-
-Object.defineProperty(DefaultListItemRenderer.prototype, 'data', {
-    set: function(data) {
-        this._data = data;
-        this.dataInvalid = true;
-    },
-    get: function() {
-        return this._data;
-    }
-});
 
 /**
  * Updates the renderer to display the item's data. Override this
@@ -96,6 +95,7 @@ DefaultListItemRenderer.prototype.commitData = function() {
  * </ol>
  *
  * @method itemToLabel
+ * @param item the item that gets converted to a label
  */
 DefaultListItemRenderer.prototype.itemToLabel = function(item) {
 	if (this.labelFunction) {
@@ -109,3 +109,19 @@ DefaultListItemRenderer.prototype.itemToLabel = function(item) {
 	}
 	return '';
 };
+
+/**
+ * TODO
+ *
+ * @property data
+ * @type Object
+ */
+Object.defineProperty(DefaultListItemRenderer.prototype, 'data', {
+    set: function(data) {
+        this._data = data;
+        this.dataInvalid = true;
+    },
+    get: function() {
+        return this._data;
+    }
+});

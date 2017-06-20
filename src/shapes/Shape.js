@@ -116,7 +116,7 @@ Shape.prototype.drawBorder = function() {
  * change border color of shape
  *
  * @property borderColor
- * @type Number (color)
+ * @type Number
  */
 Object.defineProperty(Shape.prototype, 'borderColor', {
     get: function() {
@@ -132,7 +132,7 @@ Object.defineProperty(Shape.prototype, 'borderColor', {
  * change border alpha of shape (between 0.0 - 1.0)
  *
  * @property borderAlpha
- * @type Number (alpha)
+ * @type Number
  */
 Object.defineProperty(Shape.prototype, 'borderAlpha', {
     get: function() {
@@ -148,7 +148,7 @@ Object.defineProperty(Shape.prototype, 'borderAlpha', {
  * change border size
  *
  * @property border
- * @type Number (size in pixel)
+ * @type Number
  */
 Object.defineProperty(Shape.prototype, 'border', {
     get: function() {
