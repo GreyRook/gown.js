@@ -206,10 +206,6 @@ Scrollable.prototype._updateProgressSkin = function() {
             this.progressSkin.width = progressPosX;
             this.progressSkin.height = this.skin.height;
         }
-        // 2 px is the default in the Aeon-Theme.
-        // TODO: make this theme configurable?!
-        this.progressSkin.y = 2;
-        this.progressSkin.height -= this.progressSkin.y*2;
     } else {
         var progressPosY = this.thumb.y + this.thumb.height / 2;
         if (this.inverse) {
