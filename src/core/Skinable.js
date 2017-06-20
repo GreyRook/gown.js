@@ -8,29 +8,54 @@ var Control = require('./Control');
  * @extends GOWN.Control
  * @memberof GOWN
  * @constructor
- * @param theme theme for the skinable {Theme}
- *  (default: GOWN.theme)
+ * @param [theme=GOWN.theme] theme for the skinable {Theme}
  */
 function Skinable(theme) {
     Control.call(this);
+
+    /**
+     * The skin cache
+     * @private
+     * @type Object
+     * @default {}
+     */
     this.skinCache = {};
+
     this.setTheme(theme || GOWN.theme);
 
     if (this.theme === undefined) {
         throw new Error('you need to define a theme first');
     }
 
-    // invalidate state so the control will be redrawn next time
+    /**
+     * invalidate state so the control will be redrawn next time
+     * @private
+     * @type bool
+     * @default true
+     */
     this.invalidState = true; // draw for the first time
 
-    //TODO
-    // overwrite skin values before next draw call.
+    /**
+     * overwrite skin values before next draw call.
+     * @private
+     * @type bool
+     * @default true
+     */
     this.invalidSkinData = true;
 
-    // will destroy the skin cache when the skinable gets destroyed
+    /**
+     * will destroy the skin cache when the skinable gets destroyed
+     * @type bool
+     * @default true
+     */
     this.allowDestroyCache = true;
 
-    // default skin fallback state is 'up' (works for buttons)
+    /**
+     * default skin fallback state
+     * @type String
+     * @default 'up'
+     * @private
+     */
     this.skinFallback = 'up';
 }
 
@@ -38,11 +63,14 @@ Skinable.prototype = Object.create( Control.prototype );
 Skinable.prototype.constructor = Skinable;
 module.exports = Skinable;
 
-Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
 /**
- * change the theme
- *
+ * @private
+ */
+Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
 
+/**
+ * Change the theme
+ *
  * @param theme the new theme {Theme}
  */
 Skinable.prototype.setTheme = function(theme) {
@@ -56,9 +84,8 @@ Skinable.prototype.setTheme = function(theme) {
     this.invalidState = true;
 };
 
-//TODO unused definition?
 /**
- * overwrite data from theme for this specific component.
+ * Overwrite data from theme for this specific component.
  * (usable if you want to change e.g. background color based on selected items)
  *
  * @param data updated skin data
@@ -69,7 +96,7 @@ Skinable.prototype.updateTheme = function(data) {
 };
 
 /**
- * remove old skin and add new one
+ * Remove old skin and add new one
  *
  * @param skin {DisplayObject}
  */
@@ -85,20 +112,18 @@ Skinable.prototype.changeSkin = function(skin) {
 };
 
 /**
- * initiate all skins first
- *
-
+ * Initiate all skins first
+ * @private
  */
 Skinable.prototype.preloadSkins = function() {
 };
 
 /**
- * get image from skin (will execute a callback with the loaded skin
+ * Get image from skin (will execute a callback with the loaded skin
  * when it is loaded or call it directly when it already is loaded)
  *
-
- * @param name name of the state
- * @param callback callback that is executed if the skin is loaded
+ * @param name name of the state {String}
+ * @param callback callback that is executed if the skin is loaded {function}
  */
 Skinable.prototype.fromSkin = function(name, callback) {
     var skin;
@@ -118,8 +143,7 @@ Skinable.prototype.fromSkin = function(name, callback) {
 
 /**
  * empty skin cache and load skins again
- *
-
+ * @private
  */
 Skinable.prototype.reloadSkin = function() {
     for (var name in this.skinCache) {
@@ -139,12 +163,12 @@ Skinable.prototype.reloadSkin = function() {
 };
 
 /**
- * change the skin name
+ * Change the skin name
  * You normally set the skin name as constant in your control, but if you
  * want you can set another skin name to change skins for single components
  * at runtime.
  *
- * @property skinName
+ * @name GOWN.Skinable#skinName
  * @type String
  */
 Object.defineProperty(Skinable.prototype, 'skinName', {
@@ -162,12 +186,13 @@ Object.defineProperty(Skinable.prototype, 'skinName', {
 });
 
 /**
- * fallback skin if other skin does not exist (e.g. if a mobile theme
+ * The fallback skin if the other skin does not exist (e.g. if a mobile theme
  * that does not provide a "hover" state is used on a desktop system)
  * (normally the default "up"-state skin)
  *
- * @property skinFallback
+ * @name GOWN.Skinable#skinFallback
  * @type String
+ * @default 'up'
  */
 Object.defineProperty(Skinable.prototype, 'skinFallback', {
     get: function() {
@@ -178,9 +203,14 @@ Object.defineProperty(Skinable.prototype, 'skinFallback', {
     }
 });
 
-
-//TODO documentation?
+/**
+ * @private
+ */
 Skinable.prototype.containerDestroy = PIXI.Container.prototype.destroy;
+
+/**
+ * @private
+ */
 Skinable.prototype.destroy = function() {
     for (var name in this.skinCache) {
         var skin = this.skinCache[name];

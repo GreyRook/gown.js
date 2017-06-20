@@ -18,7 +18,7 @@ function Button(theme, skinName) {
      * The valid button states
      *
      * @private
-     * @type Array
+     * @type String[]
      * @default Button.stateNames
      */
     this._validStates = this._validStates || Button.stateNames;
@@ -102,7 +102,7 @@ Button.OUT = 'out';
  *
  * @static
  * @final
- * @type Array
+ * @type String[]
  * @private
  */
 Button.stateNames = [
@@ -289,6 +289,9 @@ Button.prototype.handleEvent = function(type) {
     }
 };
 
+/**
+ * @private
+ */
 // performance increase to avoid using call.. (10x faster)
 Button.prototype.redrawSkinable = Skinable.prototype.redraw;
 
@@ -334,6 +337,9 @@ Button.prototype.updateLabelDimensions = function () {
     }
 };
 
+/**
+ * @private
+ */
 Button.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
 /**
