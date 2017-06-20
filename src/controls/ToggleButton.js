@@ -16,7 +16,7 @@ function ToggleButton(theme, skinName) {
      * The valid toggle button states
      *
      * @private
-     * @type Array
+     * @type String[]
      * @default ToggleButton.stateNames
      */
     this._validStates = ToggleButton.stateNames;
@@ -28,6 +28,7 @@ function ToggleButton(theme, skinName) {
      *
      * @private
      * @type Boolean
+     * @default false
      */
     this._selected = false;
 }
@@ -90,7 +91,7 @@ ToggleButton.SELECTED_HOVER = 'selected_hover';
  *
  * @static
  * @final
- * @type Array
+ * @type String[]
  * @private
  */
 ToggleButton.stateNames = Button.stateNames.concat([
@@ -98,7 +99,9 @@ ToggleButton.stateNames = Button.stateNames.concat([
     ToggleButton.SELECTED_DOWN,
     ToggleButton.SELECTED_HOVER]);
 
-
+/**
+ * @private
+ */
 var originalCurrentState = Object.getOwnPropertyDescriptor(Button.prototype, 'currentState');
 
 /**
@@ -148,6 +151,7 @@ ToggleButton.prototype.setSelected = function(selected, emit) {
  *
  * @name GOWN.ToggleButton#selected
  * @type Boolean
+ * @default false
  */
 Object.defineProperty(ToggleButton.prototype, 'selected', {
     set: function(selected) {
