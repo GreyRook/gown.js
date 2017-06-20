@@ -17,7 +17,7 @@
     "default"       : {
       "outputSourceFiles" : true
     },
-    "applicationName": "gown.js",
+    "applicationName": "GOWN",
     "footer"        : "",
     "copyright"     : "",
     "disqus": "",
