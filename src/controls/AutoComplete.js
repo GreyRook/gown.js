@@ -9,7 +9,7 @@ var InputControl = require('./InputControl'),
  * @memberof GOWN
  * @constructor
  * @param text Default display text {String}
- * @param [theme] theme for auto complete {Theme}
+ * @param [theme] theme for auto complete {GOWN.Theme}
  * @param [skinName=AutoComplete.SKIN_NAME] name of the auto complete skin {String}
  */
 function AutoComplete(text, theme, skinName) {

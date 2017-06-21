@@ -29,7 +29,7 @@ module.exports = Control;
  * inherit Skinable, e.g. if there is only some color in the skin that will
  * be taken or if it has some skinable components as children)
  *
- * @param theme the new theme {Theme}
+ * @param theme the new theme {GOWN.Theme}
  */
 Control.prototype.setTheme = function(theme) {
     if (theme === this.theme && theme) {

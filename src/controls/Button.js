@@ -8,7 +8,7 @@ var Skinable = require('../core/Skinable');
  * @extends GOWN.Skinable
  * @memberof GOWN
  * @constructor
- * @param [theme] theme for the button {Theme}
+ * @param [theme] theme for the button {GOWN.Theme}
  * @param [skinName=Button.SKIN_NAME] name of the button skin {String}
  */
 function Button(theme, skinName) {
@@ -355,7 +355,7 @@ Button.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 /**
  * Change the theme
  *
- * @param theme the new theme {Theme}
+ * @param theme the new theme {GOWN.Theme}
  */
 Button.prototype.setTheme = function(theme) {
     // this theme has other font or color settings - update the label

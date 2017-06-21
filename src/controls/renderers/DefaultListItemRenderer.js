@@ -8,7 +8,7 @@ var Button = require('../Button');
  * @extends GOWN.ToggleButton
  * @memberof GOWN
  * @constructor
- * @param [theme] theme for the DefaultListItemRenderer {Theme}
+ * @param [theme] theme for the DefaultListItemRenderer {GOWN.Theme}
  */
 function DefaultListItemRenderer(theme) {
     ToggleButton.call(this, theme);

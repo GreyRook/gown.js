@@ -8,7 +8,7 @@ var Control = require('./Control');
  * @extends GOWN.Control
  * @memberof GOWN
  * @constructor
- * @param [theme=GOWN.theme] theme for the skinable {Theme}
+ * @param [theme=GOWN.theme] theme for the skinable {GOWN.Theme}
  */
 function Skinable(theme) {
     Control.call(this);
@@ -78,7 +78,7 @@ Skinable.prototype.controlSetTheme = Control.prototype.setTheme;
 /**
  * Change the theme
  *
- * @param theme the new theme {Theme}
+ * @param theme the new theme {GOWN.Theme}
  */
 Skinable.prototype.setTheme = function(theme) {
     if (theme === this.theme || !theme) {
