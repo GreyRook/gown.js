@@ -12,33 +12,61 @@ var Skinable = require('../core/Skinable'),
  * @extends GOWN.Skinable
  * @memberof GOWN
  * @constructor
+ * @param [theme] theme for the input control {Theme}
  */
 function InputControl(theme) {
     Skinable.call(this, theme);
 
+    /**
+     * TODO
+     *
+     * @type bool
+     * @default true
+     */
     this.receiveKeys = true;
 
-    // prevent other interaction (touch/move) on this component
+    /**
+     * Prevent other interaction (touch/move) on this component
+     *
+     * @type bool
+     * @default false
+     */
     this.autoPreventInteraction = false;
 
     /**
-     * current position of the cursor in the text
+     * Current position of the cursor in the text
+     *
+     * @type Number
+     * @default 0
+     * @private
      */
     this.cursorPos = 0;
 
     /**
-     * character position of selected area in the text (start and end)
+     * Character position of selected area in the text (start and end)
      *
-     * @type {Array}
+     * @type Number[]
+     * @default [0, 0]
      * @private
      */
     this.selection = [0, 0];
 
     /**
-     * character position that marks the beginning of the current selection
+     * Character position that marks the beginning of the current selection
+     *
+     * @type Number
+     * @default 0
+     * @private
      */
     this.selectionStart = 0;
 
+    /**
+     * Text offset
+     *
+     * @type PIXI.Point
+     * @default new PIXI.Point(5, 4)
+     * @private
+     */
     this.textOffset = new PIXI.Point(5, 4);
 
     this.text = this.text || '';
@@ -46,53 +74,77 @@ function InputControl(theme) {
     // create DOM Input (if we need one)
     InputWrapper.createInput();
 
-    this.hasFocus = false;
+    /**
+     * Determine if the input has the focus
+     *
+     * @type bool
+     * @default false
+     * @private
+     */
+    this._hasFocus = false;
 
     /**
-     * indicates if the mouse button has been pressed
-     * @property _mouseDown
-     * @type {boolean}
+     * Indicates if the mouse button is being pressed
+     *
+     * @type bool
+     * @default false
      * @private
      */
     this._mouseDown = false;
 
-    this.currentState = InputControl.UP;
+    /**
+     * The current state
+     *
+     * @type String
+     * @default InputControl.UP
+     * @private
+     */
+    this._currentState = InputControl.UP;
 
     /**
-     * timer used to indicate if the cursor is shown
+     * Timer used to indicate if the cursor is shown
      *
-     * @property _cursorTimer
-     * @type {Number}
+     * @type Number
+     * @default 0
      * @private
      */
     this._cursorTimer = 0;
 
     /**
-     * indicates if the cursor position has changed
+     * Indicates if the cursor position has changed
      *
-     * @property _cursorNeedsUpdate
-     * @type {Boolean}
+     * @type bool
+     * @default true
      * @private
      */
-
     this._cursorNeedsUpdate = true;
 
     /**
-     * interval for the cursor (in milliseconds)
+     * Interval for the cursor (in milliseconds)
      *
-     * @property blinkInterval
-     * @type {number}
+     * @type Number
+     * @default 500
      */
     this.blinkInterval = 500;
 
-    // caret/selection sprite
+    /**
+     * Caret/selection sprite
+     *
+     * @type PIXI.Text
+     * @default new PIXI.Text('|', this.cursorStyle)
+     * @private
+     */
     this.cursor = new PIXI.Text('|', this.cursorStyle);
     if (this.pixiText) {
         this.cursor.y = this.pixiText.y;
     }
     this.addChild(this.cursor);
 
-    // selection background
+    /**
+     * Text selection background
+     *
+     * @type PIXI.Graphics
+     */
     this.selectionBg = new PIXI.Graphics();
     this.addChildAt(this.selectionBg, 0);
 
@@ -112,7 +164,6 @@ module.exports = InputControl;
 /**
  * Up state: mouse button is released or finger is removed from the screen
  *
- * @property UP
  * @static
  * @final
  * @type String
@@ -122,7 +173,6 @@ InputControl.UP = 'up';
 /**
  * Down state: mouse button is pressed or finger touches the screen
  *
- * @property DOWN
  * @static
  * @final
  * @type String
@@ -133,7 +183,6 @@ InputControl.DOWN = 'down';
  * Hover state: mouse pointer hovers over the button
  * (ignored on mobile)
  *
- * @property HOVER
  * @static
  * @final
  * @type String
@@ -144,35 +193,37 @@ InputControl.HOVER = 'hover';
  * Hover state: mouse pointer hovers over the button
  * (ignored on mobile)
  *
- * @property HOVER
  * @static
  * @final
  * @type String
  */
 InputControl.OUT = 'out';
 
-
 /**
- * names of possible states for a button
+ * Names of possible states for an input control
  *
- * @property stateNames
  * @static
  * @final
- * @type String
+ * @type String[]
+ * @private
  */
 InputControl.stateNames = [
     InputControl.DOWN, InputControl.HOVER, InputControl.UP
 ];
 
 /**
- * currently selected input control (used for tab index)
+ * Currently selected input control (used for tab index)
  *
- * @property currentInput
- * @type GOWN.InputControl
  * @static
+ * @type GOWN.InputControl
  */
 InputControl.currentInput = null;
 
+/**
+ * Input changed callback
+ *
+ * @protected
+ */
 InputControl.prototype.onInputChanged = function () {
     if (!this.hasFocus) {
         return;
@@ -192,18 +243,26 @@ InputControl.prototype.onInputChanged = function () {
     this.setCursorPos();
 };
 
+/**
+ * Move the cursor left
+ */
 InputControl.prototype.moveCursorLeft = function() {
     this.cursorPos = Math.max(this.cursorPos-1, 0);
     this._cursorNeedsUpdate = true;
 };
 
+/**
+ * Move the cursor right
+ */
 InputControl.prototype.moveCursorRight = function() {
     this.cursorPos = Math.min(this.cursorPos+1, this.text.length);
     this._cursorNeedsUpdate = true;
 };
 
 /**
- * insert char at current cursor position
+ * Insert a char at the current cursor position
+ *
+ * @param char The char that gets inserted {String}
  */
 InputControl.prototype.insertChar = function(char) {
     if (this.maxChars > 0 && this.pixiText.text >= this.maxChars) {
@@ -216,8 +275,7 @@ InputControl.prototype.insertChar = function(char) {
 };
 
 /**
- * delete selected text
- *
+ * Delete the selected text
  */
 InputControl.prototype.deleteSelection = function() {
     var start = this.selection[0];
@@ -232,10 +290,12 @@ InputControl.prototype.deleteSelection = function() {
     throw new Error('can not delete text! (start & end are the same)');
 };
 
-
-
 /**
- * deletion from to multiple lines
+ * Delete text from a start position to an end position
+ *
+ * @param fromPos start position {Number}
+ * @param toPos end position {Number}
+ * @returns {String}
  */
 InputControl.prototype.deleteText = function(fromPos, toPos) {
     this.text = [this.text.slice(0, fromPos), this.text.slice(toPos)].join('');
@@ -245,11 +305,14 @@ InputControl.prototype.deleteText = function(fromPos, toPos) {
     return this.text;
 };
 
-InputControl.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 /**
- * change the theme
- *
+ * @private
+ */
+InputControl.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 
+/**
+ * Change the theme
+ *
  * @param theme the new theme {Theme}
  */
 InputControl.prototype.setTheme = function(theme) {
@@ -261,6 +324,11 @@ InputControl.prototype.setTheme = function(theme) {
     this.style = theme.textStyle;
 };
 
+/**
+ * Set the input control text.
+ *
+ * @param text The text to set {String}
+ */
 InputControl.prototype.setText = function(text) {
     this._displayText = text || '';
     if (!this.pixiText) {
@@ -273,87 +341,10 @@ InputControl.prototype.setText = function(text) {
 };
 
 /**
- * set the text that is shown inside the input field.
- * calls onTextChange callback if text changes
+ * Set the selected text
  *
- * @property text
- * @type String
- */
-Object.defineProperty(InputControl.prototype, 'text', {
-    get: function () {
-        if (this.pixiText) {
-            return this.pixiText.text;
-        }
-        return this._origText;
-    },
-    set: function (text) {
-        text += ''; // add '' to assure text is parsed as string
-
-        if (this.maxChars > 0 && text.length > this.maxChars) {
-            //reset hidden input to previous state
-            InputWrapper.setText(this._origText);
-            InputWrapper.setSelection(this.selection[0], this.selection[1]);
-            return;
-        }
-
-        if (this._origText === text) {
-            // return if text has not changed
-            return;
-        }
-        this._origText = text;
-        this.setText(text);
-
-        // reposition cursor
-        this._cursorNeedsUpdate = true;
-    }
-});
-
-/**
- * The maximum number of characters that may be entered. If 0,
- * any number of characters may be entered.
- * (same as maxLength for DOM inputs)
- *
- * @default 0
- * @property maxChars
- * @type String
- */
-Object.defineProperty(InputControl.prototype, 'maxChars', {
-    get: function () {
-        return this._maxChars;
-    },
-    set: function (value) {
-        if (this._maxChars === value) {
-            return;
-        }
-        if (this.pixiText.text > value) {
-            this.pixiText.text = this.pixiText.text.substring(0, value);
-            if (this.cursorPos > value) {
-                this.cursorPos = value;
-                this._cursorNeedsUpdate = true;
-            }
-            this.updateSelection(
-                Math.max(this.selection[0], value),
-                Math.max(this.selection[1], value)
-            );
-        }
-        this._maxChars = value;
-        InputWrapper.setMaxLength(value);
-
-    }
-});
-
-Object.defineProperty(InputControl.prototype, 'value', {
-    get: function() {
-        return this._origText;
-    }
-});
-
-/**
- * set selected text
- *
-
- * @param start start position in the text
- * @param end end position in the text
+ * @param start Start position in the text {Number}
+ * @param end End position in the text {Number}
  * @returns {boolean}
  */
 InputControl.prototype.updateSelection = function (start, end) {
@@ -368,11 +359,10 @@ InputControl.prototype.updateSelection = function (start, end) {
 };
 
 /**
- * get text width
+ * Get the width of a text
  *
-
- * @param text
- * @returns {*}
+ * @param text The text to get the width from {String}
+ * @returns {Number}
  */
 InputControl.prototype.textWidth = function(text) {
     // TODO: support BitmapText for PIXI v3+
@@ -381,9 +371,7 @@ InputControl.prototype.textWidth = function(text) {
 };
 
 /**
- * focus on this input and set it as current
- *
-
+ * Focus on this input and set it as current
  */
 InputControl.prototype.focus = function () {
     // is already current input
@@ -415,6 +403,11 @@ InputControl.prototype.focus = function () {
      */
 };
 
+/**
+ * Blurs the input when the mouse is released outside
+ *
+ * @protected
+ */
 InputControl.prototype.onMouseUpOutside = function() {
     if (this.hasFocus && !this._mouseDown) {
         this.blur();
@@ -422,16 +415,15 @@ InputControl.prototype.onMouseUpOutside = function() {
 };
 
 /**
- * callback to execute code on focus
-
+ * Callback to execute code on focus
+ *
+ * @protected
  */
 InputControl.prototype.onfocus = function () {
 };
 
 /**
- * blur the text input (remove focus)
- *
-
+ * Blur the text input (remove focus)
  */
 InputControl.prototype.blur = function() {
     if (GOWN.InputControl.currentInput === this) {
@@ -446,7 +438,7 @@ InputControl.prototype.blur = function() {
 };
 
 /**
- * position cursor on the text
+ * Set the cursor position on the text
  */
 InputControl.prototype.setCursorPos = function () {
     this.textToPixelPos(this.cursorPos, this.cursor.position);
@@ -455,8 +447,10 @@ InputControl.prototype.setCursorPos = function () {
 };
 
 /**
- * height of the line in pixel
+ * Height of the line in pixel
  * (assume that every character of pixi text has the same line height)
+ *
+ * @returns {Number}
  */
 InputControl.prototype.lineHeight = function() {
     var style = this.pixiText._style;
@@ -465,9 +459,9 @@ InputControl.prototype.lineHeight = function() {
 };
 
 /**
- * draw the cursor
+ * Draw the cursor
  *
-
+ * @private
  */
 InputControl.prototype.drawCursor = function () {
     // TODO: use Tween instead!
@@ -490,6 +484,11 @@ InputControl.prototype.drawCursor = function () {
     }
 };
 
+/**
+ * onMove callback
+ *
+ * @protected
+ */
 InputControl.prototype.onMove = function (e) {
     if (this.autoPreventInteraction) {
         e.stopPropagation();
@@ -511,6 +510,11 @@ InputControl.prototype.onMove = function (e) {
     return true;
 };
 
+/**
+ * onDown callback
+ *
+ * @protected
+ */
 InputControl.prototype.onDown = function (e) {
     if (this.autoPreventInteraction) {
         e.stopPropagation();
@@ -549,6 +553,11 @@ InputControl.prototype.onDown = function (e) {
     return true;
 };
 
+/**
+ * onUp callback
+ *
+ * @protected
+ */
 InputControl.prototype.onUp = function (e) {
     if (this.autoPreventInteraction) {
         e.stopPropagation();
@@ -581,12 +590,12 @@ InputControl.prototype.onUp = function (e) {
 };
 
 /**
- * from position in the text to pixel position
+ * From position in the text to pixel position
  * (for cursor/selection positioning)
  *
-
- * @param textPos current character position in the text
- * @returns {Point} pixel position
+ * @param textPos Current character position in the text {Number}
+ * @param [position] point that will be set with the pixel position and returned {PIXI.Point}
+ * @returns {PIXI.Point} Pixel position
  */
 InputControl.prototype.textToPixelPos = function(textPos, position) {
     var lines = this.getLines();
@@ -612,12 +621,11 @@ InputControl.prototype.textToPixelPos = function(textPos, position) {
 };
 
 /**
- * from pixel position on the text to character position inside the text
+ * From pixel position on the text to character position inside the text
  * (used when clicked on the text)
  *
-
- * @param mousePos position of the mouse on the PIXI Text
- * @returns {Number} position in the text
+ * @param pixelPos Pixel position of the mouse on the text
+ * @returns {Number} Position in the text
  */
 InputControl.prototype.pixelToTextPos = function(pixelPos) {
     var textPos = 0;
@@ -651,17 +659,26 @@ InputControl.prototype.pixelToTextPos = function(pixelPos) {
 };
 
 /**
- * callback that will be executed once the text input is blurred
+ * Callback that will be executed once the text input is blurred
  *
-
+ * @protected
  */
 InputControl.prototype.onblur = function() {
     this.updateSelection(0, 0);
     this.emit('focusOut', this);
 };
 
+/**
+ * @private
+ */
 // performance increase to avoid using call.. (10x faster)
 InputControl.prototype.redrawSkinable = Skinable.prototype.redraw;
+
+/**
+ * Update before draw call (draw cursor and selection)
+ *
+ * @protected
+ */
 InputControl.prototype.redraw = function () {
     if (this.drawCursor) {
         this.drawCursor();
@@ -672,12 +689,89 @@ InputControl.prototype.redraw = function () {
     this.redrawSkinable();
 };
 
+/**
+ * Set the text that is shown inside the input field.
+ * Calls onTextChange callback if text changes.
+ *
+ * @name GOWN.InputControl#text
+ * @type String
+ * @default ''
+ */
+Object.defineProperty(InputControl.prototype, 'text', {
+    get: function () {
+        if (this.pixiText) {
+            return this.pixiText.text;
+        }
+        return this._origText;
+    },
+    set: function (text) {
+        text += ''; // add '' to assure text is parsed as string
+
+        if (this.maxChars > 0 && text.length > this.maxChars) {
+            //reset hidden input to previous state
+            InputWrapper.setText(this._origText);
+            InputWrapper.setSelection(this.selection[0], this.selection[1]);
+            return;
+        }
+
+        if (this._origText === text) {
+            // return if text has not changed
+            return;
+        }
+        this._origText = text;
+        this.setText(text);
+
+        // reposition cursor
+        this._cursorNeedsUpdate = true;
+    }
+});
 
 /**
- * determine if the input has the focus
+ * The maximum number of characters that may be entered. If 0,
+ * any number of characters may be entered.
+ * (same as maxLength for DOM inputs)
  *
- * @property hasFocus
- * @type Boolean
+ * @name GOWN.InputControl#maxChars
+ * @type String
+ * @default 0
+ */
+Object.defineProperty(InputControl.prototype, 'maxChars', {
+    get: function () {
+        return this._maxChars;
+    },
+    set: function (value) {
+        if (this._maxChars === value) {
+            return;
+        }
+        if (this.pixiText.text > value) {
+            this.pixiText.text = this.pixiText.text.substring(0, value);
+            if (this.cursorPos > value) {
+                this.cursorPos = value;
+                this._cursorNeedsUpdate = true;
+            }
+            this.updateSelection(
+                Math.max(this.selection[0], value),
+                Math.max(this.selection[1], value)
+            );
+        }
+        this._maxChars = value;
+        InputWrapper.setMaxLength(value);
+
+    }
+});
+
+Object.defineProperty(InputControl.prototype, 'value', {
+    get: function() {
+        return this._origText;
+    }
+});
+
+/**
+ * Determine if the input has the focus
+ *
+ * @name GOWN.InputControl#hasFocus
+ * @type bool
+ * @default false
  */
 Object.defineProperty(InputControl.prototype, 'hasFocus', {
     get: function() {
@@ -689,7 +783,10 @@ Object.defineProperty(InputControl.prototype, 'hasFocus', {
 });
 
 /**
- * set text style (size, font etc.) for text and cursor
+ * Set the text style (size, font etc.) for text and cursor
+ *
+ * @name GOWN.InputControl#style
+ * @type PIXI.TextStyle
  */
 Object.defineProperty(InputControl.prototype, 'style', {
     get: function() {
@@ -710,11 +807,12 @@ Object.defineProperty(InputControl.prototype, 'style', {
 });
 
 /**
- * The current state (one of _validStates)
+ * The current state
  * TODO: move to skinable?
  *
- * @property currentState
+ * @name GOWN.InputControl#currentState
  * @type String
+ * @default InputControl.UP
  */
 Object.defineProperty(InputControl.prototype, 'currentState',{
     get: function() {

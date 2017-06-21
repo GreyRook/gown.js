@@ -170,7 +170,7 @@ Skinable.prototype.reloadSkin = function() {
 };
 
 /**
- * Change the skin name
+ * Change the skin name.
  * You normally set the skin name as constant in your control, but if you
  * want you can set another skin name to change skins for single components
  * at runtime.
