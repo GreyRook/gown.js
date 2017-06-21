@@ -110,7 +110,7 @@ Button.stateNames = [
 ];
 
 /**
- * Triggered event name for button
+ * Dispatched when the button is triggered.
  *
  * @static
  * @final
