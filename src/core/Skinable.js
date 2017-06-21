@@ -15,6 +15,7 @@ function Skinable(theme) {
 
     /**
      * The skin cache
+     *
      * @private
      * @type Object
      * @default {}
@@ -29,6 +30,7 @@ function Skinable(theme) {
 
     /**
      * Invalidate state so the control will be redrawn next time
+     *
      * @private
      * @type bool
      * @default true
@@ -37,6 +39,7 @@ function Skinable(theme) {
 
     /**
      * Overwrite skin values before next draw call.
+     *
      * @private
      * @type bool
      * @default true
@@ -45,6 +48,7 @@ function Skinable(theme) {
 
     /**
      * Will destroy the skin cache when the skinable gets destroyed
+     *
      * @type bool
      * @default true
      */
@@ -52,6 +56,7 @@ function Skinable(theme) {
 
     /**
      * Default skin fallback state
+     *
      * @type String
      * @default 'up'
      * @private
@@ -113,7 +118,6 @@ Skinable.prototype.changeSkin = function(skin) {
 
 /**
  * Initiate all skins first
- * @private
  */
 Skinable.prototype.preloadSkins = function() {
 };
@@ -142,7 +146,8 @@ Skinable.prototype.fromSkin = function(name, callback) {
 };
 
 /**
- * empty skin cache and load skins again
+ * Empty skin cache and load skins again
+ *
  * @private
  */
 Skinable.prototype.reloadSkin = function() {
@@ -209,7 +214,7 @@ Object.defineProperty(Skinable.prototype, 'skinFallback', {
 Skinable.prototype.containerDestroy = PIXI.Container.prototype.destroy;
 
 /**
- * @private
+ * Destroy the Skinable and empty the skin cache
  */
 Skinable.prototype.destroy = function() {
     for (var name in this.skinCache) {
