@@ -12,7 +12,7 @@ var Skinable = require('../core/Skinable'),
  * @extends GOWN.Skinable
  * @memberof GOWN
  * @constructor
- * @param [theme] theme for the input control {Theme}
+ * @param [theme] theme for the input control {GOWN.Theme}
  */
 function InputControl(theme) {
     Skinable.call(this, theme);
@@ -313,7 +313,7 @@ InputControl.prototype.skinableSetTheme = Skinable.prototype.setTheme;
 /**
  * Change the theme
  *
- * @param theme the new theme {Theme}
+ * @param theme the new theme {GOWN.Theme}
  */
 InputControl.prototype.setTheme = function(theme) {
     if (theme === this.theme || !theme) {

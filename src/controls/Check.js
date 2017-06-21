@@ -8,7 +8,7 @@ var ToggleButton = require('./ToggleButton');
  * @extends GOWN.ToggleButton
  * @memberof GOWN
  * @constructor
- * @param [theme] theme for the button {Theme}
+ * @param [theme] theme for the button {GOWN.Theme}
  * @param [skinName=Check.SKIN_NAME] name of the check skin {String}
  */
 function Check(theme, skinName) {

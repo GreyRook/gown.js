@@ -10,7 +10,7 @@ var DefaultListItemRenderer = require('./renderers/DefaultListItemRenderer');
  * @extends GOWN.Scroller
  * @memberof GOWN
  * @constructor
- * @param [theme] theme for the list {Theme}
+ * @param [theme] theme for the list {GOWN.Theme}
  */
 function List(theme) {
     Scroller.call(this, theme);
@@ -145,9 +145,9 @@ List.CHANGE = 'change';
  */
 
 /**
- * A function that is expected to return a new item renderer*
+ * A function that is expected to return a new GOWN.DefaultListItemRenderer
  *
- * @param theme The item theme {Theme}
+ * @param theme The item theme {GOWN.Theme}
  * @returns {DefaultListItemRenderer}
  * @private
  */
