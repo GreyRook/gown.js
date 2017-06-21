@@ -55,13 +55,15 @@ function Skinable(theme) {
     this.allowDestroyCache = true;
 
     /**
-     * Default skin fallback state
+     * The fallback skin if the other skin does not exist (e.g. if a mobile theme
+     * that does not provide a "hover" state is used on a desktop system)
+     * (normally the default "up"-state skin)
      *
      * @type String
      * @default 'up'
      * @private
      */
-    this.skinFallback = 'up';
+    this._skinFallback = 'up';
 }
 
 Skinable.prototype = Object.create( Control.prototype );
