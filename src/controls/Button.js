@@ -110,7 +110,7 @@ Button.stateNames = [
 ];
 
 /**
- * triggered event name for button
+ * Triggered event name for button
  *
  * @static
  * @final
@@ -119,9 +119,8 @@ Button.stateNames = [
 Button.TRIGGERED = 'triggered';
 
 /**
- * initiate all skins first
+ * Initiate all skins first
  * (to prevent flickering)
- * @private
  */
 Button.prototype.preloadSkins = function() {
     if (!this._validStates) {
@@ -134,11 +133,10 @@ Button.prototype.preloadSkins = function() {
 };
 
 /**
- * skin has been loaded (see preloadSkins) and stored into the skinCache.
+ * Skin has been loaded (see preloadSkins) and stored into the skinCache.
  * add to container, hide and resize
  *
  * @param skin the loaded skin
- * @private
  */
 Button.prototype.skinLoaded = function(skin) {
     this.addChildAt(skin, 0);
@@ -157,7 +155,6 @@ Button.prototype.skinLoaded = function(skin) {
 
 /**
  * onDown callback
- * @private
  */
 Button.prototype.onDown = function() {
     this.handleEvent(Button.DOWN);
@@ -171,7 +168,6 @@ Button.prototype.onDown = function() {
 
 /**
  * onUp callback
- * @private
  */
 Button.prototype.onUp = function() {
     this.handleEvent(Button.UP);
@@ -182,7 +178,6 @@ Button.prototype.onUp = function() {
 
 /**
  * onHover callback
- * @private
  */
 Button.prototype.onHover = function() {
     this.handleEvent(Button.HOVER);
@@ -192,7 +187,6 @@ Button.prototype.onHover = function() {
 
 /**
  * onOut callback
- * @private
  */
 Button.prototype.onOut = function() {
     this.handleEvent(Button.OUT);
@@ -202,7 +196,6 @@ Button.prototype.onOut = function() {
 
 /**
  * onTouchMove callback
- * @private
  */
 Button.prototype.onTouchMove = function(eventData) {
     // please note that if the user takes his finger from the screen when
@@ -215,7 +208,8 @@ Button.prototype.onTouchMove = function(eventData) {
 };
 
 /**
- * update width/height of the button
+ * Update width/height of the button
+ *
  * @private
  */
 Button.prototype.updateDimensions = function() {
@@ -246,7 +240,7 @@ Button.prototype.updateDimensions = function() {
 };
 
 /**
- * handle one of the mouse/touch events
+ * Handle one of the mouse/touch events
  *
  * @param type one of the valid states
  * @protected
@@ -296,8 +290,7 @@ Button.prototype.handleEvent = function(type) {
 Button.prototype.redrawSkinable = Skinable.prototype.redraw;
 
 /**
- * update before draw call (position label)
- * @private
+ * Update before draw call (position label)
  */
 Button.prototype.redraw = function() {
     if (this.updateLabel) {
@@ -307,7 +300,8 @@ Button.prototype.redraw = function() {
 };
 
 /**
- * create/update a label for this button
+ * Create/update a label for this button
+ *
  * @private
  */
 Button.prototype.createLabel = function() {
@@ -325,7 +319,8 @@ Button.prototype.createLabel = function() {
 };
 
 /**
- * create/update the position of the label
+ * Create/update the position of the label
+ *
  * @private
  */
 Button.prototype.updateLabelDimensions = function () {

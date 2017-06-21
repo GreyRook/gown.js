@@ -53,6 +53,7 @@ function DefaultListItemRenderer(theme) {
 
     /**
      * Overwrite data values before next draw call.
+     *
      * @private
      * @type bool
      * @default false
@@ -65,6 +66,7 @@ function DefaultListItemRenderer(theme) {
     // before he can set pixel values.
     /**
      * Percent width
+     *
      * @private
      * @type Number
      * @default 100
@@ -73,6 +75,7 @@ function DefaultListItemRenderer(theme) {
 
     /**
      * Percent height
+     *
      * @private
      * @type Number
      * @default 100
@@ -88,8 +91,7 @@ module.exports = DefaultListItemRenderer;
 DefaultListItemRenderer.prototype.redrawButton = Button.prototype.redraw;
 
 /**
- * update button text before draw call
- * @private
+ * Update button text before draw call
  */
 DefaultListItemRenderer.prototype.redraw = function() {
     if (this.dataInvalid) {
