@@ -3,32 +3,113 @@ var Skinable = require('../core/Skinable'),
     SliderData = require('../utils/SliderData');
 
 /**
- * a scrollabe control provides a thumb that can be be moved along a fixed track.
+ * A scrollabe control provides a thumb that can be be moved along a fixed track.
  * This is the common ground for ScrollBar and Slider
  *
  * @class Scrollable
- * @extends GOWN.Scrollable
+ * @extends GOWN.Skinable
  * @memberof GOWN
  * @constructor
+ * @param [theme] theme for the radio button {GOWN.Theme}
  */
 // TODO: remove setting value (value manipulation is for Slider only)
 function Scrollable(theme) {
+    /**
+     * The scrollable mode
+     *
+     * @type String
+     * @default Scrollable.DESKTOP_MODE
+     */
     this.mode = this.mode || Scrollable.DESKTOP_MODE;
 
     Skinable.call(this, theme);
 
+    /**
+     * The scrollable direction
+     *
+     * @type String
+     * @default Scrollable.HORIZONTAL
+     */
     this.direction = this.direction || Scrollable.HORIZONTAL;
 
+    /**
+     * Invalidate track so that it will be redrawn next time
+     *
+     * @private
+     * @type bool
+     * @default true
+     */
     this.invalidTrack = true;
+
+    /**
+     * Inverse the progress bar
+     *
+     * @private
+     * @type bool
+     * @default false
+     */
     this._inverse = false;
+
+    /**
+     * Point where the mouse hit the scrollable
+     *
+     * @private
+     * @type Number[]
+     * @default null
+     */
     this._start = null;
+
+    /**
+     * The minimum
+     *
+     * @private
+     * @type Number
+     * @default 0
+     */
     this._minimum = this._minimum || 0;
+
+    /**
+     * The maximum
+     *
+     * @private
+     * @type Number
+     * @default 100
+     */
     this._maximum = this._maximum || 100;
+
+    /**
+     * Step size (not implemented yet)
+     *
+     * @private
+     * @type Number
+     * @default 1
+     */
     this.step = this.step || 1; //TODO: implement me!
+
+    /**
+     * Pagination jump (not implemented yet)
+     *
+     * @private
+     * @type Number
+     * @default 10
+     */
     this.page = this.page || 10; //TODO: implement me!
+
+    /**
+     * Value
+     *
+     * @private
+     * @type Number
+     * @default 0
+     */
     this._value = this.minimum;
 
-    // # of pixel you scroll at a time (if the event delta is 1 / -1)
+    /**
+     * Number of pixels you scroll at a time (if the event delta is 1 / -1)
+     *
+     * @type Number
+     * @default 10
+     */
     this.scrolldelta = 10;
 
     this.on('touchstart', this.handleDown, this);
@@ -39,6 +120,13 @@ function Scrollable(theme) {
     this.on('mouseupoutside', this.handleUp, this);
     this.on('mouseup', this.handleUp, this);
 
+    /**
+     * Invalidate thumb factory so that it will be redrawn next time
+     *
+     * @private
+     * @type bool
+     * @default true
+     */
     this.thumbFactoryInvalid = true;
 }
 
@@ -46,39 +134,47 @@ Scrollable.prototype = Object.create( Skinable.prototype );
 Scrollable.prototype.constructor = Scrollable;
 module.exports = Scrollable;
 
-
 /**
- * in desktop mode mouse wheel support is added (default)
+ * In desktop mode mouse wheel support is added (default)
  *
- * @property DESKTOP_MODE
  * @static
+ * @final
+ * @type String
  */
 Scrollable.DESKTOP_MODE = 'desktop';
 
 /**
- * in mobile mode mouse wheel support is disabled
+ * In mobile mode mouse wheel support is disabled
  *
- * @property MOBILE_MODE
  * @static
+ * @final
+ * @type String
  */
 Scrollable.MOBILE_MODE = 'mobile';
 
 /**
- * show horizontal scrollbar/slider
+ * Show horizontal scrollbar/slider
  *
- * @property HORIZONTAL
  * @static
+ * @final
+ * @type String
  */
 Scrollable.HORIZONTAL = 'horizontal';
 
 /**
- * show vertical scrollbar/slider
+ * Show vertical scrollbar/slider
  *
- * @property VERTICAL
  * @static
+ * @final
+ * @type String
  */
 Scrollable.VERTICAL = 'vertical';
 
+/**
+ * Create the thumb
+ *
+ * @private
+ */
 Scrollable.prototype.createThumb = function() {
     this._thumbFactory = this._thumbFactory || this.defaultThumbFactory;
     this.thumb = this._thumbFactory();
@@ -86,19 +182,28 @@ Scrollable.prototype.createThumb = function() {
     this.positionThumb(this.value);
 };
 
+/**
+ * A function that is expected to return a new GOWN.ScrollThumb
+ *
+ * @returns {ScrollThumb}
+ * @private
+ */
 Scrollable.prototype.defaultThumbFactory = function() {
     return new ScrollThumb(this, this.theme);
 };
 
+/**
+ * Scroll to a specific position (not implemented yet)
+ */
 Scrollable.prototype.scrollToPosition = function() {
 };
 
 /**
- * handle mouse down/touch start
- * move scroll thumb clicking somewhere on the scroll bar (outside the thumb)
+ * Handle mouse down/touch start.
+ * Move scroll thumb.
  *
-
- * @param mouseData mousedata provided by pixi
+ * @param mouseData mouse data provided by PIXI
+ * @protected
  */
 Scrollable.prototype.handleDown = function(mouseData) {
     var local = mouseData.data.getLocalPosition(this);
@@ -128,19 +233,19 @@ Scrollable.prototype.increment = function() {
 };
 
 /**
- * handle mouse up/touch end
+ * Handle mouse up/touch end
  *
-
+ * @protected
  */
 Scrollable.prototype.handleUp = function() {
     this._start = null;
 };
 
 /**
- * handle mouse move: move thumb
+ * Handle mouse move. Moves the thumb.
  *
-
- * @param mouseData mousedata provided by pixi
+ * @param mouseData mouse data provided by PIXI
+ * @protected
  */
 Scrollable.prototype.handleMove = function(mouseData) {
     if (this._start) {
@@ -158,10 +263,10 @@ Scrollable.prototype.handleMove = function(mouseData) {
 };
 
 /**
- * handle mouse wheel: move thumb on track
+ * Handle mouse wheel. Moves thumb on track.
  *
-
- * @param event mousewheel event from browser
+ * @param event mouse wheel event from browser
+ * @protected
  */
 Scrollable.prototype.handleWheel = function (event) {
     var x = this.thumb.x - event.delta * this.scrolldelta;
@@ -172,23 +277,20 @@ Scrollable.prototype.handleWheel = function (event) {
 };
 
 /**
- * thumb has new x/y position
+ * Thumb has new x/y position
  *
-
- * @param x x-position that has been scrolled to (ignored when vertical)
- * @param y y-position that has been scrolled to (ignored when horizontal)
+ * @param x x-position that has been scrolled to (ignored when vertical) {Number}
+ * @param y y-position that has been scrolled to (ignored when horizontal) {Number}
  */
-
 Scrollable.prototype.thumbMoved = function(x, y) {
     var pos = this.direction === Scrollable.HORIZONTAL ? x : y;
     this.value = this.pixelToValue(pos);
 };
 
 /**
- * show the progress skin from the start/end of the scroll track to the current
+ * Show the progress skin from the start/end of the scroll track to the current
  * position of the thumb.
  *
-
  * @private
  */
 Scrollable.prototype._updateProgressSkin = function() {
@@ -221,10 +323,9 @@ Scrollable.prototype._updateProgressSkin = function() {
 };
 
 /**
- * returns the max. width in pixel
+ * Returns the max. width in pixel
  * (normally this.width - thumb width)
  *
-
  * @returns {Number}
  */
 Scrollable.prototype.maxWidth = function() {
@@ -232,10 +333,9 @@ Scrollable.prototype.maxWidth = function() {
 };
 
 /**
- * returns the max. height in pixel
+ * Returns the max. height in pixel
  * (normally this.height - thumb height)
  *
-
  * @returns {Number}
  */
 Scrollable.prototype.maxHeight = function() {
@@ -243,13 +343,12 @@ Scrollable.prototype.maxHeight = function() {
 };
 
 /**
- * move the thumb on the scroll bar within its bounds
+ * Move the thumb on the scroll bar within its bounds
  *
- * @param x new calculated x position of the thumb
- * @param y new calculated y position of the thumb
- * @returns {boolean} returns true if the position of the thumb has been
+ * @param x New x position of the thumb {Number}
+ * @param y New y position of the thumb {Number}
+ * @returns {boolean} Returns true if the position of the thumb has been
  * moved
-
  */
 Scrollable.prototype.moveThumb = function(x, y) {
     if (this.thumb.move(x, y)) {
@@ -260,10 +359,10 @@ Scrollable.prototype.moveThumb = function(x, y) {
 };
 
 /**
- * show scroll track
+ * Show scroll track
  *
-
- * @param skin
+ * @param skin The track skin {PIXI.DisplayObject}
+ * @private
  */
 Scrollable.prototype.showTrack = function(skin) {
     if (this.skin !== skin) {
@@ -280,11 +379,11 @@ Scrollable.prototype.showTrack = function(skin) {
 };
 
 /**
- * show progress on track (from the start/end of the track to the
+ * Show progress on track (from the start/end of the track to the
  * current position of the thumb)
  *
-
- * @param skin
+ * @param skin The progress skin {PIXI.DisplayObject}
+ * @private
  */
 Scrollable.prototype.showProgress = function(skin) {
     if (this.progressSkin !== skin) {
@@ -301,9 +400,9 @@ Scrollable.prototype.showProgress = function(skin) {
 };
 
 /**
- * redraw track and progressbar
+ * Update before draw call. Redraw track and progressbar and create thumb.
  *
-
+ * @protected
  */
 Scrollable.prototype.redraw = function() {
     if (this.thumbFactoryInvalid) {
@@ -324,13 +423,11 @@ Scrollable.prototype.redraw = function() {
     }
 };
 
-
 /**
- * calculate value of slider based on current pixel position of thumb
+ * Calculate value of slider based on the current pixel position of the thumb
  *
- * @param position
-
- * @returns Number value between minimum and maximum
+ * @param position current pixel position of the thumb {Number}
+ * @returns {Number} Value between minimum and maximum
  */
 Scrollable.prototype.pixelToValue = function(position) {
     var max = 0;
@@ -346,11 +443,10 @@ Scrollable.prototype.pixelToValue = function(position) {
 };
 
 /**
- * calculate current pixel position of thumb based on given value
+ * Calculate current pixel position of thumb based on given value
  *
- * @param value
-
- * @returns Number position of the scroll thumb in pixel
+ * @param value The value of the thumb position {Number}
+ * @returns {Number} Position of the scroll thumb in pixel
  */
 Scrollable.prototype.valueToPixel = function(value) {
     var max = 0;
@@ -367,11 +463,9 @@ Scrollable.prototype.valueToPixel = function(value) {
 };
 
 /**
- * position thumb to given value
+ * Position the thumb to a given value
  *
- * @param value
-
- * @returns Number position of the scroll thumb in pixel
+ * @param value The value to which the thumb gets moved {Number}
  */
 Scrollable.prototype.positionThumb = function(value) {
     if (this.thumb) {
@@ -386,9 +480,8 @@ Scrollable.prototype.positionThumb = function(value) {
 
 /**
  * The width of the Scrollable, setting this will redraw the track and thumb.
-
  *
- * @property width
+ * @name GOWN.Scrollable#width
  * @type Number
  */
 Object.defineProperty(Scrollable.prototype, 'width', {
@@ -407,7 +500,7 @@ Object.defineProperty(Scrollable.prototype, 'width', {
 /**
  * Inverse the progress bar
  *
- * @property inverse
+ * @name GOWN.Scrollable#inverse
  * @type Boolean
  */
 Object.defineProperty(Scrollable.prototype, 'inverse', {
@@ -435,7 +528,7 @@ Object.defineProperty(Scrollable.prototype, 'inverse', {
 /**
  * The height of the Scrollable, setting this will redraw the track and thumb.
  *
- * @property height
+ * @name GOWN.Scrollable#height
  * @type Number
  */
 Object.defineProperty(Scrollable.prototype, 'height', {
@@ -452,9 +545,9 @@ Object.defineProperty(Scrollable.prototype, 'height', {
 });
 
 /**
- * set value (between minimum and maximum)
+ * Set value (between minimum and maximum)
  *
- * @property value
+ * @name GOWN.Scrollable#value
  * @type Number
  * @default 0
  */
@@ -489,9 +582,9 @@ Object.defineProperty(Scrollable.prototype, 'value', {
 });
 
 /**
- * set minimum and update value if necessary
+ * Set minimum and update value if necessary
  *
- * @property minimum
+ * @name GOWN.Scrollable#minimum
  * @type Number
  * @default 0
  */
@@ -510,9 +603,9 @@ Object.defineProperty(Scrollable.prototype, 'minimum', {
 });
 
 /**
- * set maximum and update value if necessary
+ * Set maximum and update value if necessary
  *
- * @property maximum
+ * @name GOWN.Scrollable#maximum
  * @type Number
  * @default 100
  */

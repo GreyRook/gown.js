@@ -142,9 +142,6 @@ List.SKIN_NAME = 'list';
 List.CHANGE = 'change';
 
 /**
- */
-
-/**
  * A function that is expected to return a new GOWN.DefaultListItemRenderer
  *
  * @param theme The item theme {GOWN.Theme}
