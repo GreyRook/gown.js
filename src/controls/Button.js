@@ -121,6 +121,8 @@ Button.TRIGGERED = 'triggered';
 /**
  * Initiate all skins first
  * (to prevent flickering)
+ *
+ * @protected
  */
 Button.prototype.preloadSkins = function() {
     if (!this._validStates) {
@@ -137,6 +139,7 @@ Button.prototype.preloadSkins = function() {
  * add to container, hide and resize
  *
  * @param skin the loaded skin
+ * @protected
  */
 Button.prototype.skinLoaded = function(skin) {
     this.addChildAt(skin, 0);
@@ -155,6 +158,8 @@ Button.prototype.skinLoaded = function(skin) {
 
 /**
  * onDown callback
+ *
+ * @protected
  */
 Button.prototype.onDown = function() {
     this.handleEvent(Button.DOWN);
@@ -168,6 +173,8 @@ Button.prototype.onDown = function() {
 
 /**
  * onUp callback
+ *
+ * @protected
  */
 Button.prototype.onUp = function() {
     this.handleEvent(Button.UP);
@@ -178,6 +185,8 @@ Button.prototype.onUp = function() {
 
 /**
  * onHover callback
+ *
+ * @protected
  */
 Button.prototype.onHover = function() {
     this.handleEvent(Button.HOVER);
@@ -187,6 +196,8 @@ Button.prototype.onHover = function() {
 
 /**
  * onOut callback
+ *
+ * @protected
  */
 Button.prototype.onOut = function() {
     this.handleEvent(Button.OUT);
@@ -196,6 +207,8 @@ Button.prototype.onOut = function() {
 
 /**
  * onTouchMove callback
+ *
+ * @protected
  */
 Button.prototype.onTouchMove = function(eventData) {
     // please note that if the user takes his finger from the screen when
@@ -210,7 +223,7 @@ Button.prototype.onTouchMove = function(eventData) {
 /**
  * Update width/height of the button
  *
- * @private
+ * @protected
  */
 Button.prototype.updateDimensions = function() {
     var width = this.worldWidth;
@@ -291,6 +304,8 @@ Button.prototype.redrawSkinable = Skinable.prototype.redraw;
 
 /**
  * Update before draw call (position label)
+ *
+ * @protected
  */
 Button.prototype.redraw = function() {
     if (this.updateLabel) {

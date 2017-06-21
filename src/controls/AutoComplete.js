@@ -259,6 +259,8 @@ AutoComplete.prototype.redrawResult = function () {
 
 /**
  * Closes the results when the mouse is released outside
+ *
+ * @protected
  */
 AutoComplete.prototype.onMouseUpOutside = function () {
     if (this.hasFocus && !this._mouseDown) {
@@ -271,7 +273,7 @@ AutoComplete.prototype.onMouseUpOutside = function () {
 /**
  * Set the auto complete text. Draws the auto complete results afterwards.
  *
- * @param text
+ * @param text The text to set {String}
  */
 AutoComplete.prototype.setText = function(text) {
     TextInput.prototype.setText.call(this,text);
