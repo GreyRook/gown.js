@@ -72,16 +72,20 @@ module.exports = {
         if(!this.resizeScaling) {
             PIXI.Container.prototype.updateTransform.call(this);
         } else {
+            var updateTransformID = this.transform._worldID;
             PIXI.DisplayObject.prototype.updateTransform.call(this);
-
-            // revert scaling
-            var tx = wt.tx;
-            var ty = wt.ty;
-            scaleX = scaleX !== 0 ? 1/scaleX : 0;
-            scaleY = scaleY !== 0 ? 1/scaleY : 0;
-            wt.scale(scaleX, scaleY);
-            wt.tx = tx;
-            wt.ty = ty;
+            
+            // Only revert scaling if something changed
+            if(updateTransformID != this.transform._worldID){
+                // revert scaling
+                var tx = wt.tx;
+                var ty = wt.ty;
+                scaleX = scaleX !== 0 ? 1/scaleX : 0;
+                scaleY = scaleY !== 0 ? 1/scaleY : 0;
+                wt.scale(scaleX, scaleY);
+                wt.tx = tx;
+                wt.ty = ty;
+            }
 
             for (var i = 0, j = this.children.length; i < j; ++i) {
                 this.children[i].updateTransform();
