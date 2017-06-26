@@ -1,7 +1,7 @@
 ![gown.js](https://cdn.rawgit.com/GreyRook/gown.js/master/logo.svg)
 ===========
 
-UI system for [pixi.js](http://pixijs.com) inspired by [feathers-ui](http://feathersui.com).
+UI system for [pixi.js](http://pixijs.com) 4, inspired by [feathers-ui](http://feathersui.com).
 
 [![Inline docs](http://inch-ci.org/github/GreyRook/gown.js.svg?branch=master)](http://inch-ci.org/github/GreyRook/gown.js)
 [![Code Climate](https://codeclimate.com/github/GreyRook/gown.js/badges/gpa.svg)](https://codeclimate.com/github/GreyRook/gown.js)
