@@ -18,7 +18,7 @@ module.exports = InputWrapper;
  * We use one input field for all InputControls
  *
  * @name GOWN.InputWrapper.hiddenInput
- * @type DOMObject
+ * @type HTMLInputElement
  * @static
  */
 InputWrapper.hiddenInput = null;
@@ -26,7 +26,7 @@ InputWrapper.hiddenInput = null;
 /**
  * Create a unique input field.
  *
- * @returns {DOMObject} The input field
+ * @returns {HTMLInputElement} The input field
  */
 InputWrapper.createInput = function() {
     if (!InputWrapper.hiddenInput) {
@@ -68,8 +68,8 @@ InputWrapper.createInput = function() {
 /**
  * The key to get the text ('value' for default input field)
  *
- * @name GOWN.InputWrapper.textProp
- * @type {string}
+ * @static
+ * @type {String}
  * @private
  */
 InputWrapper.textProp = 'value';
