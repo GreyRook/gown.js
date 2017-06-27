@@ -1,20 +1,35 @@
 var InputControl = require('./InputControl'),
     InputWrapper = require('../utils/InputWrapper'),
     position = require('../utils/position');
+
 /**
- * The basic Text Input - based on PIXI.Input Input by Sebastian Nette,
- * see https://github.com/SebastianNette/PIXI.Input
+ * The basic Text Input - based on PIXI.Input.
+ * Input by Sebastian Nette, see https://github.com/SebastianNette/PIXI.Input
  *
  * @class TextInput
  * @extends GOWN.InputControl
  * @memberof GOWN
- * @param text editable text shown in input
- * @param theme default theme
  * @constructor
+ * @param [theme] theme for the text input {GOWN.Theme}
+ * @param [skinName=TextInput.SKIN_NAME] name of the text input skin {String}
  */
 function TextInput(theme, skinName) {
     // show and load background image as skin (exploiting skin states)
+    /**
+     * The skin name
+     *
+     * @type String
+     * @default TextInput.SKIN_NAME
+     */
     this.skinName = skinName || TextInput.SKIN_NAME;
+
+    /**
+     * The valid text input states
+     *
+     * @private
+     * @type String[]
+     * @default InputControl.stateNames
+     */
     this._validStates = this._validStates || InputControl.stateNames;
 
     InputControl.call(this, theme);
@@ -24,11 +39,20 @@ TextInput.prototype = Object.create(InputControl.prototype);
 TextInput.prototype.constructor = TextInput;
 module.exports = TextInput;
 
-// name of skin
+/**
+ * Default text area skin name
+ *
+ * @static
+ * @final
+ * @type String
+ */
 TextInput.SKIN_NAME = 'text_input';
 
-/*
- * set display as password
+/**
+ * Set display as password (show text with "*")
+ *
+ * @name GOWN.TextInput#displayAsPassword
+ * @type bool
  */
 Object.defineProperty(TextInput.prototype, 'displayAsPassword', {
     get: function () {
@@ -40,12 +64,25 @@ Object.defineProperty(TextInput.prototype, 'displayAsPassword', {
     }
 });
 
-
+/**
+ * Get the text lines as an array
+ *
+ * @returns {Array|*} Returns an array with one text line per array element
+ */
 TextInput.prototype.getLines = function() {
     return [this.text];
 };
 
+/**
+ * @private
+ */
 TextInput.prototype.inputControlSetText = InputControl.prototype.setText;
+
+/**
+ * Set the text
+ *
+ * @param text The text to display {String}
+ */
 TextInput.prototype.setText = function(text) {
     if (this._displayAsPassword) {
         text = text.replace(/./gi, '*');
@@ -61,6 +98,11 @@ TextInput.prototype.setText = function(text) {
     }
 };
 
+/**
+ * Update the selection
+ *
+ * @private
+ */
 TextInput.prototype.updateSelectionBg = function() {
     var start = this.selection[0],
         end = this.selection[1];
