@@ -1,7 +1,7 @@
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
- * HorizontalLayout - just set alignment to
+ * HorizontalLayout - just sets the alignment to
  * LayoutAlignment.HORIZONTAL_ALIGNMENT
  *
  * @class HorizontalLayout
@@ -11,6 +11,13 @@ var LayoutAlignment = require('./LayoutAlignment');
  */
 function HorizontalLayout() {
     LayoutAlignment.call(this);
+
+    /**
+     * The alignment of the layout
+     *
+     * @type String
+     * @default LayoutAlignment.HORIZONTAL_ALIGNMENT
+     */
     this.alignment = LayoutAlignment.HORIZONTAL_ALIGNMENT;
 }
 

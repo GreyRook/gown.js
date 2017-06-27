@@ -22,6 +22,7 @@ function ListCollection(data) {
     }
     this.data = data;
 }
+
 ListCollection.prototype = Object.create( EventEmitter.prototype );
 ListCollection.prototype.constructor = ListCollection;
 module.exports = ListCollection;
