@@ -1,7 +1,7 @@
 /**
- * Wrapper for DOM Text Input
+ * Wrapper for DOM Text Input.
  *
- * based on PIXI.Input InputObject by Sebastian Nette,
+ * Based on PIXI.Input InputObject by Sebastian Nette,
  * see https://github.com/SebastianNette/PIXI.Input
  *
  * @class InputWrapper
@@ -10,21 +10,23 @@
  */
 function InputWrapper() {
 }
+
 module.exports = InputWrapper;
 
 /**
  * DOM input field.
- * we use one input field for all InputControls
+ * We use one input field for all InputControls
  *
- * @property hiddenInput
+ * @name GOWN.InputWrapper.hiddenInput
  * @type DOMObject
  * @static
  */
 InputWrapper.hiddenInput = null;
 
 /**
- * create/return unique input field.
- * @returns {DOMObject}
+ * Create a unique input field.
+ *
+ * @returns {DOMObject} The input field
  */
 InputWrapper.createInput = function() {
     if (!InputWrapper.hiddenInput) {
@@ -64,15 +66,18 @@ InputWrapper.createInput = function() {
 };
 
 /**
- * key to get text ('value' for default input field)
+ * The key to get the text ('value' for default input field)
+ *
+ * @name GOWN.InputWrapper.textProp
  * @type {string}
- * @static
  * @private
  */
 InputWrapper.textProp = 'value';
 
 /**
- * activate the text input
+ * Focus the text input
+ *
+ * @function GOWN.InputWrapper.focus
  */
 InputWrapper.focus = function() {
     if (InputWrapper.hiddenInput) {
@@ -81,7 +86,9 @@ InputWrapper.focus = function() {
 };
 
 /**
- * deactivate the text input
+ * Blur the text input
+ *
+ * @function GOWN.InputWrapper.blur
  */
 InputWrapper.blur = function() {
     if (InputWrapper.hiddenInput) {
@@ -89,10 +96,12 @@ InputWrapper.blur = function() {
     }
 };
 
-
 /**
- * set selection
- * @returns {DOMObject}
+ * Set the new selection
+ *
+ * @function GOWN.InputWrapper.setSelection
+ * @param start First position {Number}
+ * @param end Last position {Number}
  */
 InputWrapper.setSelection = function(start, end) {
     if (InputWrapper.hiddenInput) {
@@ -109,8 +118,10 @@ InputWrapper.setSelection = function(start, end) {
 };
 
 /**
- * get start and end of selection
- * @returns {Array}
+ * Get the start and end of the current selection
+ *
+ * @function GOWN.InputWrapper.getSelection
+ * @returns {Number[]} The start and end of the current selection
  */
 InputWrapper.getSelection = function() {
     if (InputWrapper.hiddenInput) {
@@ -124,7 +135,9 @@ InputWrapper.getSelection = function() {
 };
 
 /**
- * set cursor position of the hidden input
+ * Set the cursor position of the hidden input
+ *
+ * @function GOWN.InputWrapper.setCursorPos
  */
 InputWrapper.setCursorPos = function (pos) {
     if (InputWrapper.hiddenInput) {
@@ -146,8 +159,10 @@ InputWrapper.setCursorPos = function (pos) {
 };
 
 /**
- * get text value from hiddenInput
- * @returns {String}
+ * Get the text value from the hidden input
+ *
+ * @function GOWN.InputWrapper.getText
+ * @returns {String} The text value
  */
 InputWrapper.getText = function() {
     if (InputWrapper.hiddenInput) {
@@ -161,8 +176,10 @@ InputWrapper.getText = function() {
 };
 
 /**
- * set text value to hiddenInput
- * @param {String} text
+ * Set the text value of the hidden input
+ *
+ * @function GOWN.InputWrapper.setText
+ * @param {String} text The text to set {String}
  */
 InputWrapper.setText = function(text) {
     if (InputWrapper.hiddenInput) {
@@ -174,8 +191,11 @@ InputWrapper.setText = function(text) {
 };
 
 /**
- * set max. length setting it to 0 will allow unlimited text input
- * @param length
+ * Set the maximum length.
+ * Setting it to 0 will allow unlimited text input
+ *
+ * @function GOWN.InputWrapper.setMaxLength
+ * @param length The maximum length {Number}
  */
 InputWrapper.setMaxLength = function(length) {
     if (InputWrapper.hiddenInput) {
@@ -190,8 +210,10 @@ InputWrapper.setMaxLength = function(length) {
 };
 
 /**
- * set the input type of the hidden input
- * @param length
+ * Set the input type of the hidden input
+ *
+ * @function GOWN.InputWrapper.setType
+ * @param type The new type for the hidden input {String}
  */
 InputWrapper.setType = function(type) {
     if (InputWrapper.hiddenInput) {
@@ -202,8 +224,10 @@ InputWrapper.setType = function(type) {
 };
 
 /**
- * get the input type of the hidden input
- * @returns {String}
+ * Get the input type of the hidden input
+ *
+ * @function GOWN.InputWrapper.getType
+ * @returns {String} The input type
  */
 InputWrapper.getType = function() {
     if (InputWrapper.hiddenInput) {
