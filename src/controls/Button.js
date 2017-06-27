@@ -34,10 +34,14 @@ function Button(theme, skinName) {
     this.handleEvent(Button.UP);
 
     /**
+     * Invalidate label when the label text changed
+     * so that it will be redrawn next time
+     *
      * @private
      * @type bool
+     * @default true
      */
-    this.updateLabel = true; // label text changed
+    this.updateLabel = true;
 
     this.on('touchstart', this.onDown, this);
     this.on('mousedown', this.onDown, this);
