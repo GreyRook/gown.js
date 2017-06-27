@@ -7,16 +7,37 @@ var ToggleButton = require('./ToggleButton');
  * where only one may be selected at a time
  *
  * @class ToggleGroup
+ * @extends EventEmitter
  * @memberof GOWN
  * @constructor
  */
 function ToggleGroup() {
-    // list of toggle (RadioButtons/ToggleButton/Check) in the group
+    /**
+     * List of toggles (RadioButtons/ToggleButton/Check) in the group
+     *
+     * @private
+     * @type GOWN.ToggleButton[]
+     * @default Button.stateNames
+     */
 	this._items = [];
-    // The currently selected toggle.
+
+    /**
+     * The currently selected toggle.
+     *
+     * @private
+     * @type GOWN.Radio|GOWN.ToggleButton|GOWN.Check
+     */
 	this._selectedItem = null;
-    // Determines if the user can deselect the currently selected item or not.
+
+    /**
+     * Determines if the user can deselect the currently selected item or not.
+     *
+     * @private
+     * @type bool
+     * @default true
+     */
     this._isSelectionRequired = true;
+
 	EventEmitter.call(this);
 }
 
@@ -24,13 +45,19 @@ ToggleGroup.prototype = Object.create( EventEmitter.prototype );
 ToggleGroup.prototype.constructor = ToggleGroup;
 module.exports = ToggleGroup;
 
+/**
+ * Dispatched when the toggle group selection changes.
+ *
+ * @static
+ * @final
+ * @type String
+ */
 ToggleGroup.CHANGE = 'change';
 
 /**
- * Adds a toggle to the group.
+ * Add an toggle to the toggle group
  *
- * @property radioButton
- * @type RadioButton
+ * @param item The toggle to add to the toggle group {GOWN.ToggleButton}
  */
 ToggleGroup.prototype.addItem = function(item) {
     if (this._items.indexOf(item) === -1) {
@@ -46,6 +73,12 @@ ToggleGroup.prototype.addItem = function(item) {
     }
 };
 
+/**
+ * Change callback that updates the selection for the specific item
+ *
+ * @param item The item that emitted a change event {GOWN.ToggleButton}
+ * @private
+ */
 ToggleGroup.prototype._toggleChanged = function(item) {
 	if (item === this.selectedItem && this._isSelectionRequired && !item.selected) {
 		item.setSelected(true);
@@ -55,10 +88,9 @@ ToggleGroup.prototype._toggleChanged = function(item) {
 };
 
 /**
- * Remove a Radio Button that is currently being tracked
+ * Remove an toggle from the toggle group
  *
- * @property radioButton
- * @type RadioButton
+ * @param item The toggle to add to the toggle group {GOWN.ToggleButton}
  */
 ToggleGroup.prototype.removeItem = function(item) {
 	var index = this._items.indexOf(item);
@@ -73,7 +105,7 @@ ToggleGroup.prototype.removeItem = function(item) {
 };
 
 /**
- * remove all event listener, clear items-list and set selectedItem to null.
+ * Remove all event listener, clear items-list and set selectedItem to null.
  */
 ToggleGroup.prototype.destroy = function() {
 	while (this._items.length > 0) {
@@ -86,8 +118,8 @@ ToggleGroup.prototype.destroy = function() {
 /**
  * The currently selected toggle
  *
- * @property selectedItem
- * @type Check
+ * @name GOWN.ToggleGroup#selectedItem
+ * @type GOWN.ToggleButton
  */
 Object.defineProperty(ToggleGroup.prototype, 'selectedItem', {
     get: function() {
@@ -113,12 +145,11 @@ Object.defineProperty(ToggleGroup.prototype, 'selectedItem', {
     }
 });
 
-
 /**
  * The index of the currently selected toggle.
  *
- * @property selectedIndex
- * @type RadioButton
+ * @name GOWN.ToggleGroup#selectedIndex
+ * @type Number
  */
 Object.defineProperty(ToggleGroup.prototype, 'selectedIndex', {
     get: function() {
@@ -134,6 +165,10 @@ Object.defineProperty(ToggleGroup.prototype, 'selectedIndex', {
 
 /**
  * Determines if the user can deselect the currently selected item or not.
+ *
+ * @name GOWN.ToggleGroup#isSelectionRequired
+ * @type bool
+ * @default true
  */
 Object.defineProperty(ToggleGroup.prototype, 'isSelectionRequired', {
     get: function () {
