@@ -1,7 +1,7 @@
 var Button = require('./Button');
 
 /**
- * basic button that has a selected state which indicates if the button
+ * Basic button that has a selected state which indicates if the button
  * is pressed or not.
  *
  * @class ToggleButton
