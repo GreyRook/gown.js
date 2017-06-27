@@ -48,6 +48,7 @@ Control.prototype.updateTransformContainer = PIXI.Container.prototype.updateTran
 /**
  * PIXI method to update the object transform for rendering
  * Used to call redraw() before rendering
+ *
  * @private
  */
 Control.prototype.updateTransform = function() {
