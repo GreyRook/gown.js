@@ -9,9 +9,9 @@ var TiledLayout = require('./TiledLayout');
  * @memberof GOWN.layout
  * @constructor
  */
-
 function TiledColumnsLayout() {
     TiledLayout.call(this);
+
     this._paging = TiledLayout.PAGING_VERTICAL;
     this._orientation = TiledLayout.ORIENTATION_COLUMNS;
 }
@@ -26,12 +26,12 @@ module.exports = TiledColumnsLayout;
  * value of <code>verticalGap</code>, but the value of
  * <code>horizontalGap</code> may be different.
  *
- * @default 0
- *
  * @see #_horizontalGap
  * @see #_verticalGap
- * @property gap
+ *
+ * @name GOWN.layout.TiledColumnsLayout#gap
  * @type Number
+ * @default 0
  */
 Object.defineProperty(TiledColumnsLayout.prototype, 'gap', {
     set: function(value) {
