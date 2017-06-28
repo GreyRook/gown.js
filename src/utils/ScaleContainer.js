@@ -36,18 +36,14 @@ function ScaleContainer(texture, rect, middleWidth, centerHeight) {
     centerHeight = centerHeight || ch;
 
     /**
-     * calculated min. width based on tile sizes in pixel without scaling
-     * (if middleWidth is not set it is the same as the width of the
-     *  texture in the atlas)
+     * calculated min. width based on border tile sizes in pixel without scaling
      */
-    this.minWidth = lw + middleWidth + rw;
+    this.minWidth = lw + rw;
 
     /**
-     * calculated min. height based on tile sizes in pixel without scaling
-     * (if middleWidth is not set it is the same as the height of the
-     *  texture in the atlas)
+     * calculated min. height based on border tile sizes in pixel without scaling
      */
-    this.minHeight = th + centerHeight + bh;
+    this.minHeight = th + bh;
 
     // top left
     if (lw > 0 && th > 0) {
