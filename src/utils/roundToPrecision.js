@@ -2,11 +2,12 @@
  * Rounds a number to a certain level of precision. Useful for limiting the number of
  * decimal places on a fractional number.
  *
- * @param		number		the input number to round.
- * @param		precision	the number of decimal digits to keep
- * @return		the rounded number, or the original input if no rounding is needed
- *
  * @see Math#round
+ *
+ * @function GOWN.utils.roundToPrecision
+ * @param number The input number to round {Number}
+ * @param precision The number of decimal digits to keep {Number}
+ * @return {Number} The rounded number, or the original input if no rounding is needed
  */
 module.exports = function(number, precision) {
     precision = precision || 0;

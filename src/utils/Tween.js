@@ -1,30 +1,89 @@
 /**
- * wrapper around PIXI.tween OR CreateJS/TweenJS to do animations/tweening
- * for exxample for List or Scroller, see Scroller.thrownTo.
+ * A wrapper around PIXI.tween OR CreateJS/TweenJS to do animations/tweening,
+ * for example for a List or a Scroller.
  *
- * TODO: support greensock?
+ * @see GOWN.Scroller#throwTo
+ *
+ * @constructor
+ * @memberof GOWN
+ * @param target The tween target {Object}
+ * @param duration The tween duration {Number}
+ * @param [easing='linear'] The easing function name {String}
+ * @param [type] The tween library {String}
  */
-
+//TODO: support greensock?
 function Tween(target, duration, easing, type) {
+    /**
+     * The tween duration
+     *
+     * @type Number
+     */
     this.duration = duration;
+
+    /**
+     * The easing function name
+     *
+     * @type String
+     * @default 'linear'
+     */
     this.easing = easing || 'linear';
+
+    /**
+     * The tween library
+     *
+     * @type String
+     */
     this.type = type || this.checkLibrary();
     if (this.type === Tween.NONE) {
+        /**
+         * The tween target
+         *
+         * @private
+         * @type Object
+         */
         this._target = target;
     }
     this.createTween(target, duration, easing);
 }
 
-Tween.prototype = Object.create( {} );
+Tween.prototype = Object.create({});
 Tween.prototype.constructor = Tween;
 module.exports = Tween;
 
+/**
+ * The PIXI tween type
+ *
+ * @static
+ * @final
+ * @type String
+ */
 Tween.PIXI_TWEEN = 'PIXI_TWEEN';
+
+/**
+ * The CreateJS tween type
+ *
+ * @static
+ * @final
+ * @type String
+ */
 Tween.CREATEJS_TWEEN = 'CREATEJS_TWEEN';
+
+/**
+ * No tween type
+ *
+ * @static
+ * @final
+ * @type String
+ */
 Tween.NONE = 'NONE';
 
-// uppercase first latter, does NOT work like capitalize in python
-// it just capitalizes the first letter and let the other characters untouched
+/**
+ * Uppercase the first letter. Does NOT work like capitalize in python.
+ * It just capitalizes the first letter and let the other characters untouched.
+ *
+ * @param string The string to capitalize {String}
+ * @return {String} The capitalized string
+ */
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
@@ -32,7 +91,12 @@ function capitalize(string) {
 // TODO: possible alternative: create own easing data type
 // e.g. (in, out, inout and type)
 
-// get string e.g. 'linear' or 'quadIn', return ease function
+/**
+ * Get the specific CreateJS easing function (e.g. 'linear' or 'quadIn')
+ *
+ * @param ease The name of the CreateJS easing function {String}
+ * @return {function}
+ */
 Tween.CREATEJS_EASING = function(ease) {
     // inQutQuad to quadInOut
     if (ease.substring(0, 5) === 'inOut') {
@@ -48,6 +112,12 @@ Tween.CREATEJS_EASING = function(ease) {
     return createjs.Ease[ease];
 };
 
+/**
+ * Get the specific PIXI easing function
+ *
+ * @param ease The name of the PIXI easing function {String}
+ * @return {function}
+ */
 Tween.PIXI_EASING = function(ease) {
     if (ease.substring(ease.length-5) === 'InOut') {
         ease = 'inOut' + capitalize(ease.slice(0, -5));
@@ -62,7 +132,9 @@ Tween.PIXI_EASING = function(ease) {
 };
 
 /**
- * helper function to check if a tweening-library is present
+ * A helper function to check if a tweening-library is present
+ *
+ * @return {String} Name of the tweening-library
  */
 Tween.prototype.checkLibrary = function() {
     if (window.PIXI && PIXI.tween) {
@@ -74,6 +146,13 @@ Tween.prototype.checkLibrary = function() {
     }
 };
 
+/**
+ * Create a tween
+ *
+ * @param target The tween target {Object}
+ * @param duration The tween duration {Number}
+ * @param easing The easing function name {String}
+ */
 Tween.prototype.createTween = function(target, duration, easing) {
     if (this.type === Tween.PIXI_TWEEN) {
         this._tween = PIXI.tweenManager.createTween(target);
@@ -90,6 +169,11 @@ Tween.prototype.createTween = function(target, duration, easing) {
     }
 };
 
+/**
+ * Start the tween
+ *
+ * @param data The tween data {Object}
+ */
 Tween.prototype.to = function(data) {
     if (this.type === Tween.PIXI_TWEEN && this._tween) {
         this._tween.stop();
@@ -109,7 +193,7 @@ Tween.prototype.to = function(data) {
 };
 
 /**
- * stop tween
+ * Stop the tween
  */
 Tween.prototype.remove = function() {
     if (this.type === Tween.PIXI_TWEEN && this._tween) {
