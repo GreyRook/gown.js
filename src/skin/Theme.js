@@ -97,7 +97,7 @@ Theme.COMPLETE = 'complete';
  *
  * @param comp UI component that we want to skin, e.g. "button" {String}
  * @param id Id for the skin (e.g. state when the skinning function will be applied {String}
- * @param skin skin-function that will executed once the component gets updated  {String}
+ * @param skin skin-function that will executed once the component gets updated {function}
  */
 Theme.prototype.setSkin = function(comp, id, skin) {
     this._skins[comp] = this._skins[comp] || {};
@@ -176,7 +176,7 @@ Theme.prototype.getScaleContainer = function(name, grid, middleWidth, centerHeig
  * Create a new Sprite from an image name
  *
  * @param name Id defined in the asset loader {String}
- * @returns {PIXI.Sprite}
+ * @returns {function}
  */
 Theme.prototype.getImage = function(name) {
     var scope = this;

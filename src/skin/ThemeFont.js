@@ -58,7 +58,6 @@ function ThemeFont(data) {
      * @member GOWN.ThemeFont#lineHeight
      */
 
-
     /**
      * @member GOWN.ThemeFont#align
      */

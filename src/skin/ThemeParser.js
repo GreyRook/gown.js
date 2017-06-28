@@ -1,16 +1,24 @@
 var Theme = require('./Theme');
 
 /**
- * load theme from .json file.
+ * Load a theme from a .json file.
  *
  * @class Theme
+ * @extends GOWN.Theme
  * @memberof GOWN
  * @constructor
+ * @param jsonPath The path to the .json file {String}
+ * @param [global=true] Set theme as the global GOWN.theme {bool}
  */
 function ThemeParser(jsonPath, global) {
     Theme.call(this, global);
 
-    // components that show something and can be used as skin (see GOWN.shapes)
+    /**
+     * Components that show something and can be used as skin
+     *
+     * @see GOWN.shapes
+     * @type Object
+     */
     this.skinComponents = this.skinComponents || this.getSkinComponents();
 
     this.addThemeData(jsonPath);
@@ -20,12 +28,14 @@ ThemeParser.prototype = Object.create( Theme.prototype );
 ThemeParser.prototype.constructor = ThemeParser;
 module.exports = ThemeParser;
 
-// load theme data
+//TODO
 ThemeParser.DATA_LOADED = 'data_loaded';
 
 /**
- * get component classes that can create skins (in general all GOWN.shapes)
- * note that image textures are not components
+ * Get the component classes that can create skins (in general all GOWN.shapes).
+ * Note that image textures are not components
+ *
+ * @return Object
  */
 ThemeParser.prototype.getSkinComponents = function () {
     var cmps = {};
@@ -38,6 +48,16 @@ ThemeParser.prototype.getSkinComponents = function () {
     return cmps;
 };
 
+/**
+ * Executed when the image has been loaded.
+ * Sets cache and and applies the theme.
+ *
+ * @see addImage
+ * @see resource-loader https://github.com/englercj/resource-loader
+ *
+ * @param loader The loader {Loader}
+ * @param resources The loaded resources {Object}
+ */
 ThemeParser.prototype.loadComplete = function(loader, resources) {
     this.setCache(resources);
 
@@ -52,7 +72,15 @@ ThemeParser.prototype.loadComplete = function(loader, resources) {
     }
 };
 
+/**
+ * @private
+ */
 ThemeParser.prototype.themeApplyTheme = Theme.prototype.applyTheme;
+
+/**
+ * Apply the theme to the controls
+ * (normally executed only once after the texture has been loaded)
+ */
 ThemeParser.prototype.applyTheme = function() {
     if (!this.themeData) {
         return;
@@ -62,7 +90,10 @@ ThemeParser.prototype.applyTheme = function() {
 };
 
 /**
- * get scale9 grid data from theme data
+ * Get the scale9 grid data from the theme data
+ *
+ * @param scale Rectangle position and size {Number[]}
+ * @return {PIXI.Rectangle}
  */
 ThemeParser.prototype.getScale9 = function(scale) {
     return new PIXI.Rectangle(
@@ -71,9 +102,11 @@ ThemeParser.prototype.getScale9 = function(scale) {
 };
 
 /**
- * create new skin from theme data
- * @param data {String}
- * @returns {function}
+ * Create a new skin from the theme data
+ *
+ * @param skinData The skin data {Object}
+ * @param data The theme data {Object}
+ * @returns {function} the skin function
  */
 ThemeParser.prototype.skinFromData = function(skinData, data) {
     if (skinData.type === 'texture') {
@@ -108,10 +141,11 @@ ThemeParser.prototype.skinFromData = function(skinData, data) {
 };
 
 /**
- * create dictionary containing skin data (including default values)
- * @param stateName name of current state (e.g. GOWN.Button.UP) {String}
- * @param skinData data gathered from previous runs {String}
- * @param data new data that will be copied into skinData {Object}
+ * Create a dictionary containing the skin data (including default values)
+ *
+ * @param stateName The name of the current state (e.g. GOWN.Button.UP) {String}
+ * @param skinData The data gathered from previous runs {String}
+ * @param data The new data that will be copied into skinData {Object}
  */
 ThemeParser.prototype.getSkinData = function(stateName, skinData, data) {
     if (!data) {
@@ -134,6 +168,11 @@ ThemeParser.prototype.getSkinData = function(stateName, skinData, data) {
     copyInto(data[stateName], skinData);
 };
 
+/**
+ * Parse the theme data
+ *
+ * @param data The theme data {Object}
+ */
 ThemeParser.prototype.parseData = function(data) {
     this.hoverSkin = data.hoverSkin;
     this.thumbSkin = data.thumbSkin;
@@ -179,6 +218,11 @@ ThemeParser.prototype.parseData = function(data) {
     }
 };
 
+/**
+ * Adds the theme data located at the specified path
+ *
+ * @param jsonPath The path the .json file
+ */
 ThemeParser.prototype.addThemeData = function(jsonPath) {
     this.addImage(jsonPath);
 };
