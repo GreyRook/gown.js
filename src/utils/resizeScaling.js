@@ -1,9 +1,13 @@
-
+/**
+ *
+ *
+ * @namespace GOWN.utils.resizeScaling
+ */
 module.exports = {
     /**
-     * this should be called from inside the constructor
+     * This should be called from inside the constructor
      *
-
+     * @function GOWN.utils.resizeScaling.initResizeScaling
      */
     initResizeScaling: function() {
         this.resizeScaling = true; // resize instead of scale
@@ -17,10 +21,10 @@ module.exports = {
     },
 
     /**
-     * update before draw call
-     * redraw control for current state from theme
+     * Update before draw call.
+     * Redraw control for current state from theme
      *
-
+     * @function GOWN.utils.resizeScaling.redraw
      */
     redraw: function() {
         // remove last skin after new one has been added
@@ -45,10 +49,15 @@ module.exports = {
         }
     },
 
+    /**
+     * @function GOWN.utils.resizeScaling.updateDimensions
+     */
     updateDimensions: function() {
     },
 
-
+    /**
+     * @function GOWN.utils.resizeScaling.updateTransform
+     */
     updateTransform: function() {
         var wt = this.worldTransform;
         var scaleX = 1;
@@ -93,25 +102,27 @@ module.exports = {
         }
     },
 
+    /**
+     * @member GOWN.utils.resizeScaling.defineProperty
+     */
     defineProperty: {
-
-            'height': {
-                get: function() {
-                    return this._height;
-                },
-                set: function(value) {
-                    this._height = value;
-                    this.minHeight = Math.min(value, this.minHeight);
-                }
+        'height': {
+            get: function () {
+                return this._height
             },
-            'width': {
-                get: function() {
-                    return this._width;
-                },
-                set: function(value) {
-                    this._width = value;
-                    this.minWidth = Math.min(value, this.minWidth);
-                }
+            set: function (value) {
+                this._height = value
+                this.minHeight = Math.min(value, this.minHeight)
             }
+        },
+        'width': {
+            get: function () {
+                return this._width
+            },
+            set: function (value) {
+                this._width = value
+                this.minWidth = Math.min(value, this.minWidth)
+            }
+        }
     }
 };
