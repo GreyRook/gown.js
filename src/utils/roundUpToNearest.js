@@ -6,7 +6,7 @@ var roundToPrecision = require('./roundToPrecision');
  *
  * @see Math#ceil
  *
- * @function GOWN.utils.roundToNearest
+ * @function GOWN.utils.roundUpToNearest
  * @param number The number to round up {Number}
  * @param nearest The number whose multiple must be found {Number}
  * @return {Number} The rounded number
