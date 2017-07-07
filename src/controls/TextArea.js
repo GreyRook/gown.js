@@ -1,4 +1,5 @@
 var InputControl = require('./InputControl');
+
 /**
  * A text entry control that allows users to enter and edit multiple lines of
  * uniformly-formatted text with the ability to scroll.
@@ -6,22 +7,53 @@ var InputControl = require('./InputControl');
  * @class TextInput
  * @extends GOWN.InputControl
  * @memberof GOWN
- * @param text editable text shown in input
- * @param displayAsPassword Display TextInput as Password (default false)
- * @param theme default theme
  * @constructor
+ * @param [theme] theme for the text area {GOWN.Theme}
+ * @param [skinName=TextArea.SKIN_NAME] name of the text area skin {String}
  */
-
 function TextArea(theme, skinName) {
     // show and load background image as skin (exploiting skin states)
+    /**
+     * The skin name
+     *
+     * @type String
+     * @default TextArea.SKIN_NAME
+     */
     this.skinName = skinName || TextArea.SKIN_NAME;
+
+    /**
+     * The valid text area states
+     *
+     * @private
+     * @type String[]
+     * @default InputControl.stateNames
+     */
     this._validStates = this._validStates || InputControl.stateNames;
 
     InputControl.call(this, theme);
 
+    /**
+     * @private
+     * @type PIXI.Point
+     */
     this._fromPos = new PIXI.Point(0, 0);
+
+    /**
+     * @private
+     * @type PIXI.Point
+     */
     this._toPos = new PIXI.Point(0, 0);
+
+    /**
+     * @private
+     * @type PIXI.Point
+     */
     this._fromText = new PIXI.Point(0, 0);
+
+    /**
+     * @private
+     * @type PIXI.Point
+     */
     this._toText = new PIXI.Point(0, 0);
 }
 
@@ -29,11 +61,20 @@ TextArea.prototype = Object.create(InputControl.prototype);
 TextArea.prototype.constructor = TextArea;
 module.exports = TextArea;
 
-
-// name of skin
+/**
+ * Default text area skin name
+ *
+ * @static
+ * @final
+ * @type String
+ */
 TextArea.SKIN_NAME = 'text_input';
 
-
+/**
+ * Update the selection
+ *
+ * @private
+ */
 TextArea.prototype.updateSelectionBg = function() {
     var start = this.selection[0],
         end = this.selection[1];
@@ -50,9 +91,16 @@ TextArea.prototype.updateSelectionBg = function() {
     this.selectionBg.y = this.pixiText.y;
 };
 
+/**
+ * Calculate position in Text
+ */
 
 /**
- * calculate position in Text
+ * Calculate position in Text
+ *
+ * @param textPos Position in the text {Number}
+ * @param [position] Position object that gets returned {PIXI.Point}
+ * @returns {PIXI.Point} returns the Line and Position in line
  */
 TextArea.prototype.textToLinePos = function(textPos, position) {
     var lines = this.getLines();
@@ -77,7 +125,11 @@ TextArea.prototype.textToLinePos = function(textPos, position) {
 };
 
 /**
- * new selection over multiple lines
+ * New selection over multiple lines
+ *
+ * @param fromTextPos Start position {Number}
+ * @param toTextPos End position {Number}
+ * @private
  */
 TextArea.prototype._drawSelectionBg = function (fromTextPos, toTextPos) {
     this.textToPixelPos(fromTextPos, this._fromPos);
@@ -113,12 +165,22 @@ TextArea.prototype._drawSelectionBg = function (fromTextPos, toTextPos) {
         this.lineHeight());
 };
 
+/**
+ * Get the text lines as an array
+ *
+ * @returns {Array|*} Returns an array with one text line per array element
+ */
 TextArea.prototype.getLines = function() {
     var wrappedText = this.pixiText.wordWrap(this.text);
     return wrappedText.split(/(?:\r\n|\r|\n)/);
 };
 
-
+/**
+ * Width of the text area
+ *
+ * @name GOWN.TextArea#label
+ * @type Number
+ */
 Object.defineProperty(InputControl.prototype, 'width', {
     get: function () {
         return this._width;
@@ -134,6 +196,12 @@ Object.defineProperty(InputControl.prototype, 'width', {
     }
 });
 
+/**
+ * Set the text style
+ *
+ * @name GOWN.TextArea#style
+ * @type PIXI.TextStyle
+ */
 Object.defineProperty(TextArea.prototype, 'style', {
     get: function() {
         return this.textStyle;

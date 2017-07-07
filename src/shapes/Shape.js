@@ -1,18 +1,67 @@
 /**
- * shape base class
+ * Shape base class
  *
  * @class Shape
  * @extends PIXI.Graphics
  * @memberof GOWN.shapes
  * @constructor
+ * @param color Color of the shape {Number}
+ * @param [alpha=1.0] Alpha value of the shape {Number}
+ * @param width Width of the shape {Number}
+ * @param height Height of the shape {Number}
  */
 function Shape(color, alpha, width, height) {
     PIXI.Graphics.call(this);
+
+    /**
+     * Color of the shape
+     *
+     * @private
+     * @type Number
+     */
     this._color = color;
+
+    /**
+     * Alpha value of the shape
+     *
+     * @private
+     * @type Number
+     * @default 1.0
+     */
     this._alpha = alpha || 1.0;
+
+    /**
+     * Width of the shape
+     *
+     * @private
+     * @type Number
+     */
     this._width = width;
+
+    /**
+     * Height of the shape
+     *
+     * @private
+     * @type Number
+     */
     this._height = height;
+
+    /**
+     * Alpha value of the border
+     *
+     * @private
+     * @type Number
+     * @default 1.0
+     */
     this._borderAlpha = 1.0;
+
+    /**
+     * Invalidate shape so that it will be redrawn next time
+     *
+     * @private
+     * @type bool
+     * @default true
+     */
     this.invalid = true;
 }
 
@@ -20,11 +69,10 @@ Shape.prototype = Object.create( PIXI.Graphics.prototype );
 Shape.prototype.constructor = Shape;
 module.exports = Shape;
 
-// setter/getter
 /**
  * The width of the shape, setting this will redraw the component.
  *
- * @property width
+ * @name GOWN.shapes.Shape#width
  * @type Number
  */
 Object.defineProperty(Shape.prototype, 'width', {
@@ -40,7 +88,7 @@ Object.defineProperty(Shape.prototype, 'width', {
 /**
  * The height of the shape, setting this will redraw the component.
  *
- * @property height
+ * @name GOWN.shapes.Shape#height
  * @type Number
  */
 Object.defineProperty(Shape.prototype, 'height', {
@@ -56,13 +104,12 @@ Object.defineProperty(Shape.prototype, 'height', {
 /**
  * The fill color of the shape, setting this will redraw the component.
  *
- * setting the color to a negative value or 'null' the shape will not be filled
+ * Setting the color to a negative value or 'null', the shape will not be filled
  * (comes in handy when you only want to draw the border).
  *
- * @property color
+ * @name GOWN.shapes.Shape#color
  * @type Number
  */
-
 Object.defineProperty(Shape.prototype, 'color', {
     get: function() {
         return this._color;
@@ -76,10 +123,10 @@ Object.defineProperty(Shape.prototype, 'color', {
 /**
  * The alpha of the shape, setting this will redraw the component.
  *
- * @property alpha
+ * @name GOWN.shapes.Shape#alpha
  * @type Number
+ * @default 1.0
  */
-
 Object.defineProperty(Shape.prototype, 'alpha', {
     get: function() {
         return this._alpha;
@@ -91,9 +138,9 @@ Object.defineProperty(Shape.prototype, 'alpha', {
 });
 
 /**
- * apply the color to the shape (called during redraw)
+ * Apply the color to the shape (called during redraw)
  *
- * @method applyColor
+ * @private
  */
 Shape.prototype.applyColor = function() {
     if (this.color > 0 && typeof this.color !== null) {
@@ -102,9 +149,9 @@ Shape.prototype.applyColor = function() {
 };
 
 /**
- * apply the border around shape (called during redraw)
+ * Apply the border around shape (called during redraw)
  *
- * @method drawBorder
+ * @private
  */
 Shape.prototype.drawBorder = function() {
     if (this.border) {
@@ -113,10 +160,10 @@ Shape.prototype.drawBorder = function() {
 };
 
 /**
- * change border color of shape
+ * Change the border color of shape
  *
  * @property borderColor
- * @type Number (color)
+ * @type Number
  */
 Object.defineProperty(Shape.prototype, 'borderColor', {
     get: function() {
@@ -129,10 +176,11 @@ Object.defineProperty(Shape.prototype, 'borderColor', {
 });
 
 /**
- * change border alpha of shape (between 0.0 - 1.0)
+ * Change the border alpha of shape (between 0.0 - 1.0)
  *
  * @property borderAlpha
- * @type Number (alpha)
+ * @type Number
+ * @default 1.0
  */
 Object.defineProperty(Shape.prototype, 'borderAlpha', {
     get: function() {
@@ -145,10 +193,10 @@ Object.defineProperty(Shape.prototype, 'borderAlpha', {
 });
 
 /**
- * change border size
+ * Change the border size
  *
  * @property border
- * @type Number (size in pixel)
+ * @type Number
  */
 Object.defineProperty(Shape.prototype, 'border', {
     get: function() {
@@ -161,9 +209,8 @@ Object.defineProperty(Shape.prototype, 'border', {
 });
 
 /**
- * draw the shape during redraw. defaults to a simple rect
+ * Draw the shape during redraw. Defaults to a simple rect.
  *
- * @method _drawShape
  * @private
  */
 Shape.prototype._drawShape = function() {
@@ -175,7 +222,12 @@ Shape.prototype._drawShape = function() {
         Math.abs(this._height));
 };
 
-
+/**
+ * PIXI method to update the object transform for rendering
+ * Used to call redraw() before rendering
+ *
+ * @private
+ */
 Shape.prototype.updateTransform = function() {
     this.redraw();
 
@@ -184,10 +236,10 @@ Shape.prototype.updateTransform = function() {
 
 
 /**
- * update before draw call
- * redraw control for current state from theme
+ * Update before draw call.
+ * Redraw control for current state from theme
  *
- * @method redraw
+ * @private
  */
 Shape.prototype.redraw = function() {
     if(!this.invalid) {

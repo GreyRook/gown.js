@@ -1,14 +1,18 @@
 var Shape = require('./Shape');
 
 /**
- * basic rectangular shape
+ * Basic rectangular shape
  *
  * @class Rect
  * @extends GOWN.shapes.Shape
  * @memberof GOWN.shapes
  * @constructor
+ * @param color Color of the rectangular shape {Number}
+ * @param alpha Alpha value of the rectangular shape {Number}
+ * @param width Width of the rectangular shape {Number}
+ * @param height Height of the rectangular shape {Number}
+ * @param radius Radius of the rectangular shape {Number}
  */
-
 function Rect(color, alpha, width, height, radius) {
     Shape.call(this, color, alpha, width, height);
     this._radius = radius;
@@ -19,23 +23,22 @@ Rect.prototype.constructor = Rect;
 module.exports = Rect;
 
 /**
- * draw the rect during redraw. will use drawRoundRect if a radius is provided.
+ * Draw the rect during redraw. will use drawRoundRect if a radius is provided.
  *
- * @method _drawShape
  * @private
  */
 Rect.prototype._drawShape = function() {
     if (this.radius) {
         this.drawRoundedRect(
-            Math.min(this._width, 0), 
-            Math.min(this._height, 0), 
+            Math.min(this._width, 0),
+            Math.min(this._height, 0),
             Math.abs(this._width),
             Math.abs(this._height),
             this.radius);
     } else {
         this.drawRect(
-            Math.min(this._width, 0), 
-            Math.min(this._height, 0), 
+            Math.min(this._width, 0),
+            Math.min(this._height, 0),
             Math.abs(this._width),
             Math.abs(this._height));
     }
@@ -44,7 +47,7 @@ Rect.prototype._drawShape = function() {
 /**
  * The radius of the rectangle border, setting this will redraw the component.
  *
- * @property color
+ * @name GOWN.shapes.Rect#radius
  * @type Number
  */
 Object.defineProperty(Rect.prototype, 'radius', {

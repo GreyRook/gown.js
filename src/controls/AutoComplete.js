@@ -8,18 +8,85 @@ var InputControl = require('./InputControl'),
  * @extends GOWN.TextInput
  * @memberof GOWN
  * @constructor
+ * @param text Default display text {String}
+ * @param [theme] theme for auto complete {GOWN.Theme}
+ * @param [skinName=AutoComplete.SKIN_NAME] name of the auto complete skin {String}
  */
 function AutoComplete(text, theme, skinName) {
     this.skinName = skinName || AutoComplete.SKIN_NAME;
+
+    /**
+     * The valid auto complete states
+     *
+     * @private
+     * @type String[]
+     * @default AutoComplete.stateNames
+     */
     this._validStates = this._validStates || AutoComplete.stateNames;
+
+    /**
+     * Display the text as an password field
+     *
+     * @private
+     * @type bool
+     * @default false
+     */
     this._displayAsPassword = false;
-    this.results = this.source = [];
+
+    /**
+     * Result elements (source elements filtered by the text attribute)
+     *
+     * @private
+     * @type String[]
+     * @default []
+     */
+    this.results = [];
+
+    /**
+     * Source elements from which the auto complete filters the elements corresponding to the current text
+     *
+     * @private
+     * @type String[]
+     * @default []
+     */
+    this.source = [];
+
+    /**
+     * Hovered element text
+     *
+     * @type String
+     * @default null
+     * @private
+     */
     this.hoveredElementText = null;
 
     TextInput.call(this, theme, skinName);
+
+    /**
+     * The displayed text
+     *
+     * @type String
+     */
     this.text = text;
 
+    /**
+     * The minimum number of entered characters required to request
+     * suggestions from the AutoCompleteList.
+     *
+     * @private
+     * @type Number
+     * @default 2
+     */
     this._minAutoCompleteLength = 2;
+
+    /**
+     * The maximum number of suggestions that show at one time from the AutoCompleteList.
+     * If 0, all suggestions will be shown.
+     *
+     * @private
+     * @type Number
+     * @default 5
+     */
     this._limitTo = 5;
 }
 
@@ -27,6 +94,45 @@ AutoComplete.prototype = Object.create(TextInput.prototype);
 AutoComplete.prototype.constructor = AutoComplete;
 module.exports = AutoComplete;
 
+/**
+ * Hover state
+ *
+ * @static
+ * @final
+ * @type String
+ */
+AutoComplete.HOVER_CONTAINER = 'hoverContainer';
+
+/**
+ * Click state
+ *
+ * @static
+ * @final
+ * @type String
+ */
+AutoComplete.CLICKED = 'clicked';
+
+/**
+ * Names of possible states for an auto complete element
+ *
+ * @static
+ * @final
+ * @type String[]
+ * @private
+ */
+AutoComplete.stateNames = InputControl.stateNames.concat([
+    AutoComplete.HOVER_CONTAINER, AutoComplete.CLICKED
+]);
+
+/**
+ * Create a new suggestion item
+ *
+ * @param text Text of the suggestion item {String}
+ * @param width Width of the suggestion item {Number}
+ * @param height Height of the suggestion item {Number}
+ * @returns {PIXI.Container}
+ * @private
+ */
 AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
     var itemText = new PIXI.Text(text, this.theme.textStyle ? this.theme.textStyle.clone() : {
             font: '20px Arial',
@@ -57,6 +163,11 @@ AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
     return container;
 };
 
+/**
+ * Draw the results
+ *
+ * @param text Text to filter the source elements {String}
+ */
 AutoComplete.prototype.drawResults = function (text) {
     if (text.length < this._minAutoCompleteLength) {
         this.results = [];
@@ -99,16 +210,28 @@ AutoComplete.prototype.drawResults = function (text) {
     this.addChild(this.wrapper);
 };
 
+/**
+ * Close results and set the text
+ *
+ * @param text Display text {String}
+ */
 AutoComplete.prototype.selectResultElement = function (text) {
     this.toggleResults();
     this.text = text;
 };
 
+/**
+ * Close the results
+ */
 AutoComplete.prototype.toggleResults = function () {
     this.results = [];
     this.removeChild(this.wrapper);
 };
 
+/**
+ * Update the hover result element
+ * @param elementText
+ */
 AutoComplete.prototype.hoverResultElement = function (elementText) {
     if (elementText !== this.hoveredElementText) {
         //this.currentState = AutoComplete.HOVER_CONTAINER;
@@ -117,17 +240,28 @@ AutoComplete.prototype.hoverResultElement = function (elementText) {
     }
 };
 
+/**
+ * Remove the hover result element
+ */
 AutoComplete.prototype.removeHoverResultElement = function () {
     //this.currentState = AutoComplete.CLICKED;
     this.hoveredElementText = null;
     this.redrawResult();
 };
 
+/**
+ * Redraw the results
+ */
 AutoComplete.prototype.redrawResult = function () {
     this.removeChild(this.wrapper);
     this.drawResults(this.text);
 };
 
+/**
+ * Closes the results when the mouse is released outside
+ *
+ * @protected
+ */
 AutoComplete.prototype.onMouseUpOutside = function () {
     if (this.hasFocus && !this._mouseDown) {
         this.blur();
@@ -136,14 +270,11 @@ AutoComplete.prototype.onMouseUpOutside = function () {
     this.toggleResults();
 };
 
-AutoComplete.HOVER_CONTAINER = 'hoverContainer';
-
-AutoComplete.CLICKED = 'clicked';
-
-AutoComplete.stateNames = InputControl.stateNames.concat([
-    AutoComplete.HOVER_CONTAINER, AutoComplete.CLICKED
-]);
-
+/**
+ * Set the auto complete text. Draws the auto complete results afterwards.
+ *
+ * @param text The text to set {String}
+ */
 AutoComplete.prototype.setText = function(text) {
     TextInput.prototype.setText.call(this,text);
     if (this._source) {
@@ -153,9 +284,11 @@ AutoComplete.prototype.setText = function(text) {
 };
 
 /**
+ * Source elements from which the auto complete filters the elements corresponding to the current text
  *
- * @property source
- * @type Array
+ * @name GOWN.AutoComplete#source
+ * @type String[]
+ * @default []
  */
 Object.defineProperty(AutoComplete.prototype, 'source', {
     get: function () {
@@ -171,9 +304,11 @@ Object.defineProperty(AutoComplete.prototype, 'source', {
 
 
 /**
+ * Result elements (source elements filtered by the text attribute)
  *
- * @property results
- * @type Array
+ * @name GOWN.AutoComplete#results
+ * @type String[]
+ * @default []
  */
 Object.defineProperty(AutoComplete.prototype, 'results', {
     get: function () {
@@ -188,11 +323,11 @@ Object.defineProperty(AutoComplete.prototype, 'results', {
 });
 
 /**
- * The minimum number of entered characters required to request
- * suggestions from the AutoCompleteList.
+ * The minimum number of entered characters required to draw suggestions.
  *
- * @property minAutoCompleteLength
+ * @name GOWN.AutoComplete#minAutoCompleteLength
  * @type Number
+ * @default 2
  */
 Object.defineProperty(AutoComplete.prototype, 'minAutoCompleteLength', {
     get: function () {
@@ -207,11 +342,12 @@ Object.defineProperty(AutoComplete.prototype, 'minAutoCompleteLength', {
 });
 
 /**
- * The maximum number of suggestions that show at one time from the AutoCompleteList.
+ * The maximum number of suggestions that show at one time.
  * If 0, all suggestions will be shown.
  *
- * @property limitTo
+ * @name GOWN.AutoComplete#limitTo
  * @type Number
+ * @default 5
  */
 Object.defineProperty(AutoComplete.prototype, 'limitTo', {
     get: function () {

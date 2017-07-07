@@ -1,7 +1,7 @@
 var LayoutAlignment = require('./LayoutAlignment');
 
 /**
- * VerticalLayout - just set alignment to
+ * VerticalLayout - just sets the alignment to
  * LayoutAlignment.VERTICAL_ALIGNMENT
  *
  * @class VerticalLayout
@@ -11,6 +11,13 @@ var LayoutAlignment = require('./LayoutAlignment');
  */
 function VerticalLayout() {
     LayoutAlignment.call(this);
+
+    /**
+     * The alignment of the layout
+     *
+     * @type String
+     * @default LayoutAlignment.VERTICAL_ALIGNMENT
+     */
     this.alignment = LayoutAlignment.VERTICAL_ALIGNMENT;
 }
 

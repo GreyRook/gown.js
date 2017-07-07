@@ -1,17 +1,36 @@
 var Shape = require('./Shape');
 
 /**
- * basic line
+ * Basic line
  *
  * @class Line
  * @extends PIXI.shape.Shape
  * @memberof PIXI.shape
  * @constructor
+ * @param color Color of the line {Number}
+ * @param alpha Alpha value of the line {Number}
+ * @param width Width of the line {Number}
+ * @param height Height of the line {Number}
+ * @param [lineWidth=1] Width of the line {Number}
+ * @param reverse
  */
-
 function Line(color, alpha, width, height, lineWidth, reverse) {
+    /**
+     * Reverse the line
+     *
+     * @private
+     * @type bool
+     */
     this._reverse = reverse;
+
     Shape.call(this, color, alpha, width, height);
+
+    /**
+     * The width of the line
+     *
+     * @type Number
+     * @default 1
+     */
     this.lineWidth = lineWidth || 1;
 }
 
@@ -20,9 +39,8 @@ Line.prototype.constructor = Line;
 module.exports = Line;
 
 /**
- * draw the rect during redraw. will use drawRoundRect if a radius is provided.
+ * Draw the rect during redraw. Will use drawRoundRect if a radius is provided.
  *
- * @method _drawShape
  * @private
  */
 Line.prototype._drawShape = function() {
@@ -36,10 +54,10 @@ Line.prototype._drawShape = function() {
 };
 
 /**
- * The radius of the rectangle border, setting this will redraw the component.
+ * Reverses the line
  *
- * @property color
- * @type Number
+ * @name GOWN.shapes.Line#reverse
+ * @type bool
  */
 Object.defineProperty(Line.prototype, 'reverse', {
     get: function() {
@@ -53,10 +71,10 @@ Object.defineProperty(Line.prototype, 'reverse', {
 
 
 /**
- * update before draw call
+ * Update before draw call.
  * Line has to be drawn different than other Shapes
  *
- * @method redraw
+ * @private
  */
 Line.prototype.redraw = function() {
     if(!this.invalid) {

@@ -1,7 +1,7 @@
 var Control = require('../core/Control');
 
 /**
- * entry point for your application, makes some assumptions, (e.g. that you
+ * Entry point for your application, makes some assumptions, (e.g. that you
  * always want fullscreen) and shortcuts some fancy stuff like a gradient
  * background.
  *
@@ -9,20 +9,16 @@ var Control = require('../core/Control');
  * @extends GOWN.Control
  * @memberof GOWN
  * @constructor
- * @param config {Object} - equals the renderer config for pixi with an
+ * @param [config] {Object} Equals the renderer config for pixi with an
  *  exception: the backgroundColor is an Array a of colors it will drawn as
  *  vertical gradient
- *  (default: {backgroundColor: 0xffffff})
- * @param fullscreen {Boolean}
- *  (default: true)
- * @param width {Number} width of the canvas
- *  (default: 800)
- * @param height {Number} height of the canvas
- *  (default: 600)
- * @param renderer {WebGLRenderer|CanvasRenderer}
- *  (default: null - will create a new renderer)
- * @param stage {Stage}
- *  (default null - will use a new PIXI.Container)
+ * @param [config.backgroundColor=0xffffff] {Number} Background color of the canvas
+ * @param [screenMode=Application.SCREEN_MODE_RESIZE] {String} Screen mode of the canvas
+ * @param [parentId] {String} DOM id of the canvas element
+ * @param [width=800] {Number} Width of the canvas
+ * @param [height=600] {Number} Height of the canvas
+ * @param [renderer=PIXI.autoDetectRenderer()] {PIXI.WebGLRenderer|PIXI.CanvasRenderer} Renderer of the canvas
+ * @param [stage=new PIXI.Container()] {PIXI.Container} Root container
  */
 function Application(config, screenMode, parentId, width, height, renderer, stage) {
     screenMode = screenMode || Application.SCREEN_MODE_RESIZE;
@@ -67,12 +63,48 @@ function Application(config, screenMode, parentId, width, height, renderer, stag
         }
     }
     /* jshint ignore:start */
+
+    /**
+     * Root container
+     *
+     * @private
+     * @type PIXI.Container
+     * @default new PIXI.Container()
+     */
     this._stage = stage;
+
+    /**
+     * Canvas renderer
+     *
+     * @private
+     * @type PIXI.WebGLRenderer|PIXI.CanvasRenderer
+     */
     this._renderer = renderer;
+
     /* jshint ignore:end */
+
+    /**
+     * Width of the canvas
+     *
+     * @private
+     * @type Number
+     */
     this._width = renderer.width;
+
+    /**
+     * Height of the canvas
+     *
+     * @private
+     * @type Number
+     */
     this._height = renderer.height;
 
+    /**
+     * Screen mode of the canvas
+     *
+     * @private
+     * @type Number
+     */
     this.screenMode = screenMode;
 
     Control.call(this);
@@ -81,9 +113,22 @@ function Application(config, screenMode, parentId, width, height, renderer, stag
 
     stage.addChild(this);
 
+    /**
+     * Overwrite layout before next draw call.
+     *
+     * @private
+     * @type bool
+     * @default true
+     */
     this.layoutInvalid = true;
 
-    // you can set a layout to apply percentages on redraw etc.
+    /**
+     * Set a layout to apply percentages on redraw etc.
+     *
+     * @private
+     * @default null
+     * @type GOWN.layout.Layout
+     */
     this.layout = this.layout || null;
 
     if (_background) {
@@ -98,26 +143,37 @@ Application.prototype.constructor = Application;
 module.exports = Application;
 
 /**
- * use fixed width/height in pixel.
+ * Use fixed width/height in pixel.
+ *
+ * @static
+ * @final
+ * @type String
  */
 Application.SCREEN_MODE_FIXED = 'screenModeFixed';
 
 /**
- * use window.innerWidth/innerHeight to get the whole browser page width
+ * Use window.innerWidth/innerHeight to get the whole browser page width
+ *
+ * @static
+ * @final
+ * @type String
  */
 Application.SCREEN_MODE_FULLSCREEN = 'screenModeFullscreen';
 
 /**
- * use resize to parent div width/height
+ * Use resize to parent div width/height
+ *
+ * @static
+ * @final
+ * @type String
  */
 Application.SCREEN_MODE_RESIZE = 'screenModeResize';
 
-/**
- * call requestAnimationFrame to render the application at max. FPS
- *
- * @method animate
- */
 /* jshint ignore:start */
+
+/**
+ * Call requestAnimationFrame to render the application at max. FPS
+ */
 Application.prototype.animate = function() {
     var scope = this;
     var animate = function() {
@@ -128,14 +184,14 @@ Application.prototype.animate = function() {
     };
     requestAnimationFrame(animate);
 };
+
 /* jshint ignore:end */
 
 /**
- * creates a gradient rect that can for example be used as background
+ * Creates a gradient rect that can for example be used as a background
  * (uses a separate canvas to create a new Texture)
  * TODO: check if this works outside the browser/in cordova or cocoon
  *
- * @method _createGradientRect
  * @private
  */
 Application.prototype._createGradientRect = function(gradient, width, height) {
@@ -157,10 +213,9 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
 };
 
 /**
- * clean application: remove event listener, free memory
+ * Clean application: remove event listener, free memory
  * (can also remove the canvas from the DOM tree if wanted)
  *
- * @method destroy
  * @param [destroyChildren=false] {boolean} if set to true, all the children will have their destroy method called as well
  * @param [removeCanvas=true] {boolean} destroys the canvas and remove it from the dom tree
  */
@@ -176,7 +231,7 @@ Application.prototype.destroy = function(destroyChildren, removeCanvas) {
 };
 
 /**
- * redraw scene, apply layout if required
+ * Redraw scene, apply layout if required
  */
 Application.prototype.redraw = function() {
     if (this.layoutInvalid && this.layout) {
@@ -189,8 +244,6 @@ Application.prototype.redraw = function() {
  * called when the browser window / the application is resized
  * will set the dimensions of the canvas and layout children
  * (if it has a layout)
- *
- * @method resize
  */
 Application.prototype.onResize = function(eventData) {
     this._width = eventData.data.width;
@@ -205,9 +258,9 @@ Application.prototype.onResize = function(eventData) {
 };
 
 /**
- * allow layouting of children
+ * Allow layouting of children
  *
- * @property layout
+ * @name GOWN.Application#layout
  * @type GOWN.layout.Layout
  */
 Object.defineProperty(Application.prototype, 'layout', {
@@ -224,8 +277,8 @@ Object.defineProperty(Application.prototype, 'layout', {
 });
 
 /**
- * remove background
- * @method _removeBackground
+ * Remove background
+ *
  * @private
  */
 Application.prototype._removeBackground = function() {
@@ -236,10 +289,10 @@ Application.prototype._removeBackground = function() {
 };
 
 /**
- * set fullscreen and resize to screen size
+ * Set the screen mode
  *
- * @property enabled
- * @type Boolean
+ * @name GOWN.Application#screenMode
+ * @type String
  */
 Object.defineProperty(Application.prototype, 'screenMode', {
     get: function() {
@@ -258,10 +311,10 @@ Object.defineProperty(Application.prototype, 'screenMode', {
 });
 
 /**
- * set and draw background
+ * Set and draw background. Create a gradient by passing an array of hex color numbers.
  *
- * @property enabled
- * @type Boolean
+ * @name GOWN.Application#background
+ * @type Number|Number[]
  */
 Object.defineProperty(Application.prototype, 'background', {
     get: function() {

@@ -2,7 +2,7 @@ var Layout = require('./Layout');
 var itemDimensions = require('./utils/itemDimensions');
 
 /**
- * TiledLayout a layout for tiled rows/columns
+ * A layout for tiled rows/columns
  *
  * @class TiledLayout
  * @extends GOWN.layout.Layout
@@ -11,13 +11,77 @@ var itemDimensions = require('./utils/itemDimensions');
  */
 function TiledLayout() {
     Layout.call(this);
+
+    /**
+     * Use square tiles
+     *
+     * @private
+     * @type bool
+     * @default false
+     */
     this._useSquareTiles = false;
+
+    /**
+     * The size of the horizontal gap between tiles
+     *
+     * @private
+     * @type Number
+     * @default 0
+     */
     this._horizontalGap = 0;
+
+    /**
+     * The size of the vertical gap between tiles
+     *
+     * @private
+     * @type Number
+     * @default 0
+     */
     this._verticalGap = 0;
+
+    /**
+     * Horizontal alignment of the tiles
+     *
+     * @private
+     * @type String
+     * @default TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER
+     */
     this._tileHorizontalAlign = TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER;
+
+    /**
+     * Vertical alignment of the tiles
+     *
+     * @private
+     * @type String
+     * @default TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE
+     */
     this._tileVerticalAlign = TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE;
+
+    /**
+     * Paging mode
+     *
+     * @private
+     * @type String
+     * @default TiledLayout.TiledLayout.PAGING_NONE
+     */
     this._paging = TiledLayout.PAGING_NONE;
+
+    /**
+     * Orientation mode
+     *
+     * @private
+     * @type String
+     * @default TiledLayout.ORIENTATION_ROWS
+     */
     this._orientation = TiledLayout.ORIENTATION_ROWS;
+
+    /**
+     * Invalidate the layout so that it will be redrawn next time
+     *
+     * @private
+     * @type bool
+     * @default true
+     */
     this._needUpdate = true;
 }
 
@@ -25,16 +89,31 @@ TiledLayout.prototype = Object.create( Layout.prototype );
 TiledLayout.prototype.constructor = TiledLayout;
 module.exports = TiledLayout;
 
-
+/**
+ * Orientation by rows
+ *
+ * @static
+ * @final
+ * @type String
+ */
 TiledLayout.ORIENTATION_ROWS = 'rows';
+
+/**
+ * Orientation by columns
+ *
+ * @static
+ * @final
+ * @type String
+ */
 TiledLayout.ORIENTATION_COLUMNS = 'columns';
 
 /**
  * If an item height is smaller than the height of a tile, the item will
  * be aligned to the top edge of the tile.
  *
- * @property TILE_VERTICAL_ALIGN_TOP
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_VERTICAL_ALIGN_TOP = 'top';
 
@@ -42,8 +121,9 @@ TiledLayout.TILE_VERTICAL_ALIGN_TOP = 'top';
  * If an item height is smaller than the height of a tile, the item will
  * be aligned to the middle of the tile.
  *
- * @property TILE_VERTICAL_ALIGN_MIDDLE
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE = 'middle';
 
@@ -51,16 +131,18 @@ TiledLayout.TILE_VERTICAL_ALIGN_MIDDLE = 'middle';
  * If an item height is smaller than the height of a tile, the item will
  * be aligned to the bottom edge of the tile.
  *
- * @property TILE_VERTICAL_ALIGN_BOTTOM
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_VERTICAL_ALIGN_BOTTOM = 'bottom';
 
 /**
  * The item will be resized to fit the height of the tile.
  *
- * @property TILE_VERTICAL_ALIGN_JUSTIFY
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY = 'justify';
 
@@ -68,8 +150,9 @@ TiledLayout.TILE_VERTICAL_ALIGN_JUSTIFY = 'justify';
  * If an item width is smaller than the width of a tile, the item will
  * be aligned to the left edge of the tile.
  *
- * @property TILE_HORIZONTAL_ALIGN_LEFT
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT = 'left';
 
@@ -77,8 +160,9 @@ TiledLayout.TILE_HORIZONTAL_ALIGN_LEFT = 'left';
  * If an item width is smaller than the width of a tile, the item will
  * be aligned to the center of the tile.
  *
- * @property TILE_HORIZONTAL_ALIGN_CENTER
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER = 'center';
 
@@ -86,53 +170,66 @@ TiledLayout.TILE_HORIZONTAL_ALIGN_CENTER = 'center';
  * If an item width is smaller than the width of a tile, the item will
  * be aligned to the right edge of the tile.
  *
- * @property TILE_HORIZONTAL_ALIGN_RIGHT
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_HORIZONTAL_ALIGN_RIGHT = 'right';
 
 /**
  * The item will be resized to fit the width of the tile.
  *
- * @property TILE_HORIZONTAL_ALIGN_JUSTIFY
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.TILE_HORIZONTAL_ALIGN_JUSTIFY = 'justify';
 
 /**
  * The items will be positioned in pages horizontally from left to right.
  *
- * @property PAGING_HORIZONTAL
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.PAGING_HORIZONTAL = 'horizontal';
 
 /**
  * The items will be positioned in pages vertically from top to bottom.
  *
- * @property PAGING_VERTICAL
  * @static
+ * @final
+ * @type String
  */
 TiledLayout.PAGING_VERTICAL = 'vertical';
 
-
+/**
+ * The items will not be positioned in pages.
+ *
+ * @static
+ * @final
+ * @type String
+ */
+TiledLayout.PAGING_NONE = 'none';
 
 /**
- * calculate layout for container
+ * Calculate the layout for a container (and its children)
+ *
+ * @param container The container to calculate the layout for
+ * @return Number[] The width and height
  */
 TiledLayout.prototype.layoutContainer = function(container) {
     var dimensions = itemDimensions(container);
     return this.layout(container.children, dimensions[0], dimensions[1]);
 };
 
-
 /**
- * Positions (and possibly resizes) the supplied items.
+ * Position (and possibly resize) the supplied items.
  *
- * @method layout
- * @param items items that will be layouted
- * @param maxWidth
- * @param maxHeight
+ * @param items The items that will be layouted {Array}
+ * @param maxWidth The maximum width for the items {Number}
+ * @param maxHeight The maximum height for the items {Number}
+ * @return Number[] The width and height
  */
 TiledLayout.prototype.layout = function (items, maxWidth, maxHeight) {
     var _rows = this._orientation === TiledLayout.ORIENTATION_ROWS;
@@ -295,10 +392,11 @@ TiledLayout.prototype.layout = function (items, maxWidth, maxHeight) {
 };
 
 /**
- * use same width and height for the tiles (calculated by biggest square)
+ * Use the same width and height for tiles (calculated by biggest square)
  *
- * @property useSquareTiles
- * @type Boolean
+ * @name GOWN.layout.TiledLayout#useSquareTiles
+ * @type bool
+ * @default false
  */
 Object.defineProperty(TiledLayout.prototype, 'useSquareTiles', {
     set: function(useSquareTiles) {

@@ -1,0 +1,47 @@
+{
+  "tags": {
+    "allowUnknownTags" : true
+  },
+  "source": {
+    "include": [
+      "./src/"
+    ],
+    "exclude": [
+    ],
+    "includePattern": ".+\\.js(doc)?$",
+    "excludePattern": "(^|\\/|\\\\)_|index.js"
+  },
+  "templates": {
+    "cleverLinks"   : false,
+    "monospaceLinks": false,
+    "default"       : {
+      "outputSourceFiles" : true
+    },
+    "applicationName": "GOWN",
+    "footer"        : "",
+    "copyright"     : "",
+    "disqus": "",
+    "googleAnalytics": "",
+    "openGraph": {
+      "title": "",
+      "type": "website",
+      "image": "",
+      "site_name": "",
+      "url": ""
+    },
+    "meta": {
+      "title": "",
+      "description": "",
+      "keyword": ""
+    },
+    "linenums"      : true
+  },
+  "opts": {
+    "encoding"      : "utf8",
+    "recurse"       : true,
+    "private"       : false,
+    "lenient"       : true,
+    "destination"   : "./docs/api",
+    "template"      : "./node_modules/jaguarjs-jsdoc"
+  }
+}

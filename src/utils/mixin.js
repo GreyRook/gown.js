@@ -1,3 +1,17 @@
+/**
+ * Utility functions
+ *
+ * @namespace GOWN.utils
+ */
+
+/**
+ * Mixin utility
+ *
+ * @function GOWN.utils.mixin
+ * @param destination Destination object {Object}
+ * @param source Source object{Object}
+ * @return {Object}
+ */
 module.exports = function(destination, source) {
     for (var key in source) {
         if (source.hasOwnProperty(key)) {

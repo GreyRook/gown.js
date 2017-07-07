@@ -8,9 +8,9 @@ var EventEmitter = require('eventemitter3');
  * @class
  * @extends EventEmitter
  * @memberof GOWN.interaction
- * @param renderer {PIXI.CanvasRenderer|PIXI.WebGLRenderer} A reference to the current renderer
+ * @param renderer A reference to the current renderer {PIXI.CanvasRenderer|PIXI.WebGLRenderer}
  * @param [options] {object}
- * @param [options.autoPreventDefault=true] {boolean} Should the manager automatically prevent default browser actions.
+ * @param [options.autoPreventDefault=false] {boolean} Should the manager automatically prevent default browser actions.
  */
 // TODO (maybe): move this to an own external lib for PIXI-Keyboard interaction
 // TODO: show keyboard in Cocoon.io - see Cocoon.Dialog.showKeyboard
@@ -22,14 +22,14 @@ function KeyboardManager(renderer, options) {
     /**
      * The renderer this interaction manager works for.
      *
-     * @member {PIXI.SystemRenderer}
+     * @type PIXI.SystemRenderer
      */
     this.renderer = renderer;
 
     /**
      * Should default browser actions automatically be prevented.
      *
-     * @member {boolean}
+     * @type bool
      * @default false
      */
     this.autoPreventDefault = options.autoPreventDefault !== undefined ? options.autoPreventDefault : false;
@@ -37,7 +37,7 @@ function KeyboardManager(renderer, options) {
     /**
      * An event data object to handle all the event tracking/dispatching
      *
-     * @member {object}
+     * @type Object
      */
     this.eventData = {
         stopped: false,
@@ -55,21 +55,12 @@ function KeyboardManager(renderer, options) {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.keyDownProcess = this.keyDownProcess.bind(this);
 
-    /**
-     * Fired when a key (usually from a keyboard) is pressed
-     *
-     * @event mouseout
-     * @memberof PIXI.interaction.InteractionManager#
-     */
-
-
-     this.addEvents();
+    this.addEvents();
 }
 
 KeyboardManager.prototype = Object.create(EventEmitter.prototype);
 KeyboardManager.prototype.constructor = KeyboardManager;
 module.exports = KeyboardManager;
-
 
  /**
  * Registers all the DOM events
@@ -110,7 +101,7 @@ KeyboardManager.prototype.removeEvents = function () {
 /**
  * Is called when the key is pressed down
  *
- * @param event {Event} The DOM event of a key being pressed down
+ * @param event The DOM event of a key being pressed down {Event}
  * @private
  */
 KeyboardManager.prototype.onKeyDown = function (event) {
@@ -125,7 +116,7 @@ KeyboardManager.prototype.onKeyDown = function (event) {
 /**
  * Is called when the key is released
  *
- * @param event {Event} The DOM event of a key being released
+ * @param event The DOM event of a key being released {Event}
  * @private
  */
 KeyboardManager.prototype.onKeyUp = function (event) {
@@ -140,8 +131,7 @@ KeyboardManager.prototype.onKeyUp = function (event) {
 /**
  * Handle original key event and forward it to gown
  *
- * @param event {Event} The DOM event of a key being released
- * @param type {string} type of the event (keyup or keydown)
+ * @param event The DOM event of a key being released {Event}
  * @private
  */
 KeyboardManager.prototype._keyEvent = function(event) {
@@ -157,6 +147,9 @@ KeyboardManager.prototype._keyEvent = function(event) {
 
 /**
  * Grabs the data from the keystroke
+ *
+ * @param event The event to get the key data from {Event}
+ * @return {Object}
  * @private
  */
 KeyboardManager.prototype.getKeyData = function (event) {
@@ -169,23 +162,36 @@ KeyboardManager.prototype.getKeyData = function (event) {
     };
 };
 
+/**
+ * Dispatches a key up event
+ *
+ * @param displayObject The object to dispatch the key event for {PIXI.DisplayObject}
+ * @private
+ */
 KeyboardManager.prototype.keyUpProcess = function(displayObject) {
     this.dispatchEvent( displayObject, 'keyup', this.eventData );
 };
 
+/**
+ * Dispatches a key down event
+ *
+ * @param displayObject The object to dispatch the key event for {PIXI.DisplayObject}
+ * @private
+ */
 KeyboardManager.prototype.keyDownProcess = function(displayObject) {
     this.dispatchEvent( displayObject, 'keydown', this.eventData );
 };
 
 /**
- * traverse through the scene graph to call given function on all displayObjects
+ * Traverse through the scene graph to call the given function on all displayObjects
  * that can receive keys
  *
- * @param displayObject {PIXI.Container|PIXI.Sprite|PIXI.extras.TilingSprite} the displayObject that will be resized (recurcsivly crawls its children)
- * @param [func] {Function} the function that will be called on each resizable object. The displayObject will be passed to the function
+ * @param displayObject The displayObject that will be resized (recurcsivly crawls its children)
+ * {PIXI.Container|PIXI.Sprite|PIXI.extras.TilingSprite}
+ * @param [func] The function that will be called on each resizable object.
+ * The displayObject will be passed to the function {Function}
  */
-KeyboardManager.prototype.processInteractive = function (displayObject, func)
-{
+KeyboardManager.prototype.processInteractive = function (displayObject, func) {
     if(!displayObject || !displayObject.visible || displayObject.enabled === false)
     {
         return false;
@@ -211,9 +217,9 @@ KeyboardManager.prototype.processInteractive = function (displayObject, func)
 /**
  * Dispatches an event on the display object that has resizable set to true
  *
- * @param displayObject {PIXI.Container|PIXI.Sprite|PIXI.extras.TilingSprite} the display object in question
- * @param eventString {string} the name of the event (e.g, resize or orientation)
- * @param eventData {object} the event data object
+ * @param displayObject The display object in question {PIXI.Container|PIXI.Sprite|PIXI.extras.TilingSprite}
+ * @param eventString The name of the event (e.g, resize or orientation) {String}
+ * @param eventData The event data object {Object}
  * @private
  */
 KeyboardManager.prototype.dispatchEvent = function ( displayObject, eventString, eventData )
@@ -232,6 +238,9 @@ KeyboardManager.prototype.dispatchEvent = function ( displayObject, eventString,
     }
 };
 
+/**
+ * Remove events and listener etc.
+ */
 KeyboardManager.prototype.destroy = function(){
     this.removeEvents();
     this.removeAllListeners();

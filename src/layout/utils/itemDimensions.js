@@ -1,7 +1,7 @@
 module.exports = function (item) {
     var itemWidth = 0, itemHeight = 0;
 
-    // we prefere pixel positions over calculate ones, so we try to
+    // we prefer pixel positions over calculated ones, so we try to
     // access the underscore values first.
     if (!isNaN(item._height)) {
         itemHeight = item._height;

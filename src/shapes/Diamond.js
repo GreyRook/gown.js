@@ -1,12 +1,16 @@
 var Shape = require('./Shape');
 
 /**
- * basic diamond shape
+ * Basic diamond shape
  *
  * @class Diamond
  * @extends GOWN.shapes.Shape
  * @memberof GOWN.shapes
  * @constructor
+ * @param color Color of the diamond shape {Number}
+ * @param alpha Alpha value of the diamond shape {Number}
+ * @param width Width of the diamond shape {Number}
+ * @param height Height of the diamond shape {Number}
  */
 function Diamond(color, alpha, width, height) {
     Shape.call(this, color, alpha, width, height);
@@ -17,9 +21,8 @@ Diamond.prototype.constructor = Diamond;
 module.exports = Diamond;
 
 /**
- * draw the diamond during redraw.
+ * Draw the diamond during redraw.
  *
- * @method _drawShape
  * @private
  */
 Diamond.prototype._drawShape = function() {

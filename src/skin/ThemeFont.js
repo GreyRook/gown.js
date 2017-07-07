@@ -6,9 +6,12 @@ var OPTIONS = ['fontSize', 'fontFamily', '_fontSize', '_fontFamily',
                'lineJoin', 'miterLimit'];
 
 /**
+ * Font theme
+ *
  * @class ThemeFont
  * @memberof GOWN
  * @constructor
+ * @param data The font style object {Object}
  */
 function ThemeFont(data) {
     for(var key in data) {
@@ -17,19 +20,91 @@ function ThemeFont(data) {
         }
     }
 
+    /**
+     * The font fill color
+     *
+     * @type String
+     * @default '#000'
+     */
     this.fill = this.fill || '#000';
-    // default font for label (e.g. buttons)
+
+    /**
+     * The font family
+     *
+     * @private
+     * @type String
+     * @default 'Arial'
+     */
     this._fontFamily = this._fontFamily || 'Arial';
+
+    /**
+     * The font size
+     *
+     * @private
+     * @type Number
+     * @default 12
+     */
     this._fontSize = this._fontSize || 12;
+
+    /**
+     * @member GOWN.ThemeFont#wordWrap
+     */
+
+    /**
+     * @member GOWN.ThemeFont#wordWrapWidth
+     */
+
+    /**
+     * @member GOWN.ThemeFont#lineHeight
+     */
+
+    /**
+     * @member GOWN.ThemeFont#align
+     */
+
+    /**
+     * @member GOWN.ThemeFont#stroke
+     */
+
+    /**
+     * @member GOWN.ThemeFont#strokeThickness
+     */
+
+    /**
+     * @member GOWN.ThemeFont#dropShadow
+     */
+
+    /**
+     * @member GOWN.ThemeFont#dropShadowColor
+     */
+
+    /**
+     * @member GOWN.ThemeFont#dropShadowAngle
+     */
+
+    /**
+     * @member GOWN.ThemeFont#dropShadowDistance
+     */
+
+    /**
+     * @member GOWN.ThemeFont#textBaseline
+     */
+
+    /**
+     * @member GOWN.ThemeFont#lineJoin
+     */
+
+    /**
+     * @member GOWN.ThemeFont#miterLimit
+     */
 }
 
 module.exports = ThemeFont;
 
-
 /**
- * clone ThemeFont instance
+ * Clone the ThemeFont instance
  *
- * @method clone
+ * @return {GOWN.ThemeFont} The cloned font theme
  */
 ThemeFont.prototype.clone = function() {
     var re = new ThemeFont();
@@ -43,9 +118,8 @@ ThemeFont.prototype.clone = function() {
 };
 
 /**
- * update font string
+ * Update the font string
  *
- * @method _updateFont
  * @private
  */
 ThemeFont.prototype._updateFont = function() {
@@ -53,10 +127,11 @@ ThemeFont.prototype._updateFont = function() {
 };
 
 /**
- * instead of setting font using fontFamily and fontSize is encouraged
+ * Instead of setting font using fontFamily and fontSize is encouraged
  *
- * @property font
+ * @name GOWN.ThemeFont#font
  * @type String
+ * @deprecated
  */
 Object.defineProperty(ThemeFont.prototype, 'font', {
     get: function() {
@@ -64,12 +139,12 @@ Object.defineProperty(ThemeFont.prototype, 'font', {
     }
 });
 
-
 /**
- * Font Size
+ * The font size
  *
- * @property fontSize
+ * @name GOWN.ThemeFont#fontSize
  * @type Number
+ * @default 12
  */
 Object.defineProperty(ThemeFont.prototype, 'fontSize', {
     get: function() {
@@ -81,12 +156,12 @@ Object.defineProperty(ThemeFont.prototype, 'fontSize', {
     }
 });
 
-
 /**
- * Font Familiy
+ * The font family
  *
- * @property fontFamily
+ * @name GOWN.ThemeFont#fontFamily
  * @type String
+ * @default 'Arial'
  */
 Object.defineProperty(ThemeFont.prototype, 'fontFamily', {
     get: function() {

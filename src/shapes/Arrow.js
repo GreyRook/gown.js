@@ -1,16 +1,36 @@
 var Shape = require('./Shape');
 
 /**
- * basic arrow shape
+ * Basic arrow shape
  *
  * @class Arrow
  * @extends GOWN.shapes.Shape
  * @memberof GOWN.shapes
  * @constructor
+ * @param color Color of the arrow {Number}
+ * @param alpha Alpha value of the arrow {Number}
+ * @param tailWidth Tail width of the arrow {Number}
+ * @param tailHeight Tail height of the arrow {Number}
+ * @param width Width of the arrow {Number}
+ * @param height Height of the arrow {Number}
  */
 function Arrow(color, alpha, tailWidth, tailHeight, width, height) {
+    /**
+     * Tail height of the arrow
+     *
+     * @private
+     * @type Number
+     */
     this.tailHeight = tailHeight;
+
+    /**
+     * Tail width of the arrow
+     *
+     * @private
+     * @type Number
+     */
     this.tailWidth = tailWidth;
+
     Shape.call(this, color, alpha, width, height);
 }
 
@@ -19,9 +39,8 @@ Arrow.prototype.constructor = Arrow;
 module.exports = Arrow;
 
 /**
- * draw the arrow during redraw.
+ * Draw the arrow during redraw.
  *
- * @method _drawShape
  * @private
  */
 Arrow.prototype._drawShape = function() {

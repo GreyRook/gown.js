@@ -2,7 +2,7 @@ var Layout = require('./Layout');
 var itemDimensions = require('./utils/itemDimensions');
 
 /**
- * basic layout
+ * Basic layout
  *
  * @class LayoutAlignment
  * @extends GOWN.layout.Layout
@@ -17,21 +17,36 @@ LayoutAlignment.prototype = Object.create( Layout.prototype );
 LayoutAlignment.prototype.constructor = LayoutAlignment;
 module.exports = LayoutAlignment;
 
+/**
+ * Vertical alignment
+ *
+ * @static
+ * @final
+ * @type String
+ */
 LayoutAlignment.VERTICAL_ALIGNMENT = 'vertical';
+
+/**
+ * Horizontal alignment
+ *
+ * @static
+ * @final
+ * @type String
+ */
 LayoutAlignment.HORIZONTAL_ALIGNMENT = 'horizontal';
 
 /**
-* apply percentage width/height to items.
-* this will use the explicit width/height and apply it to all items
-* according to its percentages
-*
-* percentages have higher priorities than fixed values.
-* So if you set a width higher than 0 but also percentWidth,
-* the width will be recalculated according to percentWidth.
-*
-* @method inheritPercent
-* @param items
-* @param explicit space we have for the components
+ * Apply percentage width/height to items.
+ * This will use the explicit width/height and apply it to all items
+ * according to its percentages.
+ *
+ * Percentages have higher priorities than fixed values.
+ * So if you set a width higher than 0 but also percentWidth,
+ * the width will be recalculated according to percentWidth.
+ *
+ * @param items The items which get new width and height according to the percent {Array}
+ * @param explicit The space we have for the components {Number}
+ * @param [alignment=LayoutAlignment.VERTICAL_ALIGNMENT] The alignment mode {String}
  */
 LayoutAlignment.prototype.applyFixedPercent = function(items, explicit, alignment) {
     var itemCount = items.length;
@@ -56,18 +71,18 @@ LayoutAlignment.prototype.applyFixedPercent = function(items, explicit, alignmen
 };
 
 /**
- * apply percentage width/height to items.
- * this will stack items on top/aside of each other
+ * Apply percentage width/height to items.
+ * This will stack items on top/aside of each other
  *
- * percentages have higher priorities than fixed values.
+ * Percentages have higher priorities than fixed values.
  * So if you set a width higher than 0 but also percentWidth,
  * the width will be recalculated according to percentWidth.
  *
- * @method applyPercent
- * @param items
- * @param explicit space we have for the components
  * (this function will handle padding and gap, so the explicitWidth is
- *  for the whole available width)
+ * for the whole available width)
+ *
+ * @param items The items which get new width and height according to the percent {Array}
+ * @param explicit space we have for the components {Number}
  */
 LayoutAlignment.prototype.applyPercent = function(items, explicit) {
     var _hor = (this.alignment === LayoutAlignment.HORIZONTAL_ALIGNMENT);
@@ -119,12 +134,11 @@ LayoutAlignment.prototype.applyPercent = function(items, explicit) {
 };
 
 /**
- * get current gap (includes first and last gap)
+ * Get the current gap (includes first and last gap)
  *
- * @method _currentGap
+ * @param i The current item position {Number}
+ * @param items The list of items (to determine if we are at the last gap) {Array}
  * @private
- * @param i current item position
- * @param items list of items (to determine if we are at the last gap)
  */
 LayoutAlignment.prototype._currentGap = function(i, items) {
     if(!isNaN(this._firstGap) && i === 0)
@@ -139,21 +153,23 @@ LayoutAlignment.prototype._currentGap = function(i, items) {
 };
 
 /**
- * calculate layout for container (and its children)
+ * Calculate the layout for a container (and its children)
+ *
+ * @param container The container to calculate the layout for
+ * @return Number[] The width and height
  */
 LayoutAlignment.prototype.layoutContainer = function(container) {
     var dimensions = itemDimensions(container);
     return this.layout(container.children, dimensions[0], dimensions[1]);
-
 };
 
 /**
- * Position (and possibly resizes) the supplied items.
+ * Position (and possibly resize) the supplied items.
  *
- * @method layout
- * @param items items that will be layouted {Array}
- * @param maxWidth max. width for the items {Number}
- * @param maxWidth max. height for the items {Number}
+ * @param items The items that will be layouted {Array}
+ * @param maxWidth The maximum width for the items {Number}
+ * @param maxHeight The maximum height for the items {Number}
+ * @return Number[] The width and height
  */
 LayoutAlignment.prototype.layout = function(items, maxWidth, maxHeight) {
     var _hor = (this.alignment === LayoutAlignment.HORIZONTAL_ALIGNMENT);
@@ -215,8 +231,8 @@ LayoutAlignment.prototype.layout = function(items, maxWidth, maxHeight) {
 /**
  * The space between the first and second element
  *
- * @property firstGap
- * @type String
+ * @name GOWN.layout.LayoutAlignment#firstGap
+ * @type Number
  */
 Object.defineProperty(LayoutAlignment.prototype, 'firstGap', {
     set: function(value) {
@@ -234,8 +250,8 @@ Object.defineProperty(LayoutAlignment.prototype, 'firstGap', {
 /**
  * The space between the last and second-to-last element
  *
- * @property firstGap
- * @type String
+ * @name GOWN.layout.LayoutAlignment#lastGap
+ * @type Number
  */
 Object.defineProperty(LayoutAlignment.prototype, 'lastGap', {
     set: function(value) {

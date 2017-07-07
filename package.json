@@ -20,7 +20,9 @@
     "precoverage": "rimraf coverage",
     "predist": "rimraf docs/dist/**",
     "preinstall": "npm i -g webpack@^2.2.1",
-    "test": "floss -p test/index.js"
+    "test": "floss -p test/index.js",
+    "predocs": "rimraf docs/api/**",
+    "docs": "jsdoc -c jsdoc.conf.json -R README.md"
   },
   "files": [
     "dist/",
@@ -30,12 +32,14 @@
     "README.md"
   ],
   "dependencies": {
-    "eventemitter3": "^2.0.0"
+    "eventemitter3": "^2.0.0",
+    "jaguarjs-jsdoc": "^1.0.2"
   },
   "devDependencies": {
     "electron": "^1.4.15",
     "eslint": "^3.5.0",
     "floss": "^2.0.1",
+    "jsdoc": "^3.4.3",
     "mkdirp": "^0.5.1",
     "path": "^0.12.7",
     "rimraf": "^2.5.1",

@@ -40,9 +40,6 @@ function Scroller(theme) {
     this._verticalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
     this._horizontalScrollPolicy = Scroller.SCROLL_POLICY_AUTO;
 
-    // min/max horizontal and
-    this._scrollBounds = new PIXI.Rectangle(0, 0, Infinity, Infinity);
-
     /**
      * the default interaction mode is drag-and-drop OR use the scrollbars
      */
@@ -88,63 +85,36 @@ function Scroller(theme) {
     this._hasHorizontalScrollBar = false;
     this._hasVerticalScrollBar = false;
     this._touchPointID = -1;
-    this._velocity = {x: 0, y: 0};
-    this._previousVelocity = {x: [], y: []};
-    this._pendingVelocityChange = false;
-    this._hasViewPortBoundsChanged = false;
     this._isDraggingHorizontally = false;
     this._isDraggingVertically = false;
     this._measureViewPort = true;
     this._snapToPages = false;
-    this._snapOnComplete = false;
     this._horizontalScrollBarFactory = this._verticalScrollBarFactory = this.defaultScrollBarFactory;
     this._horizontalScrollPosition = 0;
     this._minHorizontalScrollPosition = 0;
     this._maxHorizontalScrollPosition = 0;
     this._horizontalPageIndex = 0;
     this._minHorizontalPageIndex = 0;
-    this._maxHorizontalPageIndex = 0;
     this.actualVerticalScrollStep = 1;
     this.explicitVerticalScrollStep = NaN;
-    this._verticalMouseWheelScrollStep = NaN;
     this._verticalScrollPosition = 0;
     this._minVerticalScrollPosition = 0;
     this._maxVerticalScrollPosition = 0;
     this._verticalPageIndex = 0;
     this._minVerticalPageIndex = 0;
-    this._maxVerticalPageIndex = 0;
     this.actualPageWidth = 0;
     this.explicitPageWidth = NaN;
     this.actualPageHeight = 0;
     this.explicitPageHeight = NaN;
-    this._minimumPageThrowVelocity = 5;
     this._paddingTop = 0;
     this._elasticSnapDuration = 0.5;
-    this._horizontalScrollBarIsScrolling = false;
-    this._verticalScrollBarIsScrolling = false;
     this._isScrolling = false;
     this._isScrollingStopped = false;
     this.pendingHorizontalScrollPosition = NaN;
     this.pendingVerticalScrollPosition = NaN;
     this.hasPendingHorizontalPageIndex = false;
     this.hasPendingVerticalPageIndex = false;
-    this.isScrollBarRevealPending = false;
-    this._revealScrollBarsDuration = 1.0;
-    this._isTopPullActive = false;
-    this._topPullView = null;
-    this._isRightPullActive = false;
-    this._rightPullView = null;
-    this._isBottomPullActive = false;
-    this._bottomPullView = null;
-    this._isLeftPullActive = false;
-    this._leftPullView = null;
-    this._hasElasticEdges = true;
     this._pageThrowDuration = 0.5;
-    this._mouseWheelScrollDuration = 0.35;
-    this._elasticity = 0.33;
-    this._throwElasticity = 0.05;
-
-    this.scrolldelta = 10;
 }
 
 Scroller.prototype = Object.create(Control.prototype);
@@ -406,19 +376,6 @@ Object.defineProperty(Scroller.prototype, 'verticalScrollStep', {
     }
 });
 
-Object.defineProperty(Scroller.prototype, 'verticalMouseWheelScrollStep', {
-    get: function () {
-        return this._verticalMouseWheelScrollStep;
-    },
-    set: function (value) {
-        if (this._verticalMouseWheelScrollStep === value) {
-            return;
-        }
-        this._verticalMouseWheelScrollStep = value;
-        this.scrollInvalid = true;
-    }
-});
-
 Object.defineProperty(Scroller.prototype, 'verticalPageIndex', {
     get: function () {
         if (this.hasPendingVerticalPageIndex) {
@@ -501,48 +458,12 @@ Object.defineProperty(Scroller.prototype, 'padding', {
     }
 });
 
-Object.defineProperty(Scroller.prototype, 'hasElasticEdges', {
-    get: function () {
-        return this._hasElasticEdges;
-    },
-    set: function (value) {
-        this._hasElasticEdges = value;
-    }
-});
-
 Object.defineProperty(Scroller.prototype, 'pageThrowDuration', {
     get: function () {
         return this._pageThrowDuration;
     },
     set: function (value) {
         this._pageThrowDuration = value;
-    }
-});
-
-Object.defineProperty(Scroller.prototype, 'mouseWheelScrollDuration', {
-    get: function () {
-        return this._mouseWheelScrollDuration;
-    },
-    set: function (value) {
-        this._mouseWheelScrollDuration = value;
-    }
-});
-
-Object.defineProperty(Scroller.prototype, 'elasticity', {
-    get: function () {
-        return this._elasticity;
-    },
-    set: function (value) {
-        this._elasticity = value;
-    }
-});
-
-Object.defineProperty(Scroller.prototype, 'throwElasticity', {
-    get: function () {
-        return this._throwElasticity;
-    },
-    set: function (value) {
-        this._throwElasticity = value;
     }
 });
 
@@ -667,7 +588,7 @@ Scroller.prototype.controlRedraw = Control.prototype.redraw;
 /**
  * update before draw call
  *
- * @method redraw
+
  */
 Scroller.prototype.redraw = function () {
     this.scrollBarInvalid = true;
@@ -740,8 +661,6 @@ Scroller.prototype.stopScrolling = function () {
         this._verticalAutoScrollTween = null;
     }
     this._isScrollingStopped = true;
-    this._velocity.x = 0;
-    this._velocity.y = 0;
     this.hideHorizontalScrollBar();
     this.hideVerticalScrollBar();
 };
@@ -793,17 +712,12 @@ Scroller.prototype.handlePendingScroll = function () {
 
 Scroller.prototype.completeScroll = function () {
     if (!this._isScrolling || this._verticalAutoScrollTween || this._horizontalAutoScrollTween ||
-        this._isDraggingHorizontally || this._isDraggingVertically ||
-        this._horizontalScrollBarIsScrolling || this._verticalScrollBarIsScrolling) {
+        this._isDraggingHorizontally || this._isDraggingVertically) {
         return;
     }
     this._isScrolling = false;
     this.hideHorizontalScrollBar();
     this.hideVerticalScrollBar();
-};
-
-Scroller.prototype.revealScrollBars = function () {
-    this.isScrollBarRevealPending = true;
 };
 
 Scroller.prototype.refreshEnabled = function () {
@@ -845,7 +759,6 @@ Scroller.prototype.refreshPageCount = function () {
             } else {
                 this._minHorizontalPageIndex = 0;
             }
-            this._maxHorizontalPageIndex = Number.MAX_SAFE_INTEGER;
         } else {
             this._minHorizontalPageIndex = 0;
             //floating point errors could result in the max page index
@@ -855,7 +768,6 @@ Scroller.prototype.refreshPageCount = function () {
             if ((horizontalScrollRange - roundedDownRange) < Scroller.FUZZY_PAGE_SIZE_PADDING) {
                 horizontalScrollRange = roundedDownRange;
             }
-            this._maxHorizontalPageIndex = Math.ceil(horizontalScrollRange / this.actualPageWidth);
         }
 
         var verticalScrollRange = this._maxVerticalScrollPosition - this._minVerticalScrollPosition;
@@ -867,7 +779,6 @@ Scroller.prototype.refreshPageCount = function () {
             } else {
                 this._minVerticalPageIndex = 0;
             }
-            this._maxVerticalPageIndex = Number.MAX_SAFE_INTEGER;
         } else {
             this._minVerticalPageIndex = 0;
             //floating point errors could result in the max page index
@@ -877,13 +788,9 @@ Scroller.prototype.refreshPageCount = function () {
             if ((verticalScrollRange - roundedDownRange) < Scroller.FUZZY_PAGE_SIZE_PADDING) {
                 verticalScrollRange = roundedDownRange;
             }
-            this._maxVerticalPageIndex = Math.ceil(verticalScrollRange / this.actualPageHeight);
         }
     } else {
-        this._maxHorizontalPageIndex = 0;
-        this._maxHorizontalPageIndex = 0;
         this._minVerticalPageIndex = 0;
-        this._maxVerticalPageIndex = 0;
     }
 };
 

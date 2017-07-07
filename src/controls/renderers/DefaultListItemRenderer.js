@@ -1,8 +1,16 @@
 var ToggleButton = require('../ToggleButton');
 var Button = require('../Button');
 
+/**
+ * The default list item renderer.
+ *
+ * @class DefaultListItemRenderer
+ * @extends GOWN.ToggleButton
+ * @memberof GOWN
+ * @constructor
+ * @param [theme] theme for the DefaultListItemRenderer {GOWN.Theme}
+ */
 function DefaultListItemRenderer(theme) {
-    //this._skinName = DefaultListItemRenderer.SKIN_NAME;
     ToggleButton.call(this, theme);
 
     /**
@@ -13,6 +21,7 @@ function DefaultListItemRenderer(theme) {
      * the item will be shown directly (using toString) if
      * labelField and labelFunction are not set.
      *
+     * @type String
      * @default 'text'
      */
     this.labelField = 'text';
@@ -27,19 +36,51 @@ function DefaultListItemRenderer(theme) {
 	 *    return item.firstName + " " + item.lastName;
 	 * };</listing>
 	 *
+     * @type function
 	 * @default null
 	 *
 	 * @see #labelField
 	 */
     this.labelFunction = null;
 
+    /**
+     * The list item data
+     *
+     * @private
+     * @default null
+     */
     this._data = null;
+
+    /**
+     * Overwrite data values before next draw call.
+     *
+     * @private
+     * @type bool
+     * @default false
+     */
     this.dataInvalid = false;
+
 
     // TODO: use min/max and/or default values instead, because percentages
     // have higher priority, so this forces the user to remove the percentage
     // before he can set pixel values.
-    this.percentWidth = this.percentHeight = 100;
+    /**
+     * Percent width
+     *
+     * @private
+     * @type Number
+     * @default 100
+     */
+    this.percentWidth = 100;
+
+    /**
+     * Percent height
+     *
+     * @private
+     * @type Number
+     * @default 100
+     */
+    this.percentHeight = 100;
 }
 
 DefaultListItemRenderer.prototype = Object.create( ToggleButton.prototype );
@@ -48,10 +89,9 @@ module.exports = DefaultListItemRenderer;
 
 // performance increase to avoid using call.. (10x faster)
 DefaultListItemRenderer.prototype.redrawButton = Button.prototype.redraw;
+
 /**
- * update before draw call update button text
- *
- * @method redraw
+ * Update button text before draw call
  */
 DefaultListItemRenderer.prototype.redraw = function() {
     if (this.dataInvalid) {
@@ -60,23 +100,11 @@ DefaultListItemRenderer.prototype.redraw = function() {
     this.redrawButton();
 };
 
-Object.defineProperty(DefaultListItemRenderer.prototype, 'data', {
-    set: function(data) {
-        this._data = data;
-        this.dataInvalid = true;
-    },
-    get: function() {
-        return this._data;
-    }
-});
-
 /**
  * Updates the renderer to display the item's data. Override this
  * function to pass data to sub-components and react to data changes.
  *
  * <p>Don't forget to handle the case where the data is <code>null</code>.</p>
- *
- * @method commitData
  */
 DefaultListItemRenderer.prototype.commitData = function() {
     if(this._data) {
@@ -95,7 +123,7 @@ DefaultListItemRenderer.prototype.commitData = function() {
  *     <li><code>labelField</code></li>
  * </ol>
  *
- * @method itemToLabel
+ * @param item the item that gets converted to a label
  */
 DefaultListItemRenderer.prototype.itemToLabel = function(item) {
 	if (this.labelFunction) {
@@ -109,3 +137,18 @@ DefaultListItemRenderer.prototype.itemToLabel = function(item) {
 	}
 	return '';
 };
+
+/**
+ * Data
+ *
+ * @name GOWN.DefaultListItemRenderer#data
+ */
+Object.defineProperty(DefaultListItemRenderer.prototype, 'data', {
+    set: function(data) {
+        this._data = data;
+        this.dataInvalid = true;
+    },
+    get: function() {
+        return this._data;
+    }
+});

@@ -1,5 +1,5 @@
 /**
- * basic layout stub - see LayoutAlignment
+ * Basic layout stub - see GOWN.LayoutAlignment
  *
  * @class Layout
  * @memberof GOWN.layout
@@ -17,8 +17,9 @@ module.exports = Layout;
  * If the total item height is smaller than the height of the bounds,
  * the items will be aligned to the top.
  *
- * @property VERTICAL_ALIGN_TOP
  * @static
+ * @final
+ * @type String
  */
 Layout.VERTICAL_ALIGN_TOP = 'top';
 
@@ -26,16 +27,18 @@ Layout.VERTICAL_ALIGN_TOP = 'top';
  * If the total item height is smaller than the height of the bounds,
  * the items will be aligned to the middle.
  *
- * @property VERTICAL_ALIGN_MIDDLE
  * @static
+ * @final
+ * @type String
  */
 Layout.VERTICAL_ALIGN_MIDDLE = 'middle';
 
 /**
  * Alignment justified
  *
- * @property ALIGN_JUSTIFY
  * @static
+ * @final
+ * @type String
  */
 Layout.ALIGN_JUSTIFY = 'justify';
 
@@ -43,8 +46,9 @@ Layout.ALIGN_JUSTIFY = 'justify';
  * If the total item height is smaller than the height of the bounds,
  * the items will be aligned to the bottom.
  *
- * @property VERTICAL_ALIGN_BOTTOM
  * @static
+ * @final
+ * @type String
  */
 Layout.VERTICAL_ALIGN_BOTTOM = 'bottom';
 
@@ -52,8 +56,9 @@ Layout.VERTICAL_ALIGN_BOTTOM = 'bottom';
  * If the total item width is smaller than the width of the bounds, the
  * items will be aligned to the left.
  *
- * @property HORIZONTAL_ALIGN_LEFT
  * @static
+ * @final
+ * @type String
  */
 Layout.HORIZONTAL_ALIGN_LEFT = 'left';
 
@@ -61,8 +66,9 @@ Layout.HORIZONTAL_ALIGN_LEFT = 'left';
  * If the total item width is smaller than the width of the bounds, the
  * items will be aligned to the center.
  *
- * @property HORIZONTAL_ALIGN_CENTER
  * @static
+ * @final
+ * @type String
  */
 Layout.HORIZONTAL_ALIGN_CENTER = 'center';
 
@@ -70,18 +76,18 @@ Layout.HORIZONTAL_ALIGN_CENTER = 'center';
  * If the total item width is smaller than the width of the bounds, the
  * items will be aligned to the right.
  *
- * @property HORIZONTAL_ALIGN_RIGHT
  * @static
+ * @final
+ * @type String
  */
 Layout.HORIZONTAL_ALIGN_RIGHT = 'right';
-
-
 
 /**
  * The space, in pixels, between items.
  *
- * @property gap
+ * @name GOWN.layout.Layout#gap
  * @type Number
+ * @default 0
  */
 Object.defineProperty(Layout.prototype, 'gap', {
     get: function() {
@@ -99,7 +105,7 @@ Object.defineProperty(Layout.prototype, 'gap', {
 /**
  * Indicates if the layout needs to be rearranged.
  *
- * @property needUpdate
+ * @name GOWN.layout.Layout#needUpdate
  * @readonly
  */
 Object.defineProperty(Layout.prototype, 'needUpdate', {
@@ -109,10 +115,11 @@ Object.defineProperty(Layout.prototype, 'needUpdate', {
 });
 
 /**
- * shotrtcut to set all paddings (left, right, top, bottom)
+ * Shortcut to set all paddings (left, right, top, bottom)
  *
- * @property padding
+ * @name GOWN.layout.Layout#padding
  * @type Number
+ * @default 0
  */
 Object.defineProperty(Layout.prototype, 'padding', {
     set: function(value) {
@@ -132,9 +139,9 @@ Object.defineProperty(Layout.prototype, 'padding', {
 /**
  * The minimum space, in pixels, above the items.
  *
- * @default 0
- * @property paddingTop
+ * @name GOWN.layout.Layout#paddingTop
  * @type Number
+ * @default 0
  */
 Object.defineProperty(Layout.prototype, 'paddingTop', {
     get:  function() {
@@ -152,9 +159,9 @@ Object.defineProperty(Layout.prototype, 'paddingTop', {
 /**
  * The minimum space, in pixels, below the items.
  *
- * @default 0
- * @property paddingTop
+ * @name GOWN.layout.Layout#paddingBottom
  * @type Number
+ * @default 0
  */
 Object.defineProperty(Layout.prototype, 'paddingBottom', {
     get:  function() {
@@ -173,9 +180,9 @@ Object.defineProperty(Layout.prototype, 'paddingBottom', {
  * The space, in pixels, that appears to the left, before the first
  * item.
  *
- * @default 0
- * @property paddingLeft
+ * @name GOWN.layout.Layout#paddingLeft
  * @type Number
+ * @default 0
  */
 Object.defineProperty(Layout.prototype, 'paddingLeft', {
     get:  function() {
@@ -193,9 +200,9 @@ Object.defineProperty(Layout.prototype, 'paddingLeft', {
 /**
  * The space, in pixels, that appears to the right, after the last item.
  *
- * @default 0
- * @property paddingLeft
+ * @name GOWN.layout.Layout#paddingLeft
  * @type Number
+ * @default 0
  */
 Object.defineProperty(Layout.prototype, 'paddingRight', {
     get:  function() {
@@ -211,9 +218,8 @@ Object.defineProperty(Layout.prototype, 'paddingRight', {
 });
 
 /**
- * Position (and possibly resizes) the supplied items.
+ * Position (and possibly resize) the supplied items.
  *
- * @method layout
  * @param items items that will be layouted {Array}
  * @param viewPortBounds {ViewPortBounds}
  */
