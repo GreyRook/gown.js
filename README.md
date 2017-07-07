@@ -48,6 +48,13 @@ Folder structure
   - **MetalWorksDesktopTheme**.js a theme based on Feather's [MetalWorksDesktopTheme](https://github.com/joshtynjala/feathers/tree/master/themes/MetalWorksDesktopTheme)
   - **Themes/ShapeTheme**.js a theme using only basic shapes.
 
+Installation
+============
+1. Check out the repository from [the GreyRook/gown github repository](https://github.com/GreyRook/gown.js).
+1. Install node.js (if its not even installed).
+1. Change into the path for the checked out repository and run `npm install`
+1. run `npm run dist` to build the library (it will be in docs/dist )
+1. start a webserver e.g. `python -m SimpleHTTPServer` to show the examples ( find them at /docs/examples/ )
 
 Theming
 =======
