@@ -4,6 +4,3 @@
 [submodule "external/pixi-shapes"]
 	path = external/pixi-shapes
 	url = git@github.com:GreyRook/pixi-shapes.git
-[submodule "examples/example 13 - login dialog/lib/FontLoader"]
-	path = docs/examples/example 13 - login dialog/lib/FontLoader
-	url = git@github.com:smnh/FontLoader.git
