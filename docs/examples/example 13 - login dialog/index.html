@@ -21,7 +21,7 @@
     <script src="js/IconTextInput.js"></script>
 </head>
 <body>
-<script src="lib/FontLoader/FontLoader.js"></script>
+<script src="lib/FontLoader.js"></script>
 <script>
 
     // load fontawesome first, see https://github.com/smnh/FontLoader/issues/2
@@ -35,6 +35,8 @@
         // fontawesome loaded correctly
         var theme = new GOWN.ThemeParser("../../themes/assets/aeon_desktop/aeon_desktop.json");
         theme.once(GOWN.Theme.COMPLETE, onCompleteAeon, this);
+
+        GOWN.loader.load();
     }
 
     var app;
@@ -53,9 +55,6 @@
             height: app._height
         }});
     }
-    GOWN.loader.load();
-
-
 </script>
 
 </body>
