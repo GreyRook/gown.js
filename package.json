@@ -3,7 +3,7 @@
   "version": "0.1.5",
   "description": "gown.js provides basic UI components for Pixi.js. Inspired by feathers UI",
   "author": "Grey Rook GmbH",
-  "main": "./dist/gown.js",
+  "main": "./src/index.js",
   "homepage": "http://github.com/GreyRook/gown.js/",
   "bugs": "https://github.com/GreyRook/gown.js/issues",
   "license": "Apache-2.0",
@@ -26,6 +26,7 @@
   },
   "files": [
     "dist/",
+    "src/",
     "CONTRIBUTING.md",
     "LICENSE",
     "package.json",
