@@ -1,6 +1,6 @@
 {
   "name": "gown",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "gown.js provides basic UI components for Pixi.js. Inspired by feathers UI",
   "author": "Grey Rook GmbH",
   "main": "./src/index.js",
