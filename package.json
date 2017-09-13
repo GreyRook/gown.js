@@ -26,7 +26,6 @@
   },
   "files": [
     "dist/",
-    "src/",
     "CONTRIBUTING.md",
     "LICENSE",
     "package.json",
