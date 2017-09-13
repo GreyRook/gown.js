@@ -25,7 +25,7 @@
     "docs": "jsdoc -c jsdoc.conf.json -R README.md"
   },
   "files": [
-    "docs/dist/",
+    "dist/",
     "CONTRIBUTING.md",
     "LICENSE",
     "package.json",
