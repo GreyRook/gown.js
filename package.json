@@ -1,8 +1,8 @@
 {
-  "name": "gown.js",
-  "version": "0.2.0",
-  "description": "Pixi UI provides basic UI components for Pixi.js. Inspired by feathers UI",
-  "author": "Andreas Bresser",
+  "name": "gown",
+  "version": "0.1.1",
+  "description": "gown.js provides basic UI components for Pixi.js. Inspired by feathers UI",
+  "author": "Grey Rook GmbH",
   "main": "./src/index.js",
   "homepage": "http://github.com/GreyRook/gown.js/",
   "bugs": "https://github.com/GreyRook/gown.js/issues",
@@ -25,7 +25,7 @@
     "docs": "jsdoc -c jsdoc.conf.json -R README.md"
   },
   "files": [
-    "dist/",
+    "docs/dist/",
     "CONTRIBUTING.md",
     "LICENSE",
     "package.json",
