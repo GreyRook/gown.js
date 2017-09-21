@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 55);
+/******/ 	return __webpack_require__(__webpack_require__.s = 58);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1234,7 +1234,6 @@ Button.prototype.handleEvent = function(type) {
         // click / touch DOWN so the button is pressed and the pointer has to
         // be over the Button
         this._pressed = true;
-        this._over = true;
     } else if (type === Button.UP) {
         this._pressed = false;
 
@@ -11281,15 +11280,94 @@ module.exports = {
     Tween:                  __webpack_require__(26),
     resizeScaling:          __webpack_require__(29),
     roundToPrecision:       __webpack_require__(8),
-    roundToNearest:         __webpack_require__(57),
-    roundDownToNearest:     __webpack_require__(56),
-    roundUpToNearest:       __webpack_require__(58),
+    roundToNearest:         __webpack_require__(56),
+    roundDownToNearest:     __webpack_require__(55),
+    roundUpToNearest:       __webpack_require__(57),
     mixin:                  __webpack_require__(27)
 };
 
 
 /***/ }),
 /* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var roundToPrecision = __webpack_require__(8);
+
+/**
+ * Rounds a Number <em>down</em> to the nearest multiple of an input. For example, by rounding
+ * 16 down to the nearest 10, you will receive 10. Similar to the built-in function Math.floor().
+ *
+ * @see Math#floor
+ *
+ * @function GOWN.utils.roundDownToNearest
+ * @param number The number to round down {Number}
+ * @param nearest The number whose multiple must be found {Number}
+ * @return {Number} The rounded number
+ */
+module.exports = function(number, nearest) {
+    nearest = nearest || 1;
+    if(nearest === 0) {
+		return number;
+	}
+	return Math.floor(roundToPrecision(number / nearest, 10)) * nearest;
+};
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var roundToPrecision = __webpack_require__(8);
+
+/**
+ * Rounds a Number to the nearest multiple of an input. For example, by rounding
+ * 16 to the nearest 10, you will receive 20. Similar to the built-in function Math.round().
+ *
+ * @see Math#round
+ *
+ * @function GOWN.utils.roundToNearest
+ * @param number The number to round {Number}
+ * @param nearest The number whose multiple must be found {Number}
+ * @return {Number} The rounded number
+ */
+module.exports = function(number, nearest) {
+    nearest = nearest || 1;
+    if(nearest === 0) {
+		return number;
+	}
+	var roundedNumber = Math.round(roundToPrecision(number / nearest, 10)) * nearest;
+    return roundToPrecision(roundedNumber, 10);
+};
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var roundToPrecision = __webpack_require__(8);
+
+/**
+ * Rounds a Number <em>up</em> to the nearest multiple of an input. For example, by rounding
+ * 16 up to the nearest 10, you will receive 20. Similar to the built-in function Math.ceil().
+ *
+ * @see Math#ceil
+ *
+ * @function GOWN.utils.roundUpToNearest
+ * @param number The number to round up {Number}
+ * @param nearest The number whose multiple must be found {Number}
+ * @return {Number} The rounded number
+ */
+module.exports = function(number, nearest) {
+    nearest = nearest || 1;
+    if(nearest === 0) {
+		return number;
+	}
+	return Math.ceil(roundToPrecision(number / nearest, 10)) * nearest;
+};
+
+
+/***/ }),
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// full version of gown
@@ -11375,85 +11453,6 @@ if (typeof PIXI === 'undefined') {
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)))
-
-/***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var roundToPrecision = __webpack_require__(8);
-
-/**
- * Rounds a Number <em>down</em> to the nearest multiple of an input. For example, by rounding
- * 16 down to the nearest 10, you will receive 10. Similar to the built-in function Math.floor().
- *
- * @see Math#floor
- *
- * @function GOWN.utils.roundDownToNearest
- * @param number The number to round down {Number}
- * @param nearest The number whose multiple must be found {Number}
- * @return {Number} The rounded number
- */
-module.exports = function(number, nearest) {
-    nearest = nearest || 1;
-    if(nearest === 0) {
-		return number;
-	}
-	return Math.floor(roundToPrecision(number / nearest, 10)) * nearest;
-};
-
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var roundToPrecision = __webpack_require__(8);
-
-/**
- * Rounds a Number to the nearest multiple of an input. For example, by rounding
- * 16 to the nearest 10, you will receive 20. Similar to the built-in function Math.round().
- *
- * @see Math#round
- *
- * @function GOWN.utils.roundToNearest
- * @param number The number to round {Number}
- * @param nearest The number whose multiple must be found {Number}
- * @return {Number} The rounded number
- */
-module.exports = function(number, nearest) {
-    nearest = nearest || 1;
-    if(nearest === 0) {
-		return number;
-	}
-	var roundedNumber = Math.round(roundToPrecision(number / nearest, 10)) * nearest;
-    return roundToPrecision(roundedNumber, 10);
-};
-
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var roundToPrecision = __webpack_require__(8);
-
-/**
- * Rounds a Number <em>up</em> to the nearest multiple of an input. For example, by rounding
- * 16 up to the nearest 10, you will receive 20. Similar to the built-in function Math.ceil().
- *
- * @see Math#ceil
- *
- * @function GOWN.utils.roundUpToNearest
- * @param number The number to round up {Number}
- * @param nearest The number whose multiple must be found {Number}
- * @return {Number} The rounded number
- */
-module.exports = function(number, nearest) {
-    nearest = nearest || 1;
-    if(nearest === 0) {
-		return number;
-	}
-	return Math.ceil(roundToPrecision(number / nearest, 10)) * nearest;
-};
-
 
 /***/ })
 /******/ ]);
