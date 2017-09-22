@@ -47,13 +47,31 @@ describe("Button", function() {
             // fake mouseup
             btn.onUp();
             expect(btn._pressed).equal(false);
-            // on the mousedown we set _over to true, because we assume that
-            // down-events can only be catched when the mouse is over it.
-            // so when the user let go of the mouse button he still hovers
-            // the button.
-            expect(btn.currentState).equal(GOWN.Button.HOVER);
+
+            expect(btn.currentState).equal(GOWN.Button.UP);
         }
     );
+
+    it("a clicked button states are correct (hover)",
+        function() {
+            var btn = new GOWN.Button();
+            expect(btn._pressed).not.equal(true);
+            expect(btn.currentState).equal(GOWN.Button.UP);
+
+            // change button state based on fake events
+            btn.onHover();
+            expect(btn._over).equal(true);
+            expect(btn._pressed).equal(false);
+            expect(btn.currentState).equal(GOWN.Button.HOVER);
+            // fake out
+            btn.onOut();
+            expect(btn._over).equal(false);
+            expect(btn._pressed).equal(false);
+
+            expect(btn.currentState).equal(GOWN.Button.UP);
+        }
+    );
+
     it("we can not click a disabled button", function() {
         var Button = GOWN.Button;
         var btn = new Button();

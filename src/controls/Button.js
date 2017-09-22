@@ -271,7 +271,6 @@ Button.prototype.handleEvent = function(type) {
         // click / touch DOWN so the button is pressed and the pointer has to
         // be over the Button
         this._pressed = true;
-        this._over = true;
     } else if (type === Button.UP) {
         this._pressed = false;
 
