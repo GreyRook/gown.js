@@ -29,7 +29,7 @@ Features
 Examples
 ========
 see the examples-folder in this repo or play with some example online at:
-http://greyrook.github.io/gown-examples/
+http://greyrook.github.io/gown.js/examples/
 
 Folder structure
 ================
