@@ -2,13 +2,17 @@
 engines:
   eslint:
     enabled: true
+  duplication:
+  	enabled: true
+  fixme:
+    enabled: true
+  
 ratings:
   paths:
   - src/**
   - test/src/**
   - test/unit/*.js
 exclude_paths:
-- "lib/**/*"
-- "bin/**/*"
-- "examples/**/*"
-- "test/libs/*"
+- "docs/dist/**/**"
+- "docs/lib/**/**"
+- "docs/api/**/**"
