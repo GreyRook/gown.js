@@ -31,7 +31,7 @@ function Button(theme, skinName) {
      */
     this.skinName = skinName || Button.SKIN_NAME;
 
-    this.handleEvent(Button.UP);
+    Button.prototype.handleEvent.call(this, Button.UP);
 
     /**
      * Invalidate label when the label text changed
