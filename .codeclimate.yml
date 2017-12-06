@@ -16,3 +16,4 @@ exclude_paths:
 - "docs/dist/**/**"
 - "docs/lib/**/**"
 - "docs/api/**/**"
+- "docs/examples/example 13 - login dialog/lib/**"
