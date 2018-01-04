@@ -171,7 +171,7 @@ Button.prototype.onDown = function() {
     this.on('mouseupoutside', this.onUp, this);
     this.on('mouseup', this.onUp, this);
 
-    this.on('touchendoutside', this.onOut, this);
+    this.on('touchendoutside', this.onTouchEndOutside, this);
     this.on('mouseout', this.onOut, this);
 };
 
@@ -208,6 +208,22 @@ Button.prototype.onOut = function() {
     this.off('touchendoutside', this.onOut, this);
     this.off('mouseout', this.onOut, this);
 };
+
+/**
+ * onTouchEndOutside callback
+ *
+ * @protected
+ */
+Button.prototype.onTouchEndOutside = function(){
+    // If the touch ends outside of the element,
+    // we are definitely not over it anymore
+    this._over = false;
+
+    this.off('touchendoutside', this.onTouchEndOutside, this);
+    this.off('mouseout', this.onOut, this);
+    this.onUp();
+};
+
 
 /**
  * onTouchMove callback
@@ -271,6 +287,7 @@ Button.prototype.handleEvent = function(type) {
         // click / touch DOWN so the button is pressed and the pointer has to
         // be over the Button
         this._pressed = true;
+        this._over = true;
     } else if (type === Button.UP) {
         this._pressed = false;
 
