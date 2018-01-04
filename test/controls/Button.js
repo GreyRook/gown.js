@@ -47,7 +47,7 @@ describe("Button", function() {
             // fake mouseup
             btn.emit('mouseup');
             expect(btn._pressed).equal(false);
-            expect(btn._currentState).equal(GOWN.Button.HOVER);
+            expect(btn._currentState).equal(GOWN.Button.UP);
         }
     );
 

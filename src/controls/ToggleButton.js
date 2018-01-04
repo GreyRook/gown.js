@@ -180,12 +180,15 @@ ToggleButton.prototype.buttonHandleEvent = Button.prototype.handleEvent;
  * @param type the type of the press/touch. {Object}
  * @protected
  **/
-ToggleButton.prototype.handleEvent = function(type) {
+ToggleButton.prototype.handleEvent = function(type, isMobileEvent) {
     if (!this._enabled) {
         return;
     }
-    this.buttonHandleEvent(type);
-    if (type === Button.UP && this._over) {
+    var isMobileEvent = isMobileEvent || false;
+    var pressed = this._pressed || false;
+    
+    this.buttonHandleEvent(type, isMobileEvent);
+    if (type === Button.UP && (this._over || (pressed && isMobileEvent))) {
         this.toggle();
     }
 };
