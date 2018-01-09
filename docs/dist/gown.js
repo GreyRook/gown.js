@@ -1008,7 +1008,6 @@ function Button(theme, skinName) {
      */
     this.updateLabel = true;
 
-    this.on('touchstart', this.onTouchStart, this);
     this.on('mousedown', this.onDown, this);
 
     this.on('mouseover', this.onHover, this);
