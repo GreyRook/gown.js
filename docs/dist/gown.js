@@ -252,17 +252,16 @@ ToggleButton.prototype.buttonHandleEvent = Button.prototype.handleEvent;
  * @param type the type of the press/touch. {Object}
  * @protected
  **/
-ToggleButton.prototype.handleEvent = function(type, isMobileEvent) {
+ToggleButton.prototype.handleEvent = function(type) {
     if (!this._enabled) {
         return;
     }
-    var isMobileEvent = isMobileEvent || false;
-    var pressed = this._pressed || false;
-    
-    this.buttonHandleEvent(type, isMobileEvent);
-    if (type === Button.UP && (this._over || (pressed && isMobileEvent))) {
+
+    if ((type === Button.UP && this._over) || (type === Button.TOUCHEND && this._pressed)) {
         this.toggle();
     }
+
+    this.buttonHandleEvent(type);
 };
 
 /**
@@ -1009,7 +1008,7 @@ function Button(theme, skinName) {
      */
     this.updateLabel = true;
 
-    this.on('touchstart', this.onDown, this);
+    this.on('touchstart', this.onTouchStart, this);
     this.on('mousedown', this.onDown, this);
 
     this.on('mouseover', this.onHover, this);
@@ -1089,6 +1088,26 @@ Button.stateNames = [
 Button.TRIGGERED = 'triggered';
 
 /**
+ * Touchstart event: touch starts
+ * Not to be used as a state
+ *
+ * @static
+ * @final
+ * @type String
+ */
+Button.TOUCHSTART = 'touchstart';
+
+/**
+ * Touchend event: touch ends
+ * Not to be used as a state
+ *
+ * @static
+ * @final
+ * @type String
+ */
+Button.TOUCHEND = 'touchend';
+
+/**
  * Initiate all skins first
  * (to prevent flickering)
  *
@@ -1133,11 +1152,9 @@ Button.prototype.skinLoaded = function(skin) {
  */
 Button.prototype.onDown = function() {
     this.handleEvent(Button.DOWN);
-    this.on('touchend', this.onTouchEnd, this);
     this.on('mouseupoutside', this.onUp, this);
     this.on('mouseup', this.onUp, this);
 
-    this.on('touchendoutside', this.onTouchEndOutside, this);
     this.on('mouseout', this.onOut, this);
 };
 
@@ -1148,7 +1165,7 @@ Button.prototype.onDown = function() {
  */
 Button.prototype.onUp = function() {
     this.handleEvent(Button.UP);
-    this.off('touchend', this.onTouchEnd, this);
+
     this.off('mouseupoutside', this.onUp, this);
     this.off('mouseup', this.onUp, this);
 };
@@ -1160,7 +1177,7 @@ Button.prototype.onUp = function() {
  */
 Button.prototype.onHover = function() {
     this.handleEvent(Button.HOVER);
-    this.on('touchendoutside', this.onTouchEndOutside, this);
+
     this.on('mouseout', this.onOut, this);
 };
 
@@ -1171,8 +1188,18 @@ Button.prototype.onHover = function() {
  */
 Button.prototype.onOut = function() {
     this.handleEvent(Button.OUT);
-    this.off('touchendoutside', this.onTouchEnd, this);
     this.off('mouseout', this.onOut, this);
+};
+
+/**
+ * onTouchStart callback
+ *
+ * @protected
+ */
+Button.prototype.onTouchStart = function() {
+    this.handleEvent(Button.TOUCHSTART);
+    this.on('touchend', this.onTouchEnd, this);
+    this.on('touchendoutside', this.onTouchEndOutside, this);
 };
 
 /**
@@ -1180,18 +1207,11 @@ Button.prototype.onOut = function() {
  *
  * @protected
  */
-Button.prototype.onTouchEnd = function(){
-    // we are definitely not over the element anymore
-    this._over = false;
-
-    this.handleEvent(Button.UP, true);
+Button.prototype.onTouchEnd = function() {
+    this.handleEvent(Button.TOUCHEND);
 
     this.off('touchend', this.onTouchEnd, this);
-    this.off('mouseupoutside', this.onUp, this);
-    this.off('mouseup', this.onUp, this);
-
     this.off('touchendoutside', this.onTouchEndOutside, this);
-    this.off('mouseout', this.onOut, this);
 };
 
 /**
@@ -1205,8 +1225,6 @@ Button.prototype.onTouchEndOutside = function(){
 
     this.onTouchEnd();
 };
-
-
 
 /**
  * onTouchMove callback
@@ -1261,34 +1279,30 @@ Button.prototype.updateDimensions = function() {
  * @param type one of the valid states
  * @protected
  */
-Button.prototype.handleEvent = function(type, isMobileEvent) {
-    var isMobileEvent = isMobileEvent || false;
-
+Button.prototype.handleEvent = function(type) {
     if (!this._enabled) {
         return;
     }
-    if (type === Button.DOWN) {
+    if (type === Button.DOWN || type === Button.TOUCHSTART) {
         this.currentState = Button.DOWN;
         // click / touch DOWN so the button is pressed and the pointer has to
         // be over the Button
         this._pressed = true;
-    } else if (type === Button.UP) {
-        var pressed = this._pressed || false;
-        this._pressed = false;
-
-        if (this._over || (pressed && isMobileEvent)) {
-            // the user taps or clicks the button
+    } else if (type === Button.UP || type === Button.TOUCHEND) {
+        if ((type === Button.UP && this._over) || (type === Button.TOUCHEND && this._pressed)) {
             this.emit(Button.TRIGGERED, this);
 
-            if(isMobileEvent) {
-                this.currentState = Button.UP;
-            } else if (this.theme.hoverSkin) {
+            // no hover on touch
+            if(this._over && this.theme.hoverSkin) {
                 this.currentState = Button.HOVER;
+            } else {
+                this.currentState = Button.UP;
             }
         } else {
             // user releases the mouse / touch outside of the button boundaries
             this.currentState = Button.UP;
         }
+        this._pressed = false;
     } else if (type === Button.HOVER) {
         this._over = true;
         if (this._pressed) {
