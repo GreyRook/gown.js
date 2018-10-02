@@ -8,12 +8,18 @@ describe("test scalable/tilable container", function() {
         }).throw();
     });
 
-    it("make sure calculations are correct", function() {
-
-        var loader = GOWN.loader;
-
+    it("make sure calculations are correct", async function() {
         var image = new Image();
-        image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAIAAAAmdTLBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wMCCxAuWFRGfgAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAOElEQVQ4y2P8z4APMP6HYJyAiYEyMKp/ZOtnYWDAl7z+MzDiTX4MjP8bGvBIN9ZD8Gj4j+qniX4AnXcKKJynPUsAAAAASUVORK5CYII=";
+
+        async function loadImage(){
+            return new Promise(function(resolve, reject){
+                image.onload = resolve;
+                image.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAIAAAAmdTLBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wMCCxAuWFRGfgAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAOElEQVQ4y2P8z4APMP6HYJyAiYEyMKp/ZOtnYWDAl7z+MzDiTX4MjP8bGvBIN9ZD8Gj4j+qniX4AnXcKKJynPUsAAAAASUVORK5CYII=";
+            })
+        }
+
+        await loadImage()
+
 
         var baseTexture = new PIXI.BaseTexture(image);
         var texture = new PIXI.Texture(baseTexture);
@@ -38,7 +44,6 @@ describe("test scalable/tilable container", function() {
 
         expect(scale.cm.width).equal(80);
         expect(scale.cm.height).equal(180);
-
 
         //TODO: also use imagediff to check images
     });
