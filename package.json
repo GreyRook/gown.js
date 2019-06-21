@@ -19,7 +19,6 @@
     "dist": "webpack --config webpack-development.config.js && webpack --config webpack-production.config.js",
     "precoverage": "rimraf coverage",
     "predist": "rimraf docs/dist/**",
-    "preinstall": "npm i -g webpack@^2.2.1",
     "test": "floss -p test/index.js",
     "predocs": "rimraf docs/api/**",
     "docs": "jsdoc -c jsdoc.conf.json -R README.md"
@@ -44,6 +43,6 @@
     "mkdirp": "^0.5.1",
     "path": "^0.12.7",
     "rimraf": "^2.5.1",
-    "webpack": "^2.2.1"
+    "webpack": "^2.7.0"
   }
 }
