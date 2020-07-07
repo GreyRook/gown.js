@@ -36,7 +36,7 @@
     "jaguarjs-jsdoc": "^1.0.2"
   },
   "devDependencies": {
-    "electron": "^1.4.15",
+    "electron": "^9.1.0",
     "eslint": "^4.18.2",
     "floss": "^2.0.1",
     "jsdoc": "^3.4.3",
