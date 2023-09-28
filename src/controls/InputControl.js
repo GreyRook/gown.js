@@ -148,7 +148,6 @@ function InputControl(theme) {
     this.selectionBg = new PIXI.Graphics();
     this.addChildAt(this.selectionBg, 0);
 
-    // TODO: remove events on destroy
     // setup events
     this.on('touchstart', this.onDown, this);
     this.on('mousedown', this.onDown, this);
@@ -688,6 +687,22 @@ InputControl.prototype.redraw = function () {
     }
     this.redrawSkinable();
 };
+
+/**
+ * Blur and destroy input control and listeners
+ * @param {*} options PIXI.js destroy options
+ */
+InputControl.prototype.destroy = function(options) {
+    if (GOWN.InputControl.currentInput === this) {
+        GOWN.InputControl.currentInput.blur();
+    }
+
+    this.off('touchstart', this.onDown, this);
+    this.off('mousedown', this.onDown, this);
+
+    Skinable.prototype.destroy.call(this, options);
+}
+
 
 /**
  * Set the text that is shown inside the input field.
