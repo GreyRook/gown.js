@@ -217,7 +217,7 @@ Skinable.prototype.containerDestroy = PIXI.Container.prototype.destroy;
 
 /**
  * Destroy the Skinable and empty the skin cache
- * @param {*} options PIXI.js destroy options
+ * @param {Object} options PIXI.js destroy options
  */
 Skinable.prototype.destroy = function(options) {
     for (var name in this.skinCache) {

@@ -690,7 +690,7 @@ InputControl.prototype.redraw = function () {
 
 /**
  * Blur and destroy input control and listeners
- * @param {*} options PIXI.js destroy options
+ * @param {Object} options PIXI.js destroy options
  */
 InputControl.prototype.destroy = function(options) {
     if (GOWN.InputControl.currentInput === this) {
