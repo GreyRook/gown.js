@@ -181,6 +181,7 @@ ScrollThumb.prototype.redraw = function() {
     if (this.invalidTrack && this.theme.thumbSkin) {
         this.fromSkin(this.scrollable.direction+'_thumb', this.showTrack);
     }
+    Button.prototype.redraw.call(this);
 };
 
 /**
