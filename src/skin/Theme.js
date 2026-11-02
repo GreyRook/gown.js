@@ -185,7 +185,7 @@ Theme.prototype.getImage = function(name) {
             return new PIXI.Sprite(scope.textureCache[name]);
         } else {
             // not found - try to load the image.
-            return new PIXI.Sprite(PIXI.Texture.fromImage(name));
+            return new PIXI.Sprite(PIXI.Texture.from(name));
         }
     };
 };
