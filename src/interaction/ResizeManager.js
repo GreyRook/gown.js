@@ -264,5 +264,5 @@ ResizeManager.prototype.destroy = function(){
     this.onResize = null;
 };
 
-PIXI.WebGLRenderer.registerPlugin('resize', ResizeManager);
+PIXI.Renderer.registerPlugin('resize', ResizeManager);
 PIXI.CanvasRenderer.registerPlugin('resize', ResizeManager);

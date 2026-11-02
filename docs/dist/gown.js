@@ -7143,7 +7143,7 @@ Theme.prototype.getImage = function(name) {
             return new PIXI.Sprite(scope.textureCache[name]);
         } else {
             // not found - try to load the image.
-            return new PIXI.Sprite(PIXI.Texture.fromImage(name));
+            return new PIXI.Sprite(PIXI.Texture.from(name));
         }
     };
 };
@@ -8698,7 +8698,7 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
     }
     ctx.fillStyle = linearGradient;
     ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
-    return PIXI.Texture.fromCanvas(bgCanvas);
+    return PIXI.Texture.from(bgCanvas);
 };
 
 /**
@@ -10346,7 +10346,7 @@ KeyboardManager.prototype.destroy = function(){
     this.keyDownProcess = null;
 };
 
-PIXI.WebGLRenderer.registerPlugin('keyboard', KeyboardManager);
+PIXI.Renderer.registerPlugin('keyboard', KeyboardManager);
 PIXI.CanvasRenderer.registerPlugin('keyboard', KeyboardManager);
 
 
@@ -10620,7 +10620,7 @@ ResizeManager.prototype.destroy = function(){
     this.onResize = null;
 };
 
-PIXI.WebGLRenderer.registerPlugin('resize', ResizeManager);
+PIXI.Renderer.registerPlugin('resize', ResizeManager);
 PIXI.CanvasRenderer.registerPlugin('resize', ResizeManager);
 
 

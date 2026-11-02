@@ -209,7 +209,7 @@ Application.prototype._createGradientRect = function(gradient, width, height) {
     }
     ctx.fillStyle = linearGradient;
     ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
-    return PIXI.Texture.fromCanvas(bgCanvas);
+    return PIXI.Texture.from(bgCanvas);
 };
 
 /**

@@ -252,5 +252,5 @@ KeyboardManager.prototype.destroy = function(){
     this.keyDownProcess = null;
 };
 
-PIXI.WebGLRenderer.registerPlugin('keyboard', KeyboardManager);
+PIXI.Renderer.registerPlugin('keyboard', KeyboardManager);
 PIXI.CanvasRenderer.registerPlugin('keyboard', KeyboardManager);
