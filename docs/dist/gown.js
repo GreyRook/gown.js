@@ -10346,8 +10346,16 @@ KeyboardManager.prototype.destroy = function(){
     this.keyDownProcess = null;
 };
 
-PIXI.Renderer.registerPlugin('keyboard', KeyboardManager);
-PIXI.CanvasRenderer.registerPlugin('keyboard', KeyboardManager);
+PIXI.extensions.add({
+    type: PIXI.ExtensionType.RendererPlugin,
+    name: 'keyboard',
+    ref: KeyboardManager
+});
+PIXI.extensions.add({
+    type: PIXI.ExtensionType.CanvasRendererPlugin,
+    name: 'keyboard',
+    ref: KeyboardManager
+});
 
 
 /***/ }),
@@ -10620,8 +10628,16 @@ ResizeManager.prototype.destroy = function(){
     this.onResize = null;
 };
 
-PIXI.Renderer.registerPlugin('resize', ResizeManager);
-PIXI.CanvasRenderer.registerPlugin('resize', ResizeManager);
+PIXI.extensions.add({
+    type: PIXI.ExtensionType.RendererPlugin,
+    name: 'resize',
+    ref: ResizeManager
+});
+PIXI.extensions.add({
+    type: PIXI.ExtensionType.CanvasRendererPlugin,
+    name: 'resize',
+    ref: ResizeManager
+});
 
 
 /***/ }),
@@ -11436,7 +11452,7 @@ if (typeof PIXI === 'undefined') {
     core.utils = __webpack_require__(54);
 
     // use default pixi loader
-    core.loader = PIXI.loader;
+    core.loader = PIXI.Loader.shared;
 
     // export GOWN globally.
     global.GOWN = core;
