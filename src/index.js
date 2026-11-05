@@ -73,8 +73,24 @@ if (typeof PIXI === 'undefined') {
     // add core plugins.
     core.utils = require('./utils');
 
-    // use default pixi loader
-    core.loader = PIXI.Loader.shared;
+    // use the Pixi assets API with the loader interface expected by GOWN
+    core.loader = {
+        add: function (url) {
+            var loader = {
+                once: function (event, callback) {
+                    if (event === 'complete') {
+                        PIXI.Assets.load(url).then(function (asset) {
+                            var resources = {};
+                            resources[url] = asset;
+                            callback(loader, resources);
+                        });
+                    }
+                    return loader;
+                }
+            };
+            return loader;
+        }
+    };
 
     // export GOWN globally.
     global.GOWN = core;

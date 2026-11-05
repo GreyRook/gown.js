@@ -567,7 +567,7 @@ function Control() {
     PIXI.Container.call(this);
     this.enabled = this.enabled !== false;
     // assume all controls are interactive
-    this.interactive = true;
+    this.eventMode = 'static';
 
     this.initResizeScaling();
 }
@@ -3200,7 +3200,7 @@ var Control = __webpack_require__(2),
 function Scroller(theme) {
     Control.call(this);
     this.setTheme(theme);
-    this.interactive = true;
+    this.eventMode = 'static';
 
     /**
      * use mask to clip content
@@ -8985,7 +8985,7 @@ AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
 
     container.hitArea = new PIXI.Rectangle(0, 0, width, height);
 
-    container.interactive = true;
+    container.eventMode = 'static';
     container.click = this.selectResultElement.bind(this, itemText.text);
     container.tap = this.selectResultElement.bind(this, itemText.text);
     container.mouseover = this.hoverResultElement.bind(this, itemText.text);
@@ -11451,8 +11451,24 @@ if (typeof PIXI === 'undefined') {
     // add core plugins.
     core.utils = __webpack_require__(54);
 
-    // use default pixi loader
-    core.loader = PIXI.Loader.shared;
+    // use the Pixi assets API with the loader interface expected by GOWN
+    core.loader = {
+        add: function (url) {
+            var loader = {
+                once: function (event, callback) {
+                    if (event === 'complete') {
+                        PIXI.Assets.load(url).then(function (asset) {
+                            var resources = {};
+                            resources[url] = asset;
+                            callback(loader, resources);
+                        });
+                    }
+                    return loader;
+                }
+            };
+            return loader;
+        }
+    };
 
     // export GOWN globally.
     global.GOWN = core;

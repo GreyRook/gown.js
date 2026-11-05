@@ -20,7 +20,7 @@ var Control = require('../core/Control'),
 function Scroller(theme) {
     Control.call(this);
     this.setTheme(theme);
-    this.interactive = true;
+    this.eventMode = 'static';
 
     /**
      * use mask to clip content
