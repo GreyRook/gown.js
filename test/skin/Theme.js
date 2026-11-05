@@ -15,6 +15,59 @@ describe("theming and skinning", function() {
         expect(GOWN.theme).equal(theme);
     });
 
+    it("loads theme atlases with Pixi Assets", function(done) {
+        var originalAssets = PIXI.Assets;
+        var originalLoader = GOWN.loader;
+        var textureCache = {};
+        var asset = {textures: textureCache, data: {}};
+        var theme = new GOWN.Theme(false);
+        var complete = false;
+
+        PIXI.Assets = {
+            load: function(path) {
+                expect(path).equal("theme.json");
+                return Promise.resolve(asset);
+            }
+        };
+        delete GOWN.loader;
+
+        theme.once(GOWN.Theme.COMPLETE, function() {
+            complete = true;
+        });
+
+        function restore() {
+            PIXI.Assets = originalAssets;
+            if (originalLoader !== undefined) {
+                GOWN.loader = originalLoader;
+            }
+        }
+
+        var loading;
+        try {
+            loading = theme.addImage("theme.json");
+        } catch (error) {
+            restore();
+            throw error;
+        }
+
+        loading.then(function(loadedAsset) {
+            try {
+                expect(loadedAsset).equal(asset);
+                expect(theme.textureCache).equal(textureCache);
+                expect(complete).equal(true);
+                expect(GOWN.loader).equal(undefined);
+                restore();
+                done();
+            } catch (error) {
+                restore();
+                done(error);
+            }
+        }, function(error) {
+            restore();
+            done(error);
+        });
+    });
+
     it("set theme of control", function() {
         var btn;
         expect(function () {

@@ -567,7 +567,7 @@ function Control() {
     PIXI.Container.call(this);
     this.enabled = this.enabled !== false;
     // assume all controls are interactive
-    this.interactive = true;
+    this.eventMode = 'static';
 
     this.initResizeScaling();
 }
@@ -3200,7 +3200,7 @@ var Control = __webpack_require__(2),
 function Scroller(theme) {
     Control.call(this);
     this.setTheme(theme);
-    this.interactive = true;
+    this.eventMode = 'static';
 
     /**
      * use mask to clip content
@@ -7064,14 +7064,16 @@ Theme.prototype.setSkin = function(comp, id, skin) {
 };
 
 /**
- * Set up the asset loader and load files
+ * Load the theme texture atlas
  *
  * @param jsonPath The path to the json file {String}
  */
 Theme.prototype.addImage = function(jsonPath) {
     this._jsonPath = jsonPath;
-    GOWN.loader.add(jsonPath)
-        .once('complete', this.loadComplete.bind(this));
+    return PIXI.Assets.load(jsonPath).then(function(asset) {
+        this.loadComplete(asset);
+        return asset;
+    }.bind(this));
 };
 
 /**
@@ -7079,24 +7081,21 @@ Theme.prototype.addImage = function(jsonPath) {
  * Sets cache and emits events.
  *
  * @see addImage
- * @see resource-loader https://github.com/englercj/resource-loader
- *
- * @param loader The loader {Loader}
- * @param resources The loaded resources {Object}
+ * @param asset The loaded texture atlas {Object}
  */
-Theme.prototype.loadComplete = function(loader, resources) {
-    this.setCache(resources);
+Theme.prototype.loadComplete = function(asset) {
+    this.setCache(asset);
     this.emit(Theme.LOADED, this);
     this.applyTheme();
 };
 
 /**
- * Set the texture cache (normally called when loading is complete)
+ * Set the texture cache from a loaded atlas
  *
- * @param resources The loaded resources {Object}
+ * @param asset The loaded texture atlas {Object}
  */
-Theme.prototype.setCache = function(resources) {
-    this.textureCache = resources[this._jsonPath].textures;
+Theme.prototype.setCache = function(asset) {
+    this.textureCache = asset.textures;
 };
 
 /**
@@ -8985,7 +8984,7 @@ AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
 
     container.hitArea = new PIXI.Rectangle(0, 0, width, height);
 
-    container.interactive = true;
+    container.eventMode = 'static';
     container.click = this.selectResultElement.bind(this, itemText.text);
     container.tap = this.selectResultElement.bind(this, itemText.text);
     container.mouseover = this.hoverResultElement.bind(this, itemText.text);
@@ -11169,22 +11168,16 @@ ThemeParser.prototype.getSkinComponents = function () {
  * Sets cache and and applies the theme.
  *
  * @see addImage
- * @see resource-loader https://github.com/englercj/resource-loader
- *
- * @param loader The loader {Loader}
- * @param resources The loaded resources {Object}
+ * @param asset The loaded theme texture atlas {Object}
  */
-ThemeParser.prototype.loadComplete = function(loader, resources) {
-    this.setCache(resources);
+ThemeParser.prototype.loadComplete = function(asset) {
+    this.setCache(asset);
 
-    if (resources) {
-        var res = resources[this._jsonPath];
-        if (res) {
-            this.themeData = res.data;
-        }
+    if (asset) {
+        this.themeData = asset.data;
 
         this.applyTheme();
-        Theme.prototype.loadComplete.call(this, loader, resources);
+        Theme.prototype.loadComplete.call(this, asset);
     }
 };
 
@@ -11450,9 +11443,6 @@ if (typeof PIXI === 'undefined') {
 
     // add core plugins.
     core.utils = __webpack_require__(54);
-
-    // use default pixi loader
-    core.loader = PIXI.Loader.shared;
 
     // export GOWN globally.
     global.GOWN = core;

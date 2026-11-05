@@ -15,7 +15,7 @@ function Control() {
     PIXI.Container.call(this);
     this.enabled = this.enabled !== false;
     // assume all controls are interactive
-    this.interactive = true;
+    this.eventMode = 'static';
 
     this.initResizeScaling();
 }

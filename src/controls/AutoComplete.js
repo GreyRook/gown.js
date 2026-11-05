@@ -152,7 +152,7 @@ AutoComplete.prototype.createSuggestionItem = function (text, width, height) {
 
     container.hitArea = new PIXI.Rectangle(0, 0, width, height);
 
-    container.interactive = true;
+    container.eventMode = 'static';
     container.click = this.selectResultElement.bind(this, itemText.text);
     container.tap = this.selectResultElement.bind(this, itemText.text);
     container.mouseover = this.hoverResultElement.bind(this, itemText.text);
