@@ -252,5 +252,13 @@ KeyboardManager.prototype.destroy = function(){
     this.keyDownProcess = null;
 };
 
-PIXI.Renderer.registerPlugin('keyboard', KeyboardManager);
-PIXI.CanvasRenderer.registerPlugin('keyboard', KeyboardManager);
+PIXI.extensions.add({
+    type: PIXI.ExtensionType.RendererPlugin,
+    name: 'keyboard',
+    ref: KeyboardManager
+});
+PIXI.extensions.add({
+    type: PIXI.ExtensionType.CanvasRendererPlugin,
+    name: 'keyboard',
+    ref: KeyboardManager
+});

@@ -74,7 +74,7 @@ if (typeof PIXI === 'undefined') {
     core.utils = require('./utils');
 
     // use default pixi loader
-    core.loader = PIXI.loader;
+    core.loader = PIXI.Loader.shared;
 
     // export GOWN globally.
     global.GOWN = core;
