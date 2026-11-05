@@ -53,22 +53,16 @@ ThemeParser.prototype.getSkinComponents = function () {
  * Sets cache and and applies the theme.
  *
  * @see addImage
- * @see resource-loader https://github.com/englercj/resource-loader
- *
- * @param loader The loader {Loader}
- * @param resources The loaded resources {Object}
+ * @param asset The loaded theme texture atlas {Object}
  */
-ThemeParser.prototype.loadComplete = function(loader, resources) {
-    this.setCache(resources);
+ThemeParser.prototype.loadComplete = function(asset) {
+    this.setCache(asset);
 
-    if (resources) {
-        var res = resources[this._jsonPath];
-        if (res) {
-            this.themeData = res.data;
-        }
+    if (asset) {
+        this.themeData = asset.data;
 
         this.applyTheme();
-        Theme.prototype.loadComplete.call(this, loader, resources);
+        Theme.prototype.loadComplete.call(this, asset);
     }
 };
 

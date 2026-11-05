@@ -106,14 +106,16 @@ Theme.prototype.setSkin = function(comp, id, skin) {
 };
 
 /**
- * Set up the asset loader and load files
+ * Load the theme texture atlas
  *
  * @param jsonPath The path to the json file {String}
  */
 Theme.prototype.addImage = function(jsonPath) {
     this._jsonPath = jsonPath;
-    GOWN.loader.add(jsonPath)
-        .once('complete', this.loadComplete.bind(this));
+    return PIXI.Assets.load(jsonPath).then(function(asset) {
+        this.loadComplete(asset);
+        return asset;
+    }.bind(this));
 };
 
 /**
@@ -121,24 +123,21 @@ Theme.prototype.addImage = function(jsonPath) {
  * Sets cache and emits events.
  *
  * @see addImage
- * @see resource-loader https://github.com/englercj/resource-loader
- *
- * @param loader The loader {Loader}
- * @param resources The loaded resources {Object}
+ * @param asset The loaded texture atlas {Object}
  */
-Theme.prototype.loadComplete = function(loader, resources) {
-    this.setCache(resources);
+Theme.prototype.loadComplete = function(asset) {
+    this.setCache(asset);
     this.emit(Theme.LOADED, this);
     this.applyTheme();
 };
 
 /**
- * Set the texture cache (normally called when loading is complete)
+ * Set the texture cache from a loaded atlas
  *
- * @param resources The loaded resources {Object}
+ * @param asset The loaded texture atlas {Object}
  */
-Theme.prototype.setCache = function(resources) {
-    this.textureCache = resources[this._jsonPath].textures;
+Theme.prototype.setCache = function(asset) {
+    this.textureCache = asset.textures;
 };
 
 /**

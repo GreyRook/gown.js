@@ -7064,14 +7064,16 @@ Theme.prototype.setSkin = function(comp, id, skin) {
 };
 
 /**
- * Set up the asset loader and load files
+ * Load the theme texture atlas
  *
  * @param jsonPath The path to the json file {String}
  */
 Theme.prototype.addImage = function(jsonPath) {
     this._jsonPath = jsonPath;
-    GOWN.loader.add(jsonPath)
-        .once('complete', this.loadComplete.bind(this));
+    return PIXI.Assets.load(jsonPath).then(function(asset) {
+        this.loadComplete(asset);
+        return asset;
+    }.bind(this));
 };
 
 /**
@@ -7079,24 +7081,21 @@ Theme.prototype.addImage = function(jsonPath) {
  * Sets cache and emits events.
  *
  * @see addImage
- * @see resource-loader https://github.com/englercj/resource-loader
- *
- * @param loader The loader {Loader}
- * @param resources The loaded resources {Object}
+ * @param asset The loaded texture atlas {Object}
  */
-Theme.prototype.loadComplete = function(loader, resources) {
-    this.setCache(resources);
+Theme.prototype.loadComplete = function(asset) {
+    this.setCache(asset);
     this.emit(Theme.LOADED, this);
     this.applyTheme();
 };
 
 /**
- * Set the texture cache (normally called when loading is complete)
+ * Set the texture cache from a loaded atlas
  *
- * @param resources The loaded resources {Object}
+ * @param asset The loaded texture atlas {Object}
  */
-Theme.prototype.setCache = function(resources) {
-    this.textureCache = resources[this._jsonPath].textures;
+Theme.prototype.setCache = function(asset) {
+    this.textureCache = asset.textures;
 };
 
 /**
@@ -11169,22 +11168,16 @@ ThemeParser.prototype.getSkinComponents = function () {
  * Sets cache and and applies the theme.
  *
  * @see addImage
- * @see resource-loader https://github.com/englercj/resource-loader
- *
- * @param loader The loader {Loader}
- * @param resources The loaded resources {Object}
+ * @param asset The loaded theme texture atlas {Object}
  */
-ThemeParser.prototype.loadComplete = function(loader, resources) {
-    this.setCache(resources);
+ThemeParser.prototype.loadComplete = function(asset) {
+    this.setCache(asset);
 
-    if (resources) {
-        var res = resources[this._jsonPath];
-        if (res) {
-            this.themeData = res.data;
-        }
+    if (asset) {
+        this.themeData = asset.data;
 
         this.applyTheme();
-        Theme.prototype.loadComplete.call(this, loader, resources);
+        Theme.prototype.loadComplete.call(this, asset);
     }
 };
 
@@ -11450,25 +11443,6 @@ if (typeof PIXI === 'undefined') {
 
     // add core plugins.
     core.utils = __webpack_require__(54);
-
-    // use the Pixi assets API with the loader interface expected by GOWN
-    core.loader = {
-        add: function (url) {
-            var loader = {
-                once: function (event, callback) {
-                    if (event === 'complete') {
-                        PIXI.Assets.load(url).then(function (asset) {
-                            var resources = {};
-                            resources[url] = asset;
-                            callback(loader, resources);
-                        });
-                    }
-                    return loader;
-                }
-            };
-            return loader;
-        }
-    };
 
     // export GOWN globally.
     global.GOWN = core;
